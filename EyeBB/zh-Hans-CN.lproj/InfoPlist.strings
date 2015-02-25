@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  EyeBB
+
+  Created by Evan on 15/2/23.
+  Copyright (c) 2015年 EyeBB. All rights reserved.
+*/
+CFBundleDisplayName ="宝宝安";
+"btn_sign_up"="注册";
