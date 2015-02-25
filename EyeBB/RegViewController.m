@@ -9,6 +9,9 @@
 #import "RegViewController.h"
 
 @interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+{
+    int textHeight;
+}
 //注册列表
 @property (nonatomic,strong) UITableView * regTView;
 
@@ -17,7 +20,10 @@
 //昵称输入框
 @property (nonatomic,strong) UITextField *nicknameTxt;
 //密码输入框
-@property (nonatomic,strong) UITextField *PDTxt;
+@property (nonatomic,strong) UITextField *pDTxt;
+
+//邮箱输入框
+@property (nonatomic,strong) UITextField *emailTxt;
 @end
 
 @implementation RegViewController
@@ -45,7 +51,7 @@
     [_regTView removeFromSuperview];
     [_telTxt removeFromSuperview];
     [_nicknameTxt removeFromSuperview];
-    [_PDTxt removeFromSuperview];
+    [_pDTxt removeFromSuperview];
     [self.view removeFromSuperview];
     [self setRegTView:nil];
     [self setTelTxt:nil];
@@ -95,6 +101,7 @@
     _regTView=[[UITableView alloc] initWithFrame:self.view.bounds];
     _regTView.dataSource = self;
     _regTView.delegate = self;
+    //设置table是否可以滑动
     _regTView.scrollEnabled = NO;
     //隐藏table自带的cell下划线
     _regTView.separatorStyle = UITableViewCellSeparatorStyleNone;
@@ -108,8 +115,164 @@
 //    [self.view addSubview:CopyrightLbl];
 //    
 //    
-//    
+//
+    //注册键盘弹起与收起通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(BasicRegkeyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(BasicRegkeyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    //隐藏键盘
+    UITapGestureRecognizer *tapGr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
+    tapGr.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGr];
   
+}
+/*-----------------------信息处理函数---------------------------------*/
+
+#pragma mark-
+#pragma mark--页面信息处理
+/**
+ *	@brief	验证信息
+ *
+ */
+//- (NSString *)verify:(NSString *)phone withpwd:(NSString *)pwd withver:(NSString *)ver withemail:(NSString *)email
+//{
+//    NSString * mag=nil;//返回变量值
+//    
+//    if(phone.length <= 0)
+//    {
+//        mag=@"请输入手机号码";
+//        return mag;
+//    }
+//    if([pub isMobileNumber:phone]==NO)
+//    {
+//        mag=@"用户名格式不正确";
+//        return mag;
+//    }
+//    if (pwd.length <= 0) {
+//        
+//        mag=@"密码不能为空";
+//        return mag;
+//    }
+//    if(ver.length <= 0||![pwd isEqualToString:ver])
+//    {
+//        mag=@"两次密码不一样";
+//        return mag;
+//    }
+//    if(email.length>0&&[pub validateEmail:email]==NO)
+//    {
+//        mag=@"邮箱格式不正确";
+//        return mag;
+//    }
+//    return mag;
+//}
+
+/**
+ *  获取输入框的Y坐标
+ *
+ *  @param textField <#textField description#>
+ */
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    if (textField == self.telTxt) {
+        textHeight=self.telTxt.frame.origin.y;
+    }
+    if (textField == self.nicknameTxt) {
+        textHeight=self.nicknameTxt.frame.origin.y;
+    }
+    if (textField == self.pDTxt) {
+        textHeight=self.pDTxt.frame.origin.y;
+    }
+    if (textField == self.emailTxt) {
+        textHeight=self.emailTxt.frame.origin.y;
+    }
+}
+-(void)BasicRegkeyboardWillShow:(NSNotification *)note
+{
+    CGRect r = [ UIScreen mainScreen ].applicationFrame;
+    NSDictionary *info = [note userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    
+    //自适应代码（输入法改变也可随之改变）
+    
+    if((r.size.height-keyboardSize.height-48)<textHeight)
+    {
+        [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
+        [UIView setAnimationDuration:0.3];
+        self.view.frame = CGRectMake(0.0f, -80.0, self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+    }
+}
+-(void)BasicRegkeyboardWillHide:(NSNotification *)note
+{
+    CGRect r = [ UIScreen mainScreen ].applicationFrame;
+    NSDictionary *info = [note userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+//    if (myDelegate.systemVersion<7) {
+//        if((r.size.height-keyboardSize.height-48)<textHeight)
+//        {
+//            //还原
+//            [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
+//            [UIView setAnimationDuration:0.3];
+//            self.view.frame = CGRectMake(0.0f, 64.0f, self.view.frame.size.width, self.view.frame.size.height);
+//            [UIView commitAnimations];
+//        }
+//    }
+//    else
+//    {
+        if((r.size.height-keyboardSize.height-48)<textHeight)
+        {
+            //还原
+            [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
+            [UIView setAnimationDuration:0.3];
+            self.view.frame = CGRectMake(0.0f, 64.0f, self.view.frame.size.width, self.view.frame.size.height);
+            [UIView commitAnimations];
+        }
+//    }
+    
+}
+/**
+ *	@brief	设置隐藏键盘
+ *
+ */
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    if (theTextField == self.telTxt) {
+         [theTextField resignFirstResponder];
+    }
+    if (theTextField == self.nicknameTxt) {
+        [theTextField resignFirstResponder];
+    }
+    if (theTextField == self.pDTxt) {
+        [theTextField resignFirstResponder];
+    }
+    if (theTextField == self.emailTxt) {
+        [theTextField resignFirstResponder];
+    }
+
+    
+//    if (theTextField == self.Verify) {
+//        [theTextField resignFirstResponder];
+//    }
+    
+    return YES;
+    
+}
+
+-(void)viewTapped:(UITapGestureRecognizer*)tapGr
+{
+    [self.telTxt resignFirstResponder];
+    [self.nicknameTxt resignFirstResponder];
+    [self.pDTxt resignFirstResponder];
+    
+    [self.emailTxt resignFirstResponder];
+    
 }
 
 #pragma mark --
@@ -254,20 +417,20 @@
         else if(indexPath.row==2)
         {
             if ([cell viewWithTag:103]==nil) {
-                _PDTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
-                _PDTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+                _pDTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
+                _pDTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
                 UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
-                _PDTxt.leftView=imgV;//设置输入框内左边的图标
-                _PDTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
-                _PDTxt.leftViewMode=UITextFieldViewModeAlways;
-                _PDTxt.placeholder=@"密码";//默认显示的字
-                _PDTxt.secureTextEntry=YES;//设置成密码格式
-                _PDTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
-                _PDTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
-                _PDTxt.delegate=self;//设置委托
-                _PDTxt.tag=103;
-                [cell addSubview:_PDTxt];
+                _pDTxt.leftView=imgV;//设置输入框内左边的图标
+                _pDTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+                _pDTxt.leftViewMode=UITextFieldViewModeAlways;
+                _pDTxt.placeholder=@"密码";//默认显示的字
+                _pDTxt.secureTextEntry=YES;//设置成密码格式
+                _pDTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+                _pDTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+                _pDTxt.delegate=self;//设置委托
+                _pDTxt.tag=103;
+                [cell addSubview:_pDTxt];
                 
                 UILabel * PDLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 39, self.view.frame.size.width-30, 1)];
                 [PDLbl.layer setBorderWidth:1.0]; //边框宽度
@@ -281,20 +444,20 @@
     {
         if (indexPath.row==0) {
             if ([cell viewWithTag:104]==nil) {
-                _telTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
-                _telTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+                _emailTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
+                _emailTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
                 UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
-                _telTxt.leftView=imgV;//设置输入框内左边的图标
-                _telTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
-                _telTxt.leftViewMode=UITextFieldViewModeAlways;
-                _telTxt.placeholder=@"电邮(可选)";//默认显示的字
-                _telTxt.secureTextEntry=YES;//设置成密码格式
-                _telTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
-                _telTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
-                _telTxt.delegate=self;//设置委托
-                _telTxt.tag=104;
-                [cell addSubview:_telTxt];
+                _emailTxt.leftView=imgV;//设置输入框内左边的图标
+                _emailTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+                _emailTxt.leftViewMode=UITextFieldViewModeAlways;
+                _emailTxt.placeholder=@"电邮(可选)";//默认显示的字
+                _emailTxt.secureTextEntry=YES;//设置成密码格式
+                _emailTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+                _emailTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+                _emailTxt.delegate=self;//设置委托
+                _emailTxt.tag=104;
+                [cell addSubview:_emailTxt];
                 
                 UILabel * PDLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 40, self.view.frame.size.width-30, 1)];
                 [PDLbl.layer setBorderWidth:1.0]; //边框宽度

@@ -31,9 +31,12 @@
 @property (strong,nonatomic) UIView * listTypeView;
 /**列表显示模式列表*/
 @property (strong,nonatomic) UITableView * listTypeTableView;
-
 /**列表显示模式改变按钮*/
 @property (strong,nonatomic) UIButton * listTypeChangeBtn;
+/**是否自动刷新对应显示图标*/
+@property (strong,nonatomic) UIImageView * refreshImgView;
+/**是否显示所有房间图标*/
+@property (strong,nonatomic) UIImageView * ShowALLRoomImgView;
 @end
 
 @implementation MainViewController
@@ -105,18 +108,23 @@
     [self.segmentedControl setFrame:CGRectMake(0, 20, Drive_Wdith, 44)];
     
     __weak typeof(self) weakSelf1 = self;
-    //    __block int shuaHMSegmentedControl=huaHMSegmentedControl;
     [self.segmentedControl setIndexChangeBlock:^(NSInteger index) {
-        //        huaHMSegmentedControl = index;
         if(index!=1)
         {
-            huaHMSegmentedControl = index;
+            huaHMSegmentedControl = (int)index;
+             [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * index, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         }
         else
         {
-            
+            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+                                        message:@"IOS暂时不支持此功能，敬请期待"
+                                       delegate:self
+                              cancelButtonTitle:@"确定"
+                              otherButtonTitles:nil] show];
+            [self.segmentedControl setSelectedSegmentIndex:huaHMSegmentedControl];
+             [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         }
-        [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * index, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+       
     }];
     
     [self.view addSubview:self.segmentedControl];
@@ -137,7 +145,7 @@
     [self.view addSubview:_MainInfoScrollView];
     
     //室内定位TitelView
-    UIView *titelView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
+    UIView *titelView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 54)];
     titelView.backgroundColor=[UIColor colorWithRed:0.835 green:0.835 blue:0.835 alpha:1];
     UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 44.0f)];
     [labelTitle setBackgroundColor:[UIColor clearColor]];
@@ -150,7 +158,7 @@
     [titelView addSubview:labelTitle];
     
     //室内定位条件刷选
-    UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 0, 44, 44)];
+    UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
     
     //设置按显示图片
     [listSetBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
@@ -168,11 +176,10 @@
     [_MainInfoScrollView addSubview:titelView];
     
     //房间显示选择View
-    UIView *RoomShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 44, Drive_Wdith, 44)];
+    UIView *RoomShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 54, Drive_Wdith, 44)];
     RoomShowView.backgroundColor=[UIColor clearColor];
     //室内定位显示选择
     UIButton * RoomShowBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 0, 44, 44)];
-    
     //设置按显示titel
     [RoomShowBtn setTitle:@"****" forState:UIControlStateNormal];
     [RoomShowBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]  forState:UIControlStateNormal];
@@ -186,15 +193,24 @@
     //    [listSetBtn.layer setCornerRadius:4.0];
     RoomShowBtn.tag=103;
     [RoomShowView addSubview:RoomShowBtn];
-    
     [_MainInfoScrollView addSubview:RoomShowView];
     
+    //室内定位显示选择
+    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
     
-    
+    //设置按显示titel
+    [childrenListBtn setTitle:@"儿童列表" forState:UIControlStateNormal];
+    [childrenListBtn setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [childrenListBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+    //设置按钮响应事件
+    [childrenListBtn addTarget:self action:@selector(childrenListAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_MainInfoScrollView addSubview:childrenListBtn];
+
     
     
     //初始化房间信息
-    _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 88, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-88)];
+    _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 98, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-138)];
     
     _RoomTableView.dataSource = self;
     _RoomTableView.delegate = self;
@@ -254,6 +270,10 @@
     _listTypeTableView= [[UITableView alloc]initWithFrame:CGRectMake(0, 44, CGRectGetWidth(_listTypeView.frame), 88)];
     _listTypeTableView.dataSource = self;
     _listTypeTableView.delegate = self;
+    //设置table是否可以滑动
+    _listTypeTableView.scrollEnabled = NO;
+    //隐藏table自带的cell下划线
+//    _listTypeTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_listTypeView addSubview:_listTypeTableView];
     
     //提交按钮
@@ -337,7 +357,95 @@
     static NSString *detailIndicated = @"tableCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
-    if(tableView == self.RoomTableView){
+    //房间列表显示/刷新设置
+    if(tableView == self.listTypeTableView)
+    {
+        //        static NSString *detailIndicated = @"tableCell";
+        //
+        //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            //        cell.tag = indexPath.row;
+        }
+        if (indexPath.row==0) {
+            if([cell viewWithTag:104]==nil)
+            {
+                UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, cell.frame.size.width-60, 44)];
+                [refreshLbl setBackgroundColor:[UIColor clearColor]];
+                [refreshLbl setText:@"自动刷新"];
+                [refreshLbl setTextColor:[UIColor blackColor]];
+                [refreshLbl setTextAlignment:NSTextAlignmentLeft];
+                [refreshLbl setTag:104];
+                [cell addSubview:refreshLbl];
+                
+            }
+            else
+            {
+                UILabel * refreshLbl=(UILabel *)[cell viewWithTag:104];
+                [refreshLbl setText:@"自动刷新"];
+            }
+            if([cell viewWithTag:105]==nil)
+            {
+                _refreshImgView=[[UIImageView alloc]initWithFrame:CGRectMake(cell.frame.size.width-50, 7, 30, 30)];
+                [_refreshImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [_refreshImgView setTag:105];
+                [cell addSubview:_refreshImgView];
+                
+            }
+            else
+            {
+               
+                
+                [_refreshImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+               
+            }
+            
+            
+        }
+        else if(indexPath.row==1)
+        {
+            if([cell viewWithTag:106]==nil)
+            {
+                UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, cell.frame.size.width-60, 44)];
+                [refreshLbl setBackgroundColor:[UIColor clearColor]];
+                [refreshLbl setText:@"查看所有房间"];
+                [refreshLbl setTextColor:[UIColor blackColor]];
+                [refreshLbl setTextAlignment:NSTextAlignmentLeft];
+                [refreshLbl setTag:106];
+                [cell addSubview:refreshLbl];
+                
+            }
+            else
+            {
+                UILabel * refreshLbl=(UILabel *)[cell viewWithTag:106];
+                [refreshLbl setText:@"查看所有房间"];
+            }
+            
+            if([cell viewWithTag:107]==nil)
+            {
+                _ShowALLRoomImgView=[[UIImageView alloc]initWithFrame:CGRectMake(cell.frame.size.width-50, 7, 30, 30)];
+                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [_ShowALLRoomImgView setTag:107];
+                [cell addSubview:_ShowALLRoomImgView];
+                
+            }
+            else
+            {
+                
+                
+                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                
+            }
+        }
+        else
+        {
+            
+        }
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    }
+    //房间列表
+    else if(tableView == self.RoomTableView){
         
         
         if (cell == nil) {
@@ -349,7 +457,7 @@
             //设置按钮背景颜色
             [RoomBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
             //设置按钮响应事件
-            [RoomBtn addTarget:self action:@selector(regAction:) forControlEvents:UIControlEventTouchUpInside];
+            [RoomBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
             //设置按钮是否圆角
             [RoomBtn.layer setMasksToBounds:YES];
             //圆角像素化
@@ -363,19 +471,7 @@
         
         
     }
-    else if(tableView == self.listTypeTableView)
-    {
-        //        static NSString *detailIndicated = @"tableCell";
-        //
-        //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
-        
-        if (cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-            //        cell.tag = indexPath.row;
-            
-            
-        }
-    }
+    
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
@@ -437,9 +533,13 @@
 
 #pragma mark - Scroll
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+//    scrollView.
+    
     if(huaHMSegmentedControl==0){
-        
+//        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
+//        [scrollView setContentOffset:CGPointMake(320,0) animated:YES];
         //        [self.RoomTableView tableViewDidScroll:scrollView];
+
     }
     else if(huaHMSegmentedControl==2){
         
@@ -461,36 +561,70 @@
 }
 
 #pragma mark ------------scrollview delegate-------
-
+/**列表切换*/
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView.tag == 101) {
         //   NSLog(@"segmentedControl3.selectedSegmentIndex is :%d",self.segmentedControl.selectedSegmentIndex);
         CGFloat pageWidth = scrollView.frame.size.width;
         NSInteger page = scrollView.contentOffset.x / pageWidth;
-        
-        huaHMSegmentedControl = page;
+//        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
+//        NSLog(@"scrollView.frame.size.width %f",scrollView.frame.size.width);
+        if (scrollView.contentOffset.x!=320.000000) {
+            huaHMSegmentedControl = (int)page;
+            [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
+        }
+        else
+        {
+            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+                                        message:@"IOS暂时不支持此功能，敬请期待"
+                                       delegate:self
+                              cancelButtonTitle:@"确定"
+                              otherButtonTitles:nil] show];
+            if (huaHMSegmentedControl==0) {
+                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
+            }
+            else if (huaHMSegmentedControl==2)
+            {
+                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
+            }
+            [self.segmentedControl setSelectedSegmentIndex:huaHMSegmentedControl animated:YES];
+        }
         //     NSLog(@"456=%d",huaHMSegmentedControl);
         
         //     NSLog(@"page is :%d,scrollView.contentOffset.x is %f, pageWidth is %f",page,scrollView.contentOffset.x , pageWidth);
-        [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
+        
     }
 }
 #pragma mark --
 #pragma mark --点击事件
 
+/**弹出房间列表显示设置*/
 -(void)changeAction:(id)sender
 {
     [_PopupSView setHidden:NO];
 }
 
+/**显示机构选择列表*/
 -(void)changeRoomAction:(id)sender
 {
     
 }
 
+/**显示房间信息*/
+-(void)ShowRoomAction:(id)sender
+{
+    
+}
+
+/**保存房间列表显示设置*/
 -(void)SaveAction:(id)sender
 {
     [_PopupSView setHidden:YES];
+}
+/**显示儿童列表*/
+-(void)childrenListAction:(id)sender
+{
+
 }
 
 
