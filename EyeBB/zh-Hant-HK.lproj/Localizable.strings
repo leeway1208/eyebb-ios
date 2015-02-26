@@ -1,16 +1,16 @@
 /* 
-  InfoPlist.strings
+  Localizable.strings
   EyeBB
 
   Created by Evan on 15/2/23.
   Copyright (c) 2015年 EyeBB. All rights reserved.
 */
-CFBundleDisplayName ="寶寶安";
+//CFBundleDisplayName ="寶寶安";
 "reg"="註冊";
 "tel"="Tel";
 
 
-<!-- Text strings -->
+//<!-- Text strings -->
 "this_Week"="This week";
 "Last_14_days"="Last 14 days";
 "50_days"="50 days";
@@ -176,7 +176,7 @@ CFBundleDisplayName ="寶寶安";
 
 
 
-<!-- Button strings -->
+//<!-- Button strings -->
 "btn_sign_up"="註冊";
 "btn_login"="登錄";
 "btn_logout"="登出";
@@ -213,7 +213,7 @@ CFBundleDisplayName ="寶寶安";
 "btn_options"="設定";
 
 
-<!-- Toast strings -->
+//<!-- Toast strings -->
 "toast_login"="登錄中&#8230;";
 "toast_signup"="註冊中&#8230;";
 "toast_loading"="讀取中&#8230;";
@@ -225,7 +225,7 @@ CFBundleDisplayName ="寶寶安";
 "toast_register_to_gcm_failed"="連接服務器失敗,請稍候再試";
 
 
-<!-- Dialog strings -->
+//<!-- Dialog strings -->
 "dialog_error_no_ble"="Bluetooth Low Energy technology is not supported on your device.";
 "dialog_error_no_bluetooth"="Bluetooth is not supported on your device.";
 "dialog_enable_bluetooth"="Please turn on Bluetooth to scan for SensorTag devices around you.";

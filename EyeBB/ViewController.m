@@ -9,10 +9,11 @@
 #import "ViewController.h"
 #import "RegViewController.h"
 #import "MainViewController.h"
+
 @interface ViewController ()
 
 @property (nonatomic,strong) RegViewController *reg;
-
+@property NSArray * arrayOfLanguages;
 @end
 
 @implementation ViewController
@@ -24,6 +25,15 @@
     
     self.view.backgroundColor=[UIColor whiteColor];
     //    self.navigationController.hidesBottomBarWhenPushed=YES;
+    
+    self.arrayOfLanguages = [[[Localisator sharedInstance] availableLanguagesArray] copy];
+    //语言转换本地通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(receiveLanguageChangedNotification:)
+                                                 name:kNotificationLanguageChanged
+                                               object:nil];
+    [[Localisator sharedInstance] saveInUserDefaults];
+    
     [self iv];
     [self lc];
 
@@ -51,7 +61,10 @@
     //     _PDTxt=nil;
     //    self.view=nil;
 }
-
+-(void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationLanguageChanged object:nil];
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -73,10 +86,11 @@
  */
 -(void)lc
 {
+
     //注册按钮
     UIButton * RegBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*9, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
-    [RegBtn setTitle:@"注册" forState:UIControlStateNormal];
+    [RegBtn setTitle:LOCALIZATION(@"btn_sign_up") forState:UIControlStateNormal];
     //设置按钮背景颜色
     [RegBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //设置按钮响应事件
@@ -90,7 +104,7 @@
     //登录按钮
     UIButton * LoginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*10.4, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
-    [LoginBtn setTitle:@"登录" forState:UIControlStateNormal];
+    [LoginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [LoginBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
     //设置按钮背景颜色
     [LoginBtn setBackgroundColor:[UIColor whiteColor]];
@@ -112,24 +126,47 @@
     [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:CopyrightLbl];
     
+    
 }
 #pragma mark --
 #pragma mark - 点击事件
 -(void)regAction:(id)sender
 {
+    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[2]])
+    {
+        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    }
     
-        _reg = [[RegViewController alloc] init];
-    
-    
-    [self.navigationController pushViewController:_reg animated:YES];
-    _reg.title = @"";
+//        _reg = [[RegViewController alloc] init];
+//    
+//    
+//    [self.navigationController pushViewController:_reg animated:YES];
+//    _reg.title = @"";
 }
 
 -(void)loginAction:(id)sender
 {
-    MainViewController*reg = [[MainViewController alloc] init];
-    [self.navigationController pushViewController:reg animated:YES];
-    reg.title = @"";
+//    MainViewController*reg = [[MainViewController alloc] init];
+//    [self.navigationController pushViewController:reg animated:YES];
+//    reg.title = @"";
+    
+    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
+    {
+        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alertView show];
+    }
+}
+
+
+#pragma mark - Notification methods
+
+- (void) receiveLanguageChangedNotification:(NSNotification *) notification
+{
+    if ([notification.name isEqualToString:kNotificationLanguageChanged])
+    {
+        [self lc];
+    }
 }
 
 @end

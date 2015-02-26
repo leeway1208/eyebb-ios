@@ -1,15 +1,14 @@
 /* 
-  InfoPlist.strings
+  Localizable.strings
   EyeBB
 
   Created by Evan on 15/2/23.
   Copyright (c) 2015年 EyeBB. All rights reserved.
 */
-CFBundleDisplayName ="EyeBB";
-"reg"="register";
-"tel"="Tel";
+//CFBundleDisplayName ="EyeBB";
 
-<!-- Text strings -->
+
+//<!-- Text strings -->
 "this_Week"="This week";
 "Last_14_days"="Last 14 days";
 "50_days"="50 days";
@@ -69,7 +68,7 @@ CFBundleDisplayName ="EyeBB";
 "text_sec"="Sec.";
 "text_error_bluetooth_not_supported"="Bluetooth not supported";
 "text_notificationDetails"="Notification Details";
-"text_about_details"="EyeBB is a smart kid bahavior analysis and monitoring application. It works with our developed Bluetooth Low Energy-based smart device "Macaron"，EyeBB can help you monitor the safety of kids at home, in the school bus, and in the kindergarten. It also provides accurate behavior analysis for your kids.";
+"text_about_details"="EyeBB is a smart kid bahavior analysis and monitoring application. It works with our developed Bluetooth Low Energy-based smart device \"Macaron\"，EyeBB can help you monitor the safety of kids at home, in the school bus, and in the kindergarten. It also provides accurate behavior analysis for your kids.";
 "text_version"="Version";
 "text_http"="Welcome to www.eyebb.com";
 "text_error_usernametext_invalidKindergarten"="Invalid kindergarten";
@@ -171,7 +170,7 @@ CFBundleDisplayName ="EyeBB";
 "text_search_guset_activity_share_msg"="Invite him/her?。Link：play.google.com/xxxxxxxx";
 "text_no_new_firmware"="Sorry. There is no need to update the firmware of eyebb device.";
 
-<!-- Button strings -->
+//<!-- Button strings -->
 "btn_sign_up"="Sign Up";
 "btn_login"="Login";
 "btn_add_new_guest"="Add guest";
@@ -208,7 +207,7 @@ CFBundleDisplayName ="EyeBB";
 "btn_disconnect"="Disconnect";
 "btn_options"="Setting";
 
-<!-- Toast strings -->
+//<!-- Toast strings -->
 "toast_login"="Login&#8230;";
 "toast_signup"="Sign up&#8230;";
 "toast_loading"="Loading&#8230;";

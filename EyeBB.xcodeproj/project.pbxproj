@@ -16,8 +16,9 @@
 		20BD17181A9A21C600039A31 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BD17151A9A21C600039A31 /* Default.png */; };
 		20BD17191A9A21C600039A31 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BD17161A9A21C600039A31 /* Default@2x.png */; };
 		20C14C9B1A9B09A60097C891 /* RegViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C14C9A1A9B09A60097C891 /* RegViewController.m */; };
-		20C14C9E1A9B4D0C0097C891 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA01A9B4D0C0097C891 /* InfoPlist.strings */; };
+		20C14C9E1A9B4D0C0097C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA01A9B4D0C0097C891 /* Localizable.strings */; };
 		20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA51A9B69910097C891 /* 20150207105906.png */; };
+		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
 		3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3264D9491A9D6B72009CB9C2 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F41A9D6B72009CB9C2 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3264D94A1A9D6B72009CB9C2 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F61A9D6B72009CB9C2 /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -80,10 +81,12 @@
 		20BD171A1A9A220A00039A31 /* EyeBB-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EyeBB-Prefix.pch"; sourceTree = "<group>"; };
 		20C14C991A9B09A60097C891 /* RegViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegViewController.h; sourceTree = "<group>"; };
 		20C14C9A1A9B09A60097C891 /* RegViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegViewController.m; sourceTree = "<group>"; };
-		20C14C9F1A9B4D0C0097C891 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		20C14CA21A9B4E930097C891 /* zh-Hant-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-HK"; path = "zh-Hant-HK.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
-		20C14CA31A9B59980097C891 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/InfoPlist.strings"; sourceTree = "<group>"; };
+		20C14C9F1A9B4D0C0097C891 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		20C14CA21A9B4E930097C891 /* zh-Hant-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-HK"; path = "zh-Hant-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		20C14CA31A9B59980097C891 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA51A9B69910097C891 /* 20150207105906.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 20150207105906.png; sourceTree = "<group>"; };
+		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
+		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
 		3264D8F01A9D6B72009CB9C2 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		3264D8F21A9D6B72009CB9C2 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -228,7 +231,7 @@
 				20BD16EC1A99FC7700039A31 /* Info.plist */,
 				20BD16ED1A99FC7700039A31 /* main.m */,
 				20BD171A1A9A220A00039A31 /* EyeBB-Prefix.pch */,
-				20C14CA01A9B4D0C0097C891 /* InfoPlist.strings */,
+				20C14CA01A9B4D0C0097C891 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -257,6 +260,15 @@
 			);
 			name = img;
 			path = EyeBB;
+			sourceTree = "<group>";
+		};
+		32530F461A9EE01100F66B6D /* locallistor */ = {
+			isa = PBXGroup;
+			children = (
+				32530F471A9EE01100F66B6D /* Localisator.h */,
+				32530F481A9EE01100F66B6D /* Localisator.m */,
+			);
+			path = locallistor;
 			sourceTree = "<group>";
 		};
 		3264D8EE1A9D6B72009CB9C2 /* ASIHTTPRequest */ = {
@@ -377,6 +389,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				32530F461A9EE01100F66B6D /* locallistor */,
 				3264D8EE1A9D6B72009CB9C2 /* ASIHTTPRequest */,
 				326A924B1A9C4AD300CAB4F3 /* HMSegmentedControl */,
 			);
@@ -480,7 +493,7 @@
 				20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */,
 				20BD17181A9A21C600039A31 /* Default.png in Resources */,
 				20BD17171A9A21C600039A31 /* Default-568h@2x.png in Resources */,
-				20C14C9E1A9B4D0C0097C891 /* InfoPlist.strings in Resources */,
+				20C14C9E1A9B4D0C0097C891 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,6 +534,7 @@
 				3264D9541A9D6B72009CB9C2 /* ASICloudFilesContainerXMLParserDelegate.m in Sources */,
 				3264D9531A9D6B72009CB9C2 /* ASICloudFilesContainerRequest.m in Sources */,
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,
+				32530F491A9EE01100F66B6D /* Localisator.m in Sources */,
 				3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */,
 				3264D9581A9D6B72009CB9C2 /* ASIS3Bucket.m in Sources */,
 				3264D94C1A9D6B72009CB9C2 /* ASIFormDataRequest.m in Sources */,
@@ -549,14 +563,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		20C14CA01A9B4D0C0097C891 /* InfoPlist.strings */ = {
+		20C14CA01A9B4D0C0097C891 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				20C14C9F1A9B4D0C0097C891 /* en */,
 				20C14CA21A9B4E930097C891 /* zh-Hant-HK */,
 				20C14CA31A9B59980097C891 /* zh-Hans-CN */,
 			);
-			name = InfoPlist.strings;
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
