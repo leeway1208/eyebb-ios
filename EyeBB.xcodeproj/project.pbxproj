@@ -52,6 +52,7 @@
 		3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9791A9D6DA5009CB9C2 /* libxml2.dylib */; };
 		326A92491A9C480D00CAB4F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A92481A9C480D00CAB4F3 /* MainViewController.m */; };
 		326A924E1A9C4AD300CAB4F3 /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A924D1A9C4AD300CAB4F3 /* HMSegmentedControl.m */; };
+		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -153,6 +154,8 @@
 		326A92481A9C480D00CAB4F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		326A924C1A9C4AD300CAB4F3 /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
 		326A924D1A9C4AD300CAB4F3 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
+		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
+		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -221,6 +224,8 @@
 				20C14C9A1A9B09A60097C891 /* RegViewController.m */,
 				326A92471A9C480D00CAB4F3 /* MainViewController.h */,
 				326A92481A9C480D00CAB4F3 /* MainViewController.m */,
+				92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */,
+				92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -549,6 +554,7 @@
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,
 				32530F491A9EE01100F66B6D /* Localisator.m in Sources */,
 				3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */,
+				92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */,
 				3264D9581A9D6B72009CB9C2 /* ASIS3Bucket.m in Sources */,
 				3264D94C1A9D6B72009CB9C2 /* ASIFormDataRequest.m in Sources */,
 				3264D95D1A9D6B72009CB9C2 /* ASIS3ServiceRequest.m in Sources */,

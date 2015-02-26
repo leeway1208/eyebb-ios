@@ -25,7 +25,9 @@
     float systemVersion=[[NSString stringWithFormat:@"%@.%@",[array objectAtIndex:0],[array objectAtIndex:1]]doubleValue];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    //配置首页
+
+    
+    //set init view 
     ViewController *welcome = [[ViewController alloc] init];
     //添加NavBar
     UINavigationController * navController = [[UINavigationController alloc] initWithRootViewController:welcome] ; //初始化导航栏控制器
