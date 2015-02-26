@@ -25,13 +25,14 @@
     float systemVersion=[[NSString stringWithFormat:@"%@.%@",[array objectAtIndex:0],[array objectAtIndex:1]]doubleValue];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    
+    //配置首页
     ViewController *welcome = [[ViewController alloc] init];
+    //添加NavBar
     UINavigationController * navController = [[UINavigationController alloc] initWithRootViewController:welcome] ; //初始化导航栏控制器
-    
+    //设置navBar属性
     if(systemVersion>=7)
     {
-        
+        //navBar背景颜色
         [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
         
         UIColor * cc = [UIColor whiteColor];
@@ -39,7 +40,7 @@
         
         
         navController.navigationBar.titleTextAttributes = dict;
-
+        //navBar字体颜色
         [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1]];
         
         

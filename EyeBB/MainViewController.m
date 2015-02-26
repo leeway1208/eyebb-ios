@@ -196,7 +196,7 @@
     [_MainInfoScrollView addSubview:RoomShowView];
     
     //室内定位显示选择
-    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-138, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
+    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-196, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
     
     //设置按显示titel
     [childrenListBtn setTitle:@"儿童列表" forState:UIControlStateNormal];
@@ -217,6 +217,7 @@
     //    [self.positionDetailsTableView setBounces:NO];
     //隐藏table自带的cell下划线
     _RoomTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    _RoomTableView.backgroundColor=[UIColor yellowColor];
     [_MainInfoScrollView addSubview:_RoomTableView];
     
     

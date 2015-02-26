@@ -19,6 +19,7 @@
 		20C14C9E1A9B4D0C0097C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA01A9B4D0C0097C891 /* Localizable.strings */; };
 		20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA51A9B69910097C891 /* 20150207105906.png */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
+		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
 		3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3264D9491A9D6B72009CB9C2 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F41A9D6B72009CB9C2 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3264D94A1A9D6B72009CB9C2 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F61A9D6B72009CB9C2 /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -87,6 +88,7 @@
 		20C14CA51A9B69910097C891 /* 20150207105906.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 20150207105906.png; sourceTree = "<group>"; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
+		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
 		3264D8F01A9D6B72009CB9C2 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		3264D8F21A9D6B72009CB9C2 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -180,6 +182,7 @@
 		20BD16DF1A99FC7700039A31 = {
 			isa = PBXGroup;
 			children = (
+				32530F4A1A9EFF4F00F66B6D /* db */,
 				3264D97D1A9D6E33009CB9C2 /* WebKit.framework */,
 				3264D97B1A9D6E29009CB9C2 /* libtidy.dylib */,
 				3264D9791A9D6DA5009CB9C2 /* libxml2.dylib */,
@@ -269,6 +272,15 @@
 				32530F481A9EE01100F66B6D /* Localisator.m */,
 			);
 			path = locallistor;
+			sourceTree = "<group>";
+		};
+		32530F4A1A9EFF4F00F66B6D /* db */ = {
+			isa = PBXGroup;
+			children = (
+				32530F4B1A9EFF4F00F66B6D /* eyebb.db */,
+			);
+			name = db;
+			path = EyeBB/db;
 			sourceTree = "<group>";
 		};
 		3264D8EE1A9D6B72009CB9C2 /* ASIHTTPRequest */ = {
@@ -490,6 +502,7 @@
 				20BD17191A9A21C600039A31 /* Default@2x.png in Resources */,
 				3264D96D1A9D6B72009CB9C2 /* README-GHUnit in Resources */,
 				20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */,
+				32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */,
 				20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */,
 				20BD17181A9A21C600039A31 /* Default.png in Resources */,
 				20BD17171A9A21C600039A31 /* Default-568h@2x.png in Resources */,
