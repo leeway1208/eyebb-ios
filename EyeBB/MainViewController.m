@@ -88,7 +88,7 @@
 -(void)lc
 {
     
-    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"职位详情", @"公司详情",@"所有招聘",@"所有招聘2"]];
+    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"室内定位", @"雷达",@"简报",@"用户"]];
     
     self.segmentedControl = segmentedControl3;
     [self.segmentedControl setBackgroundColor:[UIColor colorWithRed:0.800 green:0.800 blue:0.800 alpha:1]];
@@ -196,7 +196,7 @@
     [_MainInfoScrollView addSubview:RoomShowView];
     
     //室内定位显示选择
-    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
+    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-138, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
     
     //设置按显示titel
     [childrenListBtn setTitle:@"儿童列表" forState:UIControlStateNormal];
