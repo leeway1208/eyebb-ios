@@ -37,6 +37,8 @@
 @property (strong,nonatomic) UIImageView * refreshImgView;
 /**是否显示所有房间图标*/
 @property (strong,nonatomic) UIImageView * ShowALLRoomImgView;
+
+@property (strong,nonatomic) NSArray *colorArray;
 @end
 
 @implementation MainViewController
@@ -79,7 +81,7 @@
  */
 -(void)iv
 {
-    
+    _colorArray=@[[UIColor colorWithRed:0.282 green:0.800 blue:0.922 alpha:1],[UIColor colorWithRed:0.392 green:0.549 blue:0.745 alpha:1],[UIColor colorWithRed:0.396 green:0.741 blue:0.561 alpha:1],[UIColor colorWithRed:0.149 green:0.686 blue:0.663 alpha:1],[UIColor colorWithRed:0.925 green:0.278 blue:0.510 alpha:1],[UIColor colorWithRed:0.690 green:0.380 blue:0.208 alpha:1],[UIColor colorWithRed:0.898 green:0.545 blue:0.682 alpha:1],[UIColor colorWithRed:0.643 green:0.537 blue:0.882 alpha:1],[UIColor colorWithRed:0.847 green:0.749 blue:0.216 alpha:1],[UIColor colorWithRed:0.835 green:0.584 blue:0.329 alpha:1]];
 }
 
 /**
@@ -196,7 +198,7 @@
     [_MainInfoScrollView addSubview:RoomShowView];
     
     //室内定位显示选择
-    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-196, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
+    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-40, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
     
     //设置按显示titel
     [childrenListBtn setTitle:@"儿童列表" forState:UIControlStateNormal];
@@ -217,7 +219,7 @@
     //    [self.positionDetailsTableView setBounces:NO];
     //隐藏table自带的cell下划线
     _RoomTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    _RoomTableView.backgroundColor=[UIColor yellowColor];
+    _RoomTableView.backgroundColor=[UIColor whiteColor];
     [_MainInfoScrollView addSubview:_RoomTableView];
     
     
@@ -333,7 +335,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if(tableView == self.RoomTableView){
-        return 1;
+        return 11;
     }
     else if(tableView == self.RadarTableView){
         return 1;
@@ -453,23 +455,35 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
             NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
-            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, cell.frame.size.width-10, cell.frame.size.height-10)];
+            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, cell.frame.size.width-10, 150)];
             
             //设置按钮背景颜色
-            [RoomBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+            [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             //设置按钮响应事件
             [RoomBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
             //设置按钮是否圆角
             [RoomBtn.layer setMasksToBounds:YES];
             //圆角像素化
             [RoomBtn.layer setCornerRadius:4.0];
-            RoomBtn.tag=107;
+            RoomBtn.tag=201;
             [cell addSubview:RoomBtn];
             
             
             
         }
-        
+        if ([cell viewWithTag:201]!=nil) {
+            UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
+            if(indexPath.row>9)
+            {
+                [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:(indexPath.row%10)]];
+            }
+            else
+            {
+                [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
+            }
+            
+            
+        }
         
     }
     
