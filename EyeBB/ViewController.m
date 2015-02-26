@@ -13,7 +13,7 @@
 @interface ViewController ()
 
 @property (nonatomic,strong) RegViewController *reg;
-@property NSArray * arrayOfLanguages;
+//@property NSArray * arrayOfLanguages;
 @end
 
 @implementation ViewController
@@ -26,7 +26,7 @@
     self.view.backgroundColor=[UIColor whiteColor];
     //    self.navigationController.hidesBottomBarWhenPushed=YES;
     
-    self.arrayOfLanguages = [[[Localisator sharedInstance] availableLanguagesArray] copy];
+//    self.arrayOfLanguages = [[[Localisator sharedInstance] availableLanguagesArray] copy];
     //语言转换本地通知
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(receiveLanguageChangedNotification:)
@@ -132,30 +132,30 @@
 #pragma mark - 点击事件
 -(void)regAction:(id)sender
 {
-    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[2]])
-    {
-        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
-    }
+//    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[2]])
+//    {
+//        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        [alertView show];
+//    }
     
-//        _reg = [[RegViewController alloc] init];
-//    
-//    
-//    [self.navigationController pushViewController:_reg animated:YES];
-//    _reg.title = @"";
+        _reg = [[RegViewController alloc] init];
+    
+    
+    [self.navigationController pushViewController:_reg animated:YES];
+    _reg.title = @"";
 }
 
 -(void)loginAction:(id)sender
 {
-//    MainViewController*reg = [[MainViewController alloc] init];
-//    [self.navigationController pushViewController:reg animated:YES];
-//    reg.title = @"";
+    MainViewController*reg = [[MainViewController alloc] init];
+    [self.navigationController pushViewController:reg animated:YES];
+    reg.title = @"";
     
-    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
-    {
-        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alertView show];
-    }
+//    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
+//    {
+//        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+//        [alertView show];
+//    }
 }
 
 
