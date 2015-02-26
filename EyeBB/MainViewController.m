@@ -38,7 +38,12 @@
 /**是否显示所有房间图标*/
 @property (strong,nonatomic) UIImageView * ShowALLRoomImgView;
 
+
 @property (strong,nonatomic) NSArray *colorArray;
+
+/**option button*/
+@property (strong,nonatomic) UIButton * settingButton;
+
 @end
 
 @implementation MainViewController
