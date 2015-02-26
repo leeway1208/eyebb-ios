@@ -32,7 +32,7 @@
     if(systemVersion>=7)
     {
         
-        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.365 green:0.365 blue:0.365 alpha:1]];
+        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
         
         UIColor * cc = [UIColor whiteColor];
         NSDictionary * dict = [NSDictionary dictionaryWithObject:cc forKey:UITextAttributeTextColor];
@@ -46,7 +46,7 @@
     }
     else
     {
-        [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.365 green:0.365 blue:0.365 alpha:1]];
+        [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
         //        [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1]];
         
         
