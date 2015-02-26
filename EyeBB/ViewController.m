@@ -106,6 +106,7 @@
     //设置按显示文字
     [LoginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [LoginBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    
     //设置按钮背景颜色
     [LoginBtn setBackgroundColor:[UIColor whiteColor]];
     //设置按钮响应事件
