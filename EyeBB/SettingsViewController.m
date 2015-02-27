@@ -9,7 +9,7 @@
 #import "SettingsViewController.h"
 
 
-@interface SettingsViewController ()
+@interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic,strong) UITableView * optionsTable;
 
@@ -20,6 +20,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [self loadWidget];
     // Do any additional setup after loading the view.
 }
 
@@ -31,7 +32,22 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [_optionsTable removeFromSuperview];
-    [self optionsTable:nil];
+    [self.view removeFromSuperview];
+   // [self optionsTable:nil];
+    [self setView:nil];
+    [super viewDidDisappear:animated];
+}
+
+-(void)loadWidget{
+    NSLog(@"*** %f,---%F",self.view.bounds.size.height,Drive_Height);
+    _optionsTable=[[UITableView alloc] initWithFrame:self.view.bounds];
+    _optionsTable.dataSource = self;
+    _optionsTable.delegate = self;
+    //设置table是否可以滑动
+    _optionsTable.scrollEnabled = NO;
+    //隐藏table自带的cell下划线
+    _optionsTable.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_optionsTable];
 
 }
 /*

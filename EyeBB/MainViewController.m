@@ -122,7 +122,7 @@
         if(index!=1)
         {
             huaHMSegmentedControl = (int)index;
-             [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * index, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+            [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * index, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         }
         else
         {
@@ -132,9 +132,9 @@
                               cancelButtonTitle:@"确定"
                               otherButtonTitles:nil] show];
             [self.segmentedControl setSelectedSegmentIndex:huaHMSegmentedControl];
-             [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+            [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         }
-       
+        
     }];
     
     [self.view addSubview:self.segmentedControl];
@@ -169,6 +169,22 @@
     
     //室内定位条件刷选
     UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
+    
+    /**图片模糊
+     CIContext *context = [CIContext contextWithOptions:nil];
+     CIImage *inputImage = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"20150207105906"]];
+     // create gaussian blur filter
+     CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"];
+     [filter setValue:inputImage forKey:kCIInputImageKey];
+     [filter setValue:[NSNumber numberWithFloat:10.0] forKey:@"inputRadius"];
+     // blur image
+     CIImage *result = [filter valueForKey:kCIOutputImageKey];
+     CGImageRef cgImage = [context createCGImage:result fromRect:[result extent]];
+     UIImage *image = [UIImage imageWithCGImage:cgImage];
+     CGImageRelease(cgImage);
+     self.mainImageView.image = image;
+     */
+    
     
     //设置按显示图片
     [listSetBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
@@ -216,7 +232,7 @@
     //设置按钮响应事件
     [childrenListBtn addTarget:self action:@selector(childrenListAction:) forControlEvents:UIControlEventTouchUpInside];
     [_MainInfoScrollView addSubview:childrenListBtn];
-
+    
     
     
     //初始化房间信息
@@ -298,7 +314,7 @@
     //设置table是否可以滑动
     _listTypeTableView.scrollEnabled = NO;
     //隐藏table自带的cell下划线
-//    _listTypeTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //    _listTypeTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_listTypeView addSubview:_listTypeTableView];
     
     //提交按钮
@@ -326,7 +342,7 @@
     //    //公司信息
     if(tableView == self.RoomTableView){
         
-        return 160;
+        return 110;
     }
     
     if(tableView == self.RadarTableView){
@@ -420,10 +436,10 @@
             }
             else
             {
-               
+                
                 
                 [_refreshImgView setImage:[UIImage imageNamed:@"20150207105906"]];
-               
+                
             }
             
             
@@ -477,7 +493,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
             NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
-            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, cell.frame.size.width-10, 150)];
+            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, cell.frame.size.width-10, 100)];
             
             //设置按钮背景颜色
             [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
@@ -490,7 +506,25 @@
             RoomBtn.tag=201;
             [cell addSubview:RoomBtn];
             
+            //房间图标
+            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
+            [RoomImgView.layer setMasksToBounds:YES];
+            [RoomImgView.layer setBorderWidth:2];
             
+            [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            RoomImgView.tag=202;
+            [RoomBtn addSubview:RoomImgView];
+            
+            //房间名称
+            UILabel * RoomLbl =[[UILabel alloc]initWithFrame:CGRectMake(72, 17, cell.frame.size.width-100, 20)];
+            [RoomLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
+            [RoomLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [RoomLbl setTextColor:[UIColor whiteColor]];
+            [RoomLbl setTextAlignment:NSTextAlignmentLeft];
+            RoomLbl.tag=203;
+            [RoomBtn addSubview:RoomLbl];
             
         }
         if ([cell viewWithTag:201]!=nil) {
@@ -503,7 +537,13 @@
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
+            UIImageView * RoomImgView=(UIImageView *)[cell viewWithTag:202];
+            [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
             
+            UILabel * RoomLbl=(UILabel *)[cell viewWithTag:203];
+            [RoomLbl setText:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
+            
+            //            [LoginBtn setAlpha:0.4];
             
         }
         
@@ -570,13 +610,13 @@
 
 #pragma mark - Scroll
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-//    scrollView.
+    //    scrollView.
     
     if(huaHMSegmentedControl==0){
-//        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
-//        [scrollView setContentOffset:CGPointMake(320,0) animated:YES];
+        //        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
+        //        [scrollView setContentOffset:CGPointMake(320,0) animated:YES];
         //        [self.RoomTableView tableViewDidScroll:scrollView];
-
+        
     }
     else if(huaHMSegmentedControl==2){
         
@@ -604,8 +644,8 @@
         //   NSLog(@"segmentedControl3.selectedSegmentIndex is :%d",self.segmentedControl.selectedSegmentIndex);
         CGFloat pageWidth = scrollView.frame.size.width;
         NSInteger page = scrollView.contentOffset.x / pageWidth;
-//        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
-//        NSLog(@"scrollView.frame.size.width %f",scrollView.frame.size.width);
+        //        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
+        //        NSLog(@"scrollView.frame.size.width %f",scrollView.frame.size.width);
         if (scrollView.contentOffset.x!=320.000000) {
             huaHMSegmentedControl = (int)page;
             [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
@@ -670,6 +710,9 @@
 {
 
 }
+
+
+
 
 
 
