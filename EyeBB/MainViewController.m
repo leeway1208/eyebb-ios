@@ -677,7 +677,7 @@
 - (void)requestFinished:(ASIHTTPRequest *)request
 {
     NSString *responseString = [request responseString];
-    NSLog(@"responseStrings %@/n",responseString);
+    NSLog(@"responseStrings %@\n",responseString);
 }
 #pragma mark --
 #pragma mark --点击事件
@@ -715,7 +715,7 @@
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
 {
-    [self getRequest:self];
+    [self getRequest];
 }
 
 

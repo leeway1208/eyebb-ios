@@ -42,12 +42,9 @@ static HttpRequest *instance;
 }
 
 
--(void)getRequest:(id)delegate
+-(void)getRequest
 {
     
-//    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: [NSString stringWithFormat:@"%d",0]];
-    
-     [[self clientDelegates] setValue:delegate forKey:@"0"];
 NSURL *url = [NSURL URLWithString:@"http://test.eyebb.com:8089/kindergartenList"];
 
 
@@ -73,10 +70,13 @@ ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     [request setDelegate:self];
     [request startAsynchronous];
 }
-- (void)requestFinished:(ASIHTTPRequest *)request
 
+
+- (void)requestFinished:(ASIHTTPRequest *)request //delegate:(id)delegate
 {
-    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"];
+//    EyeBBHttpViewController *httpView = (EyeBBHttpViewController *)delegate;
+//     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
+    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: @"MainViewController"];
     
     [clientDelegate requestFinished:request];
     // 当以文本形式读取返回内容时用这个方法

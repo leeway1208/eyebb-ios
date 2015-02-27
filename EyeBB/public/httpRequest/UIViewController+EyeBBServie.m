@@ -15,8 +15,8 @@
     return [HttpRequest instance];
 }
 
--(void)getRequest:(id)delegate
+-(void)getRequest
 {
-    [[self HttpRequest] getRequest:self];
+    [[self HttpRequest] getRequest];
 }
 @end

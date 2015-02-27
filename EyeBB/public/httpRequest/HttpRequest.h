@@ -13,5 +13,5 @@
 +(HttpRequest *)instance;
 
 
--(void)getRequest:(id)delegate;
+-(void)getRequest;
 @end
