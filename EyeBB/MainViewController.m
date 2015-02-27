@@ -673,6 +673,13 @@
     }
 }
 #pragma mark --
+#pragma mark --服务器返回信息
+- (void)requestFinished:(ASIHTTPRequest *)request
+{
+    NSString *responseString = [request responseString];
+    NSLog(@"responseStrings %@/n",responseString);
+}
+#pragma mark --
 #pragma mark --点击事件
 
 /**弹出房间列表显示设置*/
@@ -708,7 +715,7 @@
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
 {
-
+    [self getRequest:self];
 }
 
 

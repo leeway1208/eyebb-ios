@@ -7,9 +7,9 @@
 //
 
 
+#import "EyeBBHttpViewController.h"
 
-
-@interface MainViewController : UIViewController
+@interface MainViewController : EyeBBHttpViewController
 
 
 @end

@@ -8,6 +8,10 @@
 
 
 #import "EyeBBHttpDelegate.h"
+#import "HttpRequest.h"
+#import "UIViewController+EyeBBServie.h"
 @interface EyeBBHttpViewController : UIViewController
-
+@property(nonatomic, retain)HttpRequest *httpRequest;
+- (void)requestFinished:(ASIHTTPRequest *)request;
+- (void)requestFailed:(ASIHTTPRequest *)request;
 @end

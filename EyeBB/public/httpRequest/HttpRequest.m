@@ -9,11 +9,45 @@
 #import "HttpRequest.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
+#import "EyeBBHttpViewController.h"
+@interface HttpRequest()
+@property(nonatomic, retain) NSMutableDictionary *clientDelegates;
+@end
 @implementation HttpRequest
+static HttpRequest *instance;
+
+@synthesize  clientDelegates;
+#pragma mark ---
+#pragma mark --- 处理业务逻辑委托
+-(NSMutableDictionary *)clientDelegates{
+    NSLog(@"--------------3------------------");
+    if(clientDelegates==nil){
+        clientDelegates = [[NSMutableDictionary alloc] init];
+    }
+    
+    return clientDelegates;
+}
+#pragma mark ---
+#pragma mark ---单例实现
++(HttpRequest *)instance{
+    NSLog(@"--------------2------------------");
+    static dispatch_once_t pred = 0;
+    dispatch_once(&pred, ^{
+        if(instance==nil){
+            instance = [[self alloc] init];
+        }
+        
+    });
+    return instance;
+}
 
 
--(void)getRequest
+-(void)getRequest:(id)delegate
 {
+    
+//    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: [NSString stringWithFormat:@"%d",0]];
+    
+     [[self clientDelegates] setValue:delegate forKey:@"0"];
 NSURL *url = [NSURL URLWithString:@"http://test.eyebb.com:8089/kindergartenList"];
 
 
@@ -27,6 +61,7 @@ ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 
 -(void)postRequest
 {
+    
     NSURL *url = [NSURL URLWithString:@"http://test.eyebb.com:8089/"];
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
@@ -41,9 +76,11 @@ ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 - (void)requestFinished:(ASIHTTPRequest *)request
 
 {
+    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"];
     
+    [clientDelegate requestFinished:request];
     // 当以文本形式读取返回内容时用这个方法
-    
+   
     NSString *responseString = [request responseString];
     
     //    // 当以二进制形式读取返回内容时用这个方法

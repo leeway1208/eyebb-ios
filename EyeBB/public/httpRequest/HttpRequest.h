@@ -10,4 +10,8 @@
 
 @interface HttpRequest : NSObject
 
++(HttpRequest *)instance;
+
+
+-(void)getRequest:(id)delegate;
 @end

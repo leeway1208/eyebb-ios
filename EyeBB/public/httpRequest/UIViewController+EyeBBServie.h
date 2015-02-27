@@ -1,5 +1,5 @@
 //
-//  EyeBBHttpDelegate.h
+//  UIViewController+EyeBBServie.h
 //  EyeBB
 //
 //  Created by evan.Yan on 15-2-27.
@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-@protocol EyeBBHttpDelegate<NSObject>
-- (void)requestFinished:(ASIHTTPRequest *)request;
+#import "EyeBBHttpViewController.h"
 
+@interface UIViewController(EyeBBServie)
+-(void)getRequest:(id)delegate;
 @end
