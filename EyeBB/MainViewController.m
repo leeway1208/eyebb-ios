@@ -10,7 +10,7 @@
 #import "HMSegmentedControl.h"
 #import "SettingsViewController.h"
 #import "JSONKit.h"
-@interface MainViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate>
 {
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
@@ -44,6 +44,9 @@
 @property (strong,nonatomic) UIButton * organizationShowBtn;
 /**机构列表*/
 @property (strong,nonatomic) UITableView * organizationTableView;
+
+//单击空白处关闭遮盖层
+@property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 //-------------------视图变量--------------------
 /**房间背景颜色数组*/
 @property (strong,nonatomic) NSArray *colorArray;
@@ -310,16 +313,34 @@
     //弹出遮盖层
     _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith, Drive_Height)];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
     [self.view addSubview:_PopupSView];
     [_PopupSView setHidden:YES];
     
+    //单击空白处关闭遮盖层
+    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+    self.singleTap.delegate = self;
+
+    [_PopupSView addGestureRecognizer:self.singleTap];
+    
+    //房间列表设置列表
     _listTypeView=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-88, Drive_Wdith-10, 176)];
     [_listTypeView setBackgroundColor:[UIColor whiteColor] ];
-    //设置按钮是否圆角
+    //设置列表是否圆角
     [_listTypeView.layer setMasksToBounds:YES];
     //圆角像素化
     [_listTypeView.layer setCornerRadius:4.0];
     [_PopupSView addSubview:_listTypeView];
+    
+    
+    //机构显示选择列表
+    _organizationTableView=[[UITableView alloc]initWithFrame:CGRectMake(20, 132, (Drive_Wdith-20)/2, 44)];
+    [_organizationTableView setBackgroundColor:[UIColor whiteColor] ];
+    _organizationTableView.dataSource = self;
+    _organizationTableView.delegate = self;
+    //隐藏table自带的cell下划线
+//    _organizationTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [_PopupSView addSubview:_organizationTableView];
     
     //设定title
     UILabel *listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
@@ -408,6 +429,9 @@
     }
     else if(tableView == self.listTypeTableView){
         return 2;
+    }
+    else if(tableView == self.organizationTableView){
+        return _organizationArray.count;
     }
     else{
         return  0;
@@ -507,6 +531,14 @@
         }
 //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    }
+    //
+    else if(tableView == self.organizationTableView){
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+        }
+        cell.textLabel.text=[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"];
+        cell.textLabel.textColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
     }
     //房间列表
     else if(tableView == self.RoomTableView){
@@ -706,7 +738,9 @@
 //        NSLog(@"responseStrings %@\n",request);
         NSLog(@"responseStrings %@\n",_organizationArray);
         [self.organizationShowBtn setTitle:[[_organizationArray objectAtIndex:0] objectForKey:@"nameSc"] forState:UIControlStateNormal];
-
+        CGRect  tempRect= _organizationTableView.frame;
+        _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
+        [_organizationTableView reloadData];
     }
     
 }
@@ -717,6 +751,9 @@
 -(void)changeAction:(id)sender
 {
     [_PopupSView setHidden:NO];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    [_listTypeView setHidden:NO];
+    [_organizationTableView setHidden:YES];
 }
 
 -(void)goToSettingAction:(id)sender
@@ -729,7 +766,10 @@
 /**显示机构选择列表*/
 -(void)changeRoomAction:(id)sender
 {
-    
+    [_PopupSView setHidden:NO];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.0];
+    [_listTypeView setHidden:YES];
+    [_organizationTableView setHidden:NO];
 }
 
 /**显示房间信息*/
@@ -742,6 +782,7 @@
 -(void)SaveAction:(id)sender
 {
     [_PopupSView setHidden:YES];
+
 }
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
@@ -750,6 +791,12 @@
 }
 
 
+#pragma mark - Handle Gestures
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)theSingleTap
+{
+   [_PopupSView setHidden:YES];
+}
 
 
 

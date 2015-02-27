@@ -23,7 +23,8 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     
-    self.view.backgroundColor=[UIColor whiteColor];
+    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
+    
     //    self.navigationController.hidesBottomBarWhenPushed=YES;
     
 //    self.arrayOfLanguages = [[[Localisator sharedInstance] availableLanguagesArray] copy];
