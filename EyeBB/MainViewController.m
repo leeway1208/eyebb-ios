@@ -8,6 +8,8 @@
 
 #import "MainViewController.h"
 #import "HMSegmentedControl.h"
+#import "SettingsViewController.h"
+
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     /**滑动HMSegmentedControl*/
@@ -43,6 +45,7 @@
 
 /**option button*/
 @property (strong,nonatomic) UIButton * settingButton;
+@property (nonatomic,strong) SettingsViewController *settingVc;
 
 @end
 
@@ -251,6 +254,20 @@
     _PersonageTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_PersonageTableView];
+    UIButton * settingButton = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
+    //设置按显示图片
+    [settingButton setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [settingButton setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [settingButton addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [settingButton.layer setMasksToBounds:NO];
+    //圆角像素化
+    //    [listSetBtn.layer setCornerRadius:4.0];
+    settingButton.tag=104;
+    [_PersonageTableView addSubview:settingButton];
+
     
     //弹出遮盖层
     _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith, Drive_Height)];
@@ -622,6 +639,13 @@
 -(void)changeAction:(id)sender
 {
     [_PopupSView setHidden:NO];
+}
+
+-(void)goToSettingAction:(id)sender
+{
+    SettingsViewController *svc = [[SettingsViewController alloc] init];
+    [self.navigationController pushViewController:svc animated:YES];
+//    reg.title = @"";
 }
 
 /**显示机构选择列表*/

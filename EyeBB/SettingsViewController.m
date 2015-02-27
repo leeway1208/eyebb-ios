@@ -8,7 +8,11 @@
 
 #import "SettingsViewController.h"
 
+
 @interface SettingsViewController ()
+
+@property (nonatomic,strong) UITableView * optionsTable;
+
 
 @end
 
@@ -24,6 +28,12 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (void)viewDidDisappear:(BOOL)animated{
+    [_optionsTable removeFromSuperview];
+    [self optionsTable:nil];
+
+}
 /*
 #pragma mark - Navigation
 
