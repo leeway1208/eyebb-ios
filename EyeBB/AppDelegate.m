@@ -35,7 +35,7 @@
     if(systemVersion>=7)
     {
         //navBar背景颜色
-        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+        [[UINavigationBar appearance] setBarTintColor:[UIColor colorWithRed:236.0f/255.0f green:66.0f/255.0f  blue:53.0f/255.0f alpha:1.0f]];
         
         UIColor * cc = [UIColor whiteColor];
         NSDictionary * dict = [NSDictionary dictionaryWithObject:cc forKey:UITextAttributeTextColor];
