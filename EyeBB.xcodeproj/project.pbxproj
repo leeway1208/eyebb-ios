@@ -18,9 +18,10 @@
 		20C14C9B1A9B09A60097C891 /* RegViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C14C9A1A9B09A60097C891 /* RegViewController.m */; };
 		20C14C9E1A9B4D0C0097C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA01A9B4D0C0097C891 /* Localizable.strings */; };
 		20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA51A9B69910097C891 /* 20150207105906.png */; };
-		20C320151A9F6CE100DCB519 /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C320141A9F6CE100DCB519 /* HttpRequest.m */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
 		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
+		32530F511AA002B400F66B6D /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F501AA002B400F66B6D /* HttpRequest.m */; };
+		32530F541AA006FC00F66B6D /* EyeBBHttpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F531AA006FC00F66B6D /* EyeBBHttpViewController.m */; };
 		3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3264D9491A9D6B72009CB9C2 /* ASIDataCompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F41A9D6B72009CB9C2 /* ASIDataCompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3264D94A1A9D6B72009CB9C2 /* ASIDataDecompressor.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F61A9D6B72009CB9C2 /* ASIDataDecompressor.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -88,11 +89,14 @@
 		20C14CA21A9B4E930097C891 /* zh-Hant-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-HK"; path = "zh-Hant-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA31A9B59980097C891 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA51A9B69910097C891 /* 20150207105906.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 20150207105906.png; sourceTree = "<group>"; };
-		20C320131A9F6CE100DCB519 /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpRequest.h; path = EyeBB/public/HttpRequest.h; sourceTree = "<group>"; };
-		20C320141A9F6CE100DCB519 /* HttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HttpRequest.m; path = EyeBB/public/HttpRequest.m; sourceTree = "<group>"; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
 		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
+		32530F4E1AA0029700F66B6D /* EyeBBHttpDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EyeBBHttpDelegate.h; path = EyeBB/public/httpRequest/EyeBBHttpDelegate.h; sourceTree = "<group>"; };
+		32530F4F1AA002B400F66B6D /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpRequest.h; path = EyeBB/public/httpRequest/HttpRequest.h; sourceTree = "<group>"; };
+		32530F501AA002B400F66B6D /* HttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HttpRequest.m; path = EyeBB/public/httpRequest/HttpRequest.m; sourceTree = "<group>"; };
+		32530F521AA006FC00F66B6D /* EyeBBHttpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EyeBBHttpViewController.h; path = EyeBB/public/httpRequest/EyeBBHttpViewController.h; sourceTree = "<group>"; };
+		32530F531AA006FC00F66B6D /* EyeBBHttpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EyeBBHttpViewController.m; path = EyeBB/public/httpRequest/EyeBBHttpViewController.m; sourceTree = "<group>"; };
 		3264D8F01A9D6B72009CB9C2 /* ASIAuthenticationDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASIAuthenticationDialog.h; sourceTree = "<group>"; };
 		3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ASIAuthenticationDialog.m; sourceTree = "<group>"; };
 		3264D8F21A9D6B72009CB9C2 /* ASICacheDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ASICacheDelegate.h; sourceTree = "<group>"; };
@@ -277,8 +281,7 @@
 		20C320121A9F6C8400DCB519 /* public */ = {
 			isa = PBXGroup;
 			children = (
-				20C320131A9F6CE100DCB519 /* HttpRequest.h */,
-				20C320141A9F6CE100DCB519 /* HttpRequest.m */,
+				32530F4D1AA0024900F66B6D /* httpRequest */,
 			);
 			name = public;
 			sourceTree = "<group>";
@@ -299,6 +302,18 @@
 			);
 			name = db;
 			path = EyeBB/db;
+			sourceTree = "<group>";
+		};
+		32530F4D1AA0024900F66B6D /* httpRequest */ = {
+			isa = PBXGroup;
+			children = (
+				32530F4F1AA002B400F66B6D /* HttpRequest.h */,
+				32530F501AA002B400F66B6D /* HttpRequest.m */,
+				32530F4E1AA0029700F66B6D /* EyeBBHttpDelegate.h */,
+				32530F521AA006FC00F66B6D /* EyeBBHttpViewController.h */,
+				32530F531AA006FC00F66B6D /* EyeBBHttpViewController.m */,
+			);
+			name = httpRequest;
 			sourceTree = "<group>";
 		};
 		3264D8EE1A9D6B72009CB9C2 /* ASIHTTPRequest */ = {
@@ -557,9 +572,10 @@
 				326A924E1A9C4AD300CAB4F3 /* HMSegmentedControl.m in Sources */,
 				3264D9511A9D6B72009CB9C2 /* ASICloudFilesCDNRequest.m in Sources */,
 				3264D94A1A9D6B72009CB9C2 /* ASIDataDecompressor.m in Sources */,
+				32530F541AA006FC00F66B6D /* EyeBBHttpViewController.m in Sources */,
 				3264D9561A9D6B72009CB9C2 /* ASICloudFilesObjectRequest.m in Sources */,
 				3264D95A1A9D6B72009CB9C2 /* ASIS3BucketRequest.m in Sources */,
-				20C320151A9F6CE100DCB519 /* HttpRequest.m in Sources */,
+				32530F511AA002B400F66B6D /* HttpRequest.m in Sources */,
 				326A92491A9C480D00CAB4F3 /* MainViewController.m in Sources */,
 				3264D95C1A9D6B72009CB9C2 /* ASIS3Request.m in Sources */,
 				3264D94F1A9D6B72009CB9C2 /* ASINetworkQueue.m in Sources */,
