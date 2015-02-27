@@ -9,23 +9,24 @@
 #import "MainViewController.h"
 #import "HMSegmentedControl.h"
 #import "SettingsViewController.h"
-
+#import "JSONKit.h"
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
 }
+//-------------------视图控件--------------------
 /**选项卡内容容器*/
 @property (strong, nonatomic) UIScrollView *MainInfoScrollView;
 /**实现选项卡功能的第三方控件*/
 @property (nonatomic, strong) HMSegmentedControl *segmentedControl;
-//房间信息
+/**房间信息*/
 @property (strong, nonatomic) UITableView *RoomTableView;
-//雷达
+/**雷达*/
 @property (strong, nonatomic) UITableView *RadarTableView;
-//简报
+/**简报*/
 @property (strong, nonatomic) UITableView *NewsTableView;
-//个人
+/**个人*/
 @property (strong, nonatomic) UITableView *PersonageTableView;
 /**弹出框*/
 @property (strong,nonatomic) UIScrollView * PopupSView;
@@ -39,9 +40,15 @@
 @property (strong,nonatomic) UIImageView * refreshImgView;
 /**是否显示所有房间图标*/
 @property (strong,nonatomic) UIImageView * ShowALLRoomImgView;
-
-
+/**选择机构按钮*/
+@property (strong,nonatomic) UIButton * organizationShowBtn;
+/**机构列表*/
+@property (strong,nonatomic) UITableView * organizationTableView;
+//-------------------视图变量--------------------
+/**房间背景颜色数组*/
 @property (strong,nonatomic) NSArray *colorArray;
+/**机构数组*/
+@property (strong,nonatomic) NSMutableArray * organizationArray;
 
 /**option button*/
 @property (strong,nonatomic) UIButton * settingButton;
@@ -56,6 +63,8 @@
     self.view.backgroundColor=[UIColor whiteColor];
     // Do any additional setup after loading the view.
     [self iv];
+    [self getRequest:@"kindergartenList" delegate:self];
+    
     [self lc];
 }
 
@@ -90,6 +99,9 @@
 -(void)iv
 {
     _colorArray=@[[UIColor colorWithRed:0.282 green:0.800 blue:0.922 alpha:1],[UIColor colorWithRed:0.392 green:0.549 blue:0.745 alpha:1],[UIColor colorWithRed:0.396 green:0.741 blue:0.561 alpha:1],[UIColor colorWithRed:0.149 green:0.686 blue:0.663 alpha:1],[UIColor colorWithRed:0.925 green:0.278 blue:0.510 alpha:1],[UIColor colorWithRed:0.690 green:0.380 blue:0.208 alpha:1],[UIColor colorWithRed:0.898 green:0.545 blue:0.682 alpha:1],[UIColor colorWithRed:0.643 green:0.537 blue:0.882 alpha:1],[UIColor colorWithRed:0.847 green:0.749 blue:0.216 alpha:1],[UIColor colorWithRed:0.835 green:0.584 blue:0.329 alpha:1]];
+    
+    _organizationArray=[[NSMutableArray alloc]init];
+    
 }
 
 /**
@@ -143,7 +155,7 @@
     _MainInfoScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, Drive_Wdith, Drive_Height-44)];
     
     [_MainInfoScrollView setDelegate:self];
-    _MainInfoScrollView.contentSize = CGSizeMake(Drive_Wdith*4, _MainInfoScrollView.frame.size.height);
+    _MainInfoScrollView.contentSize = CGSizeMake(Drive_Wdith*4, CGRectGetHeight(_MainInfoScrollView.frame));
     [_MainInfoScrollView setTag:101];
     // 滚动时,是否显示水平滚动条
     _MainInfoScrollView.showsHorizontalScrollIndicator = NO;
@@ -154,9 +166,9 @@
     _MainInfoScrollView.pagingEnabled = YES;
     [self.view addSubview:_MainInfoScrollView];
     
-    //室内定位TitelView
-    UIView *titelView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 54)];
-    titelView.backgroundColor=[UIColor colorWithRed:0.835 green:0.835 blue:0.835 alpha:1];
+    //室内定位titleView
+    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 54)];
+    titleView.backgroundColor=[UIColor colorWithRed:0.835 green:0.835 blue:0.835 alpha:1];
     UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 44.0f)];
     [labelTitle setBackgroundColor:[UIColor clearColor]];
     labelTitle.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
@@ -165,7 +177,7 @@
     
     labelTitle.text = @"室内定位";
     
-    [titelView addSubview:labelTitle];
+    [titleView addSubview:labelTitle];
     
     //室内定位条件刷选
     UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
@@ -197,34 +209,44 @@
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
     listSetBtn.tag=102;
-    [titelView addSubview:listSetBtn];
+    [titleView addSubview:listSetBtn];
     
-    [_MainInfoScrollView addSubview:titelView];
+    [_MainInfoScrollView addSubview:titleView];
     
     //房间显示选择View
-    UIView *RoomShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 54, Drive_Wdith, 44)];
-    RoomShowView.backgroundColor=[UIColor clearColor];
+    UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 54, Drive_Wdith, 44)];
+    organizationShowBtnShowView.backgroundColor=[UIColor clearColor];
     //室内定位显示选择
-    UIButton * RoomShowBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 0, 44, 44)];
-    //设置按显示titel
-    [RoomShowBtn setTitle:@"****" forState:UIControlStateNormal];
-    [RoomShowBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]  forState:UIControlStateNormal];
+    _organizationShowBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 0, Drive_Wdith-30, 44)];
+    //设置按显示title
+    [_organizationShowBtn setTitle:@"****" forState:UIControlStateNormal];
+    [_organizationShowBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]  forState:UIControlStateNormal];
+    //设置按钮title的对齐
+    [_organizationShowBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+    
+    [_organizationShowBtn setContentEdgeInsets:UIEdgeInsetsMake(0,0, 0, 20)];
+    
+    UIImageView * osBtnImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_organizationShowBtn.frame)-20,12,20,20)];
+    [osBtnImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+    [_organizationShowBtn addSubview:osBtnImgView];
+     
+    
     //设置按钮背景颜色
-    [RoomShowBtn setBackgroundColor:[UIColor clearColor]];
+    [_organizationShowBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [RoomShowBtn addTarget:self action:@selector(changeRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_organizationShowBtn addTarget:self action:@selector(changeRoomAction:) forControlEvents:UIControlEventTouchUpInside];
     //设置按钮是否圆角
-    [RoomShowBtn.layer setMasksToBounds:NO];
+    [_organizationShowBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-    RoomShowBtn.tag=103;
-    [RoomShowView addSubview:RoomShowBtn];
-    [_MainInfoScrollView addSubview:RoomShowView];
+    _organizationShowBtn.tag=103;
+    [organizationShowBtnShowView addSubview:_organizationShowBtn];
+    [_MainInfoScrollView addSubview:organizationShowBtnShowView];
     
     //室内定位显示选择
     UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-40, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
     
-    //设置按显示titel
+    //设置按显示title
     [childrenListBtn setTitle:@"儿童列表" forState:UIControlStateNormal];
     [childrenListBtn setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
     //设置按钮背景颜色
@@ -299,14 +321,14 @@
     [_listTypeView.layer setCornerRadius:4.0];
     [_PopupSView addSubview:_listTypeView];
     
-    //设定titel
-    UILabel *listTitelLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
-    [listTitelLal setText:@"设定"];
-    [listTitelLal setTextColor:[UIColor blackColor]];
-    [listTitelLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20]];
-    [listTitelLal setTextAlignment:NSTextAlignmentCenter];
-    [listTitelLal setBackgroundColor:[UIColor clearColor]];
-    [_listTypeView addSubview:listTitelLal];
+    //设定title
+    UILabel *listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
+    [listtitleLal setText:@"设定"];
+    [listtitleLal setTextColor:[UIColor blackColor]];
+    [listtitleLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20]];
+    [listtitleLal setTextAlignment:NSTextAlignmentCenter];
+    [listtitleLal setBackgroundColor:[UIColor clearColor]];
+    [_listTypeView addSubview:listtitleLal];
     
     _listTypeTableView= [[UITableView alloc]initWithFrame:CGRectMake(0, 44, CGRectGetWidth(_listTypeView.frame), 88)];
     _listTypeTableView.dataSource = self;
@@ -412,7 +434,7 @@
         if (indexPath.row==0) {
             if([cell viewWithTag:104]==nil)
             {
-                UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, cell.frame.size.width-60, 44)];
+                UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(cell.frame)-60, 44)];
                 [refreshLbl setBackgroundColor:[UIColor clearColor]];
                 [refreshLbl setText:@"自动刷新"];
                 [refreshLbl setTextColor:[UIColor blackColor]];
@@ -428,7 +450,7 @@
             }
             if([cell viewWithTag:105]==nil)
             {
-                _refreshImgView=[[UIImageView alloc]initWithFrame:CGRectMake(cell.frame.size.width-50, 7, 30, 30)];
+                _refreshImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-50, 7, 30, 30)];
                 [_refreshImgView setImage:[UIImage imageNamed:@"20150207105906"]];
                 [_refreshImgView setTag:105];
                 [cell addSubview:_refreshImgView];
@@ -448,7 +470,7 @@
         {
             if([cell viewWithTag:106]==nil)
             {
-                UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, cell.frame.size.width-60, 44)];
+                UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(cell.frame)-60, 44)];
                 [refreshLbl setBackgroundColor:[UIColor clearColor]];
                 [refreshLbl setText:@"查看所有房间"];
                 [refreshLbl setTextColor:[UIColor blackColor]];
@@ -465,7 +487,7 @@
             
             if([cell viewWithTag:107]==nil)
             {
-                _ShowALLRoomImgView=[[UIImageView alloc]initWithFrame:CGRectMake(cell.frame.size.width-50, 7, 30, 30)];
+                _ShowALLRoomImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-50, 7, 30, 30)];
                 [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
                 [_ShowALLRoomImgView setTag:107];
                 [cell addSubview:_ShowALLRoomImgView];
@@ -483,6 +505,7 @@
         {
             
         }
+//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     //房间列表
@@ -492,8 +515,8 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
-            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
-            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, cell.frame.size.width-10, 100)];
+//            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
+            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100)];
             
             //设置按钮背景颜色
             [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
@@ -518,7 +541,7 @@
             [RoomBtn addSubview:RoomImgView];
             
             //房间名称
-            UILabel * RoomLbl =[[UILabel alloc]initWithFrame:CGRectMake(72, 17, cell.frame.size.width-100, 20)];
+            UILabel * RoomLbl =[[UILabel alloc]initWithFrame:CGRectMake(72, 17, CGRectGetWidth(cell.frame)-100, 20)];
             [RoomLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
             [RoomLbl setFont:[UIFont systemFontOfSize: 18.0]];
             [RoomLbl setTextColor:[UIColor whiteColor]];
@@ -642,7 +665,7 @@
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView.tag == 101) {
         //   NSLog(@"segmentedControl3.selectedSegmentIndex is :%d",self.segmentedControl.selectedSegmentIndex);
-        CGFloat pageWidth = scrollView.frame.size.width;
+        CGFloat pageWidth = CGRectGetWidth(scrollView.frame);
         NSInteger page = scrollView.contentOffset.x / pageWidth;
         //        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
         //        NSLog(@"scrollView.frame.size.width %f",scrollView.frame.size.width);
@@ -674,10 +697,18 @@
 }
 #pragma mark --
 #pragma mark --服务器返回信息
-- (void)requestFinished:(ASIHTTPRequest *)request
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-    NSString *responseString = [request responseString];
-    NSLog(@"responseStrings %@\n",responseString);
+    if ([tag isEqualToString:@"kindergartenList"]) {
+        NSData *responseData = [request responseData];
+        _organizationArray=[[responseData mutableObjectFromJSONData] objectForKey:@"allLocationAreasInfo"];
+        
+//        NSLog(@"responseStrings %@\n",request);
+        NSLog(@"responseStrings %@\n",_organizationArray);
+        [self.organizationShowBtn setTitle:[[_organizationArray objectAtIndex:0] objectForKey:@"nameSc"] forState:UIControlStateNormal];
+
+    }
+    
 }
 #pragma mark --
 #pragma mark --点击事件
@@ -715,7 +746,7 @@
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
 {
-    [self getRequest];
+    [self getRequest:@"kindergartenList" delegate:self];
 }
 
 

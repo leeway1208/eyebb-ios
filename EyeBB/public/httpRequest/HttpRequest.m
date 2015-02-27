@@ -11,7 +11,8 @@
 #import "ASIFormDataRequest.h"
 #import "EyeBBHttpViewController.h"
 @interface HttpRequest()
-@property(nonatomic, retain) NSMutableDictionary *clientDelegates;
+@property(strong,nonatomic) NSMutableDictionary *clientDelegates;
+@property (strong,nonatomic) NSString *methodStr;
 @end
 @implementation HttpRequest
 static HttpRequest *instance;
@@ -42,18 +43,17 @@ static HttpRequest *instance;
 }
 
 
--(void)getRequest
+-(void)getRequest:(NSString *)resquestStr delegate:(id)delegate
 {
+    self.methodStr=resquestStr;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",resquestStr]];
+    [[self clientDelegates] setObject:delegate forKey:@"0"];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
-NSURL *url = [NSURL URLWithString:@"http://test.eyebb.com:8089/kindergartenList"];
-
-
-ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-
-[request setDelegate:self];
-
-[request startAsynchronous];
-
+    [request setDelegate:self];
+    
+    [request startAsynchronous];
+    
 }
 
 -(void)postRequest
@@ -62,10 +62,10 @@ ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     NSURL *url = [NSURL URLWithString:@"http://test.eyebb.com:8089/"];
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
-//    [request setPostValue:appraiseTextField.text forKey:@"app"];
-//    [request setPostValue:numberTextField.text   forKey:@"count"];
-//    [request setPostValue:goodsTextField.text    forKey:@"name"];
-//    [request setPostValue:priceTextField.text    forKey:@"price"];
+    //    [request setPostValue:appraiseTextField.text forKey:@"app"];
+    //    [request setPostValue:numberTextField.text   forKey:@"count"];
+    //    [request setPostValue:goodsTextField.text    forKey:@"name"];
+    //    [request setPostValue:priceTextField.text    forKey:@"price"];
     
     [request setDelegate:self];
     [request startAsynchronous];
@@ -74,14 +74,19 @@ ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 
 - (void)requestFinished:(ASIHTTPRequest *)request //delegate:(id)delegate
 {
-//    EyeBBHttpViewController *httpView = (EyeBBHttpViewController *)delegate;
-//     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
-    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: @"MainViewController"];
+    //    EyeBBHttpViewController *httpView = (EyeBBHttpViewController *)delegate;
+    //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
+
+    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
     
-    [clientDelegate requestFinished:request];
+    
+    [clientDelegate requestFinished:request tag:self.methodStr];
+    [[self clientDelegates] removeAllObjects];
+    
+    
     // 当以文本形式读取返回内容时用这个方法
-   
-    NSString *responseString = [request responseString];
+    
+//    NSString *responseString = [request responseString];
     
     //    // 当以二进制形式读取返回内容时用这个方法
     //
@@ -98,3 +103,4 @@ ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
 }
 
 @end
+

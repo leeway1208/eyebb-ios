@@ -54,7 +54,7 @@
         
         
     }
-    //设置NavBar的Titel属性（颜色和字体，字号）
+    //设置NavBar的title属性（颜色和字体，字号）
     [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
                                                           [UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1], UITextAttributeTextColor,
                                                           [UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1], UITextAttributeTextShadowColor,

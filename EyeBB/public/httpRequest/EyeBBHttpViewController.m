@@ -32,6 +32,6 @@
 
 #pragma mark ---
 #pragma mark --- 网络数据处理
-- (void)requestFinished:(ASIHTTPRequest *)request{}
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{}
 - (void)requestFailed:(ASIHTTPRequest *)request{}
 @end

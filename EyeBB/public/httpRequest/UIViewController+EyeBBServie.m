@@ -15,8 +15,8 @@
     return [HttpRequest instance];
 }
 
--(void)getRequest
+-(void)getRequest:(NSString *)resquestStr  delegate:(id)delegate
 {
-    [[self HttpRequest] getRequest];
+    [[self HttpRequest] getRequest:resquestStr delegate:self];
 }
 @end

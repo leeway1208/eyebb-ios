@@ -12,6 +12,6 @@
 #import "UIViewController+EyeBBServie.h"
 @interface EyeBBHttpViewController : UIViewController
 @property(nonatomic, retain)HttpRequest *httpRequest;
-- (void)requestFinished:(ASIHTTPRequest *)request;
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag;
 - (void)requestFailed:(ASIHTTPRequest *)request;
 @end

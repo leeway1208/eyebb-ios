@@ -13,5 +13,5 @@
 +(HttpRequest *)instance;
 
 
--(void)getRequest;
+-(void)getRequest:(NSString *)resquestStr  delegate:(id)delegate;
 @end

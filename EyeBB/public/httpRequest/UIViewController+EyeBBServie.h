@@ -10,5 +10,5 @@
 #import "EyeBBHttpViewController.h"
 
 @interface UIViewController(EyeBBServie)
--(void)getRequest;
+-(void)getRequest:(NSString *)resquestStr  delegate:(id)delegate;
 @end
