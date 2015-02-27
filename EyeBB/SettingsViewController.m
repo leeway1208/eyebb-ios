@@ -33,7 +33,7 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [_optionsTable removeFromSuperview];
     [self.view removeFromSuperview];
-   // [self optionsTable:nil];
+    [self setOptionsTable:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
@@ -49,6 +49,82 @@
     _optionsTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_optionsTable];
 
+}
+
+//标签数
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    return 2;
+}
+
+// 设置section的高度
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 40;
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    
+    UIView *v = nil;
+    v = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40)];
+    [v setBackgroundColor:[UIColor whiteColor]];
+    
+    UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(17.0f, 0.0f, Drive_Wdith-34, 40.0f)];
+    [labelTitle setBackgroundColor:[UIColor clearColor]];
+    labelTitle.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+    labelTitle.textAlignment = NSTextAlignmentLeft;
+    labelTitle.textColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    if (section == 0) {
+        
+        labelTitle.text = @"用户信息";
+        
+    }
+    else
+    {
+        labelTitle.text = @"联系信息";
+    }
+    [v addSubview:labelTitle];
+    return v;
+}
+
+// 设置cell的高度
+- (CGFloat)tableView:(UITableView *)atableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (indexPath.section==1&&indexPath.row==1) {
+        return 65;
+    }
+    else
+    {
+        return 40;
+    }
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    int num=3;
+    if (section==0) {
+        num=3;
+    }
+    else
+    {
+        num=2;
+    }
+    return num;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    static NSString *detailIndicated = @"tableCell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+        //        cell.tag = indexPath.row;
+        
+        
+    }
+    
+ 
+    return cell;
 }
 /*
 #pragma mark - Navigation
