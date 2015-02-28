@@ -21,6 +21,8 @@
 @property (nonatomic,strong) UITextField *nicknameTxt;
 //密码输入框
 @property (nonatomic,strong) UITextField *pDTxt;
+//验证密码输入框
+@property (nonatomic,strong) UITextField *verifyTxt;
 
 //邮箱输入框
 @property (nonatomic,strong) UITextField *emailTxt;
@@ -140,37 +142,51 @@
  *	@brief	验证信息
  *
  */
-//- (NSString *)verify:(NSString *)phone withpwd:(NSString *)pwd withver:(NSString *)ver withemail:(NSString *)email
-//{
-//    NSString * mag=nil;//返回变量值
-//    
-//    if(phone.length <= 0)
-//    {
-//        mag=@"请输入手机号码";
-//        return mag;
-//    }
+- (NSString *)verifyRequest:(NSString *)phone withpwd:(NSString *)pwd withver:(NSString *)ver withNickName:(NSString *)nickName withemail:(NSString *)email
+{
+    NSString * mag=nil;//返回变量值
+    
+    if(phone.length <= 0)
+    {
+        mag=@"请输入手机号码";
+        return mag;
+    }
 //    if([pub isMobileNumber:phone]==NO)
 //    {
 //        mag=@"用户名格式不正确";
 //        return mag;
 //    }
-//    if (pwd.length <= 0) {
-//        
-//        mag=@"密码不能为空";
-//        return mag;
-//    }
-//    if(ver.length <= 0||![pwd isEqualToString:ver])
-//    {
-//        mag=@"两次密码不一样";
-//        return mag;
-//    }
-//    if(email.length>0&&[pub validateEmail:email]==NO)
-//    {
-//        mag=@"邮箱格式不正确";
-//        return mag;
-//    }
-//    return mag;
-//}
+    if (nickName.length <= 0) {
+        
+        mag=@"暱称不能为空";
+        return mag;
+    }
+    if (pwd.length <= 0) {
+        
+        mag=@"密码不能为空";
+        return mag;
+    }
+    if(ver.length <= 0||![pwd isEqualToString:ver])
+    {
+        mag=@"两次密码不一样";
+        return mag;
+    }
+    if(email.length>0&&[self validateEmail:email]==NO)
+    {
+        mag=@"邮箱格式不正确";
+        return mag;
+    }
+    return mag;
+}
+
+//正则验证邮箱
+- (BOOL) validateEmail:(NSString *)email
+{
+    NSString *emailRegex = @"[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}";
+    NSPredicate *emailTest = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegex];
+    return [emailTest evaluateWithObject:email];
+}
+
 
 /**
  *  获取输入框的Y坐标
@@ -179,29 +195,32 @@
  */
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+
     if (textField == self.telTxt) {
-        textHeight=self.telTxt.frame.origin.y;
+        textHeight=134;
     }
     if (textField == self.nicknameTxt) {
-        textHeight=self.nicknameTxt.frame.origin.y;
+        textHeight=174;
     }
     if (textField == self.pDTxt) {
-        textHeight=self.pDTxt.frame.origin.y;
+        textHeight=214;
+    }
+    if (textField == self.verifyTxt) {
+        textHeight=254;
     }
     if (textField == self.emailTxt) {
-        textHeight=self.emailTxt.frame.origin.y;
+        textHeight=294;
     }
 }
 -(void)BasicRegkeyboardWillShow:(NSNotification *)note
 {
-    CGRect r = [ UIScreen mainScreen ].applicationFrame;
     NSDictionary *info = [note userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
     
     
     //自适应代码（输入法改变也可随之改变）
     
-    if((r.size.height-keyboardSize.height-48)<textHeight)
+    if((Drive_Height-keyboardSize.height-48)<textHeight)
     {
         [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
         [UIView setAnimationDuration:0.3];
@@ -211,32 +230,19 @@
 }
 -(void)BasicRegkeyboardWillHide:(NSNotification *)note
 {
-    CGRect r = [ UIScreen mainScreen ].applicationFrame;
+
     NSDictionary *info = [note userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-    
-//    if (myDelegate.systemVersion<7) {
-//        if((r.size.height-keyboardSize.height-48)<textHeight)
-//        {
-//            //还原
-//            [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
-//            [UIView setAnimationDuration:0.3];
-//            self.view.frame = CGRectMake(0.0f, 64.0f, self.view.frame.size.width, self.view.frame.size.height);
-//            [UIView commitAnimations];
-//        }
-//    }
-//    else
-//    {
-        if((r.size.height-keyboardSize.height-48)<textHeight)
+
+        if((Drive_Height-keyboardSize.height-48)<textHeight)
         {
             //还原
             [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
             [UIView setAnimationDuration:0.3];
-            self.view.frame = CGRectMake(0.0f, 64.0f, self.view.frame.size.width, self.view.frame.size.height);
+            self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
             [UIView commitAnimations];
         }
-//    }
-    
+
 }
 /**
  *	@brief	设置隐藏键盘
@@ -256,10 +262,9 @@
         [theTextField resignFirstResponder];
     }
 
-    
-//    if (theTextField == self.Verify) {
-//        [theTextField resignFirstResponder];
-//    }
+    if (theTextField == self.verifyTxt) {
+        [theTextField resignFirstResponder];
+    }
     
     return YES;
     
@@ -270,7 +275,7 @@
     [self.telTxt resignFirstResponder];
     [self.nicknameTxt resignFirstResponder];
     [self.pDTxt resignFirstResponder];
-    
+    [self.verifyTxt resignFirstResponder];
     [self.emailTxt resignFirstResponder];
     
 }
@@ -340,7 +345,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     int num=3;
     if (section==0) {
-        num=3;
+        num=4;
     }
     else
     {
@@ -371,8 +376,8 @@
                 _telTxt.leftView=imgV;//设置输入框内左边的图标
                 _telTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _telTxt.leftViewMode=UITextFieldViewModeAlways;
-                _telTxt.placeholder=@"电话(用户名)";//默认显示的字
-                _telTxt.secureTextEntry=YES;//设置成密码格式
+                _telTxt.placeholder=LOCALIZATION(@"text_phone_number");//默认显示的字
+                _telTxt.secureTextEntry=NO;//设置成密码格式
                 _telTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _telTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
                 _telTxt.delegate=self;//设置委托
@@ -398,8 +403,8 @@
                 _nicknameTxt.leftView=imgV;//设置输入框内左边的图标
                 _nicknameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _nicknameTxt.leftViewMode=UITextFieldViewModeAlways;
-                _nicknameTxt.placeholder=@"昵称";//默认显示的字
-                _nicknameTxt.secureTextEntry=YES;//设置成密码格式
+                _nicknameTxt.placeholder=LOCALIZATION(@"text_nick_name");//默认显示的字
+                _nicknameTxt.secureTextEntry=NO;//设置成密码格式
                 _nicknameTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _nicknameTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
                 _nicknameTxt.delegate=self;//设置委托
@@ -424,13 +429,38 @@
                 _pDTxt.leftView=imgV;//设置输入框内左边的图标
                 _pDTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _pDTxt.leftViewMode=UITextFieldViewModeAlways;
-                _pDTxt.placeholder=@"密码";//默认显示的字
+                _pDTxt.placeholder=LOCALIZATION(@"text_password");//默认显示的字
                 _pDTxt.secureTextEntry=YES;//设置成密码格式
                 _pDTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _pDTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
                 _pDTxt.delegate=self;//设置委托
                 _pDTxt.tag=103;
                 [cell addSubview:_pDTxt];
+                
+                UILabel * PDLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 39, self.view.frame.size.width-30, 1)];
+                [PDLbl.layer setBorderWidth:1.0]; //边框宽度
+                [PDLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
+                
+                [cell addSubview:PDLbl];
+            }
+        }
+        else if(indexPath.row==3)
+        {
+            if ([cell viewWithTag:106]==nil) {
+                _verifyTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
+                _verifyTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+                
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+                _verifyTxt.leftView=imgV;//设置输入框内左边的图标
+                _verifyTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+                _verifyTxt.leftViewMode=UITextFieldViewModeAlways;
+                _verifyTxt.placeholder=LOCALIZATION(@"text_verify");//默认显示的字
+                _verifyTxt.secureTextEntry=YES;//设置成密码格式
+                _verifyTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+                _verifyTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+                _verifyTxt.delegate=self;//设置委托
+                _verifyTxt.tag=106;
+                [cell addSubview:_verifyTxt];
                 
                 UILabel * PDLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 39, self.view.frame.size.width-30, 1)];
                 [PDLbl.layer setBorderWidth:1.0]; //边框宽度
@@ -451,8 +481,8 @@
                 _emailTxt.leftView=imgV;//设置输入框内左边的图标
                 _emailTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _emailTxt.leftViewMode=UITextFieldViewModeAlways;
-                _emailTxt.placeholder=@"电邮(可选)";//默认显示的字
-                _emailTxt.secureTextEntry=YES;//设置成密码格式
+                _emailTxt.placeholder=LOCALIZATION(@"text_email");//默认显示的字
+                _emailTxt.secureTextEntry=NO;//设置成密码格式
                 _emailTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _emailTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
                 _emailTxt.delegate=self;//设置委托
@@ -509,7 +539,28 @@
 /**提交注册信息*/
 -(void)regAction:(id)sender
 {
+    NSString *phoneStr = [self.telTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *NickNameStr= [self.nicknameTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *pwdStr = [self.pDTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *varStr = [self.verifyTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *emailStr = [self.emailTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
+    if([self verifyRequest:phoneStr withpwd:pwdStr withver:varStr withNickName:NickNameStr withemail:emailStr]!=nil)
+    {
+        
+        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+                                    message:[self verifyRequest:phoneStr withpwd:pwdStr withver:varStr withNickName:NickNameStr withemail:emailStr]
+                                   delegate:self
+                          cancelButtonTitle:@"确定"
+                          otherButtonTitles:nil] show];
+    }
+    else
+    {
+        if(emailStr==nil)emailStr=@"";
+        NSArray *tempArray=@[phoneStr,NickNameStr,pwdStr,emailStr,phoneStr];
+        [self postRequest:@"regService/api/regParents" RequestArray:tempArray delegate:self];
+        
+    }
 }
 
 /**返回*/

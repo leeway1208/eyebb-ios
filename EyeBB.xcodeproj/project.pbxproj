@@ -26,6 +26,7 @@
 		3209FFD01AA06C5300BC6C48 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFC91AA06C5300BC6C48 /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFCB1AA06C5300BC6C48 /* SerializationComplexEntities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */; };
+		3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
 		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
 		32530F511AA002B400F66B6D /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F501AA002B400F66B6D /* HttpRequest.m */; };
@@ -113,6 +114,7 @@
 		3209FFCB1AA06C5300BC6C48 /* SerializationComplexEntities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SerializationComplexEntities.m; sourceTree = "<group>"; };
 		3209FFD21AA1515700BC6C48 /* UIViewController+EyeBBDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBDB.h"; path = "EyeBB/db/UIViewController+EyeBBDB.h"; sourceTree = "<group>"; };
 		3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+EyeBBDB.m"; path = "EyeBB/db/UIViewController+EyeBBDB.m"; sourceTree = "<group>"; };
+		3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
 		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
@@ -194,6 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */,
 				3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */,
 				3264D9781A9D6BBB009CB9C2 /* libz.dylib in Frameworks */,
 				3264D9761A9D6BB4009CB9C2 /* CoreGraphics.framework in Frameworks */,
@@ -216,6 +219,7 @@
 		20BD16DF1A99FC7700039A31 = {
 			isa = PBXGroup;
 			children = (
+				3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */,
 				20C320121A9F6C8400DCB519 /* public */,
 				32530F4A1A9EFF4F00F66B6D /* db */,
 				3264D97D1A9D6E33009CB9C2 /* WebKit.framework */,

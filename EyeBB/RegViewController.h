@@ -6,8 +6,8 @@
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
+#import "EyeBBViewController.h"
 
-
-@interface RegViewController : UIViewController
+@interface RegViewController : EyeBBViewController
 
 @end

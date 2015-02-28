@@ -19,6 +19,7 @@
 "text_email"="Email (optional)";
 "text_phone_number"="Phone Number (User Name)";
 "text_password"="Password";
+"text_verify"="Verify";
 "text_login_account"="User Name";
 "text_select_kid_kindergarten"="Select your kid\&apos;s kindergarten";
 "text_fill_kid_name"="Fill in your kid\&apos;s name";

@@ -6,8 +6,8 @@
   Copyright (c) 2015年 EyeBB. All rights reserved.
 */
 //CFBundleDisplayName ="寶寶安";
-"reg"="註冊";
-"tel"="Tel";
+//"reg"="註冊";
+//"tel"="Tel";
 
 
 //<!-- Text strings -->
@@ -20,6 +20,7 @@
 "text_email"="電郵 (可選)";
 "text_phone_number"="電話 (用戶名)";
 "text_password"="密碼";
+"text_verify"="驗證密碼";
 "text_login_account"="用戶名";
 "text_select_kid_kindergarten"="選擇幼稚園";
 "text_forgot_password"="忘記密碼 ?";

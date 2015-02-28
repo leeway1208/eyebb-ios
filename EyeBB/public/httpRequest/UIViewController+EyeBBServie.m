@@ -15,8 +15,13 @@
     return [HttpRequest instance];
 }
 
--(void)getRequest:(NSString *)resquestStr  delegate:(id)delegate
+-(void)getRequest:(NSString *)requestStr  delegate:(id)delegate
 {
-    [[self HttpRequest] getRequest:resquestStr delegate:self];
+    [[self HttpRequest] getRequest:requestStr delegate:self];
+}
+
+-(void)postRequest:(NSString *)requestStr RequestArray:(NSArray *)requestArray delegate:(id)delegate
+{
+    [[self HttpRequest] postRequest:requestStr RequestArray:requestArray delegate:self];
 }
 @end

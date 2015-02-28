@@ -43,10 +43,10 @@ static HttpRequest *instance;
 }
 
 
--(void)getRequest:(NSString *)resquestStr delegate:(id)delegate
+-(void)getRequest:(NSString *)requestStr delegate:(id)delegate
 {
-    self.methodStr=resquestStr;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",resquestStr]];
+    self.methodStr=requestStr;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:@"0"];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
@@ -56,16 +56,21 @@ static HttpRequest *instance;
     
 }
 
--(void)postRequest
+-(void)postRequest:(NSString *)requestStr RequestArray:(NSArray *)requestArray delegate:(id)delegate
 {
-    
-    NSURL *url = [NSURL URLWithString:@"http://test.eyebb.com:8089/"];
+    self.methodStr=requestStr;
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
+   [[self clientDelegates] setObject:delegate forKey:@"0"];
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
-    //    [request setPostValue:appraiseTextField.text forKey:@"app"];
-    //    [request setPostValue:numberTextField.text   forKey:@"count"];
-    //    [request setPostValue:goodsTextField.text    forKey:@"name"];
-    //    [request setPostValue:priceTextField.text    forKey:@"price"];
+    if ([requestStr isEqualToString:@"regService/api/regParents"]) {
+        [request setPostValue:[requestArray objectAtIndex:0] forKey:@"accName"];
+        [request setPostValue:[requestArray objectAtIndex:1] forKey:@"name"];
+        [request setPostValue:[requestArray objectAtIndex:2] forKey:@"password"];
+        [request setPostValue:[requestArray objectAtIndex:3] forKey:@"email"];
+        [request setPostValue:[requestArray objectAtIndex:0] forKey:@"phoneNum"];
+
+    }
     
     [request setDelegate:self];
     [request startAsynchronous];
@@ -86,7 +91,7 @@ static HttpRequest *instance;
     
     // 当以文本形式读取返回内容时用这个方法
     
-//    NSString *responseString = [request responseString];
+    NSString *responseString = [request responseString];
     
     //    // 当以二进制形式读取返回内容时用这个方法
     //
