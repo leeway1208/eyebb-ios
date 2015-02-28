@@ -7,6 +7,8 @@
 //
 
 #import "RegViewController.h"
+#import <CommonCrypto/CommonDigest.h>
+#import <CommonCrypto/CommonCryptor.h>
 
 @interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -280,6 +282,19 @@
     
 }
 
+
+- (NSString *)getSha256String:(NSString *)srcString{
+    const char *cstr = [srcString UTF8String];
+    //使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64
+    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
+    //使用对应的CC_SHA256,CC_SHA384,CC_SHA512
+    CC_SHA256(cstr,  strlen(cstr), digest);
+    NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
+    for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
+        [result appendFormat:@"%02x", digest[i]];
+    }
+    return result;
+}
 #pragma mark --
 #pragma mark - 表单设置
 //标签数
@@ -549,7 +564,7 @@
     {
         
         [[[UIAlertView alloc] initWithTitle:@"系统提示"
-                                    message:[self verifyRequest:phoneStr withpwd:pwdStr withver:varStr withNickName:NickNameStr withemail:emailStr]
+                                    message:[self verifyRequest:phoneStr withpwd:[self getSha256String:pwdStr] withver:varStr withNickName:NickNameStr withemail:emailStr]
                                    delegate:self
                           cancelButtonTitle:@"确定"
                           otherButtonTitles:nil] show];

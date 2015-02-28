@@ -27,6 +27,7 @@
 		3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFCB1AA06C5300BC6C48 /* SerializationComplexEntities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */; };
 		3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */; };
+		3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
 		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
 		32530F511AA002B400F66B6D /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F501AA002B400F66B6D /* HttpRequest.m */; };
@@ -115,6 +116,8 @@
 		3209FFD21AA1515700BC6C48 /* UIViewController+EyeBBDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBDB.h"; path = "EyeBB/db/UIViewController+EyeBBDB.h"; sourceTree = "<group>"; };
 		3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+EyeBBDB.m"; path = "EyeBB/db/UIViewController+EyeBBDB.m"; sourceTree = "<group>"; };
 		3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
+		3209FFD71AA1AC6600BC6C48 /* KindlistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KindlistViewController.h; sourceTree = "<group>"; };
+		3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KindlistViewController.m; sourceTree = "<group>"; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
 		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
@@ -262,6 +265,8 @@
 				326A92481A9C480D00CAB4F3 /* MainViewController.m */,
 				92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */,
 				92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */,
+				3209FFD71AA1AC6600BC6C48 /* KindlistViewController.h */,
+				3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -615,6 +620,7 @@
 				3264D94E1A9D6B72009CB9C2 /* ASIInputStream.m in Sources */,
 				3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */,
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
+				3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
 				3264D94B1A9D6B72009CB9C2 /* ASIDownloadCache.m in Sources */,
