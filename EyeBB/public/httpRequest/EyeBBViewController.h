@@ -1,5 +1,5 @@
 //
-//  EyeBBHttpViewController.h
+//  EyeBBViewController.h
 //  EyeBB
 //
 //  Created by evan.Yan on 15-2-27.
@@ -9,8 +9,11 @@
 
 #import "EyeBBHttpDelegate.h"
 #import "HttpRequest.h"
+//访问服务器
 #import "UIViewController+EyeBBServie.h"
-@interface EyeBBHttpViewController : UIViewController
+//访问本地数据库
+#import "UIViewController+EyeBBDB.h"
+@interface EyeBBViewController : UIViewController
 @property(nonatomic, retain)HttpRequest *httpRequest;
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag;
 - (void)requestFailed:(ASIHTTPRequest *)request;

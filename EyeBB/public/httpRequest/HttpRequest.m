@@ -9,7 +9,7 @@
 #import "HttpRequest.h"
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
-#import "EyeBBHttpViewController.h"
+#import "EyeBBViewController.h"
 @interface HttpRequest()
 @property(strong,nonatomic) NSMutableDictionary *clientDelegates;
 @property (strong,nonatomic) NSString *methodStr;
@@ -74,10 +74,10 @@ static HttpRequest *instance;
 
 - (void)requestFinished:(ASIHTTPRequest *)request //delegate:(id)delegate
 {
-    //    EyeBBHttpViewController *httpView = (EyeBBHttpViewController *)delegate;
+    //    EyeBBViewController *httpView = (EyeBBViewController *)delegate;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
 
-    EyeBBHttpViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
+    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
     
     
     [clientDelegate requestFinished:request tag:self.methodStr];

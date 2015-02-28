@@ -10,7 +10,7 @@
 #import "HMSegmentedControl.h"
 #import "SettingsViewController.h"
 #import "JSONKit.h"
-@interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate>
+@interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
@@ -67,7 +67,7 @@
     // Do any additional setup after loading the view.
     [self iv];
     [self getRequest:@"kindergartenList" delegate:self];
-    
+
     [self lc];
 }
 

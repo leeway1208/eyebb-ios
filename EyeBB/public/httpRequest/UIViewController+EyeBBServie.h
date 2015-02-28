@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "EyeBBHttpViewController.h"
+#import "EyeBBViewController.h"
 
 @interface UIViewController(EyeBBServie)
 -(void)getRequest:(NSString *)resquestStr  delegate:(id)delegate;

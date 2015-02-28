@@ -1,18 +1,18 @@
 //
-//  EyeBBHttpViewController.m
+//  EyeBBViewController.m
 //  EyeBB
 //
 //  Created by evan.Yan on 15-2-27.
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
-#import "EyeBBHttpViewController.h"
+#import "EyeBBViewController.h"
 
-@interface EyeBBHttpViewController ()
+@interface EyeBBViewController ()
 
 @end
 
-@implementation EyeBBHttpViewController
+@implementation EyeBBViewController
 @synthesize httpRequest;
 -(HttpRequest *)httpRequest{
     if(httpRequest==nil){
