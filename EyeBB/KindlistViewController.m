@@ -46,7 +46,7 @@
  */
 -(void)iv
 {
-    
+    _cellHeight=120;
 }
 
 /**
@@ -115,7 +115,36 @@
         
     }
         if (indexPath.row==0) {
-       
+            if ([cell viewWithTag:101]==nil) {
+                UIView * bindView=[[UIView alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, _cellHeight-10)];
+                
+                [bindView setBackgroundColor:[UIColor colorWithRed:0.467 green:0.843 blue:0.639 alpha:1]];
+                //设置按钮是否圆角
+                [bindView.layer setMasksToBounds:YES];
+                //圆角像素化
+                [bindView.layer setCornerRadius:4.0];
+                bindView.tag=101;
+                [cell addSubview:bindView];
+                
+                //绑定栏目title
+                UILabel * bindLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 0, self.view.frame.size.width, 20)];
+                [bindLbl setText:LOCALIZATION(@"text_bind_child")];
+                [bindLbl setFont:[UIFont systemFontOfSize: 15.0]];
+                [bindLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
+                [bindLbl setTextAlignment:NSTextAlignmentCenter];
+                [bindView addSubview:bindLbl];
+                
+                for (int i=0; i<10; i++) {
+                    
+                }
+            }
+            else
+            {
+                [cell removeFromSuperview];
+                for (int i=0; i<10; i++) {
+                    
+                }
+            }
             
             
         }
