@@ -36,10 +36,14 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor=[UIColor colorWithRed:236.0f/255.0f green:66.0f/255.0f  blue:53.0f/255.0f alpha:1.0f];
+    self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     // Do any additional setup after loading the view.
     
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
+//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: LOCALIZATION(@"btn_options") style:UIBarButtonItemStyleBordered target:self action:@selector(settingsSelectLeftAction:)];
+    
+    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(settingsSelectLeftAction:)];
+   
+    
     //    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:236.0f/255.0f green:66.0f/255.0f  blue:53.0f/255.0f alpha:1.0f];
     [self loadWidget];
     // Do any additional setup after loading the view.
@@ -288,7 +292,7 @@
  // Pass the selected object to the new view controller.
  }
  */
--(void)selectLeftAction:(id)sender
+-(void)settingsSelectLeftAction:(id)sender
 {
     [[self navigationController] pushViewController:nil animated:YES];
 }

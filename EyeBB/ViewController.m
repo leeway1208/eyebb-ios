@@ -8,6 +8,7 @@
 
 #import "ViewController.h"
 #import "RegViewController.h"
+#import "LoginViewController.h"
 #import "MainViewController.h"
 
 @interface ViewController ()
@@ -22,7 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    
+    self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
     
     //    self.navigationController.hidesBottomBarWhenPushed=YES;
@@ -149,7 +150,11 @@
 
 -(void)loginAction:(id)sender
 {
-    MainViewController*reg = [[MainViewController alloc] init];
+//    MainViewController*reg = [[MainViewController alloc] init];
+//    [self.navigationController pushViewController:reg animated:YES];
+//    reg.title = @"";
+    
+    LoginViewController *reg = [[LoginViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
     reg.title = @"";
     

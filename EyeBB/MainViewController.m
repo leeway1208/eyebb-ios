@@ -64,6 +64,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor whiteColor];
+    self.title = LOCALIZATION(@"app_name");
     // Do any additional setup after loading the view.
     [self iv];
     [self getRequest:@"kindergartenList" delegate:self];
@@ -760,7 +761,7 @@
 {
     SettingsViewController *svc = [[SettingsViewController alloc] init];
     [self.navigationController pushViewController:svc animated:YES];
-//    reg.title = @"";
+    svc.title = LOCALIZATION(@"btn_options");
 }
 
 /**显示机构选择列表*/
