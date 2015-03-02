@@ -10,7 +10,8 @@
 #import "RegViewController.h"
 #import "LoginViewController.h"
 #import "MainViewController.h"
-
+//--test--
+#import "KindlistViewController.h"
 @interface WelcomeViewController ()
 
 @property (nonatomic,strong) RegViewController *reg;
@@ -141,11 +142,17 @@
 //        [alertView show];
 //    }
     
-        _reg = [[RegViewController alloc] init];
+//        _reg = [[RegViewController alloc] init];
+//    
+//    
+//    [self.navigationController pushViewController:_reg animated:YES];
+//    _reg.title = @"";
+//    
+    
+    KindlistViewController * dd= [[KindlistViewController alloc] init];
     
     
-    [self.navigationController pushViewController:_reg animated:YES];
-    _reg.title = @"";
+    [self.navigationController pushViewController:dd animated:YES];
 }
 
 -(void)loginAction:(id)sender
