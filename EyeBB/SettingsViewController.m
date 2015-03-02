@@ -12,23 +12,6 @@
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic,strong) UITableView * optionsTable;
-//@property (nonatomic,weak) UILabel * autoRefreshTimeLabel;
-//@property (nonatomic,weak) UILabel * enableVoiceLabel;
-//@property (nonatomic,weak) UILabel * enableVibrateLabel;
-//
-//@property (nonatomic,strong) UILabel * childListLabel;
-//@property (nonatomic,strong) UILabel * grantListLabel;
-//
-//@property (nonatomic,strong) UILabel * englishLabel;
-//@property (nonatomic,strong) UILabel * TChineseLabel;
-//@property (nonatomic,strong) UILabel * SChineseLabel;
-//
-//@property (nonatomic,strong) UILabel * updatePasswordLabel;
-//@property (nonatomic,strong) UILabel * updateNicknamesLabel;
-//
-//@property (nonatomic,weak) UILabel * aboutLabel;
-//@property (nonatomic,weak) UILabel * serviceLabel;
-//@property (nonatomic,weak) UILabel * privateLabel;
 
 @end
 
@@ -65,35 +48,11 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [_optionsTable removeFromSuperview];
-    //    [_autoRefreshTimeLabel removeFromSuperview];
-    //    [_enableVoiceLabel removeFromSuperview];
-    //    [_enableVibrateLabel removeFromSuperview];
-    //    [_childListLabel removeFromSuperview];
-    //    [_grantListLabel removeFromSuperview];
-    //    [_englishLabel removeFromSuperview];
-    //    [_TChineseLabel removeFromSuperview];
-    //    [_SChineseLabel removeFromSuperview];
-    //    [_updatePasswordLabel removeFromSuperview];
-    //    [_updateNicknamesLabel removeFromSuperview];
-    //    [_aboutLabel removeFromSuperview];
-    //    [_serviceLabel removeFromSuperview];
-    //    [_privateLabel removeFromSuperview];
+
     
     [self.view removeFromSuperview];
     [self setOptionsTable:nil];
-    //    [self setAutoRefreshTimeLabel:nil];
-    //    [self setEnableVoiceLabel:nil];
-    //    [self setEnableVibrateLabel:nil];
-    //    [self setChildListLabel:nil];
-    //    [self setGrantListLabel:nil];
-    //    [self setEnglishLabel:nil];
-    //    [self setTChineseLabel:nil];
-    //    [self setSChineseLabel:nil];
-    //    [self setUpdatePasswordLabel:nil];
-    //    [self setUpdateNicknamesLabel:nil];
-    //    [self setAboutLabel:nil];
-    //    [self setServiceLabel:nil];
-    //    [self setPrivateLabel:nil];
+
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
