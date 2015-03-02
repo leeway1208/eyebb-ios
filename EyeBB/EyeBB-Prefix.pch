@@ -31,3 +31,10 @@
 #define Drive_Height ([UIScreen mainScreen].applicationFrame.size.height)
 
 #define LOCALIZATION(text) [[Localisator sharedInstance] localizedStringForKey:(text)]
+
+
+
+//http request
+
+#define LOGIN_TO_CHECK @"j_spring_security_check"
+#define REG_PARENTS @"regService/api/regParents"

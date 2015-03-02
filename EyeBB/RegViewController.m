@@ -7,8 +7,8 @@
 //
 
 #import "RegViewController.h"
-#import <CommonCrypto/CommonDigest.h>
-#import <CommonCrypto/CommonCryptor.h>
+#import "CommonUtils.h"
+
 
 @interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -283,18 +283,7 @@
 }
 
 
-- (NSString *)getSha256String:(NSString *)srcString{
-    const char *cstr = [srcString UTF8String];
-    //使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64
-    unsigned char digest[CC_SHA256_DIGEST_LENGTH];
-    //使用对应的CC_SHA256,CC_SHA384,CC_SHA512
-    CC_SHA256(cstr,  strlen(cstr), digest);
-    NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
-    for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
-        [result appendFormat:@"%02x", digest[i]];
-    }
-    return result;
-}
+
 #pragma mark --
 #pragma mark - 表单设置
 //标签数
@@ -400,8 +389,8 @@
                 [cell addSubview:_telTxt];
                 
                 UILabel * telLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 40, self.view.frame.size.width-30, 1)];
-                 [telLbl.layer setBorderWidth:1.0]; //边框宽度
-                 [telLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
+                [telLbl.layer setBorderWidth:1.0]; //边框宽度
+                [telLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
                 
                 [cell addSubview:telLbl];
             }
@@ -564,7 +553,7 @@
     {
         
         [[[UIAlertView alloc] initWithTitle:@"系统提示"
-                                    message:[self verifyRequest:phoneStr withpwd:[self getSha256String:pwdStr] withver:varStr withNickName:NickNameStr withemail:emailStr]
+                                    message:[self verifyRequest:phoneStr withpwd:[CommonUtils getSha256String:pwdStr] withver:varStr withNickName:NickNameStr withemail:emailStr]
                                    delegate:self
                           cancelButtonTitle:@"确定"
                           otherButtonTitles:nil] show];
@@ -573,7 +562,7 @@
     {
         if(emailStr==nil)emailStr=@"";
         NSArray *tempArray=@[phoneStr,NickNameStr,pwdStr,emailStr,phoneStr];
-        [self postRequest:@"regService/api/regParents" RequestArray:tempArray delegate:self];
+        [self postRequest:REG_PARENTS  RequestArray:tempArray delegate:self];
         
     }
 }
