@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  WelcomeViewController.h
 //  EyeBB
 //
 //  Created by Evan on 15/2/22.
@@ -8,7 +8,7 @@
 
 
 
-@interface ViewController : UIViewController
+@interface WelcomeViewController : UIViewController
 
 
 @end

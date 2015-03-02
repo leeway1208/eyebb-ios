@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "ViewController.h"
+#import "WelcomeViewController.h"
 //#import "WelcomeViewController.h"
 @interface AppDelegate ()
 
@@ -28,7 +28,7 @@
 
     
     //set init view
-    ViewController *welcome = [[ViewController alloc] init];
+    WelcomeViewController *welcome = [[WelcomeViewController alloc] init];
     //添加NavBar
     UINavigationController * navController = [[UINavigationController alloc] initWithRootViewController:welcome] ; //初始化导航栏控制器
     //设置navBar属性

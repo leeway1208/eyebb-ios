@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		20BD16EE1A99FC7700039A31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16ED1A99FC7700039A31 /* main.m */; };
 		20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16F01A99FC7700039A31 /* AppDelegate.m */; };
-		20BD16F41A99FC7700039A31 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16F31A99FC7700039A31 /* ViewController.m */; };
 		20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20BD16F81A99FC7700039A31 /* Images.xcassets */; };
 		20BD17081A99FC7700039A31 /* EyeBBTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD17071A99FC7700039A31 /* EyeBBTests.m */; };
 		20BD17171A9A21C600039A31 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 20BD17141A9A21C600039A31 /* Default-568h@2x.png */; };
@@ -28,6 +27,7 @@
 		3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */; };
 		3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */; };
 		3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */; };
+		3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DACB1AA4151700661712 /* WelcomeViewController.m */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
 		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
 		32530F511AA002B400F66B6D /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F501AA002B400F66B6D /* HttpRequest.m */; };
@@ -84,8 +84,6 @@
 		20BD16ED1A99FC7700039A31 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20BD16EF1A99FC7700039A31 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		20BD16F01A99FC7700039A31 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		20BD16F21A99FC7700039A31 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		20BD16F31A99FC7700039A31 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		20BD16F81A99FC7700039A31 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		20BD17011A99FC7700039A31 /* EyeBBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyeBBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20BD17061A99FC7700039A31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -119,6 +117,8 @@
 		3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		3209FFD71AA1AC6600BC6C48 /* KindlistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KindlistViewController.h; sourceTree = "<group>"; };
 		3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KindlistViewController.m; sourceTree = "<group>"; };
+		3240DACA1AA4151700661712 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
+		3240DACB1AA4151700661712 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
 		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
@@ -256,10 +256,10 @@
 		20BD16EA1A99FC7700039A31 /* EyeBB */ = {
 			isa = PBXGroup;
 			children = (
+				3240DACA1AA4151700661712 /* WelcomeViewController.h */,
+				3240DACB1AA4151700661712 /* WelcomeViewController.m */,
 				20BD16EF1A99FC7700039A31 /* AppDelegate.h */,
 				20BD16F01A99FC7700039A31 /* AppDelegate.m */,
-				20BD16F21A99FC7700039A31 /* ViewController.h */,
-				20BD16F31A99FC7700039A31 /* ViewController.m */,
 				20BD16F81A99FC7700039A31 /* Images.xcassets */,
 				20BD16EB1A99FC7700039A31 /* Supporting Files */,
 				20C14C991A9B09A60097C891 /* RegViewController.h */,
@@ -619,12 +619,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20BD16F41A99FC7700039A31 /* ViewController.m in Sources */,
 				3264D9501A9D6B72009CB9C2 /* ASIWebPageRequest.m in Sources */,
 				3264D9551A9D6B72009CB9C2 /* ASICloudFilesObject.m in Sources */,
 				3264D94E1A9D6B72009CB9C2 /* ASIInputStream.m in Sources */,
 				3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */,
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
+				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
 				3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,

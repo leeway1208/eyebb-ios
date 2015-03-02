@@ -1,23 +1,23 @@
 //
-//  ViewController.m
+//  WelcomeViewController.m
 //  EyeBB
 //
 //  Created by Evan on 15/2/22.
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
-#import "ViewController.h"
+#import "WelcomeViewController.h"
 #import "RegViewController.h"
 #import "LoginViewController.h"
 #import "MainViewController.h"
 
-@interface ViewController ()
+@interface WelcomeViewController ()
 
 @property (nonatomic,strong) RegViewController *reg;
 //@property NSArray * arrayOfLanguages;
 @end
 
-@implementation ViewController
+@implementation WelcomeViewController
 
 #pragma mark - 原生方法
 - (void)viewDidLoad {
