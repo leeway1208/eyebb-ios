@@ -31,3 +31,4 @@
 #define Drive_Height ([UIScreen mainScreen].applicationFrame.size.height)
 
 #define LOCALIZATION(text) [[Localisator sharedInstance] localizedStringForKey:(text)]
+

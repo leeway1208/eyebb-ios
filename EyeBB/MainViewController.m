@@ -9,6 +9,7 @@
 #import "MainViewController.h"
 #import "HMSegmentedControl.h"
 #import "SettingsViewController.h"
+#import "KindlistViewController.h"
 #import "JSONKit.h"
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
@@ -68,7 +69,6 @@
     // Do any additional setup after loading the view.
     [self iv];
     [self getRequest:@"kindergartenList" delegate:self];
-
     [self lc];
 }
 
@@ -796,7 +796,9 @@
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)theSingleTap
 {
-   [_PopupSView setHidden:YES];
+    KindlistViewController * kindlist = [[KindlistViewController alloc] init];
+    [self.navigationController pushViewController:kindlist animated:YES];
+    kindlist.title = @"";
 }
 
 
