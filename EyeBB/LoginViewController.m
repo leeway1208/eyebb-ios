@@ -256,9 +256,7 @@
 }
 
 -(void)loginAction:(id)sender{
-    MainViewController *mvc = [[MainViewController alloc] init];
-    [self.navigationController pushViewController:mvc animated:YES];
-    self.title = @"";
+ 
     
     
     NSString *userAccount = [self.loginUserAccount.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -276,7 +274,8 @@
     else
     {
         
-        NSArray *tempArray=@[userAccount,hashUserPassword];
+        NSArray *tempArray=@[userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString];
+        NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         [self postRequest:LOGIN_TO_CHECK RequestArray:tempArray delegate:self];
         
     }
@@ -284,6 +283,20 @@
     
 }
 
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    
+    if ([tag isEqualToString:LOGIN_TO_CHECK]) {
+        NSData *responseData = [request responseData];
+        NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"login ----> %@ ",aString);
+    }
+
+    
+    
+//    MainViewController *mvc = [[MainViewController alloc] init];
+//    [self.navigationController pushViewController:mvc animated:YES];
+//    self.title = @"";
+}
 
 - (NSString *)verifyRequest:(NSString *)userAccount withpwd:(NSString *)passWord
 {

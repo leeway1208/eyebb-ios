@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EyeBBViewController.h"
 
-@interface LoginViewController : UIViewController
+@interface LoginViewController : EyeBBViewController
 
 @end
