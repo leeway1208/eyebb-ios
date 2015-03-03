@@ -8,6 +8,7 @@
 
 #import "RegViewController.h"
 #import "CommonUtils.h"
+#import "HttpRequestUtils.h"
 
 
 @interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
