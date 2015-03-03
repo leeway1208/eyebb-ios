@@ -21,7 +21,7 @@
     //使用对应的CC_SHA1,CC_SHA256,CC_SHA384,CC_SHA512的长度分别是20,32,48,64
     unsigned char digest[CC_SHA256_DIGEST_LENGTH];
     //使用对应的CC_SHA256,CC_SHA384,CC_SHA512
-    CC_SHA256(cstr,  strlen(cstr), digest);
+    CC_SHA256(cstr,  (CC_LONG)strlen(cstr), digest);
     NSMutableString* result = [NSMutableString stringWithCapacity:CC_SHA256_DIGEST_LENGTH * 2];
     for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
         [result appendFormat:@"%02x", digest[i]];

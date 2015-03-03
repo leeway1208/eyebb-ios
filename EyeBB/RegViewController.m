@@ -382,6 +382,10 @@
                 _telTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _telTxt.leftViewMode=UITextFieldViewModeAlways;
                 _telTxt.placeholder=LOCALIZATION(@"text_phone_number");//默认显示的字
+                
+                _telTxt.text=@"testUser3";
+                
+                
                 _telTxt.secureTextEntry=NO;//设置成密码格式
                 _telTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _telTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
@@ -408,6 +412,9 @@
                 _nicknameTxt.leftView=imgV;//设置输入框内左边的图标
                 _nicknameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _nicknameTxt.leftViewMode=UITextFieldViewModeAlways;
+                
+                _nicknameTxt.text=@"testUser3";
+                
                 _nicknameTxt.placeholder=LOCALIZATION(@"text_nick_name");//默认显示的字
                 _nicknameTxt.secureTextEntry=NO;//设置成密码格式
                 _nicknameTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
@@ -435,6 +442,9 @@
                 _pDTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _pDTxt.leftViewMode=UITextFieldViewModeAlways;
                 _pDTxt.placeholder=LOCALIZATION(@"text_password");//默认显示的字
+                
+                _pDTxt.text=@"111111";
+                
                 _pDTxt.secureTextEntry=YES;//设置成密码格式
                 _pDTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _pDTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
@@ -460,6 +470,9 @@
                 _verifyTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _verifyTxt.leftViewMode=UITextFieldViewModeAlways;
                 _verifyTxt.placeholder=LOCALIZATION(@"text_verify");//默认显示的字
+                
+                _verifyTxt.text=@"111111";
+                
                 _verifyTxt.secureTextEntry=YES;//设置成密码格式
                 _verifyTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
                 _verifyTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
@@ -550,7 +563,7 @@
     NSString *varStr = [self.verifyTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *emailStr = [self.emailTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     
-    if([self verifyRequest:phoneStr withpwd:pwdStr withver:varStr withNickName:NickNameStr withemail:emailStr]!=nil)
+    if([self verifyRequest:phoneStr withpwd:[CommonUtils getSha256String:pwdStr] withver:[CommonUtils getSha256String:pwdStr] withNickName:NickNameStr withemail:emailStr]!=nil)
     {
         
         [[[UIAlertView alloc] initWithTitle:@"系统提示"
@@ -562,6 +575,7 @@
     else
     {
         if(emailStr==nil)emailStr=@"";
+<<<<<<< Updated upstream
         
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
         
@@ -569,6 +583,10 @@
         [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
         //        NSArray *tempArray=@[phoneStr,NickNameStr,pwdStr,emailStr,phoneStr];
         //        [self postRequest:REG_PARENTS  RequestArray:tempArray delegate:self];
+=======
+        NSArray *tempArray=@[phoneStr,NickNameStr,[CommonUtils getSha256String:pwdStr],emailStr,phoneStr];
+        [self postRequest:REG_PARENTS  RequestDictionary:tempArray delegate:self];
+>>>>>>> Stashed changes
         
     }
 }

@@ -34,6 +34,8 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
+    
 }
 
 - (void)didReceiveMemoryWarning {

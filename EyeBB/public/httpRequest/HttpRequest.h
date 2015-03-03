@@ -15,5 +15,9 @@
 
 -(void)getRequest:(NSString *)requestStr  delegate:(id)delegate;
 
+<<<<<<< Updated upstream
 -(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate;
+=======
+-(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate;
+>>>>>>> Stashed changes
 @end

@@ -142,17 +142,17 @@
 //        [alertView show];
 //    }
     
-//        _reg = [[RegViewController alloc] init];
-//    
-//    
-//    [self.navigationController pushViewController:_reg animated:YES];
-//    _reg.title = @"";
-//    
-    
-    KindlistViewController * dd= [[KindlistViewController alloc] init];
+        _reg = [[RegViewController alloc] init];
     
     
-    [self.navigationController pushViewController:dd animated:YES];
+    [self.navigationController pushViewController:_reg animated:YES];
+    _reg.title = @"";
+//
+    
+//    KindlistViewController * dd= [[KindlistViewController alloc] init];
+//    
+//    
+//    [self.navigationController pushViewController:dd animated:YES];
 }
 
 -(void)loginAction:(id)sender

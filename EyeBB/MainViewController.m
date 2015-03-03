@@ -575,12 +575,21 @@
             
             //房间名称
             UILabel * RoomLbl =[[UILabel alloc]initWithFrame:CGRectMake(72, 17, CGRectGetWidth(cell.frame)-100, 20)];
-            [RoomLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
+            [RoomLbl setText:@"*****"];
             [RoomLbl setFont:[UIFont systemFontOfSize: 18.0]];
             [RoomLbl setTextColor:[UIColor whiteColor]];
             [RoomLbl setTextAlignment:NSTextAlignmentLeft];
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
+            
+            //当前房价人数
+            UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-80, 19, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            [roomKindNumView setBackgroundColor:[UIColor colorWithRed:0.165 green:0.165 blue:0.165 alpha:0.8]];
+            roomKindNumView.tag=204;
+            [cell addSubview:roomKindNumView];
+            
+//            UIImageView *numImgView=[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-80, 19, CGRectGetWidth(cell.frame)-80, 20)
             
         }
         if ([cell viewWithTag:201]!=nil) {
