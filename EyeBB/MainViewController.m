@@ -387,7 +387,7 @@
 
 /**tableViewCell的高度*/
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    //    //公司信息
+    //房间列表
     if(tableView == self.RoomTableView){
         
         return 110;
@@ -419,9 +419,9 @@
 
 /**table需要显示的行数*/
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
+    //房间列表
     if(tableView == self.RoomTableView){
-        return 11;
+        return 111;
     }
     else if(tableView == self.RadarTableView){
         return 1;
@@ -586,29 +586,56 @@
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
             
+            NSString *str=[NSString stringWithFormat:@"%zi",indexPath.row+1];
+            kindNum=str.length>3?3:str.length;
             //当前房价人数
-            UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-80, 21, 35+(15*kindNum), 20)];
+            UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20)];
             //设置按钮是否圆角
             [roomKindNumView.layer setMasksToBounds:YES];
             //圆角像素化
             [roomKindNumView.layer setCornerRadius:8.5];
-            [roomKindNumView setBackgroundColor:[UIColor colorWithRed:0.165 green:0.165 blue:0.165 alpha:0.8]];
+            [roomKindNumView setBackgroundColor:[UIColor colorWithRed:0.165 green:0.165 blue:0.165 alpha:0.5]];
             roomKindNumView.tag=204;
-            [cell addSubview:roomKindNumView];
+            [RoomBtn addSubview:roomKindNumView];
             
             UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, 20, 20)];
             [numImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+//            [numImgView setAlpha:0.5];
             [roomKindNumView addSubview:numImgView];
+           
             
-            
-            //房间名称
+            //房间孩子数量
             UILabel * KindNumLbl =[[UILabel alloc]initWithFrame:CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20)];
-            [KindNumLbl setText:@"1"];
+            [KindNumLbl setText:str];
+            [KindNumLbl setAlpha:0.6];
             [KindNumLbl setFont:[UIFont systemFontOfSize: 15.0]];
             [KindNumLbl setTextColor:[UIColor whiteColor]];
             [KindNumLbl setTextAlignment:NSTextAlignmentLeft];
             KindNumLbl.tag=205;
             [roomKindNumView addSubview:KindNumLbl];
+            
+            
+            int sNum=0;
+            for (int i=0; i<10; i++) {
+                
+                //房间图标
+                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+                if (i>0&&i%4==0) {
+                    sNum++;
+                }
+                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4);
+                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
+                [kindBtn.layer setMasksToBounds:YES];
+                [kindBtn.layer setBorderWidth:2];
+                
+                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+                //设置按钮响应事件
+                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+                kindBtn.tag=1000+i;
+                [RoomBtn addSubview:kindBtn];
+            }
+
             
         }
         if ([cell viewWithTag:201]!=nil) {
@@ -621,19 +648,47 @@
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
-            UIImageView * RoomImgView=(UIImageView *)[cell viewWithTag:202];
+            UIImageView * RoomImgView=(UIImageView *)[RoomBtn viewWithTag:202];
             [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
             
-            UILabel * RoomLbl=(UILabel *)[cell viewWithTag:203];
+            UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
             [RoomLbl setText:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
             
             //            [LoginBtn setAlpha:0.4];
             
+            NSString *str=[NSString stringWithFormat:@"%zi",indexPath.row+1];
+            kindNum=str.length>3?3:str.length;
+            UIView * roomKindNumView=(UIView *)[RoomBtn viewWithTag:204];
+            roomKindNumView.frame=CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20);
+            UILabel * KindNumLbl=(UILabel *)[RoomBtn viewWithTag:205];
+            KindNumLbl.frame=CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20);
+            [KindNumLbl setText:str];
+            
+//            int sNum=0;
+//            for (int i=0; i<10; i++) {
+//                
+//                //房间图标
+//                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+//                if (i>0&&i%4==0) {
+//                    sNum++;
+//                }
+//                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-100)/4+10)*(i%4),25+((CGRectGetWidth(RoomBtn.frame)-100)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-100)/4, (CGRectGetWidth(RoomBtn.frame)-100)/4);
+//                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
+//                [kindBtn.layer setMasksToBounds:YES];
+//                [kindBtn.layer setBorderWidth:2];
+//                
+//                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+//                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+//                //设置按钮响应事件
+//                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+//                kindBtn.tag=1000+i;
+//                [RoomBtn addSubview:kindBtn];
+//            }
+
         }
-         if ([cell viewWithTag:204]!=nil) {
-        UIView * roomKindNumView=(UIView *)[cell viewWithTag:204];
+       
         
-    }
+            }
     
     
     if (cell == nil) {

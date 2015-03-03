@@ -148,7 +148,7 @@
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(cell.frame)-100)/5, (CGRectGetWidth(cell.frame)-100)/5);
+                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
@@ -189,7 +189,7 @@
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(cell.frame)-100)/5, (CGRectGetWidth(cell.frame)-100)/5);
+                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
@@ -233,7 +233,7 @@
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(cell.frame)-100)/5, (CGRectGetWidth(cell.frame)-100)/5);
+                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
@@ -274,7 +274,7 @@
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(cell.frame)-100)/5, (CGRectGetWidth(cell.frame)-100)/5);
+                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
@@ -317,7 +317,7 @@
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(cell.frame)-100)/5, (CGRectGetWidth(cell.frame)-100)/5);
+                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
@@ -358,7 +358,7 @@
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(cell.frame)-100)/5, (CGRectGetWidth(cell.frame)-100)/5);
+                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
