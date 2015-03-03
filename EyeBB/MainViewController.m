@@ -652,7 +652,7 @@
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
                 [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
-                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+                [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
             }
@@ -714,7 +714,7 @@
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
                 [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
-                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+                [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
             }
@@ -922,6 +922,10 @@
 }
 
 
-
+/**儿童头像点击事件*/
+- (void)ShowKindAction:(id)sender
+{
+    
+}
 
 @end
