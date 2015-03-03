@@ -56,20 +56,19 @@ static HttpRequest *instance;
     
 }
 
--(void)postRequest:(NSString *)requestStr RequestArray:(NSArray *)requestArray delegate:(id)delegate
+-(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
 {
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
    [[self clientDelegates] setObject:delegate forKey:@"0"];
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
-    if ([requestStr isEqualToString:@"regService/api/regParents"]) {
-        [request setPostValue:[requestArray objectAtIndex:0] forKey:@"accName"];
-        [request setPostValue:[requestArray objectAtIndex:1] forKey:@"name"];
-        [request setPostValue:[requestArray objectAtIndex:2] forKey:@"password"];
-        [request setPostValue:[requestArray objectAtIndex:3] forKey:@"email"];
-        [request setPostValue:[requestArray objectAtIndex:0] forKey:@"phoneNum"];
 
+    
+    if ([requestDictionary count] > 0) {
+        for (NSString *key in requestDictionary) {
+            [request setPostValue:requestDictionary[key] forKey:key];
+        }
     }
     
     [request setDelegate:self];

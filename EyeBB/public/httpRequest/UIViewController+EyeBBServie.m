@@ -20,8 +20,8 @@
     [[self HttpRequest] getRequest:requestStr delegate:self];
 }
 
--(void)postRequest:(NSString *)requestStr RequestArray:(NSArray *)requestArray delegate:(id)delegate
+-(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
 {
-    [[self HttpRequest] postRequest:requestStr RequestArray:requestArray delegate:self];
+    [[self HttpRequest] postRequest:requestStr RequestDictionary:requestDictionary delegate:self];
 }
 @end

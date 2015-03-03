@@ -113,7 +113,7 @@
     _loginUserAccount.secureTextEntry=NO;//设置成密码格式
     _loginUserAccount.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
     _loginUserAccount.returnKeyType=UIReturnKeyDefault;//返回键的类型
-    [_loginUserAccount becomeFirstResponder];
+    //[_loginUserAccount becomeFirstResponder];
     [self.view addSubview:_loginUserAccount];
     
     UILabel * accountTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 125, self.view.frame.size.width-20, 1)];
@@ -274,9 +274,11 @@
     else
     {
         
-        NSArray *tempArray=@[userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString];
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password, nil];
         NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-        [self postRequest:LOGIN_TO_CHECK RequestArray:tempArray delegate:self];
+      
+        [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
+ 
         
     }
     

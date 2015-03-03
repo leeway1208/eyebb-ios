@@ -64,11 +64,11 @@
     [self setPDTxt:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
-//    _regTView=nil;
-//     _telTxt=nil;
-//     _nicknameTxt=nil;
-//     _PDTxt=nil;
-//    self.view=nil;
+    //    _regTView=nil;
+    //     _telTxt=nil;
+    //     _nicknameTxt=nil;
+    //     _PDTxt=nil;
+    //    self.view=nil;
 }
 
 
@@ -78,14 +78,14 @@
 }
 
 /*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
+ #pragma mark - Navigation
+ 
+ // In a storyboard-based application, you will often want to do a little preparation before navigation
+ - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+ // Get the new view controller using [segue destinationViewController].
+ // Pass the selected object to the new view controller.
+ }
+ */
 #pragma mark --
 #pragma mark - 初始化页面元素
 
@@ -111,16 +111,16 @@
     //隐藏table自带的cell下划线
     _regTView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_regTView];
-//    //版权信息
-//    UILabel * CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
-//    [CopyrightLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
-//    [CopyrightLbl setFont:[UIFont systemFontOfSize: 10.0]];
-//    [CopyrightLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
-//    [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];
-//    [self.view addSubview:CopyrightLbl];
-//    
-//    
-//
+    //    //版权信息
+    //    UILabel * CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
+    //    [CopyrightLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
+    //    [CopyrightLbl setFont:[UIFont systemFontOfSize: 10.0]];
+    //    [CopyrightLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
+    //    [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];
+    //    [self.view addSubview:CopyrightLbl];
+    //
+    //
+    //
     //注册键盘弹起与收起通知
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(BasicRegkeyboardWillShow:)
@@ -135,7 +135,7 @@
     UITapGestureRecognizer *tapGr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
     tapGr.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGr];
-  
+    
 }
 /*-----------------------信息处理函数---------------------------------*/
 
@@ -154,11 +154,11 @@
         mag=@"请输入手机号码";
         return mag;
     }
-//    if([pub isMobileNumber:phone]==NO)
-//    {
-//        mag=@"用户名格式不正确";
-//        return mag;
-//    }
+    //    if([pub isMobileNumber:phone]==NO)
+    //    {
+    //        mag=@"用户名格式不正确";
+    //        return mag;
+    //    }
     if (nickName.length <= 0) {
         
         mag=@"暱称不能为空";
@@ -198,7 +198,7 @@
  */
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-
+    
     if (textField == self.telTxt) {
         textHeight=134;
     }
@@ -233,19 +233,19 @@
 }
 -(void)BasicRegkeyboardWillHide:(NSNotification *)note
 {
-
+    
     NSDictionary *info = [note userInfo];
     CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
-
-        if((Drive_Height-keyboardSize.height-48)<textHeight)
-        {
-            //还原
-            [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
-            [UIView setAnimationDuration:0.3];
-            self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
-            [UIView commitAnimations];
-        }
-
+    
+    if((Drive_Height-keyboardSize.height-48)<textHeight)
+    {
+        //还原
+        [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
+        [UIView setAnimationDuration:0.3];
+        self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+    }
+    
 }
 /**
  *	@brief	设置隐藏键盘
@@ -253,7 +253,7 @@
  */
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
     if (theTextField == self.telTxt) {
-         [theTextField resignFirstResponder];
+        [theTextField resignFirstResponder];
     }
     if (theTextField == self.nicknameTxt) {
         [theTextField resignFirstResponder];
@@ -264,7 +264,7 @@
     if (theTextField == self.emailTxt) {
         [theTextField resignFirstResponder];
     }
-
+    
     if (theTextField == self.verifyTxt) {
         [theTextField resignFirstResponder];
     }
@@ -299,14 +299,14 @@
 
 ////点击右侧索引表项时调用
 //- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
-//    
+//
 //    NSString *key = [sectionTitleArray objectAtIndex:index];
 //    NSLog(@"sectionForSectionIndexTitle key=%@",key);
 //    if (key == UITableViewIndexSearch) {
 //        [listTableView setContentOffset:CGPointZero animated:NO];
 //        return NSNotFound;
 //    }
-//    
+//
 //    return index;
 //}
 //section （标签）标题显示
@@ -342,7 +342,7 @@
     }
     else
     {
-    return 40;
+        return 40;
     }
 }
 
@@ -366,7 +366,7 @@
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-//        cell.tag = indexPath.row;
+        //        cell.tag = indexPath.row;
         
         
     }
@@ -396,7 +396,7 @@
                 [cell addSubview:telLbl];
             }
             
-
+            
         }
         else if(indexPath.row==1)
         {
@@ -421,7 +421,7 @@
                 [nicknameLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
                 
                 [cell addSubview:nicknameLbl];
-
+                
             }
         }
         else if(indexPath.row==2)
@@ -522,16 +522,16 @@
                 RegBtn.tag=105;
                 [cell addSubview:RegBtn];
                 
-//                [tableView setSectionIndexColor:[UIColor clearColor]];
-//                [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-//                [tableView setSeparatorColor:[UIColor clearColor]];
-//                [tableView setBackgroundView:nil];
-//     [cell.textLabel setHighlighted:NO];
+                //                [tableView setSectionIndexColor:[UIColor clearColor]];
+                //                [tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+                //                [tableView setSeparatorColor:[UIColor clearColor]];
+                //                [tableView setBackgroundView:nil];
+                //     [cell.textLabel setHighlighted:NO];
                 [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-
+                
             }
         }
-
+        
     }
     
     
@@ -562,8 +562,13 @@
     else
     {
         if(emailStr==nil)emailStr=@"";
-        NSArray *tempArray=@[phoneStr,NickNameStr,pwdStr,emailStr,phoneStr];
-        [self postRequest:REG_PARENTS  RequestArray:tempArray delegate:self];
+        
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
+        
+        
+        [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
+        //        NSArray *tempArray=@[phoneStr,NickNameStr,pwdStr,emailStr,phoneStr];
+        //        [self postRequest:REG_PARENTS  RequestArray:tempArray delegate:self];
         
     }
 }
