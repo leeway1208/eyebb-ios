@@ -580,7 +580,6 @@
         
         [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
         
-        
     }
 }
 

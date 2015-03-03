@@ -64,8 +64,7 @@ static HttpRequest *instance;
     [[self clientDelegates] setObject:delegate forKey:@"0"];
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
-    
-    
+
     if ([requestDictionary count] > 0) {
         for (NSString *key in requestDictionary) {
             [request setPostValue:requestDictionary[key] forKey:key];

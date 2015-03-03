@@ -15,6 +15,9 @@
 {
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
+    
+    NSInteger kindNum;
+
 }
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
@@ -106,6 +109,7 @@
     
     _organizationArray=[[NSMutableArray alloc]init];
     
+    kindNum=1;
 }
 
 /**
@@ -583,13 +587,28 @@
             [RoomBtn addSubview:RoomLbl];
             
             //当前房价人数
-            UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-80, 19, CGRectGetWidth(cell.frame)-80, 20)];
-            
+            UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-80, 21, 35+(15*kindNum), 20)];
+            //设置按钮是否圆角
+            [roomKindNumView.layer setMasksToBounds:YES];
+            //圆角像素化
+            [roomKindNumView.layer setCornerRadius:8.5];
             [roomKindNumView setBackgroundColor:[UIColor colorWithRed:0.165 green:0.165 blue:0.165 alpha:0.8]];
             roomKindNumView.tag=204;
             [cell addSubview:roomKindNumView];
             
-//            UIImageView *numImgView=[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-80, 19, CGRectGetWidth(cell.frame)-80, 20)
+            UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, 20, 20)];
+            [numImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            [roomKindNumView addSubview:numImgView];
+            
+            
+            //房间名称
+            UILabel * KindNumLbl =[[UILabel alloc]initWithFrame:CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20)];
+            [KindNumLbl setText:@"1"];
+            [KindNumLbl setFont:[UIFont systemFontOfSize: 15.0]];
+            [KindNumLbl setTextColor:[UIColor whiteColor]];
+            [KindNumLbl setTextAlignment:NSTextAlignmentLeft];
+            KindNumLbl.tag=205;
+            [roomKindNumView addSubview:KindNumLbl];
             
         }
         if ([cell viewWithTag:201]!=nil) {
@@ -611,6 +630,8 @@
             //            [LoginBtn setAlpha:0.4];
             
         }
+         if ([cell viewWithTag:204]!=nil) {
+        UIView * roomKindNumView=(UIView *)[cell viewWithTag:204];
         
     }
     

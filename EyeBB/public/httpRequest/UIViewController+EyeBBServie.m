@@ -22,7 +22,6 @@
 
 
 -(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
-
 {
     [[self HttpRequest] postRequest:requestStr RequestDictionary:requestDictionary delegate:self];
 }

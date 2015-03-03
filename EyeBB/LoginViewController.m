@@ -278,7 +278,6 @@
         NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
       
         [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
- 
 
         
     }

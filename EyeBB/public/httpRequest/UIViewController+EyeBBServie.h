@@ -12,5 +12,7 @@
 @interface UIViewController(EyeBBServie)
 -(void)getRequest:(NSString *)requestStr  delegate:(id)delegate;
 
--(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate;
+
+-(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate;
+
 @end
