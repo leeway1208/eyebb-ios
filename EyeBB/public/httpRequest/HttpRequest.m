@@ -56,38 +56,27 @@ static HttpRequest *instance;
     
 }
 
-<<<<<<< Updated upstream
--(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
-=======
+
 -(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
->>>>>>> Stashed changes
 {
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
-   [[self clientDelegates] setObject:delegate forKey:@"0"];
+    [[self clientDelegates] setObject:delegate forKey:@"0"];
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
-
     
-<<<<<<< Updated upstream
+    
     if ([requestDictionary count] > 0) {
         for (NSString *key in requestDictionary) {
             [request setPostValue:requestDictionary[key] forKey:key];
         }
     }
-=======
-//        [request setPostValue:[requestArray objectAtIndex:0] forKey:@"accName"];
-//        [request setPostValue:[requestArray objectAtIndex:1] forKey:@"name"];
-//        [request setPostValue:[requestArray objectAtIndex:2] forKey:@"password"];
-//        [request setPostValue:[requestArray objectAtIndex:3] forKey:@"email"];
-//        [request setPostValue:[requestArray objectAtIndex:0] forKey:@"phoneNum"];
     
-    
->>>>>>> Stashed changes
     
     [request setDelegate:self];
     [request startAsynchronous];
 }
+
 
 
 - (void)requestFinished:(ASIHTTPRequest *)request //delegate:(id)delegate
@@ -95,11 +84,11 @@ static HttpRequest *instance;
     //    EyeBBViewController *httpView = (EyeBBViewController *)delegate;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
 
-//    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
-//    
-//    
-//    [clientDelegate requestFinished:request tag:self.methodStr];
-//    [[self clientDelegates] removeAllObjects];
+    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
+    
+    
+    [clientDelegate requestFinished:request tag:self.methodStr];
+    [[self clientDelegates] removeAllObjects];
     
     
     // 当以文本形式读取返回内容时用这个方法
