@@ -732,6 +732,7 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
+    //请求机构列表
     if ([tag isEqualToString:@"kindergartenList"]) {
         NSData *responseData = [request responseData];
         _organizationArray=[[responseData mutableObjectFromJSONData] objectForKey:@"allLocationAreasInfo"];

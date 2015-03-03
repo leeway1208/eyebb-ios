@@ -34,3 +34,143 @@
 
 
 
+
+#define CONNECT_TIMEOUT  5000
+/**
+ * 158.182.246.221 == test.eyebb.com (Testing)
+ * 158.182.8.221 == srv.eyebb.com (Production)
+ * 158.182.220.206 == test.eyebb.com (Testing)
+ * 158.182.246.223 == srv.eyebb.com (Production)
+ */
+#define SERVER_URL @"http://test.eyebb.com:8089/"
+// #define SERVER_URL @"http://158.182.220.206:8089/"
+// #define SERVER_URL @"http://158.182.246.223:8080/"
+// #define SERVER_URL @"http://158.182.220.203:8080/"
+#define HTTP_POST_RESPONSE_URL_NULL @"Url Null"
+#define HTTP_POST_RESPONSE_EXCEPTION @"Failed to connect to server"
+
+#define JSON_KEY_CHILD_ID @"childId"
+#define JSON_KEY_CHILD_NAME @"name"
+#define JSON_KEY_CHILD_ICON @"icon"
+
+#define LOGIN @"j_spring_security_check"
+#define JSON_KEY_USER @"guardian"
+#define JSON_KEY_USER_ID @"guardianId"
+#define JSON_KEY_USER_NAME @"name"
+#define JSON_KEY_USER_PHONE @"phoneNumber"
+#define JSON_KEY_USER_TYPE @"type"
+#define JSON_KEY_REGISTRATION_ID @"registrationId"
+
+#define GET_KINDERGARTEN_LIST @"kindergartenList"
+#define JSON_KEY_AREAS_INFO @"allLocationAreasInfo"
+#define JSON_KEY_AREAS_id @"areaId"
+#define JSON_KEY_KINDERGARTEN_NAME_EN @"name"
+#define JSON_KEY_KINDERGARTEN_NAME_TC @"nameTc"
+#define JSON_KEY_KINDERGARTEN_NAME_SC @"nameSc"
+
+// #define GET_CHILDREN_LIST =
+// "reportService/api/childrenList"
+#define GET_CHILDREN_INFO_LIST @"reportService/api/childrenInfoList"
+#define JSON_KEY_CHILDREN_INFO @"childrenInfo"
+
+#define GET_CHILDREN_LOC_LIST @"reportService/api/childrenLocList"
+#define JSON_KEY_CHILDREN_BY_AREA @"childrenByArea"
+#define JSON_KEY_CHILDREN_BEAN @"childrenBean"
+
+#define JSON_KEY_CHILD_REL @"childRel"
+#define JSON_KEY_CHILD @"child"
+#define JSON_KEY_CHILD_RELATION @"relation"
+#define JSON_KEY_CHILD_MAC_ADDRESS @"macAddress"
+#define JSON_KEY_CHILD_LAST_APPEAR_TIME @"lastAppearTime"
+#define JSON_KEY_CHILD_LOC_ID @"locId"
+
+#define JSON_KEY_LOCATION_ALL @"allLocations"
+#define JSON_KEY_LOCATION_AREA @"area"
+#define JSON_KEY_LOCATION_AREA_ID @"areaId"
+#define JSON_KEY_LOCATION_AREA_NAME @"name"
+#define JSON_KEY_LOCATION_AREA_NAME_TC @"nameTc"
+#define JSON_KEY_LOCATION_AREA_NAME_SC @"nameSc"
+#define JSON_KEY_LOCATION_AREA_ICON @"icon"
+#define JSON_KEY_LOCATIONS @"locations"
+#define JSON_KEY_LOCATION_ID @"locationId"
+#define JSON_KEY_LOCATION_NAME @"locationName"
+#define JSON_KEY_LOCATION_NAME_SC @"nameSc"
+#define JSON_KEY_LOCATION_NAME_TC @"nameTc"
+#define JSON_KEY_LOCATION_TYPE @"type"
+#define JSON_KEY_LOCATION_ICON @"icon"
+
+#define JSON_KEY_PARENTS @"parents"
+#define JSON_KEY_PARENTS_PHONE @"phoneNumber"
+#define JSON_KEY_PARENTS_TYPE @"type"
+
+#define GET_REPORTS @"reportService/api/stat"
+#define JSON_KEY_REPORT_PERFORMANCE @"dailyAvgFigure"
+#define JSON_KEY_REPORT_PERFORMANCE_LOC_NAME @"locName"
+#define JSON_KEY_REPORT_PERFORMANCE_DAILY @"daily"
+#define JSON_KEY_REPORT_PERFORMANCE_AVERAGE @"average"
+#define JSON_KEY_REPORT_PERFORMANCE_LAST_UPDATE_TIME @"lastUpdateTime"
+
+#define JSON_KEY_REPORT_ACTIVITY_INFO @"activityInfos"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_TITLE @"title"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_TITLE_TC @"titleTc"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_TITLE_SC @"titleSc"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_URL @"activity"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_URL_TC @"activityTc"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_URL_SC @"activitySc"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_ICON @"icon"
+#define JSON_KEY_REPORT_ACTIVITY_INFO_DATE @"validUntil"
+
+#define GUEST_CHILDREN @"masterService/api/guestChildren"
+#define JSON_KEY_CHILDREN_QUOTA @"childrenQuota"
+#define JSON_KEY_WITH_ACCESS @"withAccess"
+#define JSON_KEY_TOTAL_QUOTA @"totalQuota"
+#define JSON_KEY_QUOTA_LEFT @"quotaLeft"
+
+#define AUTH_FIND_GUESTS @"masterService/api/searchMasterGuests"
+#define JSON_KEY_GUESTS @"guests"
+#define JSON_KEY_MASTERS @"masters"
+#define JSON_KEY_CHILDREN_BY_GUARDIAN @"chilrenByGuardian"
+
+#define GET_NOTICES @"reportService/api/notices"
+#define JSON_KEY_NOTICES @"notices"
+#define JSON_KEY_NOTICES_TITLE @"title"
+#define JSON_KEY_NOTICES_TITLE_TC @"titleTc"
+#define JSON_KEY_NOTICES_TITLE_SC @"titleSc"
+#define JSON_KEY_NOTICES_NOTICE @"notice"
+#define JSON_KEY_NOTICES_NOTICE_TC @"noticeTc"
+#define JSON_KEY_NOTICES_NOTICE_SC @"noticeSc"
+#define JSON_KEY_NOTICES_ICON @"icon"
+#define JSON_KEY_NOTICES_VALID_UNTIL @"validUntil"
+
+#define SEARCH_GUEST @"masterService/api/searchGuest"
+#define UPDATE_REGISTRATION_ID @"/accSetting/api/updateDeviceId"
+#define ACC_NAME_CHECK @"regService/api/accNameCheck"
+#define REG_PARENTS @"regService/api/regParents"
+#define CHILD_CHECKING @"masterService/api/childChecking"
+#define CHILD_GUA_REL @"masterService/api/regGuaChildRel"
+#define CHECK_BEACON @"masterService/api/checkBeacon"
+#define DEVICE_TO_CHILD @"masterService/api/persistBeaconChildRel"
+#define FEED_BACK @"reportService/api/feedbacks"
+#define CHECK_IF_CHILD_HAS_BEACON @"masterService/api/hasBeaconOrNot"
+#define UNBIND_CHILD_BEACON @"masterService/api/unbindChildBeacon"
+#define GRANT_GUESTS @"masterService/api/grantGuestAccess"
+#define LOGIN_INFO @"reportService/api/loginInfo"
+#define UPDATE_PASSWORD @"accSetting/api/updatePassword"
+#define RESET_PASSWORD @"regService/api/resetPassword"
+#define GET_MASTER_CHILDREN @"masterService/api/masterChildren"
+#define CHANGE_NICKNAME @"accSetting/api/changeNickname"
+#define REQUIRE_OR_GET_QR_CODE @"masterService/api/childMacAddressAvailable"
+
+#define SERVER_RETURN_true @"true"
+#define SERVER_RETURN_TRUE @"TRUE"
+#define SERVER_RETURN_false @"false"
+#define SERVER_RETURN_fALSE @"fALSE"
+#define SERVER_RETURN_USED @"USED"
+#define SERVER_RETURN_N @"N"
+#define SERVER_RETURN_Y @"Y"
+#define SERVER_RETURN_T @"T"
+#define SERVER_RETURN_F @"F"
+#define SERVER_RETURN_E @"E"
+#define SERVER_RETURN_WG @"WG"
+#define SERVER_RETURN_NC @"NC"
+

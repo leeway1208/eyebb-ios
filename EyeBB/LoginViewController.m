@@ -104,7 +104,7 @@
     _loginUserAccount.frame = CGRectMake(10, 90,self.view.frame.size.width - 20 , 40);
     _loginUserAccount.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     
-    UIImageView* userAccountImg=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+    UIImageView* userAccountImg=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
     userAccountImg.frame = CGRectMake(0, 0, 20, 20);
     _loginUserAccount.leftView=userAccountImg;//设置输入框内左边的图标
     _loginUserAccount.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
@@ -129,7 +129,7 @@
     _loginPassword=[[UITextField alloc] initWithFrame:self.view.bounds];
     _loginPassword.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     _loginPassword.frame = CGRectMake(10, 145,self.view.frame.size.width - 20, 40);
-    UIImageView* passWordImg=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+    UIImageView* passWordImg=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
     passWordImg.frame = CGRectMake(0, 0, 20, 20);
     _loginPassword.leftView=passWordImg;//设置输入框内左边的图标
     _loginPassword.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
