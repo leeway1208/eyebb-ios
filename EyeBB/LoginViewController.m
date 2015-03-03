@@ -274,22 +274,13 @@
     else
     {
         
-<<<<<<< Updated upstream
+
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password, nil];
         NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
       
         [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
  
-=======
-<<<<<<< Updated upstream
-        NSArray *tempArray=@[userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString];
-        NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-        [self postRequest:LOGIN_TO_CHECK RequestArray:tempArray delegate:self];
-=======
-        NSArray *tempArray=@[userAccount,hashUserPassword];
-        [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempArray delegate:self];
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
         
     }
     

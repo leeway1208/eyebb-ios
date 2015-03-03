@@ -20,11 +20,9 @@
     [[self HttpRequest] getRequest:requestStr delegate:self];
 }
 
-<<<<<<< Updated upstream
--(void)postRequest:(NSString *)requestStr  RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
-=======
+
 -(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
->>>>>>> Stashed changes
+
 {
     [[self HttpRequest] postRequest:requestStr RequestDictionary:requestDictionary delegate:self];
 }

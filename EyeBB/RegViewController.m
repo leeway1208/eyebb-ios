@@ -575,7 +575,7 @@
     else
     {
         if(emailStr==nil)emailStr=@"";
-<<<<<<< Updated upstream
+
         
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
         
@@ -583,10 +583,7 @@
         [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
         //        NSArray *tempArray=@[phoneStr,NickNameStr,pwdStr,emailStr,phoneStr];
         //        [self postRequest:REG_PARENTS  RequestArray:tempArray delegate:self];
-=======
-        NSArray *tempArray=@[phoneStr,NickNameStr,[CommonUtils getSha256String:pwdStr],emailStr,phoneStr];
-        [self postRequest:REG_PARENTS  RequestDictionary:tempArray delegate:self];
->>>>>>> Stashed changes
+
         
     }
 }
