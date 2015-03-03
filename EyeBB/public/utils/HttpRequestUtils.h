@@ -129,21 +129,49 @@
 
 //这个是授权列表里面,添加一个新的guest用的
 #define SEARCH_GUEST @"masterService/api/searchGuest"
+//这个是gcm用的,就是推送用的
 #define UPDATE_REGISTRATION_ID @"/accSetting/api/updateDeviceId"
+//注册时第一个节目 当填完username后 textfield脱离焦点 发出请求检测这个username是否被用过,如果用过测返回错误
 #define ACC_NAME_CHECK @"regService/api/accNameCheck"
+//注册完第一个界面后 弹出dialog提示是否要进行绑定 如果绑定则进入第二个界面, 就来到这个界面进行孩子信息的注册
 #define CHILD_CHECKING @"masterService/api/childChecking"
+//第二个注册界面注册完后, 将会弹出一个dialog显示这个孩子, 然后点击这个孩子就会检测这个孩子是否已经被绑定过
 #define CHILD_GUA_REL @"masterService/api/regGuaChildRel"
+
+//检测这个device是否被用过
 #define CHECK_BEACON @"masterService/api/checkBeacon"
+
+//绑定孩子与device
 #define DEVICE_TO_CHILD @"masterService/api/persistBeaconChildRel"
+
+//反馈
 #define FEED_BACK @"reportService/api/feedbacks"
+
+//没被用过呢貌似- -
 #define CHECK_IF_CHILD_HAS_BEACON @"masterService/api/hasBeaconOrNot"
+
+//孩子专属界面里面 解绑device
 #define UNBIND_CHILD_BEACON @"masterService/api/unbindChildBeacon"
+
+//提交需要授权的孩子id 和解除授权的孩子id
 #define GRANT_GUESTS @"masterService/api/grantGuestAccess"
+
+//这个也没用过了哦
 #define LOGIN_INFO @"reportService/api/loginInfo"
+
+//更新密码
 #define UPDATE_PASSWORD @"accSetting/api/updatePassword"
+
+//重设密码 也就是忘记密码那里
 #define RESET_PASSWORD @"regService/api/resetPassword"
+
+//暂时没用到
 #define GET_MASTER_CHILDREN @"masterService/api/masterChildren"
+
+//改变昵称
 #define CHANGE_NICKNAME @"accSetting/api/changeNickname"
+
+//得到qrcode
 #define REQUIRE_OR_GET_QR_CODE @"masterService/api/childMacAddressAvailable"
 
 #define SERVER_RETURN_true @"true"
