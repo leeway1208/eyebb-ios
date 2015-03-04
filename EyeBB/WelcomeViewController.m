@@ -157,13 +157,13 @@
 
 -(void)loginAction:(id)sender
 {
-    MainViewController*reg = [[MainViewController alloc] init];
-    [self.navigationController pushViewController:reg animated:YES];
-    reg.title = @"";
-    
-//    LoginViewController *reg = [[LoginViewController alloc] init];
+//    MainViewController*reg = [[MainViewController alloc] init];
 //    [self.navigationController pushViewController:reg animated:YES];
 //    reg.title = @"";
+    
+    LoginViewController *reg = [[LoginViewController alloc] init];
+    [self.navigationController pushViewController:reg animated:YES];
+    reg.title = @"";
     
 //    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
 //    {

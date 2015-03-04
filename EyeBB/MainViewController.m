@@ -57,9 +57,7 @@
 /**机构数组*/
 @property (strong,nonatomic) NSMutableArray * organizationArray;
 
-/**option button*/
-@property (strong,nonatomic) UIButton * settingButton;
-@property (nonatomic,strong) SettingsViewController *settingVc;
+
 
 @end
 
@@ -886,7 +884,6 @@
     [self.navigationController pushViewController:kindlist animated:YES];
     kindlist.title = @"";
 }
-
 
 
 
