@@ -10,6 +10,8 @@
 #import "MainViewController.h"
 #import "CommonUtils.h"
 #import "HttpRequestUtils.h"
+#import "JSONKit.h"
+#import "UserDefaultsUtils.h"
 
 @interface LoginViewController ()
 
@@ -20,6 +22,8 @@
 @property (nonatomic,strong) UITextField *loginUserAccount;
 @property (nonatomic,strong) UITextField *loginPassword;
 @property (nonatomic,strong) UIButton *forgetPasswordLabel;
+
+
 @end
 
 @implementation LoginViewController
@@ -32,9 +36,36 @@
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
     
     
-    
+    [self loadParameter];
     [self loadWidget];
+    
+    
 }
+
+/**
+ * save the login status
+ */
+-(void)saveNSUserDefaults:(NSMutableArray *)guardian RegistrationId
+                         :(NSString *)registrationId
+{
+    NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+    NSLog(@"login sss----> %@ ",guardian);
+//    [loginStatus setObject:[guardian objectAtIndex:0] objectForKey:LoginViewController_accName] forKey:LoginViewController_accName];
+    [loginStatus setInteger:[[guardian objectAtIndex:1] intValue] forKey:LoginViewController_guardianId];
+    [loginStatus setObject:[guardian objectAtIndex:2] forKey:LoginViewController_name];
+    [loginStatus setInteger:[[guardian objectAtIndex:3] intValue] forKey:LoginViewController_phoneNumber];
+    [loginStatus setObject:[guardian objectAtIndex:4] forKey:LoginViewController_type];
+    [loginStatus setObject:registrationId forKey:LoginViewController_registrationId];
+    //    [loginStatus setInteger:myInteger forKey:@"myInteger"];
+    //    [loginStatus setObject:myString forKey:@"myString"];
+    //    [loginStatus setInteger:myInteger forKey:@"myInteger"];
+    //    [loginStatus setObject:myString forKey:@"myString"];
+     NSLog(@"login ----> %@ ",[guardian objectAtIndex:2]);
+    [loginStatus synchronize];
+    
+
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -70,6 +101,10 @@
 }
 
 
+-(void)loadParameter{
+    
+    
+}
 
 -(void)loadWidget{
     
@@ -256,7 +291,7 @@
 }
 
 -(void)loginAction:(id)sender{
- 
+    
     
     
     NSString *userAccount = [self.loginUserAccount.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -273,12 +308,12 @@
     }
     else
     {
-
+        
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password, nil];
         NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-      
+        
         [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
-
+        
         
     }
     
@@ -289,15 +324,28 @@
     
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
-        NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        NSLog(@"login ----> %@ ",aString);
+        
+        
+        NSMutableArray * guardian = [[NSMutableArray alloc]init];
+        guardian = [[responseData mutableObjectFromJSONData] objectForKey:@"guardian"];
+        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:@"registrationId"];
+        // NSLog(@"login ----> %@ ",guardian);
+        
+        if(guardian != nil){
+            
+           // [self saveNSUserDefaults:guardian RegistrationId:registrationId];
+            
+            
+            MainViewController *mvc = [[MainViewController alloc] init];
+            [self.navigationController pushViewController:mvc animated:YES];
+            self.title = @"";
+        }
+        
     }
-
     
     
-//    MainViewController *mvc = [[MainViewController alloc] init];
-//    [self.navigationController pushViewController:mvc animated:YES];
-//    self.title = @"";
+    
+    
 }
 
 - (NSString *)verifyRequest:(NSString *)userAccount withpwd:(NSString *)passWord

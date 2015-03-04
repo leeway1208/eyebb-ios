@@ -212,6 +212,7 @@
 		326A924D1A9C4AD300CAB4F3 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
 		9236323F1AA40CA600687F3F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		923632401AA40CA600687F3F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
+		927DBC781AA6C70F00923122 /* UserDefaultsUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsUtils.h; sourceTree = "<group>"; };
 		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		92FF92D21AA5592E00E04E0A /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
@@ -560,6 +561,7 @@
 				92FF92D21AA5592E00E04E0A /* CommonUtils.h */,
 				92FF92D31AA5592E00E04E0A /* CommonUtils.m */,
 				92FF92D51AA559B300E04E0A /* HttpRequestUtils.h */,
+				927DBC781AA6C70F00923122 /* UserDefaultsUtils.h */,
 			);
 			name = utils;
 			path = EyeBB/public/utils;

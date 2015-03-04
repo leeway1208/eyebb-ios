@@ -18,7 +18,7 @@
     int huaHMSegmentedControl;
     
     NSInteger kindNum;
-
+    
 }
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
@@ -246,7 +246,7 @@
     UIImageView * osBtnImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_organizationShowBtn.frame)-20,12,20,20)];
     [osBtnImgView setImage:[UIImage imageNamed:@"20150207105906"]];
     [_organizationShowBtn addSubview:osBtnImgView];
-     
+    
     
     //设置按钮背景颜色
     [_organizationShowBtn setBackgroundColor:[UIColor clearColor]];
@@ -285,7 +285,7 @@
     _RoomTableView.backgroundColor=[UIColor whiteColor];
     [_MainInfoScrollView addSubview:_RoomTableView];
     
-     //------------------------雷达-------------------------------
+    //------------------------雷达-------------------------------
     //初始化雷达
     _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
     
@@ -295,6 +295,7 @@
     [_MainInfoScrollView addSubview:_RadarTableView];
     
     //------------------------简报-------------------------------
+
     //简报名称
     UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 0, Drive_Wdith, 54)];
     NewsView.backgroundColor=[UIColor clearColor];
@@ -391,7 +392,6 @@
     [changeView addSubview:activitiesBtn];
     
     
-    
     //初始化简报
     _NewsTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame))];
     
@@ -419,7 +419,7 @@
     
     //室内定位条件刷选
     UIButton * SettingBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
-      //设置按显示图片
+    //设置按显示图片
     [SettingBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
     //设置按钮背景颜色
     [SettingBtn setBackgroundColor:[UIColor clearColor]];
@@ -427,6 +427,7 @@
     [SettingBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
 
     [PersonageView addSubview:SettingBtn];
+
     
     [_MainInfoScrollView addSubview:PersonageView];
     
@@ -466,7 +467,7 @@
     //单击空白处关闭遮盖层
     self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     self.singleTap.delegate = self;
-
+    
     [_PopupSView addGestureRecognizer:self.singleTap];
     
     //房间列表设置列表
@@ -487,7 +488,7 @@
     [_organizationTableView.layer setBorderWidth:2.0]; //边框宽度
     [_organizationTableView.layer setBorderColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:0.4].CGColor];//边框颜色
     //隐藏table自带的cell下划线
-//    _organizationTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //    _organizationTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_PopupSView addSubview:_organizationTableView];
     
     //设定title
@@ -532,7 +533,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //房间列表
     if(tableView == self.RoomTableView){
-//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        //        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
         if([cell viewWithTag:201]!=nil&&indexPath.row==1)
         {
@@ -686,7 +687,7 @@
         {
             
         }
-//        cell.selectionStyle = UITableViewCellSelectionStyleNone;
+        //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
     //选择机构
@@ -717,7 +718,7 @@
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
             
-//            [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
+            //            [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             //设置按钮响应事件
             [RoomBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
             //设置按钮是否圆角
@@ -761,9 +762,9 @@
             
             UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, 20, 20)];
             [numImgView setImage:[UIImage imageNamed:@"20150207105906"]];
-//            [numImgView setAlpha:0.5];
+            //            [numImgView setAlpha:0.5];
             [roomKindNumView addSubview:numImgView];
-           
+            
             
             //房间孩子数量
             UILabel * KindNumLbl =[[UILabel alloc]initWithFrame:CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20)];
@@ -798,7 +799,7 @@
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
             }
-
+            
             
         }
         if ([cell viewWithTag:201]!=nil) {
@@ -830,7 +831,7 @@
             
             for (UIView *view in [RoomBtn subviews])
             {
-//                NSLog(@"view.tag is%d",view.tag);
+                //                NSLog(@"view.tag is%d",view.tag);
                 
                 if ([view isKindOfClass:[UIView class]]&&view.tag>1000)
                 {
@@ -860,12 +861,13 @@
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
             }
-
+            
         }
-       
         
-            }
-    //个人信息
+
+        
+    }
+    
     else if (tableView==self.PersonageTableView)
     {
         
@@ -926,12 +928,12 @@
     }
     else
     {
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-        //        cell.tag = indexPath.row;
-        
-        
-    }
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            //        cell.tag = indexPath.row;
+            
+            
+        }
     }
     return cell;
 }
@@ -1033,7 +1035,7 @@
         NSData *responseData = [request responseData];
         _organizationArray=[[responseData mutableObjectFromJSONData] objectForKey:@"allLocationAreasInfo"];
         
-//        NSLog(@"responseStrings %@\n",request);
+        //        NSLog(@"responseStrings %@\n",request);
         NSLog(@"responseStrings %@\n",_organizationArray);
         [self.organizationShowBtn setTitle:[[_organizationArray objectAtIndex:0] objectForKey:@"nameSc"] forState:UIControlStateNormal];
         CGRect  tempRect= _organizationTableView.frame;
@@ -1057,9 +1059,11 @@
 -(void)goToSettingAction:(id)sender
 {
     self.settingVc = [[SettingsViewController alloc] init];
+    [self.navigationController pushViewController:self.settingVc  animated:YES];
+    self.settingVc .title = @"";
     
-    [self.navigationController pushViewController:self.settingVc animated:YES];
-    self.settingVc.title = LOCALIZATION(@"btn_options");
+    //    [self.navigationController pushViewController:self.settingVc animated:YES];
+    //    self.settingVc.title = LOCALIZATION(@"btn_options");
 }
 
 /**显示机构选择列表*/
@@ -1081,7 +1085,7 @@
 -(void)SaveAction:(id)sender
 {
     [_PopupSView setHidden:YES];
-
+    
 }
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
