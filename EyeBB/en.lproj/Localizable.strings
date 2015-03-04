@@ -37,7 +37,7 @@
 "text_beep_all_device"="Beep all devices?";
 "text_change"="Change";
 "text_today"="Today";
-"text_customized"="Customized:\&#160;";
+"text_customized"="Customized: ";
 "text_days"="days";
 "text_beep"="Beep";
 "text_school_bus_tracking"="School Bus Tracking";
@@ -77,7 +77,7 @@
 "text_error_email"="The Email is not in the correct format!";
 "text_error_nickname"="The Nickname is not in the correct format!";
 "text_error_password"="The Password is not in the correct format! \n(eg.A-Z a-z 0-9) Length:6-20";
-"text_loading"="Loading&#8230;";
+"text_loading"="Loading...;";
 "text_no_record"="No record";
 "text_view_all_room"="View All Rooms";
 "text_something_has_gone_wrong"="Oops, Something has gone wrong!";
@@ -159,7 +159,7 @@
 "text_sort_by"="Sort by";
 "text_name"="Name";
 "text_location"="Location";
-"text_search_kid"="Search kids&#8230;";
+"text_search_kid"="Search kids...;";
 "text_can_not_open_options"="Please, turn off the radar function.";
 "text_click_to_share"="(Click here to share ";
 "text_update_eyebb_device_firmware"="Update the eyebb device firmware";
@@ -167,7 +167,7 @@
 "text_get_the_lastest_eyebb_device_qr_code"="Apply for the latest QR code";
 "text_Apply_qr_code_fail"="Fail to get the QR code";
 "text_network_unavailable"="Network unavailable (Click to connect)";
-"text_network_connecting"="Connecting&#8230;";
+"text_network_connecting"="Connecting...;";
 "text_search_guset_activity_share_msg"="Invite him/her?。Link：play.google.com/xxxxxxxx";
 "text_no_new_firmware"="Sorry. There is no need to update the firmware of eyebb device.";
 
@@ -209,12 +209,12 @@
 "btn_options"="Setting";
 
 //<!-- Toast strings -->
-"toast_login"="Login&#8230;";
-"toast_signup"="Sign up&#8230;";
-"toast_loading"="Loading&#8230;";
+"toast_login"="Login...;";
+"toast_signup"="Sign up...;";
+"toast_loading"="Loading...;";
 "toast_please_select_kindergartens"="Please select your kid\&apos;s kindergarten";
 "toast_invalid_username_or_password"="Invalid username and password, or check your network.";
 "toast_login_failed"="Login failed, please try again";
-"toast_read_service"="Reading Service&#8230;";
-"toast_register_to_gcm"="Failed to get register id, retrying&#8230;";
+"toast_read_service"="Reading Service...;";
+"toast_register_to_gcm"="Failed to get register id, retrying...;";
 "toast_register_to_gcm_failed"="Failed to connect to server, please try again later";

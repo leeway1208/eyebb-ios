@@ -33,7 +33,7 @@
 "text_beep_all_device"="蜂鸣全部的设备?";
 "text_change"="修改";
 "text_today"="本日";
-"text_customized"="自定义:\&#160;";
+"text_customized"="自定义: ;";
 "text_days"="天";
 "text_beep"="蜂鸣";
 "text_school_bus_tracking"="校车轨迹";
@@ -71,7 +71,7 @@
 "text_error_email"="邮件地址格式错误!";
 "text_error_nickname"="暱称格式错误!";
 "text_error_password"="密码格式错误! \n(例如：A-Z a-z 0-9) 长度：6-20";
-"text_loading"="加载中&#8230;";
+"text_loading"="加载中...;";
 "text_refreshTime"="自动刷新时间 (秒):";
 "text_enter_refresh_time"="请输入更新时间";
 "text_no_record"="没有记录";
@@ -164,7 +164,7 @@
 "text_sort_by"="排序为";
 "text_name"="姓名";
 "text_location"="区域";
-"text_search_kid"="查找孩子&#8230;";
+"text_search_kid"="查找孩子...;";
 "text_can_not_open_options"="请先关闭雷达追踪";
 "text_click_to_share"="(点击邀请 ";
 "text_update_eyebb_device_firmware"="更新宝宝安设备固件";
@@ -172,7 +172,7 @@
 "text_get_the_lastest_eyebb_device_qr_code"="申请最近一次配对的宝宝安设备二维码";
 "text_Apply_qr_code_fail"="申请设备二维码失败,请使用监护人账号";
 "text_network_unavailable"="无法连接到服务器(点击连接)";
-"text_network_connecting"="连接中&#8230;";
+"text_network_connecting"="连接中...;";
 "text_search_guset_activity_share_msg"="我想授权你观看我的孩子情况，请你在完成安装宝宝安后通知我，我会再次授权给你。连结：play.google.com/xxxxxxxx";
 "text_no_new_firmware"="抱歉,您的eyebb固件是最新的.";
 
@@ -216,14 +216,14 @@
 
 
 //<!-- Toast strings -->
-"toast_login"="登录中&#8230;";
-"toast_signup"="注册中&#8230;";
-"toast_loading"="读取中&#8230;";
+"toast_login"="登录中...;";
+"toast_signup"="注册中...;";
+"toast_loading"="读取中...;";
 "toast_please_select_kindergartens"="请选择幼稚园";
 "toast_invalid_username_or_password"="帐号,密码错误或者请检查您的网路";
 "toast_login_failed"="登录失败, 请重新登录";
-"toast_read_service"="读取设备服务中&#8230;";
-"toast_register_to_gcm"="获取注册id失败,重试&#8230;";
+"toast_read_service"="读取设备服务中...;";
+"toast_register_to_gcm"="获取注册id失败,重试...;";
 "toast_register_to_gcm_failed"="连接服务器失败,请稍候再试";
 
 

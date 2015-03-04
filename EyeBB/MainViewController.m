@@ -314,7 +314,7 @@
     [NewsView addSubview:NewsLbl];
     
     //室内定位条件刷选
-    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-94, 5, 84, 44)];
+    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-82, 5, 62, 44)];
 
     //设置按钮背景颜色
     [NewsBtn setBackgroundColor:[UIColor clearColor]];
@@ -346,12 +346,12 @@
     if(revampLbl.text.length>2)
     {
        
-        NewsBtn.frame=CGRectMake(Drive_Wdith-((revampLbl.text.length*10)+45), 5, (revampLbl.text.length*10)+35, 44);
-         revampLbl.frame=CGRectMake(22.0f, 0.0f, CGRectGetWidth(NewsBtn.bounds)-32, 44.0f);
+        NewsBtn.frame=CGRectMake(Drive_Wdith-((revampLbl.text.length*9)+45), 5, (revampLbl.text.length*9)+35, 44);
+         revampLbl.frame=CGRectMake(22.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
     }
     
-    UIImageView * ImgView=[[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(NewsBtn.bounds)-10, 12, 10, 20)];
-    [ImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+    UIImageView * ImgView=[[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(NewsBtn.bounds)-12, 14, 12, 16)];
+    [ImgView setImage:[UIImage imageNamed:@"arrow_go"]];
     //    kindImgView.tag=206;
     [NewsBtn addSubview:ImgView];
     
@@ -374,8 +374,8 @@
     [performanceBtn.layer setCornerRadius:4.0];
     //设置按钮响应事件
     [performanceBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
-    
     [changeView addSubview:performanceBtn];
+    
     
     //活动
     UIButton * activitiesBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
@@ -393,7 +393,11 @@
     [activitiesBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [changeView addSubview:activitiesBtn];
-    
+
+    //间隔线
+    UILabel *divisionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 0.0f, 1, 48)];
+    [divisionLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [changeView addSubview:divisionLbl];
     
     //表现
     UIButton * PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 44)];
@@ -417,6 +421,20 @@
     todayLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
     todayLbl.text = LOCALIZATION(@"text_today");
     [PerformanceTimeBtn addSubview:todayLbl];
+    
+    
+    //自定义色块
+    UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(90.0f, 14.0f, 16.0f, 16.0f)];
+    [customizedColorLbl setBackgroundColor:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]];
+    [PerformanceTimeBtn addSubview:customizedColorLbl];
+    //自定义
+    UILabel *customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(110.0f, 14.0f, 150.0f, 16.0f)];
+    [customizedLbl setBackgroundColor:[UIColor clearColor]];
+    customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
+    customizedLbl.textAlignment = NSTextAlignmentLeft;
+    customizedLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    customizedLbl.text = LOCALIZATION(@"text_customized");
+    [PerformanceTimeBtn addSubview:customizedLbl];
 
     
     

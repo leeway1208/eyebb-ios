@@ -32,7 +32,7 @@
 "text_beep_all_device"="蜂鳴全部的設備?";
 "text_change"="修改";
 "text_today"="本日";
-"text_customized"="自定義:\&#160;";
+"text_customized"="自定義: ";
 "text_days"="天";
 "text_beep"="蜂鳴";
 "text_school_bus_tracking"="校車軌跡";
@@ -70,7 +70,7 @@
 "text_error_email"="郵件地址格式錯誤!";
 "text_error_nickname"="暱稱格式錯誤!";
 "text_error_password"="密碼格式錯誤! \n(例如：A-Z a-z 0-9) 長度：6-20";
-"text_loading"="加載中&#8230;";
+"text_loading"="加載中...;";
 "text_refreshTime"="自動刷新時間 (秒):";
 "text_enter_refresh_time"="請輸入更新時間";
 "text_no_record"="沒有記錄";
@@ -163,7 +163,7 @@
 "text_sort_by"="排序為";
 "text_name"="姓名";
 "text_location"="區域";
-"text_search_kid"="查找孩子&#8230;";
+"text_search_kid"="查找孩子...;";
 "text_can_not_open_options"="請先關閉雷達追踪";
 "text_click_to_share"="(點擊邀請 ";
 "text_update_eyebb_device_firmware"="更新寶寶安設備固件";
@@ -171,7 +171,7 @@
 "text_get_the_lastest_eyebb_device_qr_code"="申請最近一次配對的寶寶安設備二維碼";
 "text_Apply_qr_code_fail"="申請設備二維碼失敗,請使用監護人賬號";
 "text_network_unavailable"="無法連接到服務器(點擊連接)";
-"text_network_connecting"="連接中&#8230;";
+"text_network_connecting"="連接中...;";
 "text_search_guset_activity_share_msg"="我想授權你觀看我的孩子情況，請你在完成安裝寶寶安後通知我，我會再次授權給你。連結：play.google.com/xxxxxxxx";
 "text_no_new_firmware"="抱歉,您的eyebb固件是最新的.";
 
@@ -215,14 +215,14 @@
 
 
 //<!-- Toast strings -->
-"toast_login"="登錄中&#8230;";
-"toast_signup"="註冊中&#8230;";
-"toast_loading"="讀取中&#8230;";
+"toast_login"="登錄中...;";
+"toast_signup"="註冊中...;";
+"toast_loading"="讀取中...;";
 "toast_please_select_kindergartens"="請選擇幼稚園";
 "toast_invalid_username_or_password"="帳號,密碼錯誤或者請檢查您的網路";
 "toast_login_failed"="登錄失敗, 請重新登錄";
-"toast_read_service"="讀取設備服務中&#8230;";
-"toast_register_to_gcm"="获取注册id失败,重试&#8230;";
+"toast_read_service"="讀取設備服務中...;";
+"toast_register_to_gcm"="获取注册id失败,重试...;";
 "toast_register_to_gcm_failed"="連接服務器失敗,請稍候再試";
 
 

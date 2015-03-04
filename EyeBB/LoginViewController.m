@@ -144,6 +144,8 @@
     _loginUserAccount.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _loginUserAccount.leftViewMode=UITextFieldViewModeAlways;
     _loginUserAccount.placeholder=LOCALIZATION(@"text_login_account");//默认显示的字
+    //测试开发用
+    _loginUserAccount.text=@"test";
     _loginUserAccount.secureTextEntry=NO;//设置成密码格式
     _loginUserAccount.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
     _loginUserAccount.returnKeyType=UIReturnKeyDefault;//返回键的类型
@@ -169,6 +171,8 @@
     _loginPassword.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _loginPassword.leftViewMode=UITextFieldViewModeAlways;
     _loginPassword.placeholder=LOCALIZATION(@"text_password");//默认显示的字
+    //测试开发用
+    _loginPassword.text=@"000000";
     _loginPassword.secureTextEntry = YES;//设置成密码格式
     _loginPassword.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
     _loginPassword.returnKeyType=UIReturnKeyDefault;//返回键的类型
