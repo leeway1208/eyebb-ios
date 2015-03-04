@@ -212,7 +212,7 @@
         textHeight=254;
     }
     if (textField == self.emailTxt) {
-        textHeight=294;
+        textHeight=334;
     }
 }
 -(void)BasicRegkeyboardWillShow:(NSNotification *)note
@@ -222,12 +222,11 @@
     
     
     //自适应代码（输入法改变也可随之改变）
-    
     if((Drive_Height-keyboardSize.height-48)<textHeight)
     {
         [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
         [UIView setAnimationDuration:0.3];
-        self.view.frame = CGRectMake(0.0f, -80.0, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.frame = CGRectMake(0.0f, -(textHeight-(Drive_Height-keyboardSize.height-48)), self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
     }
 }

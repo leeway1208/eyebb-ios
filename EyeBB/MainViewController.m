@@ -395,12 +395,28 @@
     [changeView addSubview:activitiesBtn];
     
     
+    //活动
+    UIButton * PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 98, CGRectGetWidth(changeView.bounds)/2, 48)];
+    //设置按钮背景颜色
+    [PerformanceTimeBtn setBackgroundColor:[UIColor whiteColor]];
+    
+    //设置按钮响应事件
+    [PerformanceTimeBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [_MainInfoScrollView addSubview:PerformanceTimeBtn];
+    
+    //初始化表现列表
+    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 142, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-142)];
+    _PerformanceTableView.dataSource = self;
+    _PerformanceTableView.delegate = self;
+    //    [self.positionDetailsTableView setBounces:NO];
+    [_MainInfoScrollView addSubview:_PerformanceTableView];
+
+    
 
     
     //初始化活动列表
-    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame))];
-
-    
+    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
     _ActivitiesTableView.dataSource = self;
     _ActivitiesTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
@@ -540,16 +556,16 @@
     //房间列表
     if(tableView == self.RoomTableView){
         //        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
-        if([cell viewWithTag:201]!=nil&&indexPath.row==1)
-        {
-            UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
-            return (110+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*1);
-        }
-        else
-        {
+//        UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
+//        if([cell viewWithTag:201]!=nil&&indexPath.row==1)
+//        {
+//            UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
+//            return (110+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*1);
+//        }
+//        else
+//        {
             return 110;
-        }
+//        }
     }
     
     if(tableView == self.RadarTableView){
@@ -580,7 +596,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //房间列表
     if(tableView == self.RoomTableView){
-        return 111;
+        return 11;
     }
     else if(tableView == self.RadarTableView){
         return 1;
@@ -723,8 +739,7 @@
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
-            
-            //            [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
+
             //设置按钮响应事件
             [RoomBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
             //设置按钮是否圆角
@@ -846,7 +861,7 @@
             }
             
             int sNum=0;
-            for (int i=0; i<5; i++) {
+            for (int i=0; i<4; i++) {
                 
                 //房间图标
                 UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];

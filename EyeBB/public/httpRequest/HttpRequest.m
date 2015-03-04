@@ -82,7 +82,7 @@ static HttpRequest *instance;
 {
     //    EyeBBViewController *httpView = (EyeBBViewController *)delegate;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
-
+ NSString *responseString = [request responseString];
     EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
     
     
@@ -92,7 +92,7 @@ static HttpRequest *instance;
     
     // 当以文本形式读取返回内容时用这个方法
     
-    NSString *responseString = [request responseString];
+   
     
     //    // 当以二进制形式读取返回内容时用这个方法
     //
