@@ -395,15 +395,30 @@
     [changeView addSubview:activitiesBtn];
     
     
-    //活动
-    UIButton * PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 98, CGRectGetWidth(changeView.bounds)/2, 48)];
+    //表现
+    UIButton * PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 44)];
     //设置按钮背景颜色
-    [PerformanceTimeBtn setBackgroundColor:[UIColor whiteColor]];
+    [PerformanceTimeBtn setBackgroundColor:[UIColor yellowColor]];
     
     //设置按钮响应事件
     [PerformanceTimeBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [_MainInfoScrollView addSubview:PerformanceTimeBtn];
+    
+    //本日色块
+    UILabel *todayColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 14.0f, 16.0f, 16.0f)];
+    [todayColorLbl setBackgroundColor:[UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1]];
+    [PerformanceTimeBtn addSubview:todayColorLbl];
+    //本日
+    UILabel *todayLbl = [[UILabel alloc] initWithFrame:CGRectMake(35.0f, 14.0f, 50.0f, 16.0f)];
+    [todayLbl setBackgroundColor:[UIColor clearColor]];
+    todayLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
+    todayLbl.textAlignment = NSTextAlignmentLeft;
+    todayLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    todayLbl.text = LOCALIZATION(@"text_today");
+    [PerformanceTimeBtn addSubview:todayLbl];
+
+    
     
     //初始化表现列表
     _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 142, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-142)];
@@ -411,7 +426,7 @@
     _PerformanceTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_PerformanceTableView];
-
+//    _PerformanceTableView.hidden=YES;
     
 
     
@@ -421,6 +436,7 @@
     _ActivitiesTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
+      _ActivitiesTableView.hidden=YES;
     
     //------------------------个人信息-------------------------------
     
@@ -896,6 +912,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //房间图标
             UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            //设置按钮为圆形
             [messageImgView.layer setCornerRadius:CGRectGetHeight([messageImgView bounds]) / 2];
             [messageImgView.layer setMasksToBounds:YES];
             [messageImgView.layer setBorderWidth:2];
