@@ -29,8 +29,11 @@
 @property (strong, nonatomic) UITableView *RoomTableView;
 /**雷达*/
 @property (strong, nonatomic) UITableView *RadarTableView;
-/**简报*/
-@property (strong, nonatomic) UITableView *NewsTableView;
+/**表现*/
+@property (strong, nonatomic) UITableView *PerformanceTableView;
+/**活动*/
+@property (strong, nonatomic) UITableView *ActivitiesTableView;
+
 /**个人*/
 @property (strong, nonatomic) UITableView *PersonageTableView;
 /**弹出框*/
@@ -392,13 +395,16 @@
     [changeView addSubview:activitiesBtn];
     
     
-    //初始化简报
-    _NewsTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame))];
+
     
-    _NewsTableView.dataSource = self;
-    _NewsTableView.delegate = self;
+    //初始化活动列表
+    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame))];
+
+    
+    _ActivitiesTableView.dataSource = self;
+    _ActivitiesTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
-    [_MainInfoScrollView addSubview:_NewsTableView];
+    [_MainInfoScrollView addSubview:_ActivitiesTableView];
     
     //------------------------个人信息-------------------------------
     
@@ -551,7 +557,7 @@
         return 70;
     }
     
-    else if(tableView == self.NewsTableView){
+    else if(tableView == self.ActivitiesTableView){
         
         return 110;
         
@@ -579,7 +585,7 @@
     else if(tableView == self.RadarTableView){
         return 1;
     }
-    else if(tableView == self.NewsTableView){
+    else if(tableView == self.ActivitiesTableView){
         return 1;
     }
     else if(tableView == self.PersonageTableView){
