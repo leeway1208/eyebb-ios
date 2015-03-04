@@ -24,8 +24,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
-    self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
-    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
+    self.view.backgroundColor=[UIColor whiteColor];
+    UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2)];
+    [logoImgView setImage:[UIImage imageNamed:@"Image"]];
+    [self.view addSubview:logoImgView];
+//    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
     
     //    self.navigationController.hidesBottomBarWhenPushed=YES;
     

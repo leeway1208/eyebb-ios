@@ -11,6 +11,7 @@
 #import "SettingsViewController.h"
 #import "KindlistViewController.h"
 #import "JSONKit.h"
+#import "MSCellAccessory.h"
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
     /**滑动HMSegmentedControl*/
@@ -48,7 +49,8 @@
 @property (strong,nonatomic) UIButton * organizationShowBtn;
 /**机构列表*/
 @property (strong,nonatomic) UITableView * organizationTableView;
-
+/**用户名称*/
+@property (strong,nonatomic) UILabel * UserNameLbl;
 //单击空白处关闭遮盖层
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 //-------------------视图变量--------------------
@@ -57,6 +59,7 @@
 /**机构数组*/
 @property (strong,nonatomic) NSMutableArray * organizationArray;
 
+@property (nonatomic,strong) SettingsViewController *settingVc;
 
 
 @end
@@ -79,6 +82,14 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    if(self.settingVc!=nil)
+    {
+        self.settingVc=nil;
+    }
+    if(self.settingVc!=nil)
+    {
+        self.settingVc=nil;
+    }
 }
 
 
@@ -171,7 +182,7 @@
     //    _MainInfoScrollView.bounces = NO;
     _MainInfoScrollView.pagingEnabled = YES;
     [self.view addSubview:_MainInfoScrollView];
-    
+    //------------------------室内定位-------------------------------
     //室内定位titleView
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 54)];
     titleView.backgroundColor=[UIColor colorWithRed:0.835 green:0.835 blue:0.835 alpha:1];
@@ -274,7 +285,7 @@
     _RoomTableView.backgroundColor=[UIColor whiteColor];
     [_MainInfoScrollView addSubview:_RoomTableView];
     
-    
+     //------------------------雷达-------------------------------
     //初始化雷达
     _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
     
@@ -283,7 +294,8 @@
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_RadarTableView];
     
-    
+    //------------------------简报-------------------------------
+
     //初始化简报
     _NewsTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
     
@@ -292,26 +304,61 @@
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_NewsTableView];
     
+    //------------------------个人信息-------------------------------
+    
+    
+    //用户名
+    UIView *PersonageView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 0, Drive_Wdith, 54)];
+    PersonageView.backgroundColor=[UIColor colorWithRed:0.835 green:0.835 blue:0.835 alpha:1];
+    
+    _UserNameLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
+    [_UserNameLbl setBackgroundColor:[UIColor clearColor]];
+    _UserNameLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+    _UserNameLbl.textAlignment = NSTextAlignmentLeft;
+    _UserNameLbl.textColor=[UIColor blackColor];
+    
+    _UserNameLbl.text = @"*****";
+    
+    [PersonageView addSubview:_UserNameLbl];
+    
+    //室内定位条件刷选
+    UIButton * SettingBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
+      //设置按显示图片
+    [SettingBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [SettingBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [SettingBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+
+    [PersonageView addSubview:listSetBtn];
+    
+    [_MainInfoScrollView addSubview:PersonageView];
+    
+    //房间显示选择View
+    UIView *PersonageTitleView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 54, Drive_Wdith, 30)];
+    PersonageTitleView.backgroundColor=[UIColor clearColor];
+    
+    UILabel * PersonageLbl = [[UILabel alloc] initWithFrame:CGRectMake(-1.0f, -1.0f, Drive_Wdith+2, 31.0f)];
+    [PersonageLbl setBackgroundColor:[UIColor clearColor]];
+    PersonageLbl.font=[UIFont fontWithName:@"Helvetica" size:16];
+    PersonageLbl.textAlignment = NSTextAlignmentCenter;
+    PersonageLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    [PersonageLbl.layer setBorderWidth:1.0]; //边框宽度
+    [PersonageLbl.layer setBorderColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1].CGColor];//边框颜色
+    PersonageLbl.text = @"通告";
+    
+    [PersonageTitleView addSubview:PersonageLbl];
+    [_MainInfoScrollView addSubview:PersonageTitleView];
+    
     //初始化个人信息
-    _PersonageTableView= [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
+    _PersonageTableView= [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 84, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
     _PersonageTableView.dataSource = self;
     _PersonageTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_PersonageTableView];
-    UIButton * settingButton = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
-    //设置按显示图片
-    [settingButton setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
-    //设置按钮背景颜色
-    [settingButton setBackgroundColor:[UIColor clearColor]];
-    //设置按钮响应事件
-    [settingButton addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
-    //设置按钮是否圆角
-    [settingButton.layer setMasksToBounds:NO];
-    //圆角像素化
-    //    [listSetBtn.layer setCornerRadius:4.0];
-    settingButton.tag=104;
-    [_PersonageTableView addSubview:settingButton];
-
+    
+    
+    //------------------------遮盖层------------------------
     
     //弹出遮盖层
     _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith, Drive_Height)];
@@ -387,8 +434,17 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //房间列表
     if(tableView == self.RoomTableView){
-        
-        return 110;
+//        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
+        if([cell viewWithTag:201]!=nil&&indexPath.row==1)
+        {
+            UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
+            return (110+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*1);
+        }
+        else
+        {
+            return 110;
+        }
     }
     
     if(tableView == self.RadarTableView){
@@ -403,7 +459,7 @@
         
     }
     else if(tableView == self.PersonageTableView){
-        return 70;
+        return 100;
     }
     
     
@@ -428,7 +484,7 @@
         return 1;
     }
     else if(tableView == self.PersonageTableView){
-        return 1;
+        return 3;
     }
     else if(tableView == self.listTypeTableView){
         return 2;
@@ -535,7 +591,7 @@
 //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
-    //
+    //选择机构
     else if(tableView == self.organizationTableView){
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
@@ -550,11 +606,20 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
-//            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
-            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100)];
+            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
+            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*1)];
             
             //设置按钮背景颜色
-            [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
+            if(indexPath.row>9)
+            {
+                [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:(indexPath.row%10)]];
+            }
+            else
+            {
+                [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
+            }
+            
+//            [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             //设置按钮响应事件
             [RoomBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
             //设置按钮是否圆角
@@ -625,11 +690,13 @@
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
-                
+                if (i==2) {
+                    [kindBtn setAlpha:0.5];
+                }
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
                 [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
-                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+                [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
             }
@@ -638,6 +705,7 @@
         }
         if ([cell viewWithTag:201]!=nil) {
             UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
+            RoomBtn.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*1);
             if(indexPath.row>9)
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:(indexPath.row%10)]];
@@ -662,68 +730,76 @@
             KindNumLbl.frame=CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20);
             [KindNumLbl setText:str];
             
-//            int sNum=0;
-//            for (int i=0; i<10; i++) {
-//                
-//                //房间图标
-//                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
-//                if (i>0&&i%4==0) {
-//                    sNum++;
-//                }
-//                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-100)/4+10)*(i%4),25+((CGRectGetWidth(RoomBtn.frame)-100)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-100)/4, (CGRectGetWidth(RoomBtn.frame)-100)/4);
-//                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
-//                [kindBtn.layer setMasksToBounds:YES];
-//                [kindBtn.layer setBorderWidth:2];
-//                
-//                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-//                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
-//                //设置按钮响应事件
-//                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
-//                kindBtn.tag=1000+i;
-//                [RoomBtn addSubview:kindBtn];
-//            }
+            for (UIView *view in [RoomBtn subviews])
+            {
+//                NSLog(@"view.tag is%d",view.tag);
+                
+                if ([view isKindOfClass:[UIView class]]&&view.tag>1000)
+                {
+                    [view removeFromSuperview];
+                }
+            }
+            
+            int sNum=0;
+            for (int i=0; i<5; i++) {
+                
+                //房间图标
+                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+                if (i>0&&i%4==0) {
+                    sNum++;
+                }
+                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4);
+                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
+                [kindBtn.layer setMasksToBounds:YES];
+                [kindBtn.layer setBorderWidth:2];
+                if (i==2) {
+                    [kindBtn setAlpha:0.5];
+                }
+                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+                //设置按钮响应事件
+                [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
+                kindBtn.tag=1000+i;
+                [RoomBtn addSubview:kindBtn];
+            }
 
         }
        
         
             }
     
-    
+    else if (tableView==self.PersonageTableView)
+    {
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            //房间图标
+            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
+            [RoomImgView.layer setMasksToBounds:YES];
+            [RoomImgView.layer setBorderWidth:2];
+            
+            [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            RoomImgView.tag=202;
+            [cell addSubview:RoomImgView];
+            
+            
+        }
+        cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR color:[UIColor colorWithRed:208/255.0 green:44/255.0 blue:55/255.0 alpha:1.0]];
+    }
+    else
+    {
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         //        cell.tag = indexPath.row;
         
         
     }
-    
+    }
     return cell;
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    //    NSLog(@"ssss=%d",indexPath.row);
-    //    if (tableView==self.comShowTableView) {
-    //        self.webSite=[[WebsiteViewController alloc]init];
-    //        self.webSite.urlStr=[[self.productArray objectAtIndex:indexPath.row] objectForKey:@"url"];
-    //        self.webSite.isPush=1;
-    //
-    //        [self.navigationController pushViewController:self.webSite animated:YES];
-    //    }
-    //    else if(tableView == self.comRecruitmentTableView){
-    //
-    //        NSLog(@"ddd=%@",self.otherMorePositionArray);
-    //
-    //        NSDictionary * informationDictionary= nil;
-    //        informationDictionary=[self.otherMorePositionArray objectAtIndex:indexPath.row];
-    //
-    //        self.postDetail =[[CPositionDetailsViewController alloc]init];
-    //        self.postDetail.postId=[[informationDictionary objectForKey:@"postId"] longValue];
-    //        self.postDetail.endId=[[informationDictionary objectForKey:@"entId"] longValue];
-    //        self.postDetail.downDictionay=self.PostListDictionary;
-    //        self.postDetail.curentNum =indexPath.row;
-    //        self.postDetail.callType=3;
-    //        [self.navigationController pushViewController:self.postDetail animated:YES];
-    //    }
-    
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -843,9 +919,10 @@
 
 -(void)goToSettingAction:(id)sender
 {
-    SettingsViewController *svc = [[SettingsViewController alloc] init];
-    [self.navigationController pushViewController:svc animated:YES];
-    svc.title = LOCALIZATION(@"btn_options");
+    self.settingVc = [[SettingsViewController alloc] init];
+    
+    [self.navigationController pushViewController:self.settingVc animated:YES];
+    self.settingVc.title = LOCALIZATION(@"btn_options");
 }
 
 /**显示机构选择列表*/
@@ -887,4 +964,11 @@
 
 
 
+/**儿童头像点击事件*/
+- (void)ShowKindAction:(id)sender
+{
+    
+}
+
 @end
+
