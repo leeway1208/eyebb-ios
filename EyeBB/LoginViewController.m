@@ -23,7 +23,7 @@
 @property (nonatomic,strong) UITextField *loginPassword;
 @property (nonatomic,strong) UIButton *forgetPasswordLabel;
 
-
+@property (nonatomic,strong) NSDictionary * guardian;
 @end
 
 @implementation LoginViewController
@@ -45,25 +45,24 @@
 /**
  * save the login status
  */
--(void)saveNSUserDefaults:(NSMutableArray *)guardian RegistrationId
+-(void)saveNSUserDefaults:(NSDictionary *)guardian RegistrationId
                          :(NSString *)registrationId
 {
     NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
-    NSLog(@"login sss----> %@ ",guardian);
-//    [loginStatus setObject:[guardian objectAtIndex:0] objectForKey:LoginViewController_accName] forKey:LoginViewController_accName];
-    [loginStatus setInteger:[[guardian objectAtIndex:1] intValue] forKey:LoginViewController_guardianId];
-    [loginStatus setObject:[guardian objectAtIndex:2] forKey:LoginViewController_name];
-    [loginStatus setInteger:[[guardian objectAtIndex:3] intValue] forKey:LoginViewController_phoneNumber];
-    [loginStatus setObject:[guardian objectAtIndex:4] forKey:LoginViewController_type];
+    // NSLog(@"login sss----> %@ ",guardian);
+    
+    NSLog(@"login ----> %@ ",[guardian objectForKey:@"name"]);
+    [loginStatus setObject:[guardian objectForKey:LoginViewController_accName] forKey:LoginViewController_accName];
+    [loginStatus setInteger:[[guardian objectForKey:LoginViewController_guardianId] intValue] forKey:LoginViewController_guardianId];
+    [loginStatus setObject:[guardian objectForKey:LoginViewController_name] forKey:LoginViewController_name];
+    [loginStatus setInteger:[[guardian objectForKey:LoginViewController_phoneNumber] intValue] forKey:LoginViewController_phoneNumber];
+    [loginStatus setObject:[guardian objectForKey:LoginViewController_type] forKey:LoginViewController_type];
+    
     [loginStatus setObject:registrationId forKey:LoginViewController_registrationId];
-    //    [loginStatus setInteger:myInteger forKey:@"myInteger"];
-    //    [loginStatus setObject:myString forKey:@"myString"];
-    //    [loginStatus setInteger:myInteger forKey:@"myInteger"];
-    //    [loginStatus setObject:myString forKey:@"myString"];
-     NSLog(@"login ----> %@ ",[guardian objectAtIndex:2]);
+    
     [loginStatus synchronize];
     
-
+    
 }
 
 
@@ -79,7 +78,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-
+#pragma mark - view init
 -(void)viewDidDisappear:(BOOL)animated
 {
     [_loginUserAccount removeFromSuperview];
@@ -103,7 +102,7 @@
 
 -(void)loadParameter{
     
-    
+    _guardian = [[NSDictionary alloc]init];
 }
 
 -(void)loadWidget{
@@ -209,7 +208,7 @@
     
 }
 
-
+#pragma mark - keyboard
 -(void)BasicRegkeyboardWillShow:(NSNotification *)note
 {
     NSDictionary *info = [note userInfo];
@@ -276,14 +275,12 @@
     [self.loginPassword resignFirstResponder];
 }
 
-/*
- #pragma mark - Navigation
- 
- // In a storyboard-based application, you will often want to do a little preparation before navigation
- - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
- // Get the new view controller using [segue destinationViewController].
- // Pass the selected object to the new view controller.
- }
+
+#pragma mark - button action
+/**
+ *  the left button of navigation bar
+ *
+ *  @param sender <#sender description#>
  */
 -(void)loginSelectLeftAction:(id)sender
 {
@@ -310,7 +307,7 @@
     {
         
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password, nil];
-        NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         
         [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
         
@@ -320,25 +317,36 @@
     
 }
 
+
+#pragma mark - server request
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
     
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
         
         
-        NSMutableArray * guardian = [[NSMutableArray alloc]init];
-        guardian = [[responseData mutableObjectFromJSONData] objectForKey:@"guardian"];
+        
+        _guardian = [[responseData mutableObjectFromJSONData] objectForKey:@"guardian"];
         NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:@"registrationId"];
         // NSLog(@"login ----> %@ ",guardian);
         
-        if(guardian != nil){
-            
-           // [self saveNSUserDefaults:guardian RegistrationId:registrationId];
+        if(_guardian != nil){
+            //save to the UserDefaults
+            [self saveNSUserDefaults:_guardian RegistrationId:registrationId];
             
             
             MainViewController *mvc = [[MainViewController alloc] init];
             [self.navigationController pushViewController:mvc animated:YES];
             self.title = @"";
+            
+        }else{
+            
+            //if the user name or password is invaild. alerting the user.
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"toast_invalid_username_or_password")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
         }
         
     }
