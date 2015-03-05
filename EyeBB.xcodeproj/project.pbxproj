@@ -72,6 +72,9 @@
 		3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9791A9D6DA5009CB9C2 /* libxml2.dylib */; };
 		326A92491A9C480D00CAB4F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A92481A9C480D00CAB4F3 /* MainViewController.m */; };
 		326A924E1A9C4AD300CAB4F3 /* HMSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A924D1A9C4AD300CAB4F3 /* HMSegmentedControl.m */; };
+		32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32FC01421AA83E3B001FB4D3 /* Images.xcassets */; };
+		32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01441AA83E3B001FB4D3 /* LDProgressView.m */; };
+		32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */; };
 		923632411AA40CA600687F3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923632401AA40CA600687F3F /* LoginViewController.m */; };
 		927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */; };
 		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
@@ -211,6 +214,11 @@
 		326A92481A9C480D00CAB4F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		326A924C1A9C4AD300CAB4F3 /* HMSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HMSegmentedControl.h; sourceTree = "<group>"; };
 		326A924D1A9C4AD300CAB4F3 /* HMSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HMSegmentedControl.m; sourceTree = "<group>"; };
+		32FC01421AA83E3B001FB4D3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		32FC01431AA83E3B001FB4D3 /* LDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDProgressView.h; sourceTree = "<group>"; };
+		32FC01441AA83E3B001FB4D3 /* LDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDProgressView.m; sourceTree = "<group>"; };
+		32FC01451AA83E3B001FB4D3 /* UIColor+RGBValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RGBValues.h"; sourceTree = "<group>"; };
+		32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RGBValues.m"; sourceTree = "<group>"; };
 		9236323F1AA40CA600687F3F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		923632401AA40CA600687F3F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		927DBC781AA6C70F00923122 /* UserDefaultsUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsUtils.h; sourceTree = "<group>"; };
@@ -541,6 +549,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				32FC01411AA83E3B001FB4D3 /* LDProgressView */,
 				3240DAD91AA699FF00661712 /* MSCellAccessory */,
 				3209FFBF1AA06C5300BC6C48 /* json */,
 				32530F461A9EE01100F66B6D /* locallistor */,
@@ -558,6 +567,18 @@
 				326A924D1A9C4AD300CAB4F3 /* HMSegmentedControl.m */,
 			);
 			path = HMSegmentedControl;
+			sourceTree = "<group>";
+		};
+		32FC01411AA83E3B001FB4D3 /* LDProgressView */ = {
+			isa = PBXGroup;
+			children = (
+				32FC01421AA83E3B001FB4D3 /* Images.xcassets */,
+				32FC01431AA83E3B001FB4D3 /* LDProgressView.h */,
+				32FC01441AA83E3B001FB4D3 /* LDProgressView.m */,
+				32FC01451AA83E3B001FB4D3 /* UIColor+RGBValues.h */,
+				32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */,
+			);
+			path = LDProgressView;
 			sourceTree = "<group>";
 		};
 		92FF92D11AA5592E00E04E0A /* utils */ = {
@@ -659,6 +680,7 @@
 				20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */,
 				32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */,
 				20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */,
+				32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */,
 				3240DAD81AA5591200661712 /* icon-40@3x.png in Resources */,
 				20BD17181A9A21C600039A31 /* Default.png in Resources */,
 				20BD17171A9A21C600039A31 /* Default-568h@2x.png in Resources */,
@@ -695,6 +717,7 @@
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
 				3264D94B1A9D6B72009CB9C2 /* ASIDownloadCache.m in Sources */,
 				3264D9491A9D6B72009CB9C2 /* ASIDataCompressor.m in Sources */,
+				32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */,
 				3264D96E1A9D6B72009CB9C2 /* Reachability.m in Sources */,
 				20BD16EE1A99FC7700039A31 /* main.m in Sources */,
 				3264D94D1A9D6B72009CB9C2 /* ASIHTTPRequest.m in Sources */,
@@ -718,6 +741,7 @@
 				3264D94F1A9D6B72009CB9C2 /* ASINetworkQueue.m in Sources */,
 				3264D9541A9D6B72009CB9C2 /* ASICloudFilesContainerXMLParserDelegate.m in Sources */,
 				3264D9531A9D6B72009CB9C2 /* ASICloudFilesContainerRequest.m in Sources */,
+				32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */,
 				3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */,
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,
 				32530F491A9EE01100F66B6D /* Localisator.m in Sources */,

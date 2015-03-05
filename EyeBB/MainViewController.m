@@ -12,6 +12,8 @@
 #import "KindlistViewController.h"
 #import "JSONKit.h"
 #import "MSCellAccessory.h"
+#import "LDProgressView.h"
+
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
     /**滑动HMSegmentedControl*/
@@ -56,6 +58,20 @@
 @property (strong,nonatomic) UILabel * UserNameLbl;
 //单击空白处关闭遮盖层
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
+/**查看表现条件提示*/
+@property (strong,nonatomic) UILabel * conditionLbl;
+/**表现按钮*/
+@property (strong,nonatomic) UIButton * performanceBtn;
+/**活动按钮*/
+@property (strong,nonatomic) UIButton * activitiesBtn;
+/**选择显示范围*/
+@property (strong,nonatomic) UIButton * PerformanceTimeBtn;
+
+
+//间隔线2
+@property (strong,nonatomic) UILabel *divisionTwoLbl;
+//间隔线4
+@property (strong,nonatomic) UILabel *divisionFourLbl;
 //-------------------视图变量--------------------
 /**房间背景颜色数组*/
 @property (strong,nonatomic) NSArray *colorArray;
@@ -201,23 +217,6 @@
     
     //室内定位条件刷选
     UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
-    
-    /**图片模糊
-     CIContext *context = [CIContext contextWithOptions:nil];
-     CIImage *inputImage = [[CIImage alloc] initWithImage:[UIImage imageNamed:@"20150207105906"]];
-     // create gaussian blur filter
-     CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"];
-     [filter setValue:inputImage forKey:kCIInputImageKey];
-     [filter setValue:[NSNumber numberWithFloat:10.0] forKey:@"inputRadius"];
-     // blur image
-     CIImage *result = [filter valueForKey:kCIOutputImageKey];
-     CGImageRef cgImage = [context createCGImage:result fromRect:[result extent]];
-     UIImage *image = [UIImage imageWithCGImage:cgImage];
-     CGImageRelease(cgImage);
-     self.mainImageView.image = image;
-     */
-    
-    
     //设置按显示图片
     [listSetBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
     //设置按钮背景颜色
@@ -362,86 +361,126 @@
     [_MainInfoScrollView addSubview:changeView];
     
     //表现
-    UIButton * performanceBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
+     _performanceBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
     //设置按显示图片
-    [performanceBtn setTitle:LOCALIZATION(@"btn_performance") forState:UIControlStateNormal];
-    [performanceBtn setTitleColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1] forState:UIControlStateNormal];
+    [_performanceBtn setTitle:LOCALIZATION(@"btn_performance") forState:UIControlStateNormal];
+    [_performanceBtn setTitleColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1] forState:UIControlStateNormal];
+    [_performanceBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
+    [_performanceBtn setSelected:YES];
     //设置按钮背景颜色
-    [performanceBtn setBackgroundColor:[UIColor whiteColor]];
+    [_performanceBtn setBackgroundColor:[UIColor whiteColor]];
     //设置按钮是否圆角
-    [performanceBtn.layer setMasksToBounds:YES];
+    [_performanceBtn.layer setMasksToBounds:YES];
     //圆角像素化
-    [performanceBtn.layer setCornerRadius:4.0];
+    [_performanceBtn.layer setCornerRadius:4.0];
     //设置按钮响应事件
-    [performanceBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
-    [changeView addSubview:performanceBtn];
+    [_performanceBtn addTarget:self action:@selector(showPerformanceAction:) forControlEvents:UIControlEventTouchUpInside];
+    [changeView addSubview:_performanceBtn];
     
+    //间隔线2
+    _divisionTwoLbl = [[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetHeight(_performanceBtn.bounds)-7, CGRectGetWidth(_performanceBtn.bounds), 3)];
+    [_divisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
+
+    [_performanceBtn addSubview:_divisionTwoLbl];
     
     //活动
-    UIButton * activitiesBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
+    _activitiesBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
     //设置按显示图片
-    [activitiesBtn setTitle:LOCALIZATION(@"btn_activities") forState:UIControlStateNormal];
-    [activitiesBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateNormal];
+    [_activitiesBtn setTitle:LOCALIZATION(@"btn_activities") forState:UIControlStateNormal];
+    [_activitiesBtn setTitleColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1] forState:UIControlStateNormal];
+    [_activitiesBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
+    
     //设置按钮背景颜色
-    [activitiesBtn setBackgroundColor:[UIColor whiteColor]];
+    [_activitiesBtn setBackgroundColor:[UIColor whiteColor]];
     //设置按钮是否圆角
-    [activitiesBtn.layer setMasksToBounds:YES];
+    [_activitiesBtn.layer setMasksToBounds:YES];
     //圆角像素化
-    [activitiesBtn.layer setCornerRadius:4.0];
+    [_activitiesBtn.layer setCornerRadius:4.0];
 
     //设置按钮响应事件
-    [activitiesBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_activitiesBtn addTarget:self action:@selector(showaActivitiesAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    [changeView addSubview:activitiesBtn];
+    [changeView addSubview:_activitiesBtn];
 
     //间隔线
     UILabel *divisionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 0.0f, 1, 48)];
     [divisionLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [changeView addSubview:divisionLbl];
     
-    //表现
-    UIButton * PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 44)];
+    
+   
+    
+    //间隔线4
+    _divisionFourLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_activitiesBtn.bounds)-5, CGRectGetWidth(_activitiesBtn.bounds), 1)];
+    [_divisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [_activitiesBtn addSubview:_divisionFourLbl];
+    
+    
+
+    //选择显示范围
+    _PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 40)];
     //设置按钮背景颜色
-    [PerformanceTimeBtn setBackgroundColor:[UIColor yellowColor]];
+    [_PerformanceTimeBtn setBackgroundColor:[UIColor whiteColor]];
     
     //设置按钮响应事件
-    [PerformanceTimeBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_PerformanceTimeBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    [_MainInfoScrollView addSubview:PerformanceTimeBtn];
+    [_MainInfoScrollView addSubview:_PerformanceTimeBtn];
+    
+    
+    
+    //间隔线3
+    UILabel *divisionThreeLbl = [[UILabel alloc] initWithFrame:CGRectMake(10, CGRectGetHeight(_PerformanceTimeBtn.bounds)-1, CGRectGetWidth(_PerformanceTimeBtn.bounds)-20, 1)];
+    [divisionThreeLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [_PerformanceTimeBtn addSubview:divisionThreeLbl];
     
     //本日色块
-    UILabel *todayColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(15.0f, 14.0f, 16.0f, 16.0f)];
+    UILabel *todayColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(12.0f, 14.0f, 14.0f, 14.0f)];
     [todayColorLbl setBackgroundColor:[UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1]];
-    [PerformanceTimeBtn addSubview:todayColorLbl];
+    [_PerformanceTimeBtn addSubview:todayColorLbl];
     //本日
-    UILabel *todayLbl = [[UILabel alloc] initWithFrame:CGRectMake(35.0f, 14.0f, 50.0f, 16.0f)];
+    NSString *str=LOCALIZATION(@"text_today");
+    UILabel *todayLbl = [[UILabel alloc] initWithFrame:CGRectMake(28.0f, 14.0f, (str.length>2?str.length*8.0f:str.length*15), 16.0f)];
     [todayLbl setBackgroundColor:[UIColor clearColor]];
-    todayLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
+    todayLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
     todayLbl.textAlignment = NSTextAlignmentLeft;
     todayLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    todayLbl.text = LOCALIZATION(@"text_today");
-    [PerformanceTimeBtn addSubview:todayLbl];
+    todayLbl.text = str;
+    [_PerformanceTimeBtn addSubview:todayLbl];
     
-    
-    //自定义色块
-    UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(90.0f, 14.0f, 16.0f, 16.0f)];
+
+    //自定义色块 todayLbl.bounds
+    UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(todayLbl.bounds)+todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f)];
     [customizedColorLbl setBackgroundColor:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]];
-    [PerformanceTimeBtn addSubview:customizedColorLbl];
+    [_PerformanceTimeBtn addSubview:customizedColorLbl];
     //自定义
-    UILabel *customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(110.0f, 14.0f, 150.0f, 16.0f)];
-    [customizedLbl setBackgroundColor:[UIColor clearColor]];
-    customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
+    NSString *str2=LOCALIZATION(@"text_customized");
+    UILabel *customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedColorLbl.bounds)+customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>3?str2.length*7.5f:str2.length*15), 16.0f)];
+    [customizedLbl setBackgroundColor:[UIColor yellowColor]];
+    customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
     customizedLbl.textAlignment = NSTextAlignmentLeft;
     customizedLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    customizedLbl.text = LOCALIZATION(@"text_customized");
-    [PerformanceTimeBtn addSubview:customizedLbl];
+    customizedLbl.text = str2;
+    [_PerformanceTimeBtn addSubview:customizedLbl];
+
+     NSString *str3=LOCALIZATION(@"this_Week");
+    //查询条件
+    _conditionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedLbl.bounds)+customizedLbl.frame.origin.x, 14.0f, (str3.length>2?str3.length*8.0f:str3.length*15), 16.0f)];
+    [_conditionLbl setBackgroundColor:[UIColor clearColor]];
+    _conditionLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
+    _conditionLbl.textAlignment = NSTextAlignmentLeft;
+    _conditionLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    _conditionLbl.text = str3;
+    [_PerformanceTimeBtn addSubview:_conditionLbl];
 
     
     
     //初始化表现列表
-    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 142, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-142)];
+    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 138, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-138)];
     _PerformanceTableView.dataSource = self;
     _PerformanceTableView.delegate = self;
+    //隐藏table自带的cell下划线
+    _PerformanceTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_PerformanceTableView];
 //    _PerformanceTableView.hidden=YES;
@@ -616,7 +655,9 @@
     else if(tableView == self.PersonageTableView){
         return 100;
     }
-    
+    else if(tableView == self.PerformanceTableView){
+        return 100;
+    }
     
     
     return 44;
@@ -646,6 +687,9 @@
     }
     else if(tableView == self.organizationTableView){
         return _organizationArray.count;
+    }
+    else if(tableView == self.PerformanceTableView){
+        return 2;
     }
     else{
         return  0;
@@ -922,7 +966,7 @@
 
         
     }
-    
+    //个人设置
     else if (tableView==self.PersonageTableView)
     {
         
@@ -981,6 +1025,46 @@
         
         
        cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR color:[UIColor colorWithRed:208/255.0 green:44/255.0 blue:55/255.0 alpha:1.0]];
+    }
+    //表现
+    else if (tableView==self.PerformanceTableView)
+    {
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            
+            UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(20, 0, Drive_Wdith-60, 30)];
+            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [roomNameLbl setTextColor:[UIColor blackColor]];
+            [roomNameLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [roomNameLbl setTag:209];
+            [cell addSubview:roomNameLbl];
+            
+            UIView * compareView=[[UIView alloc]initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 50)];
+            [compareView setBackgroundColor:[UIColor colorWithRed:0.957 green:0.957 blue:0.922 alpha:1]];
+//            [roomNameLbl setTag:210];
+            [cell addSubview:compareView];
+            LDProgressView *progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
+            progressView.progress = 0.40;
+            progressView.borderRadius = @0;
+            progressView.type = LDProgressSolid;
+            progressView.color = [UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1];
+
+            [cell addSubview:progressView];
+            
+            progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
+            progressView.showText = @NO;
+            progressView.progress = 0.70;
+            progressView.borderRadius = @0;
+            progressView.type = LDProgressSolid;
+            progressView.color = [UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1];
+            [cell addSubview:progressView];
+            
+        }
+        if([cell viewWithTag:209]!=nil)
+        {
+            UILabel * roomNameLbl =(UILabel *)[cell viewWithTag:209];
+            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+        }
     }
     else
     {
@@ -1163,10 +1247,42 @@
 
 
 
+
 /**儿童头像点击事件*/
 - (void)ShowKindAction:(id)sender
 {
     
+}
+
+/**显示表现*/
+- (void)showPerformanceAction:(id)sender
+{
+
+    _divisionTwoLbl.frame=CGRectMake(0,CGRectGetHeight(_performanceBtn.bounds)-7, CGRectGetWidth(_performanceBtn.bounds), 3);
+    [_divisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
+    _divisionFourLbl.frame=CGRectMake(0, CGRectGetHeight(_activitiesBtn.bounds)-5, CGRectGetWidth(_activitiesBtn.bounds), 1);
+    [_divisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    
+    [_performanceBtn setSelected:YES];
+    [_activitiesBtn setSelected:NO];
+    _PerformanceTableView.hidden=NO;
+    _PerformanceTimeBtn.hidden=NO;
+    _ActivitiesTableView.hidden=YES;
+    
+}
+
+/**显示活动*/
+- (void)showaActivitiesAction:(id)sender
+{
+    _divisionFourLbl.frame=CGRectMake(0,CGRectGetHeight(_activitiesBtn.bounds)-7, CGRectGetWidth(_activitiesBtn.bounds), 3);
+    [_divisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
+   _divisionTwoLbl.frame=CGRectMake(0, CGRectGetHeight(_performanceBtn.bounds)-5, CGRectGetWidth(_performanceBtn.bounds), 1);
+    [_divisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+[_performanceBtn setSelected:NO];
+    [_activitiesBtn setSelected:YES];
+    _PerformanceTableView.hidden=YES;
+    _PerformanceTimeBtn.hidden=YES;
+    _ActivitiesTableView.hidden=NO;
 }
 
 @end
