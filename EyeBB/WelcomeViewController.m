@@ -9,9 +9,10 @@
 #import "WelcomeViewController.h"
 #import "RegViewController.h"
 #import "LoginViewController.h"
-#import "MainViewController.h"
+
 //--test--
 #import "KindlistViewController.h"
+#import "ChildInformationMatchingViewController.h"
 @interface WelcomeViewController ()
 
 @property (nonatomic,strong) RegViewController *reg;
@@ -67,6 +68,7 @@
     //     _PDTxt=nil;
     //    self.view=nil;
 }
+
 -(void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:kNotificationLanguageChanged object:nil];
@@ -145,11 +147,17 @@
 //        [alertView show];
 //    }
     
-        _reg = [[RegViewController alloc] init];
+//        _reg = [[RegViewController alloc] init];
+//    
+//    
+//    [self.navigationController pushViewController:_reg animated:YES];
+//    _reg.title = @"";
     
+
+    ChildInformationMatchingViewController *reg = [[ChildInformationMatchingViewController alloc] init];
+    [self.navigationController pushViewController:reg animated:YES];
+    reg.title = @"";
     
-    [self.navigationController pushViewController:_reg animated:YES];
-    _reg.title = @"";
 //
     
 //    KindlistViewController * dd= [[KindlistViewController alloc] init];
@@ -164,10 +172,10 @@
 //    [self.navigationController pushViewController:reg animated:YES];
 //    reg.title = @"";
     
+  
     LoginViewController *reg = [[LoginViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
     reg.title = @"";
-    
 //    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
 //    {
 //        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

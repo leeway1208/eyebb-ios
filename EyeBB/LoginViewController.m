@@ -18,12 +18,21 @@
 {
     int textHeight;
 }
-
+/**user name*/
 @property (nonatomic,strong) UITextField *loginUserAccount;
+/**user password*/
 @property (nonatomic,strong) UITextField *loginPassword;
+/**forget password label*/
 @property (nonatomic,strong) UIButton *forgetPasswordLabel;
-// use to keep json information
+/**use to keep json information*/
 @property (nonatomic,strong) NSDictionary * guardian;
+/**button*/
+@property (nonatomic,strong) UIButton *loginBtn;
+/**user name image*/
+@property (nonatomic,strong) UIImageView* userAccountImg;
+/**user password image*/
+@property (nonatomic,strong) UIImageView* passWordImg;
+
 @end
 
 @implementation LoginViewController
@@ -84,19 +93,18 @@
     [_loginUserAccount removeFromSuperview];
     [_loginPassword removeFromSuperview];
     [_forgetPasswordLabel removeFromSuperview];
-    
+    [_loginBtn removeFromSuperview];
+    [_userAccountImg removeFromSuperview];
+    [_passWordImg removeFromSuperview];
     [self.view removeFromSuperview];
     [self setLoginPassword:nil];
     [self setLoginUserAccount:nil];
     [self setForgetPasswordLabel:nil];
-    
+    [self setLoginBtn:nil];
+    [self setUserAccountImg:nil];
+    [self setPassWordImg:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
-    //    _regTView=nil;
-    //     _telTxt=nil;
-    //     _nicknameTxt=nil;
-    //     _PDTxt=nil;
-    //    self.view=nil;
 }
 
 
@@ -111,22 +119,22 @@
      *  button
      */
     //登录按钮
-    UIButton * LoginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 200, (Drive_Wdith/2), Drive_Wdith/8)];
+    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 200, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
-    [LoginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
-    [LoginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_loginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
+    [_loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     //设置按钮背景颜色
-    [LoginBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+    [_loginBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //设置按钮响应事件
-    [LoginBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_loginBtn addTarget:self action:@selector(loginAction:) forControlEvents:UIControlEventTouchUpInside];
     //设置按钮是否圆角
-    [LoginBtn.layer setMasksToBounds:YES];
+    [_loginBtn.layer setMasksToBounds:YES];
     //圆角像素化
-    [LoginBtn.layer setCornerRadius:4.0];
-    [LoginBtn.layer setBorderWidth:1.0]; //边框宽度
-    [LoginBtn.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];//边框颜色
-    [self.view addSubview:LoginBtn];
+    [_loginBtn.layer setCornerRadius:4.0];
+    [_loginBtn.layer setBorderWidth:1.0]; //边框宽度
+    [_loginBtn.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];//边框颜色
+    [self.view addSubview:_loginBtn];
     
     
     
@@ -138,9 +146,10 @@
     _loginUserAccount.frame = CGRectMake(10, 90,self.view.frame.size.width - 20 , 40);
     _loginUserAccount.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     
-    UIImageView* userAccountImg=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
-    userAccountImg.frame = CGRectMake(0, 0, 20, 20);
-    _loginUserAccount.leftView=userAccountImg;//设置输入框内左边的图标
+    _userAccountImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
+    _userAccountImg.frame = CGRectMake(0, 0, 20, 20);
+    
+    _loginUserAccount.leftView = _userAccountImg;//设置输入框内左边的图标
     _loginUserAccount.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _loginUserAccount.leftViewMode=UITextFieldViewModeAlways;
     _loginUserAccount.placeholder=LOCALIZATION(@"text_login_account");//默认显示的字
@@ -165,9 +174,9 @@
     _loginPassword=[[UITextField alloc] initWithFrame:self.view.bounds];
     _loginPassword.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     _loginPassword.frame = CGRectMake(10, 145,self.view.frame.size.width - 20, 40);
-    UIImageView* passWordImg=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
-    passWordImg.frame = CGRectMake(0, 0, 20, 20);
-    _loginPassword.leftView=passWordImg;//设置输入框内左边的图标
+    _passWordImg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
+    _passWordImg.frame = CGRectMake(0, 0, 20, 20);
+    _loginPassword.leftView = _passWordImg;//设置输入框内左边的图标
     _loginPassword.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _loginPassword.leftViewMode=UITextFieldViewModeAlways;
     _loginPassword.placeholder=LOCALIZATION(@"text_password");//默认显示的字

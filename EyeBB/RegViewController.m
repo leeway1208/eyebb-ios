@@ -57,6 +57,7 @@
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     // Do any additional setup after loading the view.
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
+    self.title = LOCALIZATION(@"btn_sign_up");
     [self iv];
     [self lc];
 }
@@ -74,11 +75,29 @@
     [_telTxt removeFromSuperview];
     [_nicknameTxt removeFromSuperview];
     [_pDTxt removeFromSuperview];
+    [_verifyTxt removeFromSuperview];
+    [_emailTxt removeFromSuperview];
+    [_PopupSView removeFromSuperview];
+    [_popUpImage removeFromSuperview];
+    [_popViewContainer removeFromSuperview];
+    [_confirmBtn removeFromSuperview];
+    [_cancelBtn removeFromSuperview];
+    [_popTitleLabel removeFromSuperview];
+    [_popContentLabel removeFromSuperview];
     [self.view removeFromSuperview];
     [self setRegTView:nil];
     [self setTelTxt:nil];
     [self setNicknameTxt:nil];
     [self setPDTxt:nil];
+    [self setVerifyTxt:nil];
+    [self setEmailTxt:nil];
+    [self setPopupSView:nil];
+    [self setPopUpImage:nil];
+    [self setPopViewContainer:nil];
+    [self setConfirmBtn:nil];
+    [self setCancelBtn:nil];
+    [self setPopTitleLabel:nil];
+    [self setPopContentLabel:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
     //    _regTView=nil;
@@ -678,7 +697,7 @@
         } else{
             
             [_PopupSView setHidden:NO];
-
+            
         }
         
         
@@ -727,7 +746,7 @@
 -(void)goToChildInformationMatchingAction:(id)sender{
     ChildInformationMatchingViewController *cimm = [[ChildInformationMatchingViewController alloc]init];
     [self.navigationController pushViewController:cimm animated:YES];
-    cimm.title = LOCALIZATION(@"btn_sign_up");
+    cimm.title = @"";
 }
 
 // cancel the button

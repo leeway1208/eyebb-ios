@@ -21,7 +21,7 @@
 "text_phone_number"="电话 (用户名)";
 "text_password"="密码";
 "text_verify"="验证密码";
-"text_pssword_not_the_same" = "两次密码不一样!":
+"text_pssword_not_the_same" = "两次密码不一样!";
 "text_login_account"="用户名";
 "text_select_kid_kindergarten"="选择幼稚园";
 "text_forgot_password"="忘记密码 ?";
