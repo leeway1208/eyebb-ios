@@ -9,7 +9,8 @@
 #import "RegViewController.h"
 #import "CommonUtils.h"
 #import "HttpRequestUtils.h"
-
+#import "JSONKit.h"
+#import "ChildInformationMatchingViewController.h"
 
 @interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -550,7 +551,55 @@
     return cell;
 }
 
-#pragma mark --
+#pragma mark - server return
+
+-(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    if ([tag isEqualToString:REG_PARENTS]){
+        NSData *responseData = [request responseData];
+        //                NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSString * resSignUp = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"sign up ----> %@ ",resSignUp);
+        
+        //user name is already used
+        if([resSignUp isEqualToString:SERVER_RETURN_F]){
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_username_is_used")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+        }
+        // network is error
+        else if ([resSignUp length] > 20){
+            
+            if([resSignUp isEqualToString:SERVER_RETURN_F]){
+                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                            message:LOCALIZATION(@"text_network_error")
+                                           delegate:self
+                                  cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                                  otherButtonTitles:nil] show];
+            }
+            //register is successful
+            else{
+                
+                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                            message:LOCALIZATION(@"text_binding_device")
+                                           delegate:self
+                                  cancelButtonTitle:LOCALIZATION(@"btn_skip")
+                                  otherButtonTitles:(@"btn_binding")] show];
+                
+//                UIImageView *viewe = [[UIImageView alloc] initWithFrame:CGRectMake(60.0, 50.0, 45.0, 45.0)];
+//                viewe.image = [UIImage imageNamed:@"login_name"];
+//                [alert addSubview:viewe];
+//                
+            }
+            
+        }
+        
+    }
+}
+
+
 #pragma mark - 点击事件
 
 /**提交注册信息*/
@@ -565,10 +614,10 @@
     if([self verifyRequest:phoneStr withpwd:[CommonUtils getSha256String:pwdStr] withver:[CommonUtils getSha256String:pwdStr] withNickName:NickNameStr withemail:emailStr]!=nil)
     {
         
-        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                     message:[self verifyRequest:phoneStr withpwd:[CommonUtils getSha256String:pwdStr] withver:varStr withNickName:NickNameStr withemail:emailStr]
                                    delegate:self
-                          cancelButtonTitle:@"确定"
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
     }
     else

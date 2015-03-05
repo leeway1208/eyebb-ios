@@ -12,9 +12,21 @@
 
 #endif
 
+//LoginViewController
 #define LoginViewController_accName @"accName"
 #define LoginViewController_guardianId @"guardianId"
 #define LoginViewController_name @"name"
 #define LoginViewController_phoneNumber @"phoneNumber"
 #define LoginViewController_type @"type"
 #define LoginViewController_registrationId @"registrationId"
+
+
+
+
+// json key
+//
+//
+
+//LoginViewController
+#define LoginViewController_json_key_guardian @"guardian"
+#define LoginViewController_json_key_registrationId @"registrationId"

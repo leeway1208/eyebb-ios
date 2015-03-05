@@ -22,7 +22,7 @@
 @property (nonatomic,strong) UITextField *loginUserAccount;
 @property (nonatomic,strong) UITextField *loginPassword;
 @property (nonatomic,strong) UIButton *forgetPasswordLabel;
-
+// use to keep json information
 @property (nonatomic,strong) NSDictionary * guardian;
 @end
 
@@ -45,7 +45,7 @@
 /**
  * save the login status
  */
--(void)saveNSUserDefaults:(NSDictionary *)guardian RegistrationId
+-(BOOL)saveNSUserDefaults:(NSDictionary *)guardian RegistrationId
                          :(NSString *)registrationId
 {
     NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
@@ -60,7 +60,7 @@
     
     [loginStatus setObject:registrationId forKey:LoginViewController_registrationId];
     
-    [loginStatus synchronize];
+    return [loginStatus synchronize];
     
     
 }
@@ -330,19 +330,18 @@
         
         
         
-        _guardian = [[responseData mutableObjectFromJSONData] objectForKey:@"guardian"];
-        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:@"registrationId"];
+        _guardian = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_guardian];
+        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_registrationId];
         // NSLog(@"login ----> %@ ",guardian);
         
         if(_guardian != nil){
             //save to the UserDefaults
-            [self saveNSUserDefaults:_guardian RegistrationId:registrationId];
-            
-            
-            MainViewController *mvc = [[MainViewController alloc] init];
-            [self.navigationController pushViewController:mvc animated:YES];
-            self.title = @"";
-            
+            if([self saveNSUserDefaults:_guardian RegistrationId:registrationId]){
+                
+                MainViewController *mvc = [[MainViewController alloc] init];
+                [self.navigationController pushViewController:mvc animated:YES];
+                self.title = @"";
+            }
         }else{
             
             //if the user name or password is invaild. alerting the user.
@@ -359,6 +358,15 @@
     
     
 }
+
+/**
+*  verify the password and username whether is null or not.
+*
+*  @param userAccount userAccount description
+*  @param passWord    <#passWord description#>
+*
+*  @return <#return value description#>
+*/
 
 - (NSString *)verifyRequest:(NSString *)userAccount withpwd:(NSString *)passWord
 {
