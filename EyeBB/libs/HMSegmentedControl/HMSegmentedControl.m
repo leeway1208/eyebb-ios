@@ -125,7 +125,7 @@ typedef enum {
     self.selectionIndicatorHeight = 5.0f;
     self.selectionStyle = HMSegmentedControlSelectionStyleTextWidthStripe;
     self.selectionIndicatorLocation = HMSegmentedControlSelectionIndicatorLocationUp;
-    self.type = HMSegmentedControlTypeText;
+    self.type = HMSegmentedControlTypeImages;
     
     self.selectionIndicatorStripLayer = [CALayer layer];
     
@@ -318,6 +318,7 @@ typedef enum {
         CGFloat x = ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) + (widthToStartOfSelectedIndex - sectionWidth / 2);
         return CGRectMake(x, indicatorYOffset, sectionWidth, self.selectionIndicatorHeight);
     } else {
+        NSLog(@"---%F--,%F,,%zi",self.segmentWidth * self.selectedSegmentIndex,self.segmentWidth,self.selectedSegmentIndex);
         return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, indicatorYOffset, self.segmentWidth, self.selectionIndicatorHeight);
     }
 }

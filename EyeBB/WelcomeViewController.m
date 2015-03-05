@@ -27,7 +27,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor=[UIColor whiteColor];
     UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2)];
-    [logoImgView setImage:[UIImage imageNamed:@"Image"]];
+    [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
     [self.view addSubview:logoImgView];
 //    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
     

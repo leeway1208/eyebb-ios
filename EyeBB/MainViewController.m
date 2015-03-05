@@ -91,7 +91,11 @@
     self.title = LOCALIZATION(@"app_name");
     // Do any additional setup after loading the view.
     [self iv];
-    [self getRequest:@"kindergartenList" delegate:self];
+//    [self getRequest:@"kindergartenList" delegate:self];
+//    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+    [self getRequest:@"reportService/api/notices" delegate:self];
+    
+    
     [self lc];
 }
 
@@ -146,16 +150,17 @@
 -(void)lc
 {
     
-    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"室内定位", @"雷达",@"简报",@"用户"]];
+//    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"室内定位", @"雷达",@"简报",@"用户"]];
+    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionImages:@[[UIImage imageNamed:@"actbar_home"],[UIImage imageNamed:@"actbar_tracking"],[UIImage imageNamed:@"actbar_report"],[UIImage imageNamed:@"actbar_profile"]] sectionSelectedImages:@[[UIImage imageNamed:@"actbar_home"],[UIImage imageNamed:@"actbar_tracking"],[UIImage imageNamed:@"actbar_report"],[UIImage imageNamed:@"actbar_profile"]]];
     
     self.segmentedControl = segmentedControl3;
     [self.segmentedControl setBackgroundColor:[UIColor colorWithRed:0.800 green:0.800 blue:0.800 alpha:1]];
-    [self.segmentedControl setTextColor:[UIColor colorWithRed:0.239 green:0.239 blue:0.239 alpha:1]];
+//    [self.segmentedControl setTextColor:[UIColor colorWithRed:0.239 green:0.239 blue:0.239 alpha:1]];
     
-    //选中后的颜色
-    [self.segmentedControl setSelectedTextColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+//    //选中后的颜色
+//    [self.segmentedControl setSelectedTextColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //是否下标
-    [self.segmentedControl setSelectionIndicatorHeight:0.0f];
+//    [self.segmentedControl setSelectionIndicatorHeight:0.0f];
     
     //    [self.segmentedControl setSelectionIndicatorColor:[UIColor colorWithRed:0.227 green:0.408 blue:0.616 alpha:1]];
     //    [self.segmentedControl setselect]
@@ -473,6 +478,9 @@
     _conditionLbl.text = str3;
     [_PerformanceTimeBtn addSubview:_conditionLbl];
 
+    UIImageView * conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 14.0f, 15.0F, 15.0F)];
+    [conditionImgView setImage:[UIImage imageNamed:@"arrow_down"]];
+     [_PerformanceTimeBtn addSubview:conditionImgView];
     
     
     //初始化表现列表
@@ -648,7 +656,7 @@
     
     else if(tableView == self.ActivitiesTableView){
         
-        return 110;
+        return 100;
         
         
     }
@@ -1065,6 +1073,66 @@
             UILabel * roomNameLbl =(UILabel *)[cell viewWithTag:209];
             [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
         }
+    }
+    //活动
+    else if (tableView==self.ActivitiesTableView)
+    {
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            //活动图标
+            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            //设置按钮为圆形
+            [messageImgView.layer setCornerRadius:CGRectGetHeight([messageImgView bounds]) / 2];
+            [messageImgView.layer setMasksToBounds:YES];
+            [messageImgView.layer setBorderWidth:2];
+            
+            [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            messageImgView.tag=211;
+            [cell addSubview:messageImgView];
+            
+            UILabel * messageLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 27, CGRectGetWidth(cell.frame)-100, 20)];
+            [messageLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            //            [messageLbl setAlpha:0.6];
+            [messageLbl setFont:[UIFont systemFontOfSize: 15.0]];
+            [messageLbl setTextColor:[UIColor blackColor]];
+            [messageLbl setTextAlignment:NSTextAlignmentLeft];
+            messageLbl.tag=212;
+            [cell addSubview:messageLbl];
+            
+            UILabel * timeLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 47, CGRectGetWidth(cell.frame)-100, 20)];
+            [timeLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            //            [messageLbl setAlpha:0.6];
+            [timeLbl setFont:[UIFont systemFontOfSize: 15.0]];
+            [timeLbl setTextColor:[UIColor blackColor]];
+            [timeLbl setTextAlignment:NSTextAlignmentLeft];
+            timeLbl.tag=213;
+            [cell addSubview:timeLbl];
+            
+        }
+        if([cell viewWithTag:211]!=nil)
+        {
+            UIImageView * messageImgView=(UIImageView *)[cell viewWithTag:211];
+            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            
+        }
+        
+        if([cell viewWithTag:212]!=nil)
+        {
+            UILabel * messageLbl =(UILabel *)[cell viewWithTag:212];
+            [messageLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            
+        }
+        if([cell viewWithTag:213]!=nil)
+        {
+            UILabel * timeLbl =(UILabel *)[cell viewWithTag:213];
+            [timeLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            
+        }
+        
+        
+        cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR color:[UIColor colorWithRed:208/255.0 green:44/255.0 blue:55/255.0 alpha:1.0]];
     }
     else
     {
