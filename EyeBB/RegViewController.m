@@ -30,6 +30,22 @@
 
 //邮箱输入框
 @property (nonatomic,strong) UITextField *emailTxt;
+
+/**pop view*/
+@property (strong,nonatomic) UIScrollView * PopupSView;
+/**image view of pop view*/
+@property (strong,nonatomic) UIImageView * popUpImage;
+/**pop view container*/
+@property (strong,nonatomic) UIView * popViewContainer;
+/**pop view confirm button*/
+@property (strong,nonatomic) UIButton * confirmBtn;
+
+/**pop view cancel button*/
+@property (strong,nonatomic) UIButton * cancelBtn;
+/**pop view title*/
+@property (strong,nonatomic) UILabel * popTitleLabel;
+/**pop view content*/
+@property (strong,nonatomic) UILabel * popContentLabel;
 @end
 
 @implementation RegViewController
@@ -137,6 +153,84 @@
     tapGr.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGr];
     
+    
+    
+    //------------------------遮盖层------------------------
+    
+    //Popping view when you sign up successfully
+    _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith, Drive_Height)];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
+    [self.view addSubview:_PopupSView];
+    [_PopupSView setHidden:YES];
+    
+    
+    _popViewContainer=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-88, Drive_Wdith-10, 176)];
+    [_popViewContainer setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_popViewContainer.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_popViewContainer.layer setCornerRadius:4.0];
+    [_PopupSView addSubview:_popViewContainer];
+    
+    
+    //pop image view
+    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 20, 45, 45)];
+    [_popUpImage setImage:[UIImage imageNamed:@"Image"]];
+    [_popUpImage setTag:105];
+    [_popViewContainer addSubview:_popUpImage];
+    
+    //confirm button
+    _confirmBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame) / 2 , 134 ,CGRectGetWidth(_popViewContainer.frame) / 2, 40)];
+    //设置按显示文字
+    [_confirmBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
+    [_confirmBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_confirmBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_confirmBtn addTarget:self action:@selector(goToChildInformationMatchingAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_popViewContainer addSubview:_confirmBtn];
+    
+    //cancel button
+    _cancelBtn=[[UIButton alloc]initWithFrame:CGRectMake(0 , 134 ,CGRectGetWidth(_popViewContainer.frame) / 2, 40)];
+    //设置按显示文字
+    [_cancelBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
+    [_cancelBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_cancelBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_cancelBtn addTarget:self action:@selector(btnCancelAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_popViewContainer addSubview:_cancelBtn];
+    
+    //pop title label
+    _popTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 -10 ,12,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popTitleLabel.text = LOCALIZATION(@"text_tips");
+    [_popTitleLabel setFont:[UIFont systemFontOfSize:12.0]];
+    [_popViewContainer addSubview:_popTitleLabel];
+    
+    
+    //pop centent label
+    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2 - 10 ,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popContentLabel.text = LOCALIZATION(@"text_binding_device");
+    [_popViewContainer addSubview:_popContentLabel];
+    
+    //Dividing top line
+    UILabel * popTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 + 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
+    [popTopLabel.layer setBorderWidth:1.0]; //边框宽度
+    [popTopLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popViewContainer addSubview:popTopLabel];
+    
+    //Dividing bottom line
+    UILabel * popBottomLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 - 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
+    [popBottomLabel.layer setBorderWidth:1.0]; //边框宽度
+    [popBottomLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popViewContainer addSubview:popBottomLabel];
+    
+    //Dividing button line
+    UILabel * buttonLabel =[[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2, CGRectGetHeight(_popViewContainer.frame)/2 + 45, 1, CGRectGetHeight(_popViewContainer.frame)/2 - 20)];
+    [buttonLabel.layer setBorderWidth:1.0]; //边框宽度
+    [buttonLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popViewContainer addSubview:buttonLabel];
 }
 /*-----------------------信息处理函数---------------------------------*/
 
@@ -152,7 +246,7 @@
     
     if(phone.length <= 0)
     {
-        mag=@"请输入手机号码";
+        mag=LOCALIZATION(@"text_error_username");
         return mag;
     }
     //    if([pub isMobileNumber:phone]==NO)
@@ -162,22 +256,22 @@
     //    }
     if (nickName.length <= 0) {
         
-        mag=@"暱称不能为空";
+        mag=LOCALIZATION(@"text_error_nickname");
         return mag;
     }
     if (pwd.length <= 0) {
         
-        mag=@"密码不能为空";
+        mag=LOCALIZATION(@"text_error_password");
         return mag;
     }
     if(ver.length <= 0||![pwd isEqualToString:ver])
     {
-        mag=@"两次密码不一样";
+        mag=LOCALIZATION(@"text_pssword_not_the_same");
         return mag;
     }
     if(email.length>0&&[self validateEmail:email]==NO)
     {
-        mag=@"邮箱格式不正确";
+        mag=LOCALIZATION(@"text_error_email");
         return mag;
     }
     return mag;
@@ -523,7 +617,7 @@
                 //注册按钮
                 UIButton * RegBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 25, (Drive_Wdith/2), 35)];
                 //设置按显示文字
-                [RegBtn setTitle:@"注册" forState:UIControlStateNormal];
+                [RegBtn setTitle:LOCALIZATION(@"btn_sign_up") forState:UIControlStateNormal];
                 //设置按钮背景颜色
                 [RegBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                 //设置按钮响应事件
@@ -580,21 +674,13 @@
                                   otherButtonTitles:nil] show];
             }
             //register is successful
-            else{
-                
-                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                            message:LOCALIZATION(@"text_binding_device")
-                                           delegate:self
-                                  cancelButtonTitle:LOCALIZATION(@"btn_skip")
-                                  otherButtonTitles:(@"btn_binding")] show];
-                
-//                UIImageView *viewe = [[UIImageView alloc] initWithFrame:CGRectMake(60.0, 50.0, 45.0, 45.0)];
-//                viewe.image = [UIImage imageNamed:@"login_name"];
-//                [alert addSubview:viewe];
-//                
-            }
             
+        } else{
+            
+            [_PopupSView setHidden:NO];
+
         }
+        
         
     }
 }
@@ -629,12 +715,24 @@
         [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
         
     }
+    
 }
 
 /**返回*/
 -(void)selectLeftAction:(id)sender
 {
     [[self navigationController] pushViewController:nil animated:YES];
+}
+
+-(void)goToChildInformationMatchingAction:(id)sender{
+    ChildInformationMatchingViewController *cimm = [[ChildInformationMatchingViewController alloc]init];
+    [self.navigationController pushViewController:cimm animated:YES];
+    cimm.title = LOCALIZATION(@"btn_sign_up");
+}
+
+// cancel the button
+-(void)btnCancelAction:(id)sender{
+    [_PopupSView setHidden:YES];
 }
 
 @end

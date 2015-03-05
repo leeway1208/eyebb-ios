@@ -16,6 +16,7 @@
 "50_days"="50 days";
 "app_name"="寶寶安";
 "text_policy"="By Continuing, you agree to our <u>Terms</u> and <u>Privacy Policy</u>.";
+"text_pssword_not_the_same" = "兩次密碼不一樣!":
 "text_user_name"="用戶名";
 "text_email"="電郵 (可選)";
 "text_phone_number"="電話 (用戶名)";

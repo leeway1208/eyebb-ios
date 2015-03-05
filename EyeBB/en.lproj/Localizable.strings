@@ -9,6 +9,7 @@
 
 
 //<!-- Text strings -->
+"text_pssword_not_the_same" = "The two passwrods are not the same!":
 "this_Week"="This week";
 "Last_14_days"="Last 14 days";
 "50_days"="50 days";
