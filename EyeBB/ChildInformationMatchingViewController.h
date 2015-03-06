@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ChildInformationMatchingViewController : UIViewController
+@interface ChildInformationMatchingViewController : UIViewController<UIActionSheetDelegate>
 
 @end

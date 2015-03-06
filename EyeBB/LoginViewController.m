@@ -119,7 +119,7 @@
      *  button
      */
     //登录按钮
-    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 115, (Drive_Wdith/2), Drive_Wdith/8)];
+    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 80 +(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
     [_loginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [_loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

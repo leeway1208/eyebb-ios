@@ -147,16 +147,16 @@
 //        [alertView show];
 //    }
     
-        _reg = [[RegViewController alloc] init];
-    
-    
-    [self.navigationController pushViewController:_reg animated:YES];
-    _reg.title = @"";
-    
+//        _reg = [[RegViewController alloc] init];
+//    
+//    
+//    [self.navigationController pushViewController:_reg animated:YES];
+//    _reg.title = @"";
+//    
 
-//    ChildInformationMatchingViewController *reg = [[ChildInformationMatchingViewController alloc] init];
-//    [self.navigationController pushViewController:reg animated:YES];
-//    reg.title = @"";
+    ChildInformationMatchingViewController *reg = [[ChildInformationMatchingViewController alloc] init];
+    [self.navigationController pushViewController:reg animated:YES];
+    reg.title = @"";
     
 //
     
