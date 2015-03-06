@@ -52,6 +52,8 @@
 @property (strong,nonatomic) UIButton * organizationShowBtn;
 /**机构列表*/
 @property (strong,nonatomic) UITableView * organizationTableView;
+/**查询日期范围列表*/
+@property (strong,nonatomic) UITableView * dateTableView;
 /**用户名称*/
 @property (strong,nonatomic) UILabel * UserNameLbl;
 //单击空白处关闭遮盖层
@@ -259,7 +261,7 @@
     [self.view addSubview:_MainInfoScrollView];
     //------------------------室内定位-------------------------------
     //室内定位titleView
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 54)];
+    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
     titleView.backgroundColor=[UIColor clearColor];
     UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 44.0f)];
     [labelTitle setBackgroundColor:[UIColor clearColor]];
@@ -272,9 +274,9 @@
     [titleView addSubview:labelTitle];
     
     //室内定位条件刷选
-    UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
+    UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 0, 44, 44)];
     //设置按显示图片
-    [listSetBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+    [listSetBtn setImage:[UIImage imageNamed:@"btn_option"] forState:UIControlStateNormal];
     //设置按钮背景颜色
     [listSetBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
@@ -289,20 +291,22 @@
     [_MainInfoScrollView addSubview:titleView];
     
     //房间显示选择View
-    UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 54, Drive_Wdith, 44)];
+    UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 44, Drive_Wdith, 44)];
     organizationShowBtnShowView.backgroundColor=[UIColor whiteColor];
     //室内定位显示选择
+    NSString *organizationStr=@"你你你你";
     _organizationShowBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 0, Drive_Wdith-30, 44)];
     //设置按显示title
-    [_organizationShowBtn setTitle:@"****" forState:UIControlStateNormal];
+    [_organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
     [_organizationShowBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]  forState:UIControlStateNormal];
     //设置按钮title的对齐
     [_organizationShowBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     
     [_organizationShowBtn setContentEdgeInsets:UIEdgeInsetsMake(0,0, 0, 20)];
     
-    UIImageView * osBtnImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_organizationShowBtn.frame)-20,12,20,20)];
-    [osBtnImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+    UIImageView * osBtnImgView=[[UIImageView alloc]initWithFrame:CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15)];
+    [osBtnImgView setImage:[UIImage imageNamed:@"arrow_down"]];
+    osBtnImgView.tag=218;
     [_organizationShowBtn addSubview:osBtnImgView];
     
     
@@ -333,7 +337,7 @@
     
     
     //初始化房间信息
-    _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 98, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-138)];
+    _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 88, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-128)];
     
     _RoomTableView.dataSource = self;
     _RoomTableView.delegate = self;
@@ -574,7 +578,7 @@
     //室内定位条件刷选
     UIButton * SettingBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 5, 44, 44)];
     //设置按显示图片
-    [SettingBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+    [SettingBtn setImage:[UIImage imageNamed:@"btn_settings"] forState:UIControlStateNormal];
     //设置按钮背景颜色
     [SettingBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
@@ -717,6 +721,9 @@
     else if(tableView == self.PerformanceTableView){
         return 100;
     }
+    else if(tableView == self.dateTableView){
+        return 44;
+    }
     
     
     return 44;
@@ -749,6 +756,9 @@
     }
     else if(tableView == self.PerformanceTableView){
         return 2;
+    }
+    else if(tableView == self.dateTableView){
+        return 3;
     }
     else{
         return  0;
