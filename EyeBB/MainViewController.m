@@ -69,13 +69,13 @@
 
 
 /**活动按钮*/
-@property (strong,nonatomic) UIButton * oneBtn;
+@property (strong,nonatomic) UIButton * HomeBtn;
 /**活动按钮*/
-@property (strong,nonatomic) UIButton * twoBtn;
+@property (strong,nonatomic) UIButton * RadarBtn;
 /**活动按钮*/
-@property (strong,nonatomic) UIButton * threeBtn;
+@property (strong,nonatomic) UIButton * NewsBtn;
 /**活动按钮*/
-@property (strong,nonatomic) UIButton * fourBtn;
+@property (strong,nonatomic) UIButton * PersonageBtn;
 
 
 //间隔线2
@@ -179,70 +179,88 @@
 //    [segmentedControl addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventValueChanged];
 //    [self.view addSubview:segmentedControl];
     
-    //室内定位条件刷选
-    _oneBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
+    //室内定位选择按钮
+    _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
-    [_oneBtn setImage:[UIImage imageNamed:@"actbar_home"] forState:UIControlStateNormal];
+    [_HomeBtn setImage:[UIImage imageNamed:@"actbar_home"] forState:UIControlStateNormal];
+    [_HomeBtn setImage:[UIImage imageNamed:@"actbar_homeOn"] forState:UIControlStateSelected];
     //设置按钮背景颜色
-    [_oneBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+    [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //设置按钮响应事件
-    [_oneBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_HomeBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
     //设置按钮是否圆角
-    [_oneBtn.layer setMasksToBounds:NO];
+    [_HomeBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-    _oneBtn.tag=214;
-    [self.view addSubview:_oneBtn];
+    _HomeBtn.tag=214;
+    [self.view addSubview:_HomeBtn];
     
     
-    //室内定位条件刷选
-    _twoBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
+    
+    
+    //雷达选择按钮
+    _RadarBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
-    [_twoBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
+    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
+    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_trackingOn"] forState:UIControlStateSelected];
     //设置按钮背景颜色
-    [_twoBtn setBackgroundColor:[UIColor clearColor]];
+    [_RadarBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [_twoBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_RadarBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
     //设置按钮是否圆角
-    [_twoBtn.layer setMasksToBounds:NO];
+    [_RadarBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _twoBtn.tag=215;
-    [self.view addSubview:_twoBtn];
+        _RadarBtn.tag=215;
+    [self.view addSubview:_RadarBtn];
     
-    //室内定位条件刷选
-    _threeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*2, 20, Drive_Wdith/4, 44)];
+    //简报选择按钮
+    _NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*2, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
-    [_threeBtn setImage:[UIImage imageNamed:@"actbar_profile"] forState:UIControlStateNormal];
+    [_NewsBtn setImage:[UIImage imageNamed:@"actbar_report"] forState:UIControlStateNormal];
+    [_NewsBtn setImage:[UIImage imageNamed:@"actbar_reportOn"] forState:UIControlStateSelected];
     //设置按钮背景颜色
-    [_threeBtn setBackgroundColor:[UIColor clearColor]];
+    [_NewsBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [_threeBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_NewsBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
     //设置按钮是否圆角
-    [_threeBtn.layer setMasksToBounds:NO];
+    [_NewsBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _threeBtn.tag=216;
-    [self.view addSubview:_threeBtn];
+        _NewsBtn.tag=216;
+    [self.view addSubview:_NewsBtn];
     
-    //室内定位条件刷选
-    _fourBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*3, 20, Drive_Wdith/4, 44)];
+    //个人信息选择按钮
+    _PersonageBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*3, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
-    [_fourBtn setImage:[UIImage imageNamed:@"actbar_report"] forState:UIControlStateNormal];
+    [_PersonageBtn setImage:[UIImage imageNamed:@"actbar_profile"] forState:UIControlStateNormal];
+    [_PersonageBtn setImage:[UIImage imageNamed:@"actbar_profileOn"] forState:UIControlStateSelected];
     //设置按钮背景颜色
-    [_fourBtn setBackgroundColor:[UIColor clearColor]];
+    [_PersonageBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [_fourBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_PersonageBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
     //设置按钮是否圆角
-    [_fourBtn.layer setMasksToBounds:NO];
+    [_PersonageBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _fourBtn.tag=217;
-    [self.view addSubview:_fourBtn];
+        _PersonageBtn.tag=217;
+    [self.view addSubview:_PersonageBtn];
     
-
+    NSLog(@"CGRectGetm(_RadarBtn.bounds) is %f",CGRectGetMinX(_RadarBtn.bounds));
+    //间隔线
+    UILabel *divisionHomeLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4-1, 24.0f, 2, 34)];
+    [divisionHomeLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [self.view addSubview:divisionHomeLbl];
     
+    //间隔线
+    UILabel *divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*2-1, 24.0f, 2, 34)];
+    [divisionRadarLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [self.view addSubview:divisionRadarLbl];
     
+    //间隔线
+    UILabel *divisionNewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*3-1, 24.0f, 2, 34)];
+    [divisionNewsLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [self.view addSubview:divisionNewsLbl];
     
     
     //设置scrollView
@@ -372,7 +390,7 @@
     
     [NewsView addSubview:NewsLbl];
     
-    //室内定位条件刷选
+    //选择要查看的儿童
     UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-82, 5, 62, 44)];
 
     //设置按钮背景颜色
@@ -1419,14 +1437,49 @@
     int num=tempBtn.tag-214;
     if(num !=1)
     {
+        switch (tempBtn.tag) {
+            case 214:
+                [_HomeBtn setSelected:YES];
+                [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_NewsBtn setSelected:NO];
+                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                [_PersonageBtn setSelected:NO];
+                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                break;
+            case 216:
+                [_HomeBtn setSelected:NO];
+                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_NewsBtn setSelected:YES];
+                [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                [_PersonageBtn setSelected:NO];
+                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                break;
+            case 217:
+                [_HomeBtn setSelected:NO];
+                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_NewsBtn setSelected:NO];
+                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                [_PersonageBtn setSelected:YES];
+                [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                break;
+                
+            default:
+                break;
+        }
         huaHMSegmentedControl = num;
         [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * num, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         if(num==0)
         {
-            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+//            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         }
         if (num==3) {
-             [self getRequest:@"reportService/api/notices" delegate:self];
+//             [self getRequest:@"reportService/api/notices" delegate:self];
         }
     }
     else
