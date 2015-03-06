@@ -40,7 +40,8 @@
         UIColor * cc = [UIColor whiteColor];
         NSDictionary * dict = [NSDictionary dictionaryWithObject:cc forKey:UITextAttributeTextColor];
         
-        
+        navController.navigationBar.translucent = NO;
+        welcome.edgesForExtendedLayout = UIRectEdgeNone;
         navController.navigationBar.titleTextAttributes = dict;
         //navBar字体颜色
         [[UINavigationBar appearance] setTintColor:[UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1]];

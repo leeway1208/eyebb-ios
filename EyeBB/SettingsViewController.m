@@ -8,22 +8,24 @@
 
 #import "SettingsViewController.h"
 
+#import "ASIDownloadCache.h"
 
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 
 @property (nonatomic,strong) UITableView * optionsTable;
-
+/**右按钮*/
+@property(nonatomic, retain) UIBarButtonItem *rightBtnItem;
 @end
 
 @implementation SettingsViewController
-
+@synthesize  rightBtnItem;
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     // Do any additional setup after loading the view.
     
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: LOCALIZATION(@"btn_options") style:UIBarButtonItemStyleBordered target:self action:@selector(settingsSelectLeftAction:)];
-    
+    self.navigationItem.rightBarButtonItem = self.rightBtnItem;
+   
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(settingsSelectLeftAction:)];
    
     
@@ -69,6 +71,27 @@
     [self.view addSubview:_optionsTable];
     
 }
+/**自定义右按钮*/
+-(UIBarButtonItem *)rightBtnItem{
+    if (rightBtnItem==nil) {
+        UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-100, 6, 80, 32)];
+        [button setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+        [button setTitle:LOCALIZATION(@"btn_logout") forState:UIControlStateNormal];
+        [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [button.layer setBorderWidth:1.0];
+        //设置按钮是否圆角
+        [button.layer setMasksToBounds:YES];
+        //圆角像素化
+        [button.layer setCornerRadius:4.0];
+        [button.layer setBorderColor:[UIColor whiteColor].CGColor];
+        [button addTarget:self action:@selector(exitAction:) forControlEvents:UIControlEventTouchUpInside];
+
+        rightBtnItem = [[UIBarButtonItem alloc] initWithCustomView:button] ;
+
+    }
+    return rightBtnItem;
+}
+
 
 //标签数
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -255,4 +278,13 @@
 {
     [[self navigationController] pushViewController:nil animated:YES];
 }
+
+-(void)exitAction:(id)sender
+{
+    [[ASIDownloadCache sharedCache] clearCachedResponsesForStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+    [ASIHTTPRequest clearSession];
+    [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+
 @end

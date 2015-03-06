@@ -100,8 +100,8 @@
     // Do any additional setup after loading the view.
     [self iv];
 //    [self getRequest:@"kindergartenList" delegate:self];
-//    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
-    [self getRequest:@"reportService/api/notices" delegate:self];
+    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+   
     
     
     [self lc];
@@ -1226,9 +1226,8 @@
     //    scrollView.
     
     if(huaHMSegmentedControl==0){
-        //        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
-        //        [scrollView setContentOffset:CGPointMake(320,0) animated:YES];
-        //        [self.RoomTableView tableViewDidScroll:scrollView];
+
+        [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         
     }
     else if(huaHMSegmentedControl==2){
@@ -1237,6 +1236,11 @@
         //        myDelegate.footStr = nil;
         //        [self.RadarTableView tableViewDidScroll:scrollView];
     }
+    else if(huaHMSegmentedControl==2){
+        
+        [self getRequest:@"reportService/api/notices" delegate:self];
+    }
+
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
@@ -1280,6 +1284,8 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
+    NSString *responseString = [request responseString];
+    NSLog(@"responseString is:%@",responseString);
     //请求机构列表
     if ([tag isEqualToString:@"kindergartenList"]) {
         NSData *responseData = [request responseData];
@@ -1292,6 +1298,7 @@
         _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
         [_organizationTableView reloadData];
     }
+    
     
 }
 #pragma mark --
@@ -1404,6 +1411,13 @@
     {
         huaHMSegmentedControl = num;
         [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * num, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+        if(num==0)
+        {
+            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+        }
+        if (num==3) {
+             [self getRequest:@"reportService/api/notices" delegate:self];
+        }
     }
     else
     {

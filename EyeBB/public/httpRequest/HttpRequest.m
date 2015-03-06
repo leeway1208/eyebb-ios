@@ -10,6 +10,7 @@
 #import "ASIHTTPRequest.h"
 #import "ASIFormDataRequest.h"
 #import "EyeBBViewController.h"
+#import "ASIDownloadCache.h"
 @interface HttpRequest()
 @property(strong,nonatomic) NSMutableDictionary *clientDelegates;
 @property (strong,nonatomic) NSString *methodStr;
@@ -21,7 +22,7 @@ static HttpRequest *instance;
 #pragma mark ---
 #pragma mark --- 处理业务逻辑委托
 -(NSMutableDictionary *)clientDelegates{
-    NSLog(@"--------------3------------------");
+
     if(clientDelegates==nil){
         clientDelegates = [[NSMutableDictionary alloc] init];
     }
@@ -31,7 +32,7 @@ static HttpRequest *instance;
 #pragma mark ---
 #pragma mark ---单例实现
 +(HttpRequest *)instance{
-    NSLog(@"--------------2------------------");
+
     static dispatch_once_t pred = 0;
     dispatch_once(&pred, ^{
         if(instance==nil){
@@ -49,7 +50,9 @@ static HttpRequest *instance;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:@"0"];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-    
+//    [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
+    [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
+[request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     [request setDelegate:self];
     
     [request startAsynchronous];
@@ -62,9 +65,12 @@ static HttpRequest *instance;
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:@"0"];
+    
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
-
+    [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+    
+[ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
     if ([requestDictionary count] > 0) {
         for (NSString *key in requestDictionary) {
             [request setPostValue:requestDictionary[key] forKey:key];
