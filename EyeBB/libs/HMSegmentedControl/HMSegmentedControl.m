@@ -119,6 +119,7 @@ typedef enum {
     self.backgroundColor = [UIColor whiteColor];
     self.opaque = NO;
     self.selectionIndicatorColor = [UIColor colorWithRed:52.0f/255.0f green:181.0f/255.0f blue:229.0f/255.0f alpha:1.0f];
+//    self.selectionIndicatorColor = [UIColor grayColor];
     
     self.selectedSegmentIndex = 0;
     self.segmentEdgeInset = UIEdgeInsetsMake(0, 5, 0, 5);
@@ -133,10 +134,9 @@ typedef enum {
     self.selectionIndicatorBoxLayer.opacity = 0.2;
     self.selectionIndicatorBoxLayer.borderWidth = 1.0f;
 }
-
 - (void)setFrame:(CGRect)frame {
     [super setFrame:frame];
-    
+
     if (self.type == HMSegmentedControlTypeText && self.sectionTitles) {
         [self updateSegmentsRects];
     } else if(self.type == HMSegmentedControlTypeImages && self.sectionImages) {
@@ -276,12 +276,13 @@ typedef enum {
     // Add the selection indicators
     if (self.selectedSegmentIndex != HMSegmentedControlNoSegment && !self.selectionIndicatorStripLayer.superlayer) {
         self.selectionIndicatorStripLayer.frame = [self frameForSelectionIndicator];
-        
+        NSLog(@"--%f,--%f",self.selectionIndicatorStripLayer.frame.size.height,self.selectionIndicatorStripLayer.frame.origin.y);
    
         [self.scrollView.layer addSublayer:self.selectionIndicatorStripLayer];
         
         if (self.selectionStyle == HMSegmentedControlSelectionStyleBox && !self.selectionIndicatorBoxLayer.superlayer) {
             self.selectionIndicatorBoxLayer.frame = [self frameForFillerSelectionIndicator];
+            NSLog(@"self.selectionIndicatorBoxLayer.frame.h is%f,%F",self.selectionIndicatorBoxLayer.frame.size.height,self.selectionIndicatorBoxLayer.frame.origin.y);
             [self.scrollView.layer insertSublayer:self.selectionIndicatorBoxLayer atIndex:0];
         }
     }
@@ -299,7 +300,6 @@ typedef enum {
     
     if (self.selectionIndicatorLocation == HMSegmentedControlSelectionIndicatorLocationDown)
         indicatorYOffset = self.bounds.size.height - self.selectionIndicatorHeight;
-    
     CGFloat sectionWidth = 0.0f;
     
     if (self.type == HMSegmentedControlTypeText) {
@@ -318,9 +318,9 @@ typedef enum {
         CGFloat x = ((widthToEndOfSelectedSegment - widthToStartOfSelectedIndex) / 2) + (widthToStartOfSelectedIndex - sectionWidth / 2);
         return CGRectMake(x, indicatorYOffset, sectionWidth, self.selectionIndicatorHeight);
     } else {
-        NSLog(@"---%F--,%F,,%zi",self.segmentWidth * self.selectedSegmentIndex,self.segmentWidth,self.selectedSegmentIndex);
         return CGRectMake(self.segmentWidth * self.selectedSegmentIndex, indicatorYOffset, self.segmentWidth, self.selectionIndicatorHeight);
     }
+   
 }
 
 - (CGRect)frameForFillerSelectionIndicator {
@@ -365,6 +365,7 @@ typedef enum {
 		self.scrollView.scrollEnabled = NO;
         self.scrollView.contentSize = self.frame.size;
 	}
+
 }
 
 - (void)willMoveToSuperview:(UIView *)newSuperview {
@@ -469,6 +470,8 @@ typedef enum {
             [CATransaction setAnimationTimingFunction:[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionLinear]];
             self.selectionIndicatorStripLayer.frame = [self frameForSelectionIndicator];
             self.selectionIndicatorBoxLayer.frame = [self frameForFillerSelectionIndicator];
+            
+
             [CATransaction commit];
         } else {
             // Disable CALayer animations

@@ -7,7 +7,6 @@
 //
 
 #import "MainViewController.h"
-#import "HMSegmentedControl.h"
 #import "SettingsViewController.h"
 #import "KindlistViewController.h"
 #import "JSONKit.h"
@@ -25,8 +24,7 @@
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
 @property (strong, nonatomic) UIScrollView *MainInfoScrollView;
-/**实现选项卡功能的第三方控件*/
-@property (nonatomic, strong) HMSegmentedControl *segmentedControl;
+
 /**房间信息*/
 @property (strong, nonatomic) UITableView *RoomTableView;
 /**雷达*/
@@ -66,6 +64,16 @@
 @property (strong,nonatomic) UIButton * activitiesBtn;
 /**选择显示范围*/
 @property (strong,nonatomic) UIButton * PerformanceTimeBtn;
+
+
+/**活动按钮*/
+@property (strong,nonatomic) UIButton * oneBtn;
+/**活动按钮*/
+@property (strong,nonatomic) UIButton * twoBtn;
+/**活动按钮*/
+@property (strong,nonatomic) UIButton * threeBtn;
+/**活动按钮*/
+@property (strong,nonatomic) UIButton * fourBtn;
 
 
 //间隔线2
@@ -150,47 +158,90 @@
 -(void)lc
 {
     
-//    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionTitles:@[@"室内定位", @"雷达",@"简报",@"用户"]];
-    HMSegmentedControl *segmentedControl3 = [[HMSegmentedControl alloc] initWithSectionImages:@[[UIImage imageNamed:@"actbar_home"],[UIImage imageNamed:@"actbar_tracking"],[UIImage imageNamed:@"actbar_report"],[UIImage imageNamed:@"actbar_profile"]] sectionSelectedImages:@[[UIImage imageNamed:@"actbar_home"],[UIImage imageNamed:@"actbar_tracking"],[UIImage imageNamed:@"actbar_report"],[UIImage imageNamed:@"actbar_profile"]]];
+//    UISegmentedControl *segmentedControl = [ [ UISegmentedControl alloc ]initWithItems:[NSArray arrayWithObjects:@"",@"",@"",@"",nil]];
+//    segmentedControl.frame=CGRectMake(0, 20, Drive_Wdith, 44);
+//    segmentedControl.segmentedControlStyle =
+//    UISegmentedControlStyleBar;
+//  
+//    segmentedControl.tintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+////    [ segmentedControl insertSegmentWithTitle:
+////     @"All" atIndex: 0 animated: NO ];
+////    [ segmentedControl insertSegmentWithTitle:
+////     @"Missed" atIndex: 1 animated: NO ];
+//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_home"] forSegmentAtIndex:0];
+//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_tracking"] forSegmentAtIndex:1];
+//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_profile"] forSegmentAtIndex:2];
+//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_report"] forSegmentAtIndex:3];
+//    segmentedControl.selectedSegmentIndex = 0;
+//    
+//    [segmentedControl addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventValueChanged];
+//    [self.view addSubview:segmentedControl];
     
-    self.segmentedControl = segmentedControl3;
-    [self.segmentedControl setBackgroundColor:[UIColor colorWithRed:0.800 green:0.800 blue:0.800 alpha:1]];
-//    [self.segmentedControl setTextColor:[UIColor colorWithRed:0.239 green:0.239 blue:0.239 alpha:1]];
+    //室内定位条件刷选
+    _oneBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
+    //设置按显示图片
+    [_oneBtn setImage:[UIImage imageNamed:@"actbar_home"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_oneBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+    //设置按钮响应事件
+    [_oneBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [_oneBtn.layer setMasksToBounds:NO];
+    //圆角像素化
+    //    [listSetBtn.layer setCornerRadius:4.0];
+    _oneBtn.tag=214;
+    [self.view addSubview:_oneBtn];
     
-//    //选中后的颜色
-//    [self.segmentedControl setSelectedTextColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-    //是否下标
-//    [self.segmentedControl setSelectionIndicatorHeight:0.0f];
     
-    //    [self.segmentedControl setSelectionIndicatorColor:[UIColor colorWithRed:0.227 green:0.408 blue:0.616 alpha:1]];
-    //    [self.segmentedControl setselect]
+    //室内定位条件刷选
+    _twoBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
+    //设置按显示图片
+    [_twoBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_twoBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_twoBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [_twoBtn.layer setMasksToBounds:NO];
+    //圆角像素化
+    //    [listSetBtn.layer setCornerRadius:4.0];
+        _twoBtn.tag=215;
+    [self.view addSubview:_twoBtn];
     
-    [self.segmentedControl setSelectionStyle:HMSegmentedControlSelectionStyleBox];
-    [self.segmentedControl setSelectedSegmentIndex:0];
-    [self.segmentedControl setSelectionIndicatorLocation:HMSegmentedControlSelectionIndicatorLocationDown];
-    [self.segmentedControl setFrame:CGRectMake(0, 20, Drive_Wdith, 44)];
+    //室内定位条件刷选
+    _threeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*2, 20, Drive_Wdith/4, 44)];
+    //设置按显示图片
+    [_threeBtn setImage:[UIImage imageNamed:@"actbar_profile"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_threeBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_threeBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [_threeBtn.layer setMasksToBounds:NO];
+    //圆角像素化
+    //    [listSetBtn.layer setCornerRadius:4.0];
+        _threeBtn.tag=216;
+    [self.view addSubview:_threeBtn];
     
-    __weak typeof(self) weakSelf1 = self;
-    [self.segmentedControl setIndexChangeBlock:^(NSInteger index) {
-        if(index!=1)
-        {
-            huaHMSegmentedControl = (int)index;
-            [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * index, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-        }
-        else
-        {
-            [[[UIAlertView alloc] initWithTitle:@"系统提示"
-                                        message:@"IOS暂时不支持此功能，敬请期待"
-                                       delegate:self
-                              cancelButtonTitle:@"确定"
-                              otherButtonTitles:nil] show];
-            [self.segmentedControl setSelectedSegmentIndex:huaHMSegmentedControl];
-            [weakSelf1.self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-        }
-        
-    }];
+    //室内定位条件刷选
+    _fourBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*3, 20, Drive_Wdith/4, 44)];
+    //设置按显示图片
+    [_fourBtn setImage:[UIImage imageNamed:@"actbar_report"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_fourBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_fourBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [_fourBtn.layer setMasksToBounds:NO];
+    //圆角像素化
+    //    [listSetBtn.layer setCornerRadius:4.0];
+        _fourBtn.tag=217;
+    [self.view addSubview:_fourBtn];
     
-    [self.view addSubview:self.segmentedControl];
+
+    
+    
+    
     
     //设置scrollView
     _MainInfoScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, Drive_Wdith, Drive_Height-44)];
@@ -1203,14 +1254,10 @@
 /**列表切换*/
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     if (scrollView.tag == 101) {
-        //   NSLog(@"segmentedControl3.selectedSegmentIndex is :%d",self.segmentedControl.selectedSegmentIndex);
         CGFloat pageWidth = CGRectGetWidth(scrollView.frame);
         NSInteger page = scrollView.contentOffset.x / pageWidth;
-        //        NSLog(@"scrollView.contentOffset.x is %f",scrollView.contentOffset.x);
-        //        NSLog(@"scrollView.frame.size.width %f",scrollView.frame.size.width);
         if (scrollView.contentOffset.x!=320.000000) {
             huaHMSegmentedControl = (int)page;
-            [self.segmentedControl setSelectedSegmentIndex:page animated:YES];
         }
         else
         {
@@ -1226,12 +1273,7 @@
             {
                 [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
             }
-            [self.segmentedControl setSelectedSegmentIndex:huaHMSegmentedControl animated:YES];
         }
-        //     NSLog(@"456=%d",huaHMSegmentedControl);
-        
-        //     NSLog(@"page is :%d,scrollView.contentOffset.x is %f, pageWidth is %f",page,scrollView.contentOffset.x , pageWidth);
-        
     }
 }
 #pragma mark --
@@ -1351,6 +1393,45 @@
     _PerformanceTableView.hidden=YES;
     _PerformanceTimeBtn.hidden=YES;
     _ActivitiesTableView.hidden=NO;
+}
+
+
+- (void)tabAction:(id)sender
+{
+    UIButton *tempBtn=(UIButton *)sender;
+    int num=tempBtn.tag-214;
+    if(num !=1)
+    {
+        huaHMSegmentedControl = num;
+        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * num, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+    }
+    else
+    {
+        
+        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+                                    message:@"IOS暂时不支持此功能，敬请期待"
+                                   delegate:self
+                          cancelButtonTitle:@"确定"
+                          otherButtonTitles:nil] show];
+        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+    }
+//    UISegmentedControl *segmentedControl=(UISegmentedControl *)sender;
+//    if([sender selectedSegmentIndex] !=1)
+//    {
+//        huaHMSegmentedControl = [sender selectedSegmentIndex];
+//        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * [sender selectedSegmentIndex], 0, Drive_Wdith, Drive_Height-44) animated:YES];
+//    }
+//    else
+//    {
+//        segmentedControl.selectedSegmentIndex = huaHMSegmentedControl;
+//        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+//                                    message:@"IOS暂时不支持此功能，敬请期待"
+//                                   delegate:self
+//                          cancelButtonTitle:@"确定"
+//                          otherButtonTitles:nil] show];
+//        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+//    }
+
 }
 
 @end
