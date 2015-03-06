@@ -39,7 +39,7 @@
         
         UIColor * cc = [UIColor whiteColor];
         NSDictionary * dict = [NSDictionary dictionaryWithObject:cc forKey:UITextAttributeTextColor];
-        
+        //设置NavBar是否有透明
         navController.navigationBar.translucent = NO;
         welcome.edgesForExtendedLayout = UIRectEdgeNone;
         navController.navigationBar.titleTextAttributes = dict;

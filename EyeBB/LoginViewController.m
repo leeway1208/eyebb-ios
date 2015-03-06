@@ -119,7 +119,7 @@
      *  button
      */
     //登录按钮
-    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 200, (Drive_Wdith/2), Drive_Wdith/8)];
+    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 115, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
     [_loginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [_loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -143,7 +143,7 @@
      */
     
     _loginUserAccount=[[UITextField alloc] initWithFrame:self.view.bounds];
-    _loginUserAccount.frame = CGRectMake(10, 90,self.view.frame.size.width - 20 , 40);
+    _loginUserAccount.frame = CGRectMake(10, 10,self.view.frame.size.width - 20 , 40);
     _loginUserAccount.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     
     _userAccountImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
@@ -161,7 +161,7 @@
     //[_loginUserAccount becomeFirstResponder];
     [self.view addSubview:_loginUserAccount];
     
-    UILabel * accountTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 125, self.view.frame.size.width-20, 1)];
+    UILabel * accountTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 45, self.view.frame.size.width-20, 1)];
     [accountTelLbl.layer setBorderWidth:1.0]; //边框宽度
     [accountTelLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
     
@@ -173,7 +173,7 @@
      */
     _loginPassword=[[UITextField alloc] initWithFrame:self.view.bounds];
     _loginPassword.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
-    _loginPassword.frame = CGRectMake(10, 145,self.view.frame.size.width - 20, 40);
+    _loginPassword.frame = CGRectMake(10, 65,self.view.frame.size.width - 20, 40);
     _passWordImg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
     _passWordImg.frame = CGRectMake(0, 0, 20, 20);
     _loginPassword.leftView = _passWordImg;//设置输入框内左边的图标
@@ -187,7 +187,7 @@
     _loginPassword.returnKeyType=UIReturnKeyDefault;//返回键的类型
     [self.view addSubview:_loginPassword];
     
-    UILabel * passWordTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 180, self.view.frame.size.width-20, 1)];
+    UILabel * passWordTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 100, self.view.frame.size.width-20, 1)];
     [passWordTelLbl.layer setBorderWidth:1.0]; //边框宽度
     [passWordTelLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
     
@@ -200,7 +200,7 @@
     _forgetPasswordLabel.titleLabel.font = [UIFont systemFontOfSize:12];
     [_forgetPasswordLabel setTitle:LOCALIZATION(@"text_forgot_password") forState:UIControlStateNormal];
     [_forgetPasswordLabel setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
-    _forgetPasswordLabel.frame = CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 240, (Drive_Wdith/2), Drive_Wdith/8);
+    _forgetPasswordLabel.frame = CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 120+(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8);
     
     [self.view  addSubview:_forgetPasswordLabel];
     
