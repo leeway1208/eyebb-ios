@@ -30,9 +30,6 @@
 @property (nonatomic,strong) UIButton * searchBtn;
 
 /**action sheet for kids birthady*/
-@property(retain,nonatomic)UIActionSheet *actionSheet;
-
-/**action sheet for kids birthady*/
 @property(retain,nonatomic)UIDatePicker *datePicker;
 
 /**date view container*/
@@ -332,34 +329,11 @@
     
 }
 
-//- (void)kidsBirthdayAciton:(id)sender{
-//
-//    NSString *title = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? @"\n\n\n\n\n\n\n\n\n" : @"\n\n\n\n\n\n\n\n\n\n\n\n";
-//    _actionSheet =  [[UIActionSheet alloc] initWithTitle:title delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:LOCALIZATION(@"btn_confirm"),nil];
-//
-//
-//
-//    _datePicker= [[UIDatePicker alloc] init];
-//    _datePicker.tag = 101;
-//    _datePicker.datePickerMode = 1;
-//
-//
-//    [_actionSheet addSubview:_datePicker];
-//    [_actionSheet showInView:self.view];
-//}
 
 
 
+#pragma mark - method of UIDatePicker
 
-#pragma mark - method of UIActionSheet
-//-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-//    _datePicker = (UIDatePicker *)[actionSheet viewWithTag:101];
-//    NSDateFormatter *formattor = [[NSDateFormatter alloc] init];
-//
-//    NSString *timestamp = [formattor stringFromDate:_datePicker.date];
-//    [(UIButton *)[self.view viewWithTag:102] setTitle:timestamp forState:UIControlStateNormal];
-//
-//}
 - (void)chooseDate:(UIDatePicker *)sender {
     NSDate *selectedDate = sender.date;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
