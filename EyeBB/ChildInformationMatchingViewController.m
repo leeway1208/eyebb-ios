@@ -16,7 +16,8 @@
 @property (nonatomic,strong) UIImageView *kidsNameImg;
 
 /**kids birthday*/
-@property (nonatomic,strong) UIButton *kidsBirthdayBtn;
+//@property (nonatomic,strong) UIButton *kidsBirthdayBtn;
+@property (nonatomic,strong) UITextField *kidsBirthdayBtn;
 @property (nonatomic,strong) UILabel *kidsBirthadyLb;
 @property (nonatomic,strong) UIImageView *kidsBirthdayImg;
 
@@ -34,6 +35,10 @@
 /**action sheet for kids birthady*/
 @property(retain,nonatomic)UIDatePicker *datePicker;
 
+/**date view container*/
+@property (strong,nonatomic) UIView * dateViewContainer;
+/**date view container confirm button*/
+@property (nonatomic,strong) UIButton *dateViewContainerConfirmBtn;
 @end
 
 @implementation ChildInformationMatchingViewController
@@ -75,6 +80,8 @@
     [_kidsKindergartenImg removeFromSuperview];
     
     [_searchBtn removeFromSuperview];
+    [_dateViewContainer removeFromSuperview];
+    [_dateViewContainerConfirmBtn removeFromSuperview];
     [self.view removeFromSuperview];
     [self setKidsNameTf:nil];
     [self setKidsNameLb:nil];
@@ -88,15 +95,13 @@
     [self setKidsKindergartenBtn:nil];
     [self setKidsKindergartenImg:nil];
     [self setSearchBtn:nil];
-    
+    [self setDateViewContainer:nil];
+    [self setDateViewContainerConfirmBtn:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
 
 -(void)loadWidget{
-    
-
-    
     
     
     /**
@@ -134,7 +139,7 @@
     
     [self.view  addSubview:kidsNameDivLb];
     
-
+    
     
     
     /*
@@ -147,21 +152,64 @@
     [_kidsBirthadyLb setFont: [UIFont systemFontOfSize:14]];
     [self.view  addSubview:_kidsBirthadyLb];
     
-     /**button view*/
-    _kidsBirthdayBtn=[[UIButton alloc] initWithFrame:self.view.bounds];
-    _kidsBirthdayBtn.frame = CGRectMake(-75, (Drive_Height/4) - 20,self.view.frame.size.width , 40);
+    /**button view*/
+    _kidsBirthdayBtn=[[UITextField alloc] initWithFrame:self.view.bounds];
+    _kidsBirthdayBtn.frame = CGRectMake(10 , (Drive_Height/4) - 20,self.view.frame.size.width , 40);
     _kidsBirthdayBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
-    [_kidsBirthdayBtn setTitle:LOCALIZATION(@"text_kid_birthday") forState:UIControlStateNormal];
-    [_kidsBirthdayBtn setTitleColor:[UIColor colorWithRed:0.725 green:0.725 blue:0.745 alpha:1]forState:UIControlStateNormal];
-    _kidsBirthdayBtn.titleLabel.font = [UIFont systemFontOfSize:17];
-    [_kidsBirthdayBtn addTarget:self action:@selector(kidsBirthdayAciton:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:_kidsBirthdayBtn];
-    _kidsBirthdayBtn.tag = 102;
     
-      /**image view*/
-    _kidsNameImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_bday"]];
-    _kidsNameImg.frame = CGRectMake(10, (Drive_Height/4) - 10, 20, 20);
-    [self.view addSubview:_kidsNameImg];
+    _kidsBirthdayImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_bday"]];
+    _kidsBirthdayImg.frame = CGRectMake(0, 0, 20, 20);
+    
+    _kidsBirthdayBtn.leftView = _kidsBirthdayImg;//设置输入框内左边的图标
+    _kidsBirthdayBtn.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+    _kidsBirthdayBtn.leftViewMode=UITextFieldViewModeAlways;
+    _kidsBirthdayBtn.tag = 1001;
+    _kidsBirthdayBtn.placeholder=LOCALIZATION(@"text_kid_birthday");//默认显示的字
+    _kidsBirthdayBtn.secureTextEntry=NO;//设置成密码格式
+    [self.view  addSubview:_kidsBirthdayBtn];
+    
+    
+    /* date view container  */
+    _dateViewContainer=[[UIView alloc]initWithFrame:CGRectMake(0, Drive_Height, Drive_Wdith-10, 220)];
+    [_dateViewContainer setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_dateViewContainer.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_dateViewContainer.layer setCornerRadius:4.0];
+    //[_PopupSView addSubview:_popViewContainer];
+    
+    
+    /** date view container confirm btn */
+    _dateViewContainerConfirmBtn=[[UIButton alloc] initWithFrame:self.view.bounds];
+    _dateViewContainerConfirmBtn.frame = CGRectMake(0, 175 ,self.view.frame.size.width , 40);
+    _dateViewContainerConfirmBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    [_dateViewContainerConfirmBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
+    [_dateViewContainerConfirmBtn setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    _dateViewContainerConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+    [_dateViewContainerConfirmBtn addTarget:self action:@selector(kidsKindergartenAciton:) forControlEvents:UIControlEventTouchUpInside];
+    [_dateViewContainer addSubview:_dateViewContainerConfirmBtn];
+    
+    
+    /**Dividing line for container*/
+    UILabel * containerDivLb=[[UILabel alloc]initWithFrame:CGRectMake(0, 170 ,self.view.frame.size.width, 1)];
+    [containerDivLb.layer setBorderWidth:1.0]; //边框宽度
+    [containerDivLb.layer setBorderColor:[UIColor colorWithRed:0.682 green:0.682 blue:0.682 alpha:0.8].CGColor];
+    
+    [_dateViewContainer addSubview:containerDivLb];
+    
+     /** date picker */
+    self.datePicker = [[UIDatePicker alloc] init];
+    self.datePicker.frame =CGRectMake(0, 0, self.view.frame.size.width, 190);
+    //this mode just have yyyy-mm-dd
+    self.datePicker.datePickerMode = 1;
+    
+    [self.datePicker addTarget:self action:@selector(chooseDate:) forControlEvents:UIControlEventValueChanged];
+    
+    [_dateViewContainer addSubview:_datePicker];
+    _kidsBirthdayBtn.inputView =  self.dateViewContainer;
+  
+    
+    
     
     /**Dividing line*/
     UILabel * kidsBirthdayDivLb=[[UILabel alloc]initWithFrame:CGRectMake(10, (Drive_Height/4) + 20, self.view.frame.size.width-20, 1)];
@@ -183,7 +231,7 @@
     [_kidsKindergartenLb setFont: [UIFont systemFontOfSize:14]];
     [self.view  addSubview:_kidsKindergartenLb];
     
-      /**kindergarten btn*/
+    /**kindergarten btn*/
     _kidsKindergartenBtn=[[UIButton alloc] initWithFrame:self.view.bounds];
     _kidsKindergartenBtn.frame = CGRectMake(-15, (Drive_Height/4) + 60,self.view.frame.size.width , 40);
     _kidsKindergartenBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
@@ -193,11 +241,11 @@
     [_kidsKindergartenBtn addTarget:self action:@selector(kidsKindergartenAciton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_kidsKindergartenBtn];
     
-     /**kindergarten image view*/
+    /**kindergarten image view*/
     _kidsKindergartenImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"arrow_go"]];
     _kidsKindergartenImg.frame = CGRectMake(self.view.frame.size.width - 40, (Drive_Height/4) + 70, 20, 20);
     [self.view addSubview:_kidsKindergartenImg];
-
+    
     
     /**Dividing line*/
     UILabel * kidsKindergartenDivLb=[[UILabel alloc]initWithFrame:CGRectMake(10, (Drive_Height/4) + 101, self.view.frame.size.width-20, 1)];
@@ -207,7 +255,7 @@
     [self.view  addSubview:kidsKindergartenDivLb];
     
     
-
+    
     /*
      *  search button
      */
@@ -231,10 +279,43 @@
     [self.view addSubview:_searchBtn];
     
     
+    
+
+    //隐藏键盘
+    UITapGestureRecognizer *tapGr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
+    tapGr.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGr];
+    
 }
+
+
+
+
 
 -(void)loadParameter{
     
+}
+
+#pragma - keyboard action
+/**
+ *	@brief	设置隐藏键盘
+ *
+ */
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    if (theTextField == self.kidsBirthdayBtn) {
+        [theTextField resignFirstResponder];
+    }
+    if (theTextField == self.kidsNameTf) {
+        [theTextField resignFirstResponder];
+    }
+    return YES;
+    
+}
+
+-(void)viewTapped:(UITapGestureRecognizer*)tapGr
+{
+    [self.kidsBirthdayBtn resignFirstResponder];
+    [self.kidsNameTf resignFirstResponder];
 }
 
 
@@ -251,51 +332,73 @@
     
 }
 
-- (void)kidsBirthdayAciton:(id)sender{
-    
-    NSString *title = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? @"\n\n\n\n\n\n\n\n\n" : @"\n\n\n\n\n\n\n\n\n\n\n\n";
-    _actionSheet =  [[UIActionSheet alloc] initWithTitle:title delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:LOCALIZATION(@"btn_confirm"),nil];
-   [_actionSheet showInView:self.view];
-    
-    
-    _datePicker= [[UIDatePicker alloc] init];
-    _datePicker.tag = 101;
-    _datePicker.datePickerMode = [(UISegmentedControl *)self.navigationItem.titleView selectedSegmentIndex];
-    
-    
-    [_actionSheet addSubview:_datePicker];
-   
-}
+//- (void)kidsBirthdayAciton:(id)sender{
+//
+//    NSString *title = UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) ? @"\n\n\n\n\n\n\n\n\n" : @"\n\n\n\n\n\n\n\n\n\n\n\n";
+//    _actionSheet =  [[UIActionSheet alloc] initWithTitle:title delegate:nil cancelButtonTitle:nil destructiveButtonTitle:nil otherButtonTitles:LOCALIZATION(@"btn_confirm"),nil];
+//
+//
+//
+//    _datePicker= [[UIDatePicker alloc] init];
+//    _datePicker.tag = 101;
+//    _datePicker.datePickerMode = 1;
+//
+//
+//    [_actionSheet addSubview:_datePicker];
+//    [_actionSheet showInView:self.view];
+//}
 
 
 
 
 #pragma mark - method of UIActionSheet
--(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
-    UIDatePicker *datePicker = (UIDatePicker *)[actionSheet viewWithTag:101];
-    NSDateFormatter *formattor = [[NSDateFormatter alloc] init];
-    
-    switch ([(UISegmentedControl *) self.navigationItem.titleView selectedSegmentIndex]) {
-        case 0:
-            formattor.dateFormat = @"h:mm a";
-            break;
-        case 1:
-            formattor.dateFormat = @"dd MMMM yy";
-            break;
-        case 2:
-            formattor.dateFormat = @"MM/dd/YY h:mm a";
-            break;
-        case 3:
-            formattor.dateFormat = @"HH:mm";
-            break;
-        default:
-            break;
-    }
-    NSString *timestamp = [formattor stringFromDate:datePicker.date];
-    [(UIButton *)[self.view viewWithTag:102] setTitle:timestamp forState:UIControlStateNormal];
-    
+//-(void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+//    _datePicker = (UIDatePicker *)[actionSheet viewWithTag:101];
+//    NSDateFormatter *formattor = [[NSDateFormatter alloc] init];
+//
+//    NSString *timestamp = [formattor stringFromDate:_datePicker.date];
+//    [(UIButton *)[self.view viewWithTag:102] setTitle:timestamp forState:UIControlStateNormal];
+//
+//}
+- (void)chooseDate:(UIDatePicker *)sender {
+    NSDate *selectedDate = sender.date;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"YYYY-MM-dd";
+    NSString *dateString = [formatter stringFromDate:selectedDate];
+    self.kidsBirthdayBtn.text = dateString;
 }
 
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    
+    //如果当前要显示的键盘，那么把UIDatePicker（如果在视图中）隐藏
+    if (textField.tag != 1001) {
+        if (self.datePicker.superview) {
+            [self.datePicker removeFromSuperview];
+        }
+        return YES;
+    }
+    
+    //UIDatePicker以及在当前视图上就不用再显示了
+    if (self.datePicker.superview == nil) {
+        //close all keyboard or data picker visible currently
+        [self.kidsBirthdayBtn resignFirstResponder];
+
+        //此处将Y坐标设在最底下，为了一会动画的展示
+        self.datePicker.frame = CGRectMake(0, Drive_Height, Drive_Wdith, 216);
+        [self.view addSubview:self.datePicker];
+        
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.3f];
+        [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
+       // self.datePicker.frame -= self.datePicker.frame.size.height;
+        [UIView commitAnimations];
+    }
+    
+    return NO;
+}
 @end
 
 
