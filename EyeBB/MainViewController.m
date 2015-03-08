@@ -48,6 +48,8 @@
 @property (strong,nonatomic) UIImageView * refreshImgView;
 /**是否显示所有房间图标*/
 @property (strong,nonatomic) UIImageView * ShowALLRoomImgView;
+/**时间段选择向下图标*/
+@property (strong,nonatomic) UIImageView * conditionImgView;
 /**选择机构按钮*/
 @property (strong,nonatomic) UIButton * organizationShowBtn;
 /**机构列表*/
@@ -89,12 +91,15 @@
 @property (strong,nonatomic) NSMutableArray * organizationArray;
 
 @property (nonatomic,strong) SettingsViewController *settingVc;
-
-
+/**查看所有房间功能打开*/
+@property (nonatomic) BOOL isallRoomOn;
+/**自动刷新功能打开*/
+@property (nonatomic) BOOL isautoOn;
 @end
 
 @implementation MainViewController
 
+#pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor whiteColor];
@@ -140,7 +145,8 @@
  // Pass the selected object to the new view controller.
  }
  */
-
+#pragma mark --
+#pragma mark - 初始化页面元素
 
 /**
  *初始化参数
@@ -152,6 +158,9 @@
     _organizationArray=[[NSMutableArray alloc]init];
     
     kindNum=1;
+    
+    _isallRoomOn=NO;
+    _isautoOn=NO;
 }
 
 /**
@@ -501,7 +510,7 @@
     [_PerformanceTimeBtn setBackgroundColor:[UIColor whiteColor]];
     
     //设置按钮响应事件
-    [_PerformanceTimeBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_PerformanceTimeBtn addTarget:self action:@selector(dateChageAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [_MainInfoScrollView addSubview:_PerformanceTimeBtn];
     
@@ -551,9 +560,9 @@
     _conditionLbl.text = str3;
     [_PerformanceTimeBtn addSubview:_conditionLbl];
 
-    UIImageView * conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 14.0f, 15.0F, 15.0F)];
-    [conditionImgView setImage:[UIImage imageNamed:@"arrow_down"]];
-     [_PerformanceTimeBtn addSubview:conditionImgView];
+    _conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 14.0f, 15.0F, 15.0F)];
+    [_conditionImgView setImage:[UIImage imageNamed:@"arrow_down"]];
+     [_PerformanceTimeBtn addSubview:_conditionImgView];
     
     
     //初始化表现列表
@@ -667,6 +676,19 @@
     //    _organizationTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [_PopupSView addSubview:_organizationTableView];
     
+    
+    //时间段选择
+    _dateTableView=[[UITableView alloc]initWithFrame:CGRectMake((Drive_Wdith-20)/2-10, 176, (Drive_Wdith-20)/2, 132)];
+    [_dateTableView setBackgroundColor:[UIColor whiteColor] ];
+    _dateTableView.dataSource = self;
+    _dateTableView.delegate = self;
+    [_dateTableView.layer setBorderWidth:2.0]; //边框宽度
+    [_dateTableView.layer setBorderColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:0.4].CGColor];//边框颜色
+    //隐藏table自带的cell下划线
+    //    _organizationTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [_PopupSView addSubview:_dateTableView];
+    
+    
     //设定title
     UILabel *listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
     [listtitleLal setText:@"设定"];
@@ -700,6 +722,18 @@
     
     
 }
+
+
+//重写UIGestureRecognizerDelegate,解决UITapGestureRecognizer与didSelectRowAtIndexPath冲突
+-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
+{
+    if ([NSStringFromClass([touch.view class]) isEqualToString:@"UITableViewCellContentView"]) {//如果当前是tableView
+        //做自己想做的事
+        return NO;
+    }
+    return YES;
+}
+
 
 
 #pragma mark -
@@ -805,7 +839,7 @@
             {
                 UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(cell.frame)-60, 44)];
                 [refreshLbl setBackgroundColor:[UIColor clearColor]];
-                [refreshLbl setText:@"自动刷新"];
+                [refreshLbl setText:LOCALIZATION(@"text_auto_refresh")];
                 [refreshLbl setTextColor:[UIColor blackColor]];
                 [refreshLbl setTextAlignment:NSTextAlignmentLeft];
                 [refreshLbl setTag:104];
@@ -815,12 +849,13 @@
             else
             {
                 UILabel * refreshLbl=(UILabel *)[cell viewWithTag:104];
-                [refreshLbl setText:@"自动刷新"];
+                [refreshLbl setText:LOCALIZATION(@"text_auto_refresh")];
             }
             if([cell viewWithTag:105]==nil)
             {
                 _refreshImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-50, 7, 30, 30)];
-                [_refreshImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [_refreshImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                
                 [_refreshImgView setTag:105];
                 [cell addSubview:_refreshImgView];
                 
@@ -829,7 +864,7 @@
             {
                 
                 
-                [_refreshImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [_refreshImgView setImage:[UIImage imageNamed:@"selected_off"]];
                 
             }
             
@@ -841,7 +876,7 @@
             {
                 UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(cell.frame)-60, 44)];
                 [refreshLbl setBackgroundColor:[UIColor clearColor]];
-                [refreshLbl setText:@"查看所有房间"];
+                [refreshLbl setText:LOCALIZATION(@"text_view_all_room")];
                 [refreshLbl setTextColor:[UIColor blackColor]];
                 [refreshLbl setTextAlignment:NSTextAlignmentLeft];
                 [refreshLbl setTag:106];
@@ -851,13 +886,13 @@
             else
             {
                 UILabel * refreshLbl=(UILabel *)[cell viewWithTag:106];
-                [refreshLbl setText:@"查看所有房间"];
+                [refreshLbl setText:LOCALIZATION(@"text_view_all_room")];
             }
             
             if([cell viewWithTag:107]==nil)
             {
                 _ShowALLRoomImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.frame)-50, 7, 30, 30)];
-                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected_off"]];
                 [_ShowALLRoomImgView setTag:107];
                 [cell addSubview:_ShowALLRoomImgView];
                 
@@ -866,7 +901,7 @@
             {
                 
                 
-                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected_off"]];
                 
             }
         }
@@ -1131,6 +1166,7 @@
 //            [roomNameLbl setTag:210];
             [cell addSubview:compareView];
             LDProgressView *progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
+            progressView.showText = @NO;
             progressView.progress = 0.40;
             progressView.borderRadius = @0;
             progressView.type = LDProgressSolid;
@@ -1213,6 +1249,27 @@
         
         cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR color:[UIColor colorWithRed:208/255.0 green:44/255.0 blue:55/255.0 alpha:1.0]];
     }
+    else if(tableView==self.dateTableView)
+    {
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+           
+        }
+        if (indexPath.row==0) {
+            cell.textLabel.text=LOCALIZATION(@"this_Week");
+            
+        }
+        if (indexPath.row==1) {
+            cell.textLabel.text=LOCALIZATION(@"Last_14_days");
+            
+        }
+        if (indexPath.row==2) {
+            cell.textLabel.text=LOCALIZATION(@"50_days");
+            
+        }
+        cell.textLabel.textColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    }
     else
     {
         if (cell == nil) {
@@ -1226,6 +1283,60 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    //房间列表设置
+    if(tableView == self.listTypeTableView)
+    {
+        
+        if (indexPath.row==0) {
+            if (
+                _isautoOn==YES) {
+                 [_refreshImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                _isautoOn=NO;
+            }
+            else
+            {
+                 [_refreshImgView setImage:[UIImage imageNamed:@"selected"]];
+                _isautoOn=YES;
+            }
+        }
+        if (indexPath.row==1) {
+            if (_isallRoomOn==YES) {
+                _isallRoomOn=NO;
+                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected_off"]];
+            }
+            else
+            {
+                [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected"]];
+                _isallRoomOn=YES;
+            }
+        }
+    }
+    //个人表现时间段查询
+    else if(tableView ==self.dateTableView)
+    {
+
+        CGRect temp=self.conditionLbl.frame ;
+        NSString *str3;
+        if (indexPath.row==0) {
+            str3=LOCALIZATION(@"this_Week");
+            [_conditionLbl setText:str3];
+        }
+        else if(indexPath.row==1)
+        {
+            str3=LOCALIZATION(@"Last_14_days");
+            [_conditionLbl setText:str3];
+        }
+        else if (indexPath.row==2)
+        {
+            str3=LOCALIZATION(@"50_days");
+            [_conditionLbl setText:str3];
+        }
+        //查询条件
+        _conditionLbl.frame = CGRectMake(temp.origin.x, temp.origin.y, (str3.length>2?str3.length*8.0f:str3.length*15), temp.size.height);
+        _conditionImgView.frame=CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 14.0f, 15.0F, 15.0F);
+        [_PopupSView setHidden:YES];
+    }
+    
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -1338,6 +1449,7 @@
     [_PopupSView setHidden:NO];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
     [_listTypeView setHidden:NO];
+    [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:YES];
 }
 
@@ -1357,6 +1469,7 @@
     [_PopupSView setHidden:NO];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.0];
     [_listTypeView setHidden:YES];
+    [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:NO];
 }
 
@@ -1509,6 +1622,15 @@
 //        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
 //    }
 
+}
+/**显示时间段选择列表*/
+-(void)dateChageAction:(id)sender
+{
+    [_PopupSView setHidden:NO];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    [_listTypeView setHidden:YES];
+    [_dateTableView setHidden:NO];
+    [_organizationTableView setHidden:YES];
 }
 
 @end
