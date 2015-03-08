@@ -13,6 +13,8 @@
 #import "UIViewController+EyeBBServie.h"
 //访问本地数据库
 #import "UIViewController+EyeBBDB.h"
+//公用方法
+#import "ViewController+EyebbPublic.h"
 @interface EyeBBViewController : UIViewController
 @property(nonatomic, retain)HttpRequest *httpRequest;
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag;

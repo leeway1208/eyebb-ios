@@ -17,6 +17,7 @@
 		20C14C9B1A9B09A60097C891 /* RegViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C14C9A1A9B09A60097C891 /* RegViewController.m */; };
 		20C14C9E1A9B4D0C0097C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA01A9B4D0C0097C891 /* Localizable.strings */; };
 		20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA51A9B69910097C891 /* 20150207105906.png */; };
+		20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */; };
 		3209FFBE1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFBD1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m */; };
 		3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFC11AA06C5300BC6C48 /* CJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFCD1AA06C5300BC6C48 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFC31AA06C5300BC6C48 /* CJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -110,6 +111,8 @@
 		20C14CA21A9B4E930097C891 /* zh-Hant-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-HK"; path = "zh-Hant-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA31A9B59980097C891 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA51A9B69910097C891 /* 20150207105906.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 20150207105906.png; sourceTree = "<group>"; };
+		20E2CC771AAC929B0027A7A8 /* ViewController+EyebbPublic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ViewController+EyebbPublic.h"; path = "EyeBB/public/ViewController+EyebbPublic.h"; sourceTree = "<group>"; };
+		20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ViewController+EyebbPublic.m"; path = "EyeBB/public/ViewController+EyebbPublic.m"; sourceTree = "<group>"; };
 		3209FFBC1AA04B6500BC6C48 /* UIViewController+EyeBBServie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBServie.h"; path = "EyeBB/public/httpRequest/UIViewController+EyeBBServie.h"; sourceTree = "<group>"; };
 		3209FFBD1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+EyeBBServie.m"; path = "EyeBB/public/httpRequest/UIViewController+EyeBBServie.m"; sourceTree = "<group>"; };
 		3209FFC01AA06C5300BC6C48 /* CJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDataSerializer.h; sourceTree = "<group>"; };
@@ -424,6 +427,8 @@
 				3209FFBD1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m */,
 				3209FFD21AA1515700BC6C48 /* UIViewController+EyeBBDB.h */,
 				3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */,
+				20E2CC771AAC929B0027A7A8 /* ViewController+EyebbPublic.h */,
+				20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */,
 			);
 			name = httpRequest;
 			sourceTree = "<group>";
@@ -729,6 +734,7 @@
 				3264D9531A9D6B72009CB9C2 /* ASICloudFilesContainerRequest.m in Sources */,
 				32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */,
 				3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */,
+				20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */,
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,
 				32530F491A9EE01100F66B6D /* Localisator.m in Sources */,
 				3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */,

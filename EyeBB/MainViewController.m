@@ -90,6 +90,9 @@
 /**机构数组*/
 @property (strong,nonatomic) NSMutableArray * organizationArray;
 
+/**房间数组*/
+@property (strong,nonatomic) NSMutableArray * roomArray;
+
 @property (nonatomic,strong) SettingsViewController *settingVc;
 /**查看所有房间功能打开*/
 @property (nonatomic) BOOL isallRoomOn;
@@ -321,7 +324,7 @@
     UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 44, Drive_Wdith, 44)];
     organizationShowBtnShowView.backgroundColor=[UIColor whiteColor];
     //室内定位显示选择
-    NSString *organizationStr=@"你你你你";
+    NSString *organizationStr=@"****";
     _organizationShowBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 0, Drive_Wdith-30, 44)];
     //设置按显示title
     [_organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
@@ -789,7 +792,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //房间列表
     if(tableView == self.RoomTableView){
-        return 11;
+        return _roomArray.count;
     }
     else if(tableView == self.RadarTableView){
         return 1;
@@ -917,7 +920,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         }
-        cell.textLabel.text=[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"];
+        cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameSc"];
         cell.textLabel.textColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
     }
     //房间列表
@@ -928,7 +931,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
             NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
-            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*1)];
+            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*0)];
             
             //设置按钮背景颜色
             if(indexPath.row>9)
@@ -950,19 +953,62 @@
             [cell addSubview:RoomBtn];
             
             //房间图标
+           
+            
             UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
             [RoomImgView.layer setMasksToBounds:YES];
             [RoomImgView.layer setBorderWidth:2];
             
             [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-            [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            
+            
+            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
+                NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+                
+                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                
+                NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                
+                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                    
+                    
+                    [RoomImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]];
+                }
+                else
+                {
+                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                    [RoomImgView setImage:[UIImage imageWithData:data]];
+                    //Get Image From URL
+                    UIImage * imageFromURL  = nil;
+                    imageFromURL=[UIImage imageWithData:data];
+                    //Save Image to Directory
+                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                    
+                    
+                }
+            }
+            else
+            {
+                [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            }
             RoomImgView.tag=202;
             [RoomBtn addSubview:RoomImgView];
             
             //房间名称
             UILabel * RoomLbl =[[UILabel alloc]initWithFrame:CGRectMake(72, 17, CGRectGetWidth(cell.frame)-100, 20)];
-            [RoomLbl setText:@"*****"];
+            
+            
+            if (_roomArray.count>0) {
+
+               [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+            }
+            else
+            {
+                [RoomLbl setText:@"*****"];
+            }
             [RoomLbl setFont:[UIFont systemFontOfSize: 18.0]];
             [RoomLbl setTextColor:[UIColor whiteColor]];
             [RoomLbl setTextAlignment:NSTextAlignmentLeft];
@@ -1025,7 +1071,7 @@
         }
         if ([cell viewWithTag:201]!=nil) {
             UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
-            RoomBtn.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*1);
+            RoomBtn.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*0);
             if(indexPath.row>9)
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:(indexPath.row%10)]];
@@ -1035,12 +1081,47 @@
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
             UIImageView * RoomImgView=(UIImageView *)[RoomBtn viewWithTag:202];
-            [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
+                NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+                
+                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                
+                NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                
+                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                    
+                    
+                    [RoomImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]];
+                }
+                else
+                {
+                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                    [RoomImgView setImage:[UIImage imageWithData:data]];
+                    //Get Image From URL
+                    UIImage * imageFromURL  = nil;
+                    imageFromURL=[UIImage imageWithData:data];
+                    //Save Image to Directory
+                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                    
+                    
+                }
+            }
+            else
+            {
+                [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            }
             
             UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
-            [RoomLbl setText:[NSString stringWithFormat:@"%ld",(long)indexPath.row]];
-            
-            //            [LoginBtn setAlpha:0.4];
+            if (_roomArray.count>0) {
+                
+                [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+            }
+            else
+            {
+                [RoomLbl setText:@"*****"];
+            }            //            [LoginBtn setAlpha:0.4];
             
             NSString *str=[NSString stringWithFormat:@"%zi",indexPath.row+1];
             kindNum=str.length>3?3:str.length;
@@ -1423,19 +1504,30 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-    NSString *responseString = [request responseString];
-    NSLog(@"responseString is:%@",responseString);
+//    NSString *responseString = [request responseString];
+//    NSLog(@"responseString is:%@",responseString);
     //请求机构列表
-    if ([tag isEqualToString:@"kindergartenList"]) {
+    if ([tag isEqualToString:@"reportService/api/childrenLocList"]) {
         NSData *responseData = [request responseData];
-        _organizationArray=[[responseData mutableObjectFromJSONData] objectForKey:@"allLocationAreasInfo"];
-        
+        _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
+        responseData=nil;
         //        NSLog(@"responseStrings %@\n",request);
-        NSLog(@"responseStrings %@\n",_organizationArray);
-        [self.organizationShowBtn setTitle:[[_organizationArray objectAtIndex:0] objectForKey:@"nameSc"] forState:UIControlStateNormal];
+//        NSLog(@"_organizationArray %@\n",_organizationArray);
+        
+        //机构名称列表选择-----------------------------
+        NSString *organizationStr=[[[_organizationArray objectAtIndex:0] objectForKey:@"area"] objectForKey:@"nameSc"];
+        [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
+        
+        UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
+        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15);
+        
         CGRect  tempRect= _organizationTableView.frame;
         _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
         [_organizationTableView reloadData];
+        
+        
+        _roomArray=[[_organizationArray objectAtIndex:0] objectForKey:@"locations"];
+        [_RoomTableView reloadData];
     }
     
     
@@ -1632,6 +1724,8 @@
     [_dateTableView setHidden:NO];
     [_organizationTableView setHidden:YES];
 }
+
+//{"refreshTime":1425821871302,"allLocations":[{"area":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://158.182.220.206/twinly/share/images/locationAreas/icons/2_icon.png"},"locations":[{"locationId":4,"locationName":"Exit","nameTc":"出口","nameSc":"出口","type":"X","icon":""},{"locationId":1,"locationName":"Music Room","nameTc":"音樂室","nameSc":"音乐室","type":"O","icon":"http://158.182.220.206/twinly/share/images/locations/icons/1_icon.png"},{"locationId":6,"locationName":"Playground","nameTc":"遊樂場","nameSc":"游乐场","type":"O","icon":"http://test.eyebb.com/twinly/share/images/locations/icons/6_icon.png"},{"locationId":2,"locationName":"Reading Room","nameTc":"閱讀室","nameSc":"阅读室","type":"O","icon":"http://158.182.220.206/twinly/share/images/locations/icons/2_icon.png"},{"locationId":8,"locationName":"School Bus","nameTc":"校巴","nameSc":"校巴","type":"E","icon":"http://test.eyebb.com/twinly/share/images/locations/icons/8_icon.png"},{"locationId":5,"locationName":"Sleeping Room","nameTc":"休息室","nameSc":"休息室","type":"O","icon":"http://158.182.220.206/twinly/share/images/locations/icons/5_icon.png"},{"locationId":7,"locationName":"Study Room","nameTc":"溫習室","nameSc":"温习室","type":"O","icon":""}]}]}
 
 @end
 
