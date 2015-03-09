@@ -18,7 +18,7 @@
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
     
-    NSInteger kindNum;
+   
     
 }
 //-------------------视图控件--------------------
@@ -92,6 +92,10 @@
 
 /**房间数组*/
 @property (strong,nonatomic) NSMutableArray * roomArray;
+//儿童所在机构对应数据数组
+@property (strong,nonatomic) NSMutableArray * childrenByAreaArray;
+/**儿童相关信息*/
+@property (strong,nonatomic) NSMutableDictionary * childrenDictionary;
 
 @property (nonatomic,strong) SettingsViewController *settingVc;
 /**查看所有房间功能打开*/
@@ -159,8 +163,8 @@
     _colorArray=@[[UIColor colorWithRed:0.282 green:0.800 blue:0.922 alpha:1],[UIColor colorWithRed:0.392 green:0.549 blue:0.745 alpha:1],[UIColor colorWithRed:0.396 green:0.741 blue:0.561 alpha:1],[UIColor colorWithRed:0.149 green:0.686 blue:0.663 alpha:1],[UIColor colorWithRed:0.925 green:0.278 blue:0.510 alpha:1],[UIColor colorWithRed:0.690 green:0.380 blue:0.208 alpha:1],[UIColor colorWithRed:0.898 green:0.545 blue:0.682 alpha:1],[UIColor colorWithRed:0.643 green:0.537 blue:0.882 alpha:1],[UIColor colorWithRed:0.847 green:0.749 blue:0.216 alpha:1],[UIColor colorWithRed:0.835 green:0.584 blue:0.329 alpha:1]];
     
     _organizationArray=[[NSMutableArray alloc]init];
-    
-    kindNum=1;
+    _childrenDictionary=[[NSMutableDictionary alloc]init];
+//    _roomArray=[[NSMutableArray alloc]init];
     
     _isallRoomOn=NO;
     _isautoOn=NO;
@@ -746,17 +750,25 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //房间列表
     if(tableView == self.RoomTableView){
-        //        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-//        UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
-//        if([cell viewWithTag:201]!=nil&&indexPath.row==1)
-//        {
-//            UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
-//            return (110+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*1);
-//        }
-//        else
-//        {
+//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
+        if([cell viewWithTag:201]!=nil)
+        {
+             NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            //儿童图标行数
+            int kindRow =0;
+            if (tempChildArray.count>0) {
+                kindRow =tempChildArray.count%4>0?tempChildArray.count/4:tempChildArray.count/4-1;
+            }
+           
+
+            UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
+            return (110+(((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*kindRow));
+        }
+        else
+        {
             return 110;
-//        }
+        }
     }
     
     if(tableView == self.RadarTableView){
@@ -829,10 +841,6 @@
     //房间列表显示/刷新设置
     if(tableView == self.listTypeTableView)
     {
-        //        static NSString *detailIndicated = @"tableCell";
-        //
-        //        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
-        
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
@@ -926,12 +934,27 @@
     //房间列表
     else if(tableView == self.RoomTableView){
         
+         NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+        NSString *str=[NSString stringWithFormat:@"%d",tempChildArray.count];
+        //儿童数量位数
+         NSInteger kindNum=str.length>3?3:str.length;
+        //儿童图标行数
+        int kindRow =0;
+        if (tempChildArray.count>0) {
+            kindRow =tempChildArray.count%4>0?tempChildArray.count/4:tempChildArray.count/4-1;
+        }
+
+        NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+        NSDate *  senddate=[NSDate date];
+        //当前时间
+        NSDate *senderDate = [dateFormatter dateFromString:[dateFormatter stringFromDate:senddate]];
         
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
             NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
-            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*0)];
+            UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*kindRow)];
             
             //设置按钮背景颜色
             if(indexPath.row>9)
@@ -992,7 +1015,7 @@
             }
             else
             {
-                [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
             }
             RoomImgView.tag=202;
             [RoomBtn addSubview:RoomImgView];
@@ -1014,9 +1037,7 @@
             [RoomLbl setTextAlignment:NSTextAlignmentLeft];
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
-            
-            NSString *str=[NSString stringWithFormat:@"%zi",indexPath.row+1];
-            kindNum=str.length>3?3:str.length;
+
             //当前房价人数
             UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20)];
             //设置按钮是否圆角
@@ -1044,10 +1065,13 @@
             [roomKindNumView addSubview:KindNumLbl];
             
             
+            
+           
+            //儿童图标行数
             int sNum=0;
-            for (int i=0; i<10; i++) {
+            for (int i=0; i<tempChildArray.count; i++) {
                 
-                //房间图标
+                //儿童图标
                 UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
                 if (i>0&&i%4==0) {
                     sNum++;
@@ -1056,11 +1080,59 @@
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
-                if (i==2) {
+                if (tempChildArray.count>0)
+                {
+                //结束时间
+                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
+                NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
+
+                
+//                NSDate *endDate = [dateFormatter stringFromDate:date];
+                               //得到相差秒数
+                NSTimeInterval time=[endDate timeIntervalSinceDate:senderDate];
+                int minute = ((int)time>0?(int)time:-((int)time))/60;
+                
+                
+                if (minute>10) {
                     [kindBtn setAlpha:0.5];
                 }
+                }
+                
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
+                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                    
+                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                    NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                    
+                    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    
+                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                        
+                         [kindBtn setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath] forState:UIControlStateNormal];
+                    }
+                    else
+                    {
+                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+                        //Get Image From URL
+                        UIImage * imageFromURL  = nil;
+                        imageFromURL=[UIImage imageWithData:data];
+                        //Save Image to Directory
+                        [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                        
+                        
+                    }
+                }
+                else
+                {
+                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
+                }
+
+                
+                
+                
                 //设置按钮响应事件
                 [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
@@ -1071,7 +1143,7 @@
         }
         if ([cell viewWithTag:201]!=nil) {
             UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
-            RoomBtn.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*0);
+            RoomBtn.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*kindRow);
             if(indexPath.row>9)
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:(indexPath.row%10)]];
@@ -1081,6 +1153,9 @@
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
             UIImageView * RoomImgView=(UIImageView *)[RoomBtn viewWithTag:202];
+
+            
+            
             if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
                 
@@ -1110,7 +1185,7 @@
             }
             else
             {
-                [RoomImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+                [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
             }
             
             UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
@@ -1123,8 +1198,7 @@
                 [RoomLbl setText:@"*****"];
             }            //            [LoginBtn setAlpha:0.4];
             
-            NSString *str=[NSString stringWithFormat:@"%zi",indexPath.row+1];
-            kindNum=str.length>3?3:str.length;
+            
             UIView * roomKindNumView=(UIView *)[RoomBtn viewWithTag:204];
             roomKindNumView.frame=CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20);
             UILabel * KindNumLbl=(UILabel *)[RoomBtn viewWithTag:205];
@@ -1142,7 +1216,7 @@
             }
             
             int sNum=0;
-            for (int i=0; i<4; i++) {
+            for (int i=0; i<tempChildArray.count; i++) {
                 
                 //房间图标
                 UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
@@ -1153,11 +1227,55 @@
                 [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
                 [kindBtn.layer setMasksToBounds:YES];
                 [kindBtn.layer setBorderWidth:2];
-                if (i==2) {
-                    [kindBtn setAlpha:0.5];
+                if (tempChildArray.count>0)
+                {
+                    //结束时间
+                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
+                    NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
+                    
+                    
+                    //                NSDate *endDate = [dateFormatter stringFromDate:date];
+                    //得到相差秒数
+                    NSTimeInterval time=[endDate timeIntervalSinceDate:senderDate];
+                    int minute = ((int)time>0?(int)time:-((int)time))/60;
+                    
+                    
+                    if (minute>10) {
+                        [kindBtn setAlpha:0.5];
+                    }
                 }
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
+                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                    
+                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                    NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                    
+                    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                    
+                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                        
+                        [kindBtn setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath] forState:UIControlStateNormal];
+                    }
+                    else
+                    {
+                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+                        //Get Image From URL
+                        UIImage * imageFromURL  = nil;
+                        imageFromURL=[UIImage imageWithData:data];
+                        //Save Image to Directory
+                        [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                        
+                        
+                    }
+                }
+                else
+                {
+                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
+                }
+
                 //设置按钮响应事件
                 [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
@@ -1504,12 +1622,13 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-//    NSString *responseString = [request responseString];
-//    NSLog(@"responseString is:%@",responseString);
     //请求机构列表
     if ([tag isEqualToString:@"reportService/api/childrenLocList"]) {
         NSData *responseData = [request responseData];
+        
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
+        _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
+        
         responseData=nil;
         //        NSLog(@"responseStrings %@\n",request);
 //        NSLog(@"_organizationArray %@\n",_organizationArray);
@@ -1525,9 +1644,34 @@
         _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
         [_organizationTableView reloadData];
         
+        NSArray *tempArray=[[_childrenByAreaArray objectAtIndex:0] objectForKey:@"childrenBean"];
         
-        _roomArray=[[_organizationArray objectAtIndex:0] objectForKey:@"locations"];
+//        NSLog(@"_childrenArray %@\n",_childrenArray);
+        
+       _roomArray=[[[_organizationArray objectAtIndex:0] objectForKey:@"locations"] copy];
+         NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
+        for(int i=0;i<_roomArray.count;i++)
+        {
+
+            for(int j=0;j<tempArray.count;j++)
+            {
+                 NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_roomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
+                if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_roomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
+                {
+                    [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
+                }
+                
+            }
+            [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
+            [tempChindrenArray removeAllObjects];
+        }
+        
+        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
         [_RoomTableView reloadData];
+        [tempChindrenArray removeAllObjects];
+        tempChindrenArray=nil;
+        tempArray=nil;
+        
     }
     
     
@@ -1725,7 +1869,192 @@
     [_organizationTableView setHidden:YES];
 }
 
-//{"refreshTime":1425821871302,"allLocations":[{"area":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://158.182.220.206/twinly/share/images/locationAreas/icons/2_icon.png"},"locations":[{"locationId":4,"locationName":"Exit","nameTc":"出口","nameSc":"出口","type":"X","icon":""},{"locationId":1,"locationName":"Music Room","nameTc":"音樂室","nameSc":"音乐室","type":"O","icon":"http://158.182.220.206/twinly/share/images/locations/icons/1_icon.png"},{"locationId":6,"locationName":"Playground","nameTc":"遊樂場","nameSc":"游乐场","type":"O","icon":"http://test.eyebb.com/twinly/share/images/locations/icons/6_icon.png"},{"locationId":2,"locationName":"Reading Room","nameTc":"閱讀室","nameSc":"阅读室","type":"O","icon":"http://158.182.220.206/twinly/share/images/locations/icons/2_icon.png"},{"locationId":8,"locationName":"School Bus","nameTc":"校巴","nameSc":"校巴","type":"E","icon":"http://test.eyebb.com/twinly/share/images/locations/icons/8_icon.png"},{"locationId":5,"locationName":"Sleeping Room","nameTc":"休息室","nameSc":"休息室","type":"O","icon":"http://158.182.220.206/twinly/share/images/locations/icons/5_icon.png"},{"locationId":7,"locationName":"Study Room","nameTc":"溫習室","nameSc":"温习室","type":"O","icon":""}]}]}
+
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 2;
+//                         cls =                     {
+//                             classId = 1;
+//                             name = "Class 1";
+//                         };
+//                         dateOfBirth = "01/02/2010";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/2_icon.png";
+//                         name = Betty;
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425879020000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:05:92";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 18;
+//                         cls = "<null>";
+//                         dateOfBirth = "27/11/2014";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/18_icon.png";
+//                         name = c20141127;
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425623863000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:3A:01";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 19;
+//                         cls = "<null>";
+//                         dateOfBirth = "27/11/2014";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/19_icon.png";
+//                         name = C2014112801;
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425641773000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:05:9B";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 10;
+//                         cls =                     {
+//                             classId = 1;
+//                             name = "Class 1";
+//                         };
+//                         dateOfBirth = "06/05/2014";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/10_icon.png";
+//                         name = "Espa\U00f1ol";
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425879020000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:37:E7";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 9;
+//                         cls = "<null>";
+//                         dateOfBirth = "15/07/2014";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/9_icon.png";
+//                         name = "fran\U00e7ais";
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425879020000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:37:ED";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 5;
+//                         cls =                     {
+//                             classId = 1;
+//                             name = "Class 1";
+//                         };
+//                         dateOfBirth = "03/10/2011";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/5_icon.png";
+//                         name = Haibo;
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425379961000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:04:EC";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 1;
+//                         cls =                     {
+//                             classId = 1;
+//                             name = "Class 1";
+//                         };
+//                         dateOfBirth = "01/01/2010";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/1_icon.png";
+//                         name = Peter;
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425376121000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:05:99";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 3;
+//                         cls =                     {
+//                             classId = 1;
+//                             name = "Class 1";
+//                         };
+//                         dateOfBirth = "02/06/2010";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/3_icon.png";
+//                         name = Wanwan;
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425877960000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:37:EA";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 8;
+//                         cls = "<null>";
+//                         dateOfBirth = "19/11/2013";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/8_icon.png";
+//                         name = "\U3072\U308d";
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425878970000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:04:E2";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 6;
+//                         cls = "<null>";
+//                         dateOfBirth = "06/06/2013";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/6_icon.png";
+//                         name = "\U8ed2\U4ed4";
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1421924737000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:38:DE";
+//             },
+//             {
+//                 childRel =             {
+//                     child =                 {
+//                         childId = 11;
+//                         cls =                     {
+//                             classId = 1;
+//                             name = "Class 1";
+//                         };
+//                         dateOfBirth = "13/11/2012";
+//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/11_icon.png";
+//                         name = "\Uc7a5\Uc18c\Ub098";
+//                     };
+//                     relation = P;
+//                 };
+//                 lastAppearTime = 1425867660000;
+//                 locId = 4;
+//                 macAddress = "44:A6:E5:00:3A:00";
+//             }
+//
+
 
 @end
 
