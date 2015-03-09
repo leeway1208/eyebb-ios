@@ -104,6 +104,8 @@
 @property (nonatomic) BOOL isallRoomOn;
 /**自动刷新功能打开*/
 @property (nonatomic) BOOL isautoOn;
+/**时间格式*/
+@property (nonatomic,strong) NSDateFormatter *dateFormatter;
 @end
 
 @implementation MainViewController
@@ -1011,11 +1013,14 @@
             kindRow =tempChildArray.count%4>0?tempChildArray.count/4:tempChildArray.count/4-1;
         }
 
-        NSDateFormatter *dateFormatter=[[NSDateFormatter alloc] init];
-        [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-        NSDate *  senddate=[NSDate date];
+        if(_dateFormatter==nil)
+        {
+            _dateFormatter=[[NSDateFormatter alloc] init];
+        }
+        [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+
         //当前时间
-        NSDate *senderDate = [dateFormatter dateFromString:[dateFormatter stringFromDate:senddate]];
+        NSDate *senderDate = [_dateFormatter dateFromString:[_dateFormatter stringFromDate:[NSDate date]]];
         
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
