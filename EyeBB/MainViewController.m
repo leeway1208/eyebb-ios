@@ -40,6 +40,8 @@
 @property (strong,nonatomic) UIScrollView * PopupSView;
 /**列表显示模式容器*/
 @property (strong,nonatomic) UIView * listTypeView;
+/**儿童相关信息容器*/
+@property (strong,nonatomic) UIView * kidsMassageView;
 /**列表显示模式列表*/
 @property (strong,nonatomic) UITableView * listTypeTableView;
 /**列表显示模式改变按钮*/
@@ -417,16 +419,20 @@
     [NewsView addSubview:NewsBtn];
     
     [_MainInfoScrollView addSubview:NewsView];
+    //kids头像
+    UIImageView * kidImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 12, 20, 20)];
+    [kidImgView.layer setCornerRadius:CGRectGetHeight([kidImgView bounds]) / 2];
+    [kidImgView.layer setMasksToBounds:YES];
+    [kidImgView.layer setBorderWidth:2];
     
-    UIImageView * kindImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 12, 20, 20)];
-    [kindImgView.layer setCornerRadius:CGRectGetHeight([kindImgView bounds]) / 2];
-    [kindImgView.layer setMasksToBounds:YES];
-    [kindImgView.layer setBorderWidth:2];
-    
-    [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-    [kindImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+    [kidImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
     //    kindImgView.tag=206;
-    [NewsBtn addSubview:kindImgView];
+    [NewsBtn addSubview:kidImgView];
+    
+    
+    
+    
     
     UILabel *revampLbl = [[UILabel alloc] initWithFrame:CGRectMake(22.0f, 0.0f, CGRectGetWidth(NewsBtn.bounds)-32, 44.0f)];
     [revampLbl setBackgroundColor:[UIColor clearColor]];
@@ -670,6 +676,67 @@
     //圆角像素化
     [_listTypeView.layer setCornerRadius:4.0];
     [_PopupSView addSubview:_listTypeView];
+    
+    
+    //儿童信息
+    _kidsMassageView=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-75, Drive_Wdith-10, 150)];
+    [_kidsMassageView setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_kidsMassageView.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_kidsMassageView.layer setCornerRadius:4.0];
+    [_PopupSView addSubview:_kidsMassageView];
+    
+    UIImageView * KidsImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 75, 75)];
+    [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
+    [KidsImgView.layer setMasksToBounds:YES];
+    [KidsImgView.layer setBorderWidth:2];
+    
+    [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+    
+    
+            [KidsImgView setImage:[UIImage imageNamed:@"logo_en"]];
+    
+    KidsImgView.tag=219;
+    [_kidsMassageView addSubview:KidsImgView];
+    
+    UILabel * kidNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 10, CGRectGetWidth(_kidsMassageView.frame)-100, 20)];
+    [kidNameLbl setText:@"sss"];
+    //            [messageLbl setAlpha:0.6];
+    [kidNameLbl setFont:[UIFont systemFontOfSize: 15.0]];
+    [kidNameLbl setTextColor:[UIColor blackColor]];
+    [kidNameLbl setTextAlignment:NSTextAlignmentLeft];
+    kidNameLbl.tag=220;
+    [_kidsMassageView addSubview:kidNameLbl];
+    
+    UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 35, CGRectGetWidth(_kidsMassageView.frame)-100, 20)];
+    [roomNameLbl setText:@"sss"];
+    //            [messageLbl setAlpha:0.6];
+    [roomNameLbl setFont:[UIFont systemFontOfSize: 15.0]];
+    [roomNameLbl setTextColor:[UIColor blackColor]];
+    [roomNameLbl setTextAlignment:NSTextAlignmentLeft];
+    roomNameLbl.tag=221;
+    [_kidsMassageView addSubview:roomNameLbl];
+    
+    //间隔线
+    divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_kidsMassageView.frame)-41, CGRectGetWidth(_kidsMassageView.frame), 1)];
+    [divisionRadarLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [_kidsMassageView addSubview:divisionRadarLbl];
+    
+    //提交按钮
+    UIButton *closeBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_kidsMassageView.frame)-40,CGRectGetWidth(_kidsMassageView.frame), 40)];
+    //设置按显示文字
+    [closeBtn setTitle:LOCALIZATION(@"btn_back") forState:UIControlStateNormal];
+    [closeBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [closeBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [closeBtn addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
+    [_kidsMassageView addSubview:closeBtn];
+
+    
+  
+    
     
     
     //机构显示选择列表
@@ -991,9 +1058,9 @@
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                 NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
-                
+                //图片保存的本地的地址获取
                 NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-                
+                //判断文件夹是否已经存在对应图片
                 if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
                     
                     
@@ -1001,6 +1068,7 @@
                 }
                 else
                 {
+                    //不存在
                     NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
                     NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
                     [RoomImgView setImage:[UIImage imageWithData:data]];
@@ -1083,7 +1151,7 @@
                 if (tempChildArray.count>0)
                 {
                 //结束时间
-                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
+//                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
                 NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
 
                 
@@ -1103,13 +1171,13 @@
                     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                     
                     NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                    NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
-                    
+                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+                    array=nil;
                     NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                     
-                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:documentsDirectoryPath]!=nil) {
                         
-                         [kindBtn setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath] forState:UIControlStateNormal];
+                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath] forState:UIControlStateNormal];
                     }
                     else
                     {
@@ -1120,10 +1188,11 @@
                         UIImage * imageFromURL  = nil;
                         imageFromURL=[UIImage imageWithData:data];
                         //Save Image to Directory
-                        [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath];
                         
                         
                     }
+                    array2=nil;
                 }
                 else
                 {
@@ -1160,14 +1229,14 @@
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
-                
+                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
+                array=nil;
                 NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                 
-                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                if ([self loadImage:[[array2 objectAtIndex:0] copy] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:documentsDirectoryPath]!=nil) {
                     
                     
-                    [RoomImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]];
+                    [RoomImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath]];
                 }
                 else
                 {
@@ -1178,10 +1247,11 @@
                     UIImage * imageFromURL  = nil;
                     imageFromURL=[UIImage imageWithData:data];
                     //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath];
                     
                     
                 }
+                array2=nil;
             }
             else
             {
@@ -1229,8 +1299,8 @@
                 [kindBtn.layer setBorderWidth:2];
                 if (tempChildArray.count>0)
                 {
-                    //结束时间
-                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
+//                    //结束时间
+//                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
                     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
                     
                     
@@ -1677,6 +1747,14 @@
     
 }
 #pragma mark --
+#pragma mark - Handle Gestures
+
+- (void)handleSingleTap:(UITapGestureRecognizer *)theSingleTap
+{
+    [_PopupSView setHidden:YES];
+}
+
+
 #pragma mark --点击事件
 
 /**弹出房间列表显示设置*/
@@ -1687,6 +1765,7 @@
     [_listTypeView setHidden:NO];
     [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:YES];
+    [_kidsMassageView setHidden:YES];
 }
 
 -(void)goToSettingAction:(id)sender
@@ -1707,6 +1786,7 @@
     [_listTypeView setHidden:YES];
     [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:NO];
+    [_kidsMassageView setHidden:YES];
 }
 
 /**显示房间信息*/
@@ -1732,12 +1812,6 @@
 }
 
 
-#pragma mark - Handle Gestures
-
-- (void)handleSingleTap:(UITapGestureRecognizer *)theSingleTap
-{
-   [_PopupSView setHidden:YES];
-}
 
 
 
@@ -1746,6 +1820,27 @@
 - (void)ShowKindAction:(id)sender
 {
     
+    UIButton *tempBtn=sender;
+    
+    
+    UITableViewCell *cell = (UITableViewCell *)[tempBtn superview];
+    NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
+    NSLog(@"indexPath is = %i",indexPath.row);
+     NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+    [_PopupSView setHidden:NO];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    [_listTypeView setHidden:YES];
+    [_dateTableView setHidden:YES];
+    [_organizationTableView setHidden:YES];
+    
+    [_kidsMassageView setHidden:NO];
+    
+    UIImageView * KidsImgView=(UIImageView *)[_kidsMassageView viewWithTag:219];
+    KidsImgView.image= tempBtn.imageView.image;
+    UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
+    [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+    UILabel * roomNameLbl =(UILabel *)[_kidsMassageView viewWithTag:221];
+     [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]]];
 }
 
 /**显示表现*/
@@ -1867,193 +1962,14 @@
     [_listTypeView setHidden:YES];
     [_dateTableView setHidden:NO];
     [_organizationTableView setHidden:YES];
+    [_kidsMassageView setHidden:YES];
 }
 
+- (void)closeAction
+{
+    [_PopupSView setHidden:YES];
+}
 
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 2;
-//                         cls =                     {
-//                             classId = 1;
-//                             name = "Class 1";
-//                         };
-//                         dateOfBirth = "01/02/2010";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/2_icon.png";
-//                         name = Betty;
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425879020000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:05:92";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 18;
-//                         cls = "<null>";
-//                         dateOfBirth = "27/11/2014";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/18_icon.png";
-//                         name = c20141127;
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425623863000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:3A:01";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 19;
-//                         cls = "<null>";
-//                         dateOfBirth = "27/11/2014";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/19_icon.png";
-//                         name = C2014112801;
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425641773000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:05:9B";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 10;
-//                         cls =                     {
-//                             classId = 1;
-//                             name = "Class 1";
-//                         };
-//                         dateOfBirth = "06/05/2014";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/10_icon.png";
-//                         name = "Espa\U00f1ol";
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425879020000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:37:E7";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 9;
-//                         cls = "<null>";
-//                         dateOfBirth = "15/07/2014";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/9_icon.png";
-//                         name = "fran\U00e7ais";
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425879020000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:37:ED";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 5;
-//                         cls =                     {
-//                             classId = 1;
-//                             name = "Class 1";
-//                         };
-//                         dateOfBirth = "03/10/2011";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/5_icon.png";
-//                         name = Haibo;
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425379961000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:04:EC";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 1;
-//                         cls =                     {
-//                             classId = 1;
-//                             name = "Class 1";
-//                         };
-//                         dateOfBirth = "01/01/2010";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/1_icon.png";
-//                         name = Peter;
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425376121000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:05:99";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 3;
-//                         cls =                     {
-//                             classId = 1;
-//                             name = "Class 1";
-//                         };
-//                         dateOfBirth = "02/06/2010";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/3_icon.png";
-//                         name = Wanwan;
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425877960000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:37:EA";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 8;
-//                         cls = "<null>";
-//                         dateOfBirth = "19/11/2013";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/8_icon.png";
-//                         name = "\U3072\U308d";
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425878970000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:04:E2";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 6;
-//                         cls = "<null>";
-//                         dateOfBirth = "06/06/2013";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/6_icon.png";
-//                         name = "\U8ed2\U4ed4";
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1421924737000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:38:DE";
-//             },
-//             {
-//                 childRel =             {
-//                     child =                 {
-//                         childId = 11;
-//                         cls =                     {
-//                             classId = 1;
-//                             name = "Class 1";
-//                         };
-//                         dateOfBirth = "13/11/2012";
-//                         icon = "http://test.eyebb.com/twinly/share/images/childrenIcons/11_icon.png";
-//                         name = "\Uc7a5\Uc18c\Ub098";
-//                     };
-//                     relation = P;
-//                 };
-//                 lastAppearTime = 1425867660000;
-//                 locId = 4;
-//                 macAddress = "44:A6:E5:00:3A:00";
-//             }
-//
 
 
 @end
