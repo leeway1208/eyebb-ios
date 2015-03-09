@@ -77,6 +77,7 @@
 		32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */; };
 		923632411AA40CA600687F3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923632401AA40CA600687F3F /* LoginViewController.m */; };
 		927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */; };
+		927DBC7E1AA9B46F00923122 /* KindergartenListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */; };
 		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
 		92FF92D41AA5592E00E04E0A /* CommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FF92D31AA5592E00E04E0A /* CommonUtils.m */; };
 /* End PBXBuildFile section */
@@ -224,6 +225,8 @@
 		927DBC781AA6C70F00923122 /* UserDefaultsUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsUtils.h; sourceTree = "<group>"; };
 		927DBC791AA7325B00923122 /* ChildInformationMatchingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildInformationMatchingViewController.h; sourceTree = "<group>"; };
 		927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildInformationMatchingViewController.m; sourceTree = "<group>"; };
+		927DBC7C1AA9B46F00923122 /* KindergartenListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KindergartenListViewController.h; sourceTree = "<group>"; };
+		927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KindergartenListViewController.m; sourceTree = "<group>"; };
 		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		92FF92D21AA5592E00E04E0A /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
@@ -308,6 +311,8 @@
 				923632401AA40CA600687F3F /* LoginViewController.m */,
 				927DBC791AA7325B00923122 /* ChildInformationMatchingViewController.h */,
 				927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */,
+				927DBC7C1AA9B46F00923122 /* KindergartenListViewController.h */,
+				927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -716,6 +721,7 @@
 				927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */,
 				3264D9571A9D6B72009CB9C2 /* ASICloudFilesRequest.m in Sources */,
 				3264D9511A9D6B72009CB9C2 /* ASICloudFilesCDNRequest.m in Sources */,
+				927DBC7E1AA9B46F00923122 /* KindergartenListViewController.m in Sources */,
 				3240DADF1AA69A4A00661712 /* UIView+AccessViewController.m in Sources */,
 				3264D94A1A9D6B72009CB9C2 /* ASIDataDecompressor.m in Sources */,
 				3209FFCE1AA06C5300BC6C48 /* CSerializedJSONData.m in Sources */,
