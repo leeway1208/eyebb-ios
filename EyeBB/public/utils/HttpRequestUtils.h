@@ -205,6 +205,7 @@
 #define LOGIN_TO_CHECK_KEY_j_username @"j_username"
 #define LOGIN_TO_CHECK_KEY_j_password @"j_password"
 
+//
 #define REG_PARENTS_KEY_ACCNAME @"accName"
 #define REG_PARENTS_KEY_NAME @"name"
 #define REG_PARENTS_KEY_PASSWORD @"password"
@@ -212,6 +213,20 @@
 #define REG_PARENTS_KEY_PHONENUM @"phoneNum"
 
 
+/*
+ * json key
+ */
 
+//LoginViewController
+#define LoginViewController_json_key_guardian @"guardian"
+#define LoginViewController_json_key_registrationId @"registrationId"
 
+//KindergartenListViewController
+#define KindergartenListViewController_json_key_size @"size"
+#define KindergartenListViewController_json_key_allLocationAreasInfo @"allLocationAreasInfo"
+#define KindergartenListViewController_json_key_areaId @"areaId"
+#define KindergartenListViewController_json_key_name @"name"
+#define KindergartenListViewController_json_key_nameTc @"nameTc"
+#define KindergartenListViewController_json_key_nameSc @"nameSc"
+#define KindergartenListViewController_json_key_icon @"icon"
 

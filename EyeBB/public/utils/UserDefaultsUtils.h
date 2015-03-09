@@ -23,10 +23,3 @@
 
 
 
-// json key
-//
-//
-
-//LoginViewController
-#define LoginViewController_json_key_guardian @"guardian"
-#define LoginViewController_json_key_registrationId @"registrationId"

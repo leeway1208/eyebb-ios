@@ -9,5 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface ChildInformationMatchingViewController : UIViewController<UIActionSheetDelegate>
-
+/* kindergarten name from kindergarten view */
+@property (nonatomic,retain) NSString *kindergartenName;
 @end

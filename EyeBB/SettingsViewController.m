@@ -11,7 +11,7 @@
 #import "ASIDownloadCache.h"
 
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
-
+/** all items */
 @property (nonatomic,strong) UITableView * optionsTable;
 /**右按钮*/
 @property(nonatomic, retain) UIBarButtonItem *rightBtnItem;
@@ -19,6 +19,9 @@
 
 @implementation SettingsViewController
 @synthesize  rightBtnItem;
+
+#pragma mark - load views
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
@@ -92,7 +95,7 @@
     return rightBtnItem;
 }
 
-
+#pragma mark - table view
 //标签数
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 5;
@@ -265,6 +268,8 @@
     
     return cell;
 }
+
+#pragma mark - button action
 /*
  #pragma mark - Navigation
  

@@ -7,7 +7,7 @@
 //
 
 #import "ChildInformationMatchingViewController.h"
-
+#import "KindergartenListViewController.h"
 
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
@@ -48,6 +48,8 @@
     
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
     self.title = LOCALIZATION(@"text_child_information_matching");
+    
+    
     
     [self loadParameter];
     [self loadWidget];
@@ -149,7 +151,7 @@
     [_kidsBirthadyLb setFont: [UIFont systemFontOfSize:14]];
     [self.view  addSubview:_kidsBirthadyLb];
     
-    /**button view*/
+    /** kids birthday button view */
     _kidsBirthdayBtn=[[UITextField alloc] initWithFrame:self.view.bounds];
     _kidsBirthdayBtn.frame = CGRectMake(10 , (Drive_Height/4) - 20,self.view.frame.size.width , 40);
     _kidsBirthdayBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
@@ -183,7 +185,7 @@
     [_dateViewContainerConfirmBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
     [_dateViewContainerConfirmBtn setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
     _dateViewContainerConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:17];
-    [_dateViewContainerConfirmBtn addTarget:self action:@selector(kidsKindergartenAciton:) forControlEvents:UIControlEventTouchUpInside];
+    [_dateViewContainerConfirmBtn addTarget:self action:@selector(kidsKindergartenContainerConfirmAciton:) forControlEvents:UIControlEventTouchUpInside];
     [_dateViewContainer addSubview:_dateViewContainerConfirmBtn];
     
     
@@ -200,7 +202,9 @@
     //this mode just have yyyy-mm-dd
     self.datePicker.datePickerMode = 1;
     
-    [self.datePicker addTarget:self action:@selector(chooseDate:) forControlEvents:UIControlEventValueChanged];
+    //button action
+    [self.datePicker addTarget:self action:@selector(chooseDateValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.kidsBirthdayBtn addTarget:self action:@selector(chooseDateTouchDown:) forControlEvents:UIControlEventTouchDown];
     
     [_dateViewContainer addSubview:_datePicker];
     _kidsBirthdayBtn.inputView =  self.dateViewContainer;
@@ -232,8 +236,19 @@
     _kidsKindergartenBtn=[[UIButton alloc] initWithFrame:self.view.bounds];
     _kidsKindergartenBtn.frame = CGRectMake(-15, (Drive_Height/4) + 60,self.view.frame.size.width , 40);
     _kidsKindergartenBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
-    [_kidsKindergartenBtn setTitle:LOCALIZATION(@"text_select_kid_kindergarten") forState:UIControlStateNormal];
-    [_kidsKindergartenBtn setTitleColor:[UIColor colorWithRed:0.725 green:0.725 blue:0.745 alpha:1]forState:UIControlStateNormal];
+    //NSLog(@"NAMENAME ----> %@",_kindergartenName );
+    
+    //get the value from the KindergartenListViewController
+    if(_kindergartenName != nil){
+        [_kidsKindergartenBtn setTitle:_kindergartenName forState:UIControlStateNormal];
+        
+        [_kidsKindergartenBtn setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    }else{
+        [_kidsKindergartenBtn setTitle:LOCALIZATION(@"text_select_kid_kindergarten") forState:UIControlStateNormal];
+        [_kidsKindergartenBtn setTitleColor:[UIColor colorWithRed:0.725 green:0.725 blue:0.745 alpha:1]forState:UIControlStateNormal];
+    }
+    
+
     _kidsKindergartenBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [_kidsKindergartenBtn addTarget:self action:@selector(kidsKindergartenAciton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_kidsKindergartenBtn];
@@ -326,6 +341,14 @@
 }
 
 - (void)kidsKindergartenAciton:(id)sender{
+    KindergartenListViewController *reg = [[KindergartenListViewController alloc] init];
+    [self.navigationController pushViewController:reg animated:YES];
+    reg.title = @"";
+}
+
+- (void)kidsKindergartenContainerConfirmAciton:(id)sender{
+
+    [_kidsBirthdayBtn resignFirstResponder];
     
 }
 
@@ -334,13 +357,22 @@
 
 #pragma mark - method of UIDatePicker
 
-- (void)chooseDate:(UIDatePicker *)sender {
+- (void)chooseDateValueChanged:(UIDatePicker *)sender {
     NSDate *selectedDate = sender.date;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.dateFormat = @"YYYY-MM-dd";
     NSString *dateString = [formatter stringFromDate:selectedDate];
     self.kidsBirthdayBtn.text = dateString;
 }
+
+- (void)chooseDateTouchDown:(UIDatePicker *)sender {
+    NSDate *selectedDate = self.datePicker.date;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.dateFormat = @"YYYY-MM-dd";
+    NSString *dateString = [formatter stringFromDate:selectedDate];
+    self.kidsBirthdayBtn.text = dateString;
+}
+
 
 
 #pragma mark - UITextFieldDelegate

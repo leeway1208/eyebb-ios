@@ -7,7 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "EyeBBViewController.h"
+#import "ChildInformationMatchingViewController.h"
 
-@interface KindergartenListViewController : UIViewController
+@interface KindergartenListViewController : EyeBBViewController
+
+
 
 @end
