@@ -9,7 +9,7 @@
 #import "WelcomeViewController.h"
 #import "RegViewController.h"
 #import "LoginViewController.h"
-
+#import "MainViewController.h"
 //--test--
 #import "KindlistViewController.h"
 #import "ChildInformationMatchingViewController.h"
@@ -54,7 +54,22 @@
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
+//页面显示后执行事件
+-(void)viewDidAppear:(BOOL)animated
+{
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    
+    NSString * accNameStr=[userDefaultes objectForKey:LoginViewController_accName];
+    NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
+    
+    if (![accNameStr isEqualToString:@""]&&![accPdeStr isEqualToString:@""]) {
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
+        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+        
+        [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
 
+    }
+}
 -(void)viewDidDisappear:(BOOL)animated
 {
 
@@ -67,6 +82,9 @@
     //     _nicknameTxt=nil;
     //     _PDTxt=nil;
     //    self.view=nil;
+    
+
+    
 }
 
 -(void)dealloc
@@ -129,7 +147,7 @@
     
     //版权信息
     UILabel * CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
-    [CopyrightLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
+    [CopyrightLbl setText:LOCALIZATION(@"text_policy")];
     [CopyrightLbl setFont:[UIFont systemFontOfSize: 10.0]];
     [CopyrightLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
     [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];
@@ -182,6 +200,39 @@
 //        [alertView show];
 //    }
 }
+
+#pragma mark - server request
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    
+    if ([tag isEqualToString:LOGIN_TO_CHECK]) {
+        NSData *responseData = [request responseData];
+        
+        
+        
+        NSDictionary *  guardian = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_guardian];
+
+        
+        if(guardian != nil){
+
+                MainViewController *mvc = [[MainViewController alloc] init];
+                [self.navigationController pushViewController:mvc animated:YES];
+                self.title = @"";
+
+        }else{
+            
+            //if the user name or password is invaild. alerting the user.
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"toast_invalid_username_or_password")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+        }
+        
+    }
+    
+}
+
+
 
 
 #pragma mark - Notification methods

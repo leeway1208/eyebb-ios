@@ -8,7 +8,7 @@
 
 #import "KindergartenListViewController.h"
 #import "JSONKit.h"
-#import "HttpRequestUtils.h"
+
 #import "ChildInformationMatchingViewController.h"
 
 @interface KindergartenListViewController ()<UITableViewDataSource,UITableViewDelegate>

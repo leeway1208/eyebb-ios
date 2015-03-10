@@ -6,9 +6,9 @@
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
+#import "EyeBBViewController.h"
 
-
-@interface WelcomeViewController : UIViewController
+@interface WelcomeViewController : EyeBBViewController
 
 
 @end

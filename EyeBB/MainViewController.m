@@ -13,7 +13,7 @@
 #import "MSCellAccessory.h"
 #import "LDProgressView.h"
 #import "UserDefaultsUtils.h"
-#import "HttpRequestUtils.h"
+
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
@@ -96,6 +96,10 @@
 
 /**房间数组*/
 @property (strong,nonatomic) NSMutableArray * roomArray;
+/**所有房间数组*/
+@property (strong,nonatomic) NSMutableArray * allRoomArray;
+/**当前有儿童的房间数组*/
+@property (strong,nonatomic) NSMutableArray * kidsRoomArray;
 //儿童所在机构对应数据数组
 @property (strong,nonatomic) NSMutableArray * childrenByAreaArray;
 
@@ -104,6 +108,8 @@
 
 /**儿童相关信息*/
 @property (strong,nonatomic) NSMutableDictionary * childrenDictionary;
+/**儿童相关信息根据房间显示*/
+@property (strong,nonatomic) NSMutableDictionary * childrenByRoomDictionary;
 
 @property (nonatomic,strong) SettingsViewController *settingVc;
 /**查看所有房间功能打开*/
@@ -114,6 +120,9 @@
 @property (nonatomic,strong) NSDateFormatter *dateFormatter;
 /**图片本地存储地址*/
 @property (nonatomic,strong)NSString * documentsDirectoryPath;
+
+
+
 @end
 
 @implementation MainViewController
@@ -177,8 +186,8 @@
     _organizationArray=[[NSMutableArray alloc]init];
     _childrenDictionary=[[NSMutableDictionary alloc]init];
     _personalDetailsArray=[[NSMutableArray alloc]init];
-//    _roomArray=[[NSMutableArray alloc]init];
-    
+    _kidsRoomArray=[[NSMutableArray alloc]init];
+    _childrenByRoomDictionary=[[NSMutableDictionary alloc]init];
     _isallRoomOn=NO;
     _isautoOn=NO;
     
@@ -625,7 +634,11 @@
     _UserNameLbl.textAlignment = NSTextAlignmentLeft;
     _UserNameLbl.textColor=[UIColor blackColor];
     
-    _UserNameLbl.text = LoginViewController_accName;
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    
+    
+    _UserNameLbl.text = [userDefaultes objectForKey:LoginViewController_accName];
     
     [PersonageView addSubview:_UserNameLbl];
     
@@ -835,7 +848,14 @@
         UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
         if([cell viewWithTag:201]!=nil)
         {
-             NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            NSArray *tempChildArray;
+            if (self.isallRoomOn==YES) {
+                tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            }
+            else
+            {
+                tempChildArray=[_childrenByRoomDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            }
             //儿童图标行数
             int kindRow =0;
             if (tempChildArray.count>0) {
@@ -885,7 +905,10 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //房间列表
     if(tableView == self.RoomTableView){
-        return _roomArray.count;
+
+            return _roomArray.count;
+
+        
     }
     else if(tableView == self.RadarTableView){
         return 1;
@@ -1015,7 +1038,14 @@
     //房间列表
     else if(tableView == self.RoomTableView){
         
-         NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+        NSArray *tempChildArray;
+        if (self.isallRoomOn==YES) {
+            tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+        }
+        else
+        {
+            tempChildArray=[_childrenByRoomDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+        }
         NSString *str=[NSString stringWithFormat:@"%d",tempChildArray.count];
         //儿童数量位数
          NSInteger kindNum=str.length>3?3:str.length;
@@ -1074,14 +1104,14 @@
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
                 //图片保存的本地的地址获取
                 
                 //判断文件夹是否已经存在对应图片
-                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
+                if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
                     
                     
-                    [RoomImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]];
+                    [RoomImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
                 }
                 else
                 {
@@ -1093,10 +1123,13 @@
                     UIImage * imageFromURL  = nil;
                     imageFromURL=[UIImage imageWithData:data];
                     //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
+                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
                     
                     
                 }
+                pathOne=nil;
+                array=nil;
+                array2=nil;
             }
             else
             {
@@ -1189,7 +1222,7 @@
                     
                     NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                     NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-                    array=nil;
+
 
                     
                     if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
@@ -1209,7 +1242,10 @@
                         
                         
                     }
+                    pathOne=nil;
+                    array=nil;
                     array2=nil;
+
                 }
                 else
                 {
@@ -1247,7 +1283,7 @@
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                 NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
-                array=nil;
+
                 
                 
                 if ([self loadImage:[[array2 objectAtIndex:0] copy] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
@@ -1268,7 +1304,10 @@
                     
                     
                 }
+                pathOne=nil;
+                array=nil;
                 array2=nil;
+
             }
             else
             {
@@ -1296,7 +1335,7 @@
             {
                 //                NSLog(@"view.tag is%d",view.tag);
                 
-                if ([view isKindOfClass:[UIView class]]&&view.tag>1000)
+                if ([view isKindOfClass:[UIView class]]&&view.tag>999)
                 {
                     [view removeFromSuperview];
                 }
@@ -1336,13 +1375,13 @@
                     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                     
                     NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                    NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
                     
 
                     
-                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
+                    if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
                         
-                        [kindBtn setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
+                        [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
                     }
                     else
                     {
@@ -1353,10 +1392,14 @@
                         UIImage * imageFromURL  = nil;
                         imageFromURL=[UIImage imageWithData:data];
                         //Save Image to Directory
-                        [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
+                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
                         
                         
                     }
+                    pathOne=nil;
+                    array=nil;
+                    array2=nil;
+
                 }
                 else
                 {
@@ -1371,7 +1414,7 @@
             
         }
         
-
+        tempChildArray=nil;
         
     }
     //个人设置
@@ -1395,12 +1438,12 @@
                
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
                 
                 
                 
-                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
-                    [messageImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]];
+                if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
+                    [messageImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
                    
                 }
                 else
@@ -1412,10 +1455,13 @@
                     UIImage * imageFromURL  = nil;
                     imageFromURL=[UIImage imageWithData:data];
                     //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
+                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
                     
                     
                 }
+                pathOne=nil;
+                array=nil;
+                array2=nil;
             }
             else
             {
@@ -1453,12 +1499,12 @@
                 
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
                 
                 
                 
-                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
-                    [messageImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]];
+                if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
+                    [messageImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
                     
                 }
                 else
@@ -1470,10 +1516,13 @@
                     UIImage * imageFromURL  = nil;
                     imageFromURL=[UIImage imageWithData:data];
                     //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
+                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
                     
                     
                 }
+                pathOne=nil;
+                array=nil;
+                array2=nil;
             }
             else
             {
@@ -1655,12 +1704,17 @@
             if (_isallRoomOn==YES) {
                 _isallRoomOn=NO;
                 [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                 _roomArray=_kidsRoomArray;
+                
             }
             else
             {
                 [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected"]];
                 _isallRoomOn=YES;
+                _roomArray=_allRoomArray;
             }
+            
+            [_RoomTableView reloadData];
         }
     }
     //个人表现时间段查询
@@ -1713,37 +1767,102 @@
 
 
 #pragma mark - Scroll
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
-    //    scrollView.
-    
-    if(huaHMSegmentedControl==0){
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView{
+//    //    scrollView.
+////    NSLog(@"%@",scrollView.class);
+////    if (scrollView==_MainInfoScrollView) {
+////        if(huaHMSegmentedControl==0){
+////            
+////            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+////            
+////        }
+////        else if(huaHMSegmentedControl==2){
+////            
+////            //        myDelegate.headStr = nil;
+////            //        myDelegate.footStr = nil;
+////            //        [self.RadarTableView tableViewDidScroll:scrollView];
+////        }
+////        else if(huaHMSegmentedControl==3){
+////            
+////            [self getRequest:@"reportService/api/notices" delegate:self];
+////        }
+////    }
+//   
+//
+//}
 
-        [self getRequest:@"reportService/api/childrenLocList" delegate:self];
-        
-    }
-    else if(huaHMSegmentedControl==2){
-        
-        //        myDelegate.headStr = nil;
-        //        myDelegate.footStr = nil;
-        //        [self.RadarTableView tableViewDidScroll:scrollView];
-    }
-    else if(huaHMSegmentedControl==3){
-        
-        [self getRequest:@"reportService/api/notices" delegate:self];
-    }
-
-}
-
-- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
-    //    if(huaHMSegmentedControl==0){
-    //
-    //        [self.positionDetailsTableView tableViewDidEndDragging:scrollView];
-    //    }
-    //    else if(huaHMSegmentedControl==2){
-    //
-    //        [self.allCompanyPositionTableView tableViewDidEndDragging:scrollView];
-    //    }
-}
+//- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+//    if (scrollView==_MainInfoScrollView) {
+//        
+//        if(huaHMSegmentedControl !=1)
+//        {
+//            switch (huaHMSegmentedControl) {
+//                case 0:
+//                    [_HomeBtn setSelected:YES];
+//                    [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+//                    [_RadarBtn setSelected:NO];
+//                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_NewsBtn setSelected:NO];
+//                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_PersonageBtn setSelected:NO];
+//                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+//                    break;
+//                case 2:
+//                    [_HomeBtn setSelected:NO];
+//                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_RadarBtn setSelected:NO];
+//                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_NewsBtn setSelected:YES];
+//                    [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+//                    [_PersonageBtn setSelected:NO];
+//                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+//                    break;
+//                case 3:
+//                    [_HomeBtn setSelected:NO];
+//                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_RadarBtn setSelected:NO];
+//                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_NewsBtn setSelected:NO];
+//                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+//                    [_PersonageBtn setSelected:YES];
+//                    [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+//                     [self getRequest:@"reportService/api/notices" delegate:self];
+//                    break;
+//                    
+//                default:
+//                    break;
+//            }
+//            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+//   
+//        }
+//        else
+//        {
+//            
+//            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+//                                        message:@"IOS暂时不支持此功能，敬请期待"
+//                                       delegate:self
+//                              cancelButtonTitle:@"确定"
+//                              otherButtonTitles:nil] show];
+//            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+//        }
+////        if(huaHMSegmentedControl==0){
+////            
+////            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+////            
+////        }
+////        else if(huaHMSegmentedControl==2){
+////            
+////            //        myDelegate.headStr = nil;
+////            //        myDelegate.footStr = nil;
+////            //        [self.RadarTableView tableViewDidScroll:scrollView];
+////        }
+////        else if(huaHMSegmentedControl==3){
+////            
+////            [self getRequest:@"reportService/api/notices" delegate:self];
+////        }
+//    }
+//}
 
 #pragma mark ------------scrollview delegate-------
 /**列表切换*/
@@ -1752,7 +1871,46 @@
         CGFloat pageWidth = CGRectGetWidth(scrollView.frame);
         NSInteger page = scrollView.contentOffset.x / pageWidth;
         if (scrollView.contentOffset.x!=320.000000) {
+            
             huaHMSegmentedControl = (int)page;
+            switch (huaHMSegmentedControl) {
+                case 0:
+                    [_HomeBtn setSelected:YES];
+                    [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                    [_RadarBtn setSelected:NO];
+                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_NewsBtn setSelected:NO];
+                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_PersonageBtn setSelected:NO];
+                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+                    break;
+                case 2:
+                    [_HomeBtn setSelected:NO];
+                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_RadarBtn setSelected:NO];
+                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_NewsBtn setSelected:YES];
+                    [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                    [_PersonageBtn setSelected:NO];
+                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                    break;
+                case 3:
+                    [_HomeBtn setSelected:NO];
+                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_RadarBtn setSelected:NO];
+                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_NewsBtn setSelected:NO];
+                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_PersonageBtn setSelected:YES];
+                    [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                    [self getRequest:@"reportService/api/notices" delegate:self];
+                    break;
+                    
+                default:
+                    break;
+            }
+//            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         }
         else
         {
@@ -1797,22 +1955,37 @@
         
 //        NSLog(@"_childrenArray %@\n",_childrenArray);
         
-       _roomArray=[[[_organizationArray objectAtIndex:0] objectForKey:@"locations"] copy];
+       _allRoomArray=[[[_organizationArray objectAtIndex:0] objectForKey:@"locations"] copy];
          NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
-        for(int i=0;i<_roomArray.count;i++)
+        
+        for(int i=0;i<_allRoomArray.count;i++)
         {
             for(int j=0;j<tempArray.count;j++)
             {
-                 NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_roomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
-                if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_roomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
+                 NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
+                if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
                 {
                     [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
+                    
+                    
                 }
             }
             [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
+            if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
+            {
+                [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
+                [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",(_kidsRoomArray.count-1)]];
+            }
             [tempChindrenArray removeAllObjects];
         }
 //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+        if (_isallRoomOn==YES) {
+            _roomArray=_allRoomArray;
+        }
+        else
+        {
+            _roomArray=_kidsRoomArray;
+        }
         [_RoomTableView reloadData];
         [tempChindrenArray removeAllObjects];
         tempChindrenArray=nil;
@@ -1821,7 +1994,7 @@
     
     //请求个人信息
     if ([tag isEqualToString:@"reportService/api/notices"]) {
-//        NSString *responseString = [request responseString];
+        NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
         
        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
