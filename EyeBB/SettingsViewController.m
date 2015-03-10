@@ -286,8 +286,15 @@
 
 -(void)exitAction:(id)sender
 {
+    
     [[ASIDownloadCache sharedCache] clearCachedResponsesForStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     [ASIHTTPRequest clearSession];
+    NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
+    NSDictionary *dictionary = [userDefatluts dictionaryRepresentation];
+    for(NSString* key in [dictionary allKeys]){
+        [userDefatluts removeObjectForKey:key];
+        [userDefatluts synchronize];
+    }
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

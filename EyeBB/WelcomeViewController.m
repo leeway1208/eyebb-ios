@@ -10,23 +10,37 @@
 #import "RegViewController.h"
 #import "LoginViewController.h"
 #import "MainViewController.h"
+#import "AppDelegate.h"
 //--test--
 #import "KindlistViewController.h"
 #import "ChildInformationMatchingViewController.h"
 @interface WelcomeViewController ()
+{
+     AppDelegate *myDelegate;
+}
+//注册按钮
+@property (nonatomic,strong) UIButton * RegBtn;
+//登录按钮
+@property (nonatomic,strong) UIButton * LoginBtn;
+//版权信息
+@property (nonatomic,strong) UILabel * CopyrightLbl;
+
+@property (nonatomic,strong) UIImageView *logoImgView;
 
 @property (nonatomic,strong) RegViewController *reg;
+
 //@property NSArray * arrayOfLanguages;
 @end
 
 @implementation WelcomeViewController
-
+@synthesize RegBtn,LoginBtn,CopyrightLbl,logoImgView;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor=[UIColor whiteColor];
-    UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2)];
+    logoImgView=[[UIImageView alloc]initWithFrame:CGRectZero];
+    logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
     [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
     [self.view addSubview:logoImgView];
 //    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
@@ -53,22 +67,42 @@
     }
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
+    
+    logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Height/2-(Drive_Wdith/4), Drive_Wdith/2, Drive_Wdith/2);
+    RegBtn.hidden=YES;
+    LoginBtn.hidden=YES;
+    CopyrightLbl.hidden=YES;
 }
 //页面显示后执行事件
 -(void)viewDidAppear:(BOOL)animated
 {
-    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    if(myDelegate.appIsFirstStart != YES)
+    {
+        
+        NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+        
+        NSString * accNameStr=[userDefaultes objectForKey:LoginViewController_accName];
+        NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
     
-    NSString * accNameStr=[userDefaultes objectForKey:LoginViewController_accName];
-    NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
-    
-//    if (![accNameStr isEqualToString:@""]&&![accPdeStr isEqualToString:@""]) {
-//        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
-//        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-//        
-//        [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
-//
-//    }
+
+        if (![accNameStr isEqualToString:@""]&&![accPdeStr isEqualToString:@""]) {
+            NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
+            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+            
+            [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
+            
+        }
+        
+    }
+    else
+    {
+        logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+        RegBtn.hidden=NO;
+        LoginBtn.hidden=NO;
+        CopyrightLbl.hidden=NO;
+    }
+
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
@@ -104,7 +138,7 @@
   */
 -(void)iv
 {
-    
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 /**
@@ -114,7 +148,7 @@
 {
 
     //注册按钮
-    UIButton * RegBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*9, (Drive_Wdith/2), Drive_Wdith/8)];
+    RegBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*9, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
     [RegBtn setTitle:LOCALIZATION(@"btn_sign_up") forState:UIControlStateNormal];
     //设置按钮背景颜色
@@ -126,9 +160,10 @@
     //圆角像素化
     [RegBtn.layer setCornerRadius:4.0];
     [self.view addSubview:RegBtn];
+
     
     //登录按钮
-    UIButton * LoginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*10.4, (Drive_Wdith/2), Drive_Wdith/8)];
+    LoginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*10.4, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
     [LoginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [LoginBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
@@ -144,15 +179,15 @@
     [LoginBtn.layer setBorderWidth:1.0]; //边框宽度
     [LoginBtn.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];//边框颜色
     [self.view addSubview:LoginBtn];
-    
+
     //版权信息
-    UILabel * CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
+    CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
     [CopyrightLbl setText:LOCALIZATION(@"text_policy")];
     [CopyrightLbl setFont:[UIFont systemFontOfSize: 10.0]];
     [CopyrightLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
     [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];
     [self.view addSubview:CopyrightLbl];
-    
+
     
 }
 #pragma mark --
@@ -219,7 +254,10 @@
                 self.title = @"";
 
         }else{
-            
+            logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+            RegBtn.hidden=NO;
+            LoginBtn.hidden=NO;
+            CopyrightLbl.hidden=NO;
             //if the user name or password is invaild. alerting the user.
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"toast_invalid_username_or_password")
