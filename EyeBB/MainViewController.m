@@ -135,7 +135,7 @@
     // Do any additional setup after loading the view.
     [self iv];
 //    [self getRequest:@"kindergartenList" delegate:self];
-    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self];
    
     
     
@@ -1167,7 +1167,7 @@
             [RoomBtn addSubview:roomKindNumView];
             
             UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, 20, 20)];
-            [numImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            [numImgView setImage:[UIImage imageNamed:@"actbar_profileOn"]];
             //            [numImgView setAlpha:0.5];
             [roomKindNumView addSubview:numImgView];
             
@@ -1883,7 +1883,7 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                    [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+                    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self];
                     break;
                 case 2:
                     [_HomeBtn setSelected:NO];
@@ -1894,6 +1894,8 @@
                     [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                     [self getRequest:GET_REPORTS delegate:self];
+                    
                     break;
                 case 3:
                     [_HomeBtn setSelected:NO];
@@ -1904,7 +1906,7 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:YES];
                     [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                    [self getRequest:@"reportService/api/notices" delegate:self];
+                    [self getRequest:GET_NOTICES delegate:self];
                     break;
                     
                 default:
@@ -1934,7 +1936,7 @@
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
     //请求机构列表
-    if ([tag isEqualToString:@"reportService/api/childrenLocList"]) {
+    if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
         NSData *responseData = [request responseData];
         
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
@@ -1993,8 +1995,8 @@
     }
     
     //请求个人信息
-    if ([tag isEqualToString:@"reportService/api/notices"]) {
-        NSString *responseString = [request responseString];
+    if ([tag isEqualToString:GET_NOTICES]) {
+
         NSData *responseData = [request responseData];
         
        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
@@ -2003,7 +2005,17 @@
         
         
     }
-
+    //请求简报
+    if ([tag isEqualToString:GET_REPORTS]) {
+        NSString *responseString = [request responseString];
+        NSData *responseData = [request responseData];
+        
+//        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
+//        responseData=nil;
+//        [_PersonageTableView reloadData];
+        
+        
+    }
     
     
     
@@ -2185,8 +2197,11 @@
         {
 //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         }
+        if (num==2) {
+            [self getRequest:GET_REPORTS delegate:self];
+        }
         if (num==3) {
-             [self getRequest:@"reportService/api/notices" delegate:self];
+             [self getRequest:GET_NOTICES delegate:self];
         }
     }
     else

@@ -50,9 +50,11 @@ static HttpRequest *instance;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:@"0"];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-//    [ASIHTTPRequest setDefaultCache:[ASIDownloadCache sharedCache]];
+
     [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
 [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+    
+
     [request setDelegate:self];
     
     [request startAsynchronous];
