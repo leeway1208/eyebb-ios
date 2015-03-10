@@ -8,6 +8,7 @@
 
 #import "ChildInformationMatchingViewController.h"
 #import "KindergartenListViewController.h"
+#import "UserDefaultsUtils.h"
 
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
@@ -39,7 +40,7 @@
 @end
 
 @implementation ChildInformationMatchingViewController
-#pragma - view control
+#pragma mark - view control
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -51,9 +52,10 @@
     
     
     
-    [self loadParameter];
+    
     [self loadWidget];
     
+    [self loadParameter];
     
 }
 
@@ -155,6 +157,9 @@
     _kidsBirthdayBtn=[[UITextField alloc] initWithFrame:self.view.bounds];
     _kidsBirthdayBtn.frame = CGRectMake(10 , (Drive_Height/4) - 20,self.view.frame.size.width , 40);
     _kidsBirthdayBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
+    if([childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth] != nil){
+        _kidsBirthdayBtn.text = [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth];}
     
     _kidsBirthdayImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_bday"]];
     _kidsBirthdayImg.frame = CGRectMake(0, 0, 20, 20);
@@ -196,7 +201,7 @@
     
     [_dateViewContainer addSubview:containerDivLb];
     
-     /** date picker */
+    /** date picker */
     self.datePicker = [[UIDatePicker alloc] init];
     self.datePicker.frame =CGRectMake(0, 0, self.view.frame.size.width, 190);
     //this mode just have yyyy-mm-dd
@@ -208,7 +213,7 @@
     
     [_dateViewContainer addSubview:_datePicker];
     _kidsBirthdayBtn.inputView =  self.dateViewContainer;
-  
+    
     
     
     
@@ -248,7 +253,7 @@
         [_kidsKindergartenBtn setTitleColor:[UIColor colorWithRed:0.725 green:0.725 blue:0.745 alpha:1]forState:UIControlStateNormal];
     }
     
-
+    
     _kidsKindergartenBtn.titleLabel.font = [UIFont systemFontOfSize:17];
     [_kidsKindergartenBtn addTarget:self action:@selector(kidsKindergartenAciton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:_kidsKindergartenBtn];
@@ -292,7 +297,7 @@
     
     
     
-
+    
     //隐藏键盘
     UITapGestureRecognizer *tapGr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
     tapGr.cancelsTouchesInView = NO;
@@ -303,12 +308,19 @@
 
 
 
-
+#pragma mark - loadParameter
 -(void)loadParameter{
+    NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
     
+    //    NSLog(@"ASDASDAS-_---> %@", [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth]);
+    if(   [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_childName] != nil){
+        _kidsNameTf.text = [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_childName];
+    }else if([childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_kId] != nil){
+        [_kidsKindergartenBtn setTitle:[childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_kId] forState:UIControlStateNormal];
+    }
 }
 
-#pragma - keyboard action
+#pragma mark - keyboard action
 /**
  *	@brief	设置隐藏键盘
  *
@@ -330,7 +342,7 @@
     [self.kidsNameTf resignFirstResponder];
 }
 
-#pragma - check the string
+#pragma mark- check the string
 
 - (NSString *)verifyRequest:(NSString *)childName dateOfBirth:(NSString *)dateOfBirth kId:(NSString *)kId
 
@@ -347,7 +359,7 @@
         mag=LOCALIZATION(@"text_something_has_gone_wrong");
         return mag;
     }
-    if (kId.length <= 0) {
+    if (kId != nil) {
         
         mag=LOCALIZATION(@"text_something_has_gone_wrong");
         return mag;
@@ -379,12 +391,12 @@
                           otherButtonTitles:nil] show];
     }else{
         
-//        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
-//        
-//        
-//        [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
-//
-//        
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:childName, ChildInformationMatchingViewController_KEY_childName, dateOfBirth,ChildInformationMatchingViewController_KEY_dateOfBirth,kId,ChildInformationMatchingViewController_KEY_kId,nil];
+        
+        
+        [self postRequest:CHILD_CHECKING RequestDictionary:tempDoct delegate:self];
+        
+        
     }
 }
 
@@ -392,17 +404,37 @@
 
 
 - (void)kidsKindergartenAciton:(id)sender{
-    KindergartenListViewController *reg = [[KindergartenListViewController alloc] init];
-    [self.navigationController pushViewController:reg animated:YES];
-    reg.title = @"";
+    
+    if([self saveNSUserDefaults:[self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] dateOfBirth:[self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] kId:_kindergartenId]){
+        KindergartenListViewController *reg = [[KindergartenListViewController alloc] init];
+        [self.navigationController pushViewController:reg animated:YES];
+        reg.title = @"";
+    }
+    
+    
+    
 }
 
 - (void)kidsKindergartenContainerConfirmAciton:(id)sender{
-
+    
     [_kidsBirthdayBtn resignFirstResponder];
     
 }
 
+#pragma mark - server return
+
+-(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    if ([tag isEqualToString:CHILD_CHECKING]){
+        
+        NSData *responseData = [request responseData];
+        
+        NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"CHILD_CHECKING ----> %@ ",aString);
+    }
+    
+    
+}
 
 
 
@@ -413,7 +445,7 @@
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     //formatter.dateFormat = @"YYYY-MM-dd";
     formatter.dateFormat = @"dd/MM/YYYY";
-
+    
     NSString *dateString = [formatter stringFromDate:selectedDate];
     self.kidsBirthdayBtn.text = dateString;
 }
@@ -445,7 +477,7 @@
     if (self.datePicker.superview == nil) {
         //close all keyboard or data picker visible currently
         [self.kidsBirthdayBtn resignFirstResponder];
-
+        
         //此处将Y坐标设在最底下，为了一会动画的展示
         self.datePicker.frame = CGRectMake(0, Drive_Height, Drive_Wdith, 216);
         [self.view addSubview:self.datePicker];
@@ -453,12 +485,36 @@
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.3f];
         [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
-       // self.datePicker.frame -= self.datePicker.frame.size.height;
+        // self.datePicker.frame -= self.datePicker.frame.size.height;
         [UIView commitAnimations];
     }
     
     return NO;
 }
+
+
+#pragma mark- save the child information (userDefault)
+/**
+ * save the child information
+ */
+-(BOOL)saveNSUserDefaults:(NSString *)childName dateOfBirth
+                         :(NSString *)dateOfBirth kId
+                         :(NSString *)kId
+{
+    NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
+    // NSLog(@"login sss----> %@ ",guardian);
+    
+    
+    [childInformation setObject:childName forKey:ChildInformationMatchingViewController_userDefaults_childName];
+    [childInformation setObject:dateOfBirth forKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth];
+    [childInformation setObject:kId forKey:ChildInformationMatchingViewController_userDefaults_kId];
+    
+    
+    return [childInformation synchronize];
+    
+    
+}
+
 @end
 
 

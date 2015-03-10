@@ -22,5 +22,7 @@
 #define LoginViewController_registrationId @"registrationId"
 
 
-
-
+//ChildInformationMatchingViewController
+#define ChildInformationMatchingViewController_userDefaults_childName @"childName"
+#define ChildInformationMatchingViewController_userDefaults_dateOfBirth @"dateOfBirth"
+#define ChildInformationMatchingViewController_userDefaults_kId @"kId"

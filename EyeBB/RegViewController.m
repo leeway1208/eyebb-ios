@@ -672,7 +672,7 @@
         //                NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         NSString * resSignUp = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
-        NSLog(@"sign up ----> %@ ",resSignUp);
+        //NSLog(@"sign up ----> %@ ",resSignUp);
         
         //user name is already used
         if([resSignUp isEqualToString:SERVER_RETURN_F]){

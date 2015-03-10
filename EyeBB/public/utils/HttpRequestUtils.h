@@ -213,6 +213,10 @@
 #define REG_PARENTS_KEY_EMAIL @"email"
 #define REG_PARENTS_KEY_PHONENUM @"phoneNum"
 
+//ChildInformationMatchingViewController
+#define ChildInformationMatchingViewController_KEY_childName @"childName"
+#define ChildInformationMatchingViewController_KEY_dateOfBirth @"dateOfBirth"
+#define ChildInformationMatchingViewController_KEY_kId @"kId"
 
 /*
  * json key

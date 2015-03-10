@@ -62,13 +62,13 @@
     NSString * accNameStr=[userDefaultes objectForKey:LoginViewController_accName];
     NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
     
-    if (![accNameStr isEqualToString:@""]&&![accPdeStr isEqualToString:@""]) {
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
-        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-        
-        [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
-
-    }
+//    if (![accNameStr isEqualToString:@""]&&![accPdeStr isEqualToString:@""]) {
+//        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
+//        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+//        
+//        [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
+//
+//    }
 }
 -(void)viewDidDisappear:(BOOL)animated
 {
