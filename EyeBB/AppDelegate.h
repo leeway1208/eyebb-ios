@@ -12,6 +12,7 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-
+//判断APP是否第一次启动
+@property bool appIsFirstStart;
 @end
 

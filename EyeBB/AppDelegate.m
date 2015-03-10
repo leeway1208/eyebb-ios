@@ -18,6 +18,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:@"everLaunched"]) {
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"everLaunched"];
+        [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"firstStart"];
+        
+        NSLog(@"第一次启动");
+        self.appIsFirstStart = YES;
+    }
+    else{
+        self.appIsFirstStart = NO;
+        [[NSUserDefaults standardUserDefaults] setBool:NO forKey:@"firstStart"];
+    }
     //获取当前系统版本号
     NSString * version = [[UIDevice currentDevice] systemVersion];
     
