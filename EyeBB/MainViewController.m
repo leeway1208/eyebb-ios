@@ -12,6 +12,8 @@
 #import "JSONKit.h"
 #import "MSCellAccessory.h"
 #import "LDProgressView.h"
+#import "UserDefaultsUtils.h"
+#import "HttpRequestUtils.h"
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
@@ -96,6 +98,10 @@
 @property (strong,nonatomic) NSMutableArray * roomArray;
 //儿童所在机构对应数据数组
 @property (strong,nonatomic) NSMutableArray * childrenByAreaArray;
+
+//个人信息列表
+@property (strong,nonatomic) NSMutableArray * personalDetailsArray;
+
 /**儿童相关信息*/
 @property (strong,nonatomic) NSMutableDictionary * childrenDictionary;
 
@@ -106,6 +112,8 @@
 @property (nonatomic) BOOL isautoOn;
 /**时间格式*/
 @property (nonatomic,strong) NSDateFormatter *dateFormatter;
+/**图片本地存储地址*/
+@property (nonatomic,strong)NSString * documentsDirectoryPath;
 @end
 
 @implementation MainViewController
@@ -168,10 +176,14 @@
     
     _organizationArray=[[NSMutableArray alloc]init];
     _childrenDictionary=[[NSMutableDictionary alloc]init];
+    _personalDetailsArray=[[NSMutableArray alloc]init];
 //    _roomArray=[[NSMutableArray alloc]init];
     
     _isallRoomOn=NO;
     _isautoOn=NO;
+    
+    
+     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
 /**
@@ -613,7 +625,7 @@
     _UserNameLbl.textAlignment = NSTextAlignmentLeft;
     _UserNameLbl.textColor=[UIColor blackColor];
     
-    _UserNameLbl.text = @"*****";
+    _UserNameLbl.text = LoginViewController_accName;
     
     [PersonageView addSubview:_UserNameLbl];
     
@@ -882,7 +894,7 @@
         return 1;
     }
     else if(tableView == self.PersonageTableView){
-        return 3;
+        return _personalDetailsArray.count;
     }
     else if(tableView == self.listTypeTableView){
         return 2;
@@ -1064,12 +1076,12 @@
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                 NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
                 //图片保存的本地的地址获取
-                NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+                
                 //判断文件夹是否已经存在对应图片
-                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
                     
                     
-                    [RoomImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]];
+                    [RoomImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]];
                 }
                 else
                 {
@@ -1081,7 +1093,7 @@
                     UIImage * imageFromURL  = nil;
                     imageFromURL=[UIImage imageWithData:data];
                     //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
                     
                     
                 }
@@ -1178,11 +1190,11 @@
                     NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                     NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
                     array=nil;
-                    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+
                     
-                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:documentsDirectoryPath]!=nil) {
+                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
                         
-                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath] forState:UIControlStateNormal];
+                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
                     }
                     else
                     {
@@ -1193,7 +1205,7 @@
                         UIImage * imageFromURL  = nil;
                         imageFromURL=[UIImage imageWithData:data];
                         //Save Image to Directory
-                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath];
+                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
                         
                         
                     }
@@ -1236,12 +1248,12 @@
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                 NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
                 array=nil;
-                NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
                 
-                if ([self loadImage:[[array2 objectAtIndex:0] copy] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:documentsDirectoryPath]!=nil) {
+                
+                if ([self loadImage:[[array2 objectAtIndex:0] copy] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
                     
                     
-                    [RoomImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath]];
+                    [RoomImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
                 }
                 else
                 {
@@ -1252,7 +1264,7 @@
                     UIImage * imageFromURL  = nil;
                     imageFromURL=[UIImage imageWithData:data];
                     //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:documentsDirectoryPath];
+                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
                     
                     
                 }
@@ -1326,11 +1338,11 @@
                     NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
                     NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
                     
-                    NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+
                     
-                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil) {
+                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
                         
-                        [kindBtn setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath] forState:UIControlStateNormal];
+                        [kindBtn setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
                     }
                     else
                     {
@@ -1341,7 +1353,7 @@
                         UIImage * imageFromURL  = nil;
                         imageFromURL=[UIImage imageWithData:data];
                         //Save Image to Directory
-                        [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                        [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
                         
                         
                     }
@@ -1365,7 +1377,9 @@
     //个人设置
     else if (tableView==self.PersonageTableView)
     {
+        NSDictionary *tempDictionary=[[_personalDetailsArray objectAtIndex:indexPath.row]copy];
         
+         NSString* pathOne =[NSString stringWithFormat: @"%@",[tempDictionary objectForKey:@"icon"]];
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //房间图标
@@ -1376,12 +1390,45 @@
             [messageImgView.layer setBorderWidth:2];
             
             [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            
+            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]) {
+               
+                
+                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                
+                
+                
+                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
+                    [messageImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]];
+                   
+                }
+                else
+                {
+                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                    [messageImgView setImage:[UIImage imageWithData:data]];
+                    //Get Image From URL
+                    UIImage * imageFromURL  = nil;
+                    imageFromURL=[UIImage imageWithData:data];
+                    //Save Image to Directory
+                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
+                    
+                    
+                }
+            }
+            else
+            {
+
+                [messageImgView setImage:[UIImage imageNamed:@"logo_en"]];
+            }
+            
+            
             messageImgView.tag=206;
             [cell addSubview:messageImgView];
             
             UILabel * messageLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 27, CGRectGetWidth(cell.frame)-100, 20)];
-            [messageLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
 //            [messageLbl setAlpha:0.6];
             [messageLbl setFont:[UIFont systemFontOfSize: 15.0]];
             [messageLbl setTextColor:[UIColor blackColor]];
@@ -1390,7 +1437,7 @@
             [cell addSubview:messageLbl];
             
             UILabel * timeLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 47, CGRectGetWidth(cell.frame)-100, 20)];
-            [timeLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
             //            [messageLbl setAlpha:0.6];
             [timeLbl setFont:[UIFont systemFontOfSize: 15.0]];
             [timeLbl setTextColor:[UIColor blackColor]];
@@ -1402,20 +1449,51 @@
         if([cell viewWithTag:206]!=nil)
         {
             UIImageView * messageImgView=(UIImageView *)[cell viewWithTag:206];
-            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]) {
+                
+                
+                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                NSArray  * array2= [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
+                
+                
+                
+                if ([self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]!=nil) {
+                    [messageImgView setImage:[self loadImage:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath]];
+                    
+                }
+                else
+                {
+                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                    [messageImgView setImage:[UIImage imageWithData:data]];
+                    //Get Image From URL
+                    UIImage * imageFromURL  = nil;
+                    imageFromURL=[UIImage imageWithData:data];
+                    //Save Image to Directory
+                    [self saveImage:imageFromURL withFileName:[array2 objectAtIndex:0] ofType:[array2 objectAtIndex:1] inDirectory:_documentsDirectoryPath];
+                    
+                    
+                }
+            }
+            else
+            {
+                
+                [messageImgView setImage:[UIImage imageNamed:@"logo_en"]];
+            }
+
             
         }
         
         if([cell viewWithTag:207]!=nil)
         {
             UILabel * messageLbl =(UILabel *)[cell viewWithTag:207];
-            [messageLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
             
         }
         if([cell viewWithTag:208]!=nil)
         {
             UILabel * timeLbl =(UILabel *)[cell viewWithTag:208];
-            [timeLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
             
         }
         
@@ -1649,7 +1727,7 @@
         //        myDelegate.footStr = nil;
         //        [self.RadarTableView tableViewDidScroll:scrollView];
     }
-    else if(huaHMSegmentedControl==2){
+    else if(huaHMSegmentedControl==3){
         
         [self getRequest:@"reportService/api/notices" delegate:self];
     }
@@ -1703,11 +1781,7 @@
         
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
-        
         responseData=nil;
-        //        NSLog(@"responseStrings %@\n",request);
-//        NSLog(@"_organizationArray %@\n",_organizationArray);
-        
         //机构名称列表选择-----------------------------
         NSString *organizationStr=[[[_organizationArray objectAtIndex:0] objectForKey:@"area"] objectForKey:@"nameSc"];
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
@@ -1727,7 +1801,6 @@
          NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
         for(int i=0;i<_roomArray.count;i++)
         {
-
             for(int j=0;j<tempArray.count;j++)
             {
                  NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_roomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
@@ -1735,19 +1808,31 @@
                 {
                     [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
                 }
-                
             }
             [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
             [tempChindrenArray removeAllObjects];
         }
-        
-        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+//        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
         [_RoomTableView reloadData];
         [tempChindrenArray removeAllObjects];
         tempChindrenArray=nil;
         tempArray=nil;
+    }
+    
+    //请求个人信息
+    if ([tag isEqualToString:@"reportService/api/notices"]) {
+//        NSString *responseString = [request responseString];
+        NSData *responseData = [request responseData];
+        
+       _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
+        responseData=nil;
+        [_PersonageTableView reloadData];
+        
         
     }
+
+    
+    
     
     
 }
@@ -1928,7 +2013,7 @@
 //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         }
         if (num==3) {
-//             [self getRequest:@"reportService/api/notices" delegate:self];
+             [self getRequest:@"reportService/api/notices" delegate:self];
         }
     }
     else
@@ -1974,6 +2059,8 @@
 {
     [_PopupSView setHidden:YES];
 }
+
+
 
 
 
