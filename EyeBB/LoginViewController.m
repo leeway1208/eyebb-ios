@@ -51,28 +51,6 @@
     
 }
 
-/**
- * save the login status
- */
--(BOOL)saveNSUserDefaults:(NSDictionary *)guardian RegistrationId
-                         :(NSString *)registrationId
-{
-    NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
-    // NSLog(@"login sss----> %@ ",guardian);
-    
-    NSLog(@"login ----> %@ ",[guardian objectForKey:@"name"]);
-    [loginStatus setObject:[guardian objectForKey:LoginViewController_accName] forKey:LoginViewController_accName];
-    [loginStatus setInteger:[[guardian objectForKey:LoginViewController_guardianId] intValue] forKey:LoginViewController_guardianId];
-    [loginStatus setObject:[guardian objectForKey:LoginViewController_name] forKey:LoginViewController_name];
-    [loginStatus setInteger:[[guardian objectForKey:LoginViewController_phoneNumber] intValue] forKey:LoginViewController_phoneNumber];
-    [loginStatus setObject:[guardian objectForKey:LoginViewController_type] forKey:LoginViewController_type];
-    
-    [loginStatus setObject:registrationId forKey:LoginViewController_registrationId];
-    
-    return [loginStatus synchronize];
-    
-    
-}
 
 
 -(void)viewWillAppear:(BOOL)animated
@@ -367,7 +345,7 @@
     
     
 }
-
+#pragma mark - check the string
 /**
 *  verify the password and username whether is null or not.
 *
@@ -394,5 +372,33 @@
     
     return mag;
 }
+
+#pragma mark- save the login status (userDefault)
+/**
+ * save the login status
+ */
+-(BOOL)saveNSUserDefaults:(NSDictionary *)guardian RegistrationId
+                         :(NSString *)registrationId
+{
+    NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+    // NSLog(@"login sss----> %@ ",guardian);
+    
+    NSLog(@"login ----> %@ ",[guardian objectForKey:@"name"]);
+    [loginStatus setObject:[guardian objectForKey:LoginViewController_accName] forKey:LoginViewController_accName];
+    [loginStatus setInteger:[[guardian objectForKey:LoginViewController_guardianId] intValue] forKey:LoginViewController_guardianId];
+    [loginStatus setObject:[guardian objectForKey:LoginViewController_name] forKey:LoginViewController_name];
+    [loginStatus setInteger:[[guardian objectForKey:LoginViewController_phoneNumber] intValue] forKey:LoginViewController_phoneNumber];
+    [loginStatus setObject:[guardian objectForKey:LoginViewController_type] forKey:LoginViewController_type];
+    
+    [loginStatus setObject:registrationId forKey:LoginViewController_registrationId];
+    //password
+     NSString *hashUserPassword= [self.loginPassword.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    [loginStatus setObject:[CommonUtils getSha256String:hashUserPassword].uppercaseString  forKey:LoginViewController_hashPassword];
+    
+    return [loginStatus synchronize];
+    
+    
+}
+
 
 @end

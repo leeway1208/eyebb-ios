@@ -330,6 +330,31 @@
     [self.kidsNameTf resignFirstResponder];
 }
 
+#pragma - check the string
+
+- (NSString *)verifyRequest:(NSString *)childName dateOfBirth:(NSString *)dateOfBirth kId:(NSString *)kId
+
+{
+    NSString * mag=nil;//返回变量值
+    
+    if(childName.length <= 0)
+    {
+        mag=LOCALIZATION(@"text_something_has_gone_wrong");
+        return mag;
+    }
+    if (dateOfBirth.length <= 0) {
+        
+        mag=LOCALIZATION(@"text_something_has_gone_wrong");
+        return mag;
+    }
+    if (kId.length <= 0) {
+        
+        mag=LOCALIZATION(@"text_something_has_gone_wrong");
+        return mag;
+    }
+    
+    return mag;
+}
 
 #pragma - button action
 - (void)loginSelectLeftAction:(id)sender{
@@ -337,8 +362,34 @@
 }
 
 - (void)searchChildAction:(id)sender{
+    //Remove spaces at both ends
+    //03-10 11:42:54.054: I/System.out(16330): username=>k 10/3/2015 2
+    NSString *childName = [self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *dateOfBirth= [self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *kId= _kindergartenId;
     
+    NSLog(@"time --- > %@", kId);
+    
+    if([self verifyRequest:childName dateOfBirth:dateOfBirth kId:kId] != nil){
+        
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_something_has_gone_wrong")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
+    }else{
+        
+//        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
+//        
+//        
+//        [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
+//
+//        
+    }
 }
+
+
+
 
 - (void)kidsKindergartenAciton:(id)sender{
     KindergartenListViewController *reg = [[KindergartenListViewController alloc] init];
@@ -360,7 +411,9 @@
 - (void)chooseDateValueChanged:(UIDatePicker *)sender {
     NSDate *selectedDate = sender.date;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"YYYY-MM-dd";
+    //formatter.dateFormat = @"YYYY-MM-dd";
+    formatter.dateFormat = @"dd/MM/YYYY";
+
     NSString *dateString = [formatter stringFromDate:selectedDate];
     self.kidsBirthdayBtn.text = dateString;
 }
@@ -368,7 +421,8 @@
 - (void)chooseDateTouchDown:(UIDatePicker *)sender {
     NSDate *selectedDate = self.datePicker.date;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.dateFormat = @"YYYY-MM-dd";
+    //formatter.dateFormat = @"YYYY-MM-dd";
+    formatter.dateFormat = @"dd/MM/YYYY";
     NSString *dateString = [formatter stringFromDate:selectedDate];
     self.kidsBirthdayBtn.text = dateString;
 }

@@ -172,8 +172,10 @@
         [cell addSubview:messageLbl];
         
         
-        //save image
+        /*save image */
+        //get image path
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[_allLocationAreasInfoAr objectAtIndex:indexPath.row] objectForKey:KindergartenListViewController_json_key_icon]];
+        NSLog(@"pathOne----%@",pathOne);
         if(pathOne.length > 1){
             //NSLog(@"SADSADSSSSSS----%@",pathOne);
             NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
@@ -222,6 +224,7 @@
         
         ChildInformationMatchingViewController *cimmvc = [[ChildInformationMatchingViewController alloc] init];
         cimmvc.kindergartenName = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_nameTc];
+        cimmvc.kindergartenId = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_areaId];
         [self.navigationController pushViewController:cimmvc animated:YES];
         
     }

@@ -14,6 +14,7 @@
 
 //LoginViewController
 #define LoginViewController_accName @"accName"
+#define LoginViewController_hashPassword @"hashPassword"
 #define LoginViewController_guardianId @"guardianId"
 #define LoginViewController_name @"name"
 #define LoginViewController_phoneNumber @"phoneNumber"

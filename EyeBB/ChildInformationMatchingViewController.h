@@ -11,4 +11,6 @@
 @interface ChildInformationMatchingViewController : UIViewController<UIActionSheetDelegate>
 /* kindergarten name from kindergarten view */
 @property (nonatomic,retain) NSString *kindergartenName;
+@property (nonatomic,retain) NSString *kindergartenId;
+
 @end

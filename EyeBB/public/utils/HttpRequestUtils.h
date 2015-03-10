@@ -202,10 +202,11 @@
 /*
  * http request key
  */
+//LoginViewController
 #define LOGIN_TO_CHECK_KEY_j_username @"j_username"
 #define LOGIN_TO_CHECK_KEY_j_password @"j_password"
 
-//
+//RegViewController
 #define REG_PARENTS_KEY_ACCNAME @"accName"
 #define REG_PARENTS_KEY_NAME @"name"
 #define REG_PARENTS_KEY_PASSWORD @"password"
