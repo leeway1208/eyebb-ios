@@ -74,13 +74,13 @@
 @property (strong,nonatomic) UIButton * PerformanceTimeBtn;
 
 
-/**活动按钮*/
+/**房间按钮*/
 @property (strong,nonatomic) UIButton * HomeBtn;
-/**活动按钮*/
+/**雷达按钮*/
 @property (strong,nonatomic) UIButton * RadarBtn;
-/**活动按钮*/
+/**简报按钮*/
 @property (strong,nonatomic) UIButton * NewsBtn;
-/**活动按钮*/
+/**个人信息按钮*/
 @property (strong,nonatomic) UIButton * PersonageBtn;
 
 
@@ -102,6 +102,11 @@
 @property (strong,nonatomic) NSMutableArray * kidsRoomArray;
 //儿童所在机构对应数据数组
 @property (strong,nonatomic) NSMutableArray * childrenByAreaArray;
+
+/**活动数组*/
+@property (strong,nonatomic) NSMutableArray * activityInfosArray;
+//表现数组
+@property (strong,nonatomic) NSMutableArray * dailyAvgFigureArray;
 
 //个人信息列表
 @property (strong,nonatomic) NSMutableArray * personalDetailsArray;
@@ -135,7 +140,7 @@
     // Do any additional setup after loading the view.
     [self iv];
 //    [self getRequest:@"kindergartenList" delegate:self];
-    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self];
+    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
    
     
     
@@ -1883,7 +1888,7 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self];
+                    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
                     break;
                 case 2:
                     [_HomeBtn setSelected:NO];
@@ -1894,7 +1899,7 @@
                     [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                     [self getRequest:GET_REPORTS delegate:self];
+                     [self getRequest:GET_REPORTS delegate:self RequestDictionary:nil];
                     
                     break;
                 case 3:
@@ -1906,7 +1911,7 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:YES];
                     [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                    [self getRequest:GET_NOTICES delegate:self];
+                    [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
                     break;
                     
                 default:
@@ -2010,8 +2015,13 @@
         NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
         
+        
+        
+        
+        _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
+         _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
 //        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
-//        responseData=nil;
+        responseData=nil;
 //        [_PersonageTableView reloadData];
         
         
@@ -2079,7 +2089,7 @@
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
 {
-    [self getRequest:@"kindergartenList" delegate:self];
+    [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
     KindlistViewController * kindlist = [[KindlistViewController alloc] init];
     [self.navigationController pushViewController:kindlist animated:YES];
@@ -2198,10 +2208,12 @@
 //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         }
         if (num==2) {
-            [self getRequest:GET_REPORTS delegate:self];
+            NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:@"2", @"childId",@"5", @"avgDays", nil];
+            [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
+            tempDictionary=nil;
         }
         if (num==3) {
-             [self getRequest:GET_NOTICES delegate:self];
+             [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
         }
     }
     else

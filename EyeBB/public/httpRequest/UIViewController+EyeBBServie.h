@@ -10,7 +10,7 @@
 #import "EyeBBViewController.h"
 
 @interface UIViewController(EyeBBServie)
--(void)getRequest:(NSString *)requestStr  delegate:(id)delegate;
+-(void)getRequest:(NSString *)requestStr  delegate:(id)delegate RequestDictionary:(NSDictionary *)requestDictionary;
 
 
 -(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate;

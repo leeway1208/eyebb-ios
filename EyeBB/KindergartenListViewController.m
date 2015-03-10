@@ -93,7 +93,7 @@
 #pragma mark - request server
 -(void)requestServer{
     
-    [self getRequest:GET_KINDERGARTEN_LIST delegate:self];
+    [self getRequest:GET_KINDERGARTEN_LIST delegate:self RequestDictionary:nil];
     
 }
 

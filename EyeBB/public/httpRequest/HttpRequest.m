@@ -22,7 +22,7 @@ static HttpRequest *instance;
 #pragma mark ---
 #pragma mark --- 处理业务逻辑委托
 -(NSMutableDictionary *)clientDelegates{
-
+    
     if(clientDelegates==nil){
         clientDelegates = [[NSMutableDictionary alloc] init];
     }
@@ -32,7 +32,7 @@ static HttpRequest *instance;
 #pragma mark ---
 #pragma mark ---单例实现
 +(HttpRequest *)instance{
-
+    
     static dispatch_once_t pred = 0;
     dispatch_once(&pred, ^{
         if(instance==nil){
@@ -44,17 +44,36 @@ static HttpRequest *instance;
 }
 
 
--(void)getRequest:(NSString *)requestStr delegate:(id)delegate
+-(void)getRequest:(NSString *)requestStr delegate:(id)delegate RequestDictionary:(NSDictionary *)requestDictionary
 {
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
+    
+    if (requestDictionary!=nil)
+    {
+        //%@=%@&
+        int tempNum=0;
+        for (id key in requestDictionary)
+        {
+            NSString *str;
+            if (tempNum==0) {
+                str=[NSString stringWithFormat:@"?%@=%@",key,[requestDictionary objectForKey:key]];
+            }
+            else
+            {
+                str=[NSString stringWithFormat:@"&%@=%@",key,[requestDictionary objectForKey:key]];
+            }
+             url = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@",url,str]];
+            tempNum++;
+        }
+    }
     [[self clientDelegates] setObject:delegate forKey:@"0"];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
-
-    [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
-[request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     
-
+    [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
+    [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
+    
+    
     [request setDelegate:self];
     
     [request startAsynchronous];
@@ -72,7 +91,7 @@ static HttpRequest *instance;
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
     [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     
-[ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
+    [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
     if ([requestDictionary count] > 0) {
         for (NSString *key in requestDictionary) {
             [request setPostValue:requestDictionary[key] forKey:key];
@@ -90,7 +109,7 @@ static HttpRequest *instance;
 {
     //    EyeBBViewController *httpView = (EyeBBViewController *)delegate;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
- NSString *responseString = [request responseString];
+    NSString *responseString = [request responseString];
     EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
     
     
@@ -100,7 +119,7 @@ static HttpRequest *instance;
     
     // 当以文本形式读取返回内容时用这个方法
     
-   
+    
     
     //    // 当以二进制形式读取返回内容时用这个方法
     //
