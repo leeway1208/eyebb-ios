@@ -1097,9 +1097,10 @@
             //房间图标
            
             
-            EGOImageView * RoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+            EGOImageView * EGORoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
             
-//            =[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
             
             RoomImgView.frame=CGRectMake(10, 15, 60, 60);
             [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
@@ -1111,9 +1112,10 @@
             
 //            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-            if (RoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
-                RoomImgView.imageURL = [NSURL URLWithString:pathOne];
+            if (EGORoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
+                EGORoomImgView.imageURL = [NSURL URLWithString:pathOne];
             }
+            RoomImgView.image=EGORoomImgView.image;
              pathOne=nil;
 //                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
 //                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
