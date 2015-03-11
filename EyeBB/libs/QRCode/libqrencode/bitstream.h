@@ -23,7 +23,7 @@
 #define __BITSTREAM_H__
 
 typedef struct {
-	int length;
+    int length;
 	unsigned char *data;
 } BitStream;
 
