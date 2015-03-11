@@ -14,6 +14,10 @@
 //--test--
 #import "KindlistViewController.h"
 #import "ChildInformationMatchingViewController.h"
+
+#import "RootViewController.h"
+
+
 @interface WelcomeViewController ()
 {
      AppDelegate *myDelegate;
@@ -79,38 +83,38 @@
 //页面显示后执行事件
 -(void)viewDidAppear:(BOOL)animated
 {
-    if(myDelegate.appIsFirstStart != YES)
-    {
-        
-        NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
-        
-        NSString * accNameStr=[userDefaultes objectForKey:LoginViewController_accName];
-        NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
-    
-
-        if (accNameStr!=nil&&![accNameStr isEqualToString:@""]&&accPdeStr!=nil&&![accPdeStr isEqualToString:@""]) {
-            NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
-            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-            
-            [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
-            
-        }
-        else
-        {
+//    if(myDelegate.appIsFirstStart != YES)
+//    {
+//        
+//        NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+//        
+//        NSString * accNameStr=[userDefaultes objectForKey:LoginViewController_accName];
+//        NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
+//    
+//
+//        if (accNameStr!=nil&&![accNameStr isEqualToString:@""]&&accPdeStr!=nil&&![accPdeStr isEqualToString:@""]) {
+//            NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
+//            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+//            
+//            [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
+//            
+//        }
+//        else
+//        {
             logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
             RegBtn.hidden=NO;
             LoginBtn.hidden=NO;
             CopyrightLbl.hidden=NO;
-        }
+//        }
         
-    }
-    else
-    {
-        logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
-        RegBtn.hidden=NO;
-        LoginBtn.hidden=NO;
-        CopyrightLbl.hidden=NO;
-    }
+//    }
+//    else
+//    {
+//        logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+//        RegBtn.hidden=NO;
+//        LoginBtn.hidden=NO;
+//        CopyrightLbl.hidden=NO;
+//    }
 
 }
 -(void)viewDidDisappear:(BOOL)animated
@@ -235,10 +239,15 @@
 //    [self.navigationController pushViewController:reg animated:YES];
 //    reg.title = @"";
     
-
-    LoginViewController *reg = [[LoginViewController alloc] init];
+    RootViewController *reg = [[RootViewController alloc] init];
+    reg.navigationController.navigationBarHidden = YES;
     [self.navigationController pushViewController:reg animated:YES];
-    reg.title = @"";
+//    reg.title = @"";
+    
+    
+//    LoginViewController *reg = [[LoginViewController alloc] init];
+//    [self.navigationController pushViewController:reg animated:YES];
+//    reg.title = @"";
 //    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
 //    {
 //        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

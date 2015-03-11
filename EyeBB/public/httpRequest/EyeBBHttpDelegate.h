@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 @protocol EyeBBHttpDelegate<NSObject>
 - (void)requestFinished:(ASIHTTPRequest *)request;
 

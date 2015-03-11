@@ -1098,6 +1098,7 @@
            
             
             EGOImageView * RoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+            
 //            =[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             
             RoomImgView.frame=CGRectMake(10, 15, 60, 60);
@@ -1110,8 +1111,9 @@
             
 //            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+            if (RoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
                 RoomImgView.imageURL = [NSURL URLWithString:pathOne];
-            RoomImgView.placeholderImage=RoomImgView.image;
+            }
              pathOne=nil;
 //                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
 //                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
@@ -1288,44 +1290,17 @@
             EGOImageView * RoomImgView=(EGOImageView *)[RoomBtn viewWithTag:202];
 
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-            RoomImgView.imageURL = [NSURL URLWithString:pathOne];
-            RoomImgView.placeholderImage=RoomImgView.image;
+            NSLog(@"%zi 加载前 %@  --%@ --%@",indexPath.row, RoomImgView.imageURL,[NSURL URLWithString:pathOne],RoomImgView.placeholderImage);
+            if (![[NSString stringWithFormat: @"%@",RoomImgView.imageURL] isEqualToString:pathOne]) {
+                 RoomImgView.imageURL = [NSURL URLWithString:pathOne];
+                
+            }
+             RoomImgView.placeholderImage=RoomImgView.image;
+            NSLog(@"%zi 加载后 %@",indexPath.row, RoomImgView.imageURL);
+           
+//             NSLog(@"RoomImgView.placeholderImage.class 加载后 %@",RoomImgView.placeholderImage.);
+            
             pathOne=nil;
-//            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
-//                NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-//                
-//                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-//                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
-//
-//                
-//                
-//                if ([self loadImage:[[array2 objectAtIndex:0] copy] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-//                    
-//                    
-//                    [RoomImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
-//                }
-//                else
-//                {
-//                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-//                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-//                    [RoomImgView setImage:[UIImage imageWithData:data]];
-//                    //Get Image From URL
-//                    UIImage * imageFromURL  = nil;
-//                    imageFromURL=[UIImage imageWithData:data];
-//                    //Save Image to Directory
-//                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-//                    
-//                    
-//                }
-//                pathOne=nil;
-//                array=nil;
-//                array2=nil;
-//
-//            }
-//            else
-//            {
-//                [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
-//            }
             
             UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
             if (_roomArray.count>0) {
