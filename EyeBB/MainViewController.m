@@ -8,12 +8,14 @@
 
 #import "MainViewController.h"
 #import "SettingsViewController.h"
-#import "KindlistViewController.h"
+#import "KidslistViewController.h"
 #import "JSONKit.h"
 #import "MSCellAccessory.h"
 #import "LDProgressView.h"
 #import "UserDefaultsUtils.h"
 #import "EGOImageView.h"
+
+#import "ChildrenListViewController.h"
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
@@ -1097,9 +1099,9 @@
             //房间图标
            
             
-            EGOImageView * EGORoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-            EGORoomImgView.frame=CGRectMake(10, 15, 60, 60);
-            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            EGOImageView * RoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+            RoomImgView.frame=CGRectMake(10, 15, 60, 60);
+//            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
             
             
@@ -1112,12 +1114,12 @@
             
 //            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-            if (EGORoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
-                EGORoomImgView.imageURL = [NSURL URLWithString:pathOne];
-            }
-            RoomImgView.image=[EGORoomImgView.image copy];
-            [EGORoomImgView removeFromSuperview];
-            EGORoomImgView=nil;
+//            if (EGORoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
+                RoomImgView.imageURL = [NSURL URLWithString:pathOne];
+//            }
+//            RoomImgView.image=[EGORoomImgView.image copy];
+//            [EGORoomImgView removeFromSuperview];
+//            EGORoomImgView=nil;
              pathOne=nil;
 //                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
 //                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
@@ -1292,19 +1294,19 @@
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
             
-             EGOImageView * EGORoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-            EGORoomImgView.frame=CGRectMake(10, 15, 60, 60);
-            UIImageView * RoomImgView=(UIImageView *)[RoomBtn viewWithTag:202];
+//             EGOImageView * EGORoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+//            EGORoomImgView.frame=CGRectMake(10, 15, 60, 60);
+            EGOImageView * RoomImgView=(EGOImageView *)[RoomBtn viewWithTag:202];
 
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
 //            NSLog(@"%zi 加载前 %@  --%@ --%@",indexPath.row, RoomImgView.imageURL,[NSURL URLWithString:pathOne],RoomImgView.placeholderImage);
 //            if (![[NSString stringWithFormat: @"%@",EGORoomImgView.imageURL] isEqualToString:pathOne]) {
-                 EGORoomImgView.imageURL = [NSURL URLWithString:pathOne];
+                 RoomImgView.imageURL = [NSURL URLWithString:pathOne];
                 
 //            }
-            if (EGORoomImgView.image!=RoomImgView.image) {
-                RoomImgView.image=EGORoomImgView.image;
-            }
+//            if (EGORoomImgView.image!=RoomImgView.image) {
+//                RoomImgView.image=EGORoomImgView.image;
+//            }
 //             RoomImgView.placeholderImage=RoomImgView.image;
 //            NSLog(@"%zi 加载后 %@",indexPath.row, RoomImgView.imageURL);
            
@@ -2048,8 +2050,8 @@
 
 -(void)goToSettingAction:(id)sender
 {
-    self.settingVc = [[SettingsViewController alloc] init];
-    [self.navigationController pushViewController:self.settingVc  animated:YES];
+    ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
+    [self.navigationController pushViewController:tt animated:YES];
     self.settingVc .title = @"";
     
     //    [self.navigationController pushViewController:self.settingVc animated:YES];
@@ -2084,7 +2086,7 @@
 {
     [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
-    KindlistViewController * kindlist = [[KindlistViewController alloc] init];
+    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
     [self.navigationController pushViewController:kindlist animated:YES];
     kindlist.title = @"";
 }

@@ -8,6 +8,6 @@
 
 #import "EyeBBViewController.h"
 
-@interface KindlistViewController : EyeBBViewController
+@interface KidslistViewController : EyeBBViewController
 
 @end

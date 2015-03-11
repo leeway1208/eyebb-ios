@@ -6,9 +6,9 @@
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
-#import "KindlistViewController.h"
+#import "KidslistViewController.h"
 
-@interface KindlistViewController ()<UITableViewDataSource,UITableViewDelegate>
+@interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 //-------------------视图控件--------------------
 /**兒童列表*/
 @property (strong,nonatomic) UITableView * KindlistTView;
@@ -17,7 +17,7 @@
 @property NSInteger cellHeight;
 @end
 
-@implementation KindlistViewController
+@implementation KidslistViewController
 
 #pragma mark - 原生方法
 - (void)viewDidLoad {

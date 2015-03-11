@@ -118,4 +118,65 @@
 }
 
 
+#pragma mark--
+#pragma mark --儿童查询
+
+-(NSMutableArray *)allChildren{
+    
+    NSMutableArray *ChildrenArray = [[NSMutableArray alloc] init];
+    
+    sqlite3 *database;
+    if (sqlite3_open([[self findDBUrl] UTF8String] , &database) != SQLITE_OK) {
+        
+        sqlite3_close(database);
+        
+        NSAssert(0, @"打开数据库失败！");
+        
+    }
+    
+    //查询儿童
+    NSString *qChildren = @"SELECT child_id, name, icon, relation_with_user, mac_address FROM children";
+    
+    sqlite3_stmt *statement;
+    
+    if (sqlite3_prepare_v2(database, [qChildren UTF8String], -1, &statement, nil) == SQLITE_OK) {
+        
+        while (sqlite3_step(statement) == SQLITE_ROW) {
+            //临时装载信息
+            NSMutableDictionary *row=[NSMutableDictionary dictionaryWithCapacity:4];
+            
+            //获得数据
+            int child_id = sqlite3_column_int(statement, 0);
+            
+            char* name = (char *)sqlite3_column_text(statement, 1);
+            NSString *namestr =  [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
+            
+            char* icon = (char *)sqlite3_column_text(statement, 2);
+            NSString *iconstr =  [NSString stringWithCString:icon encoding:NSUTF8StringEncoding];
+            
+            char* relation = (char *)sqlite3_column_text(statement, 3);
+            NSString *relationstr =  [NSString stringWithCString:relation encoding:NSUTF8StringEncoding];
+            
+            char* macAddress = (char *)sqlite3_column_text(statement, 3);
+            NSString *macAddressstr =  [NSString stringWithCString:macAddress encoding:NSUTF8StringEncoding];
+            
+            [row setObject:[NSString stringWithFormat:@"%i", child_id] forKey:@"child_id"];
+            [row setObject:namestr forKey:@"name"];
+            [row setObject:iconstr forKey:@"icon"];
+            [row setObject:relationstr forKey:@"relation_with_user"];
+            [row setObject:macAddressstr forKey:@"mac_address"];
+            
+            [ChildrenArray addObject:row];
+            
+        }
+        
+        sqlite3_finalize(statement);
+        
+    }
+    
+    return ChildrenArray;
+}
+
+
+
 @end

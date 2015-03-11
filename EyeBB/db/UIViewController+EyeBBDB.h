@@ -14,4 +14,9 @@
 #pragma mark--
 #pragma mark --保存儿童信息
 -(void)SaveChildren:(NSArray *)childrenArray;
+
+#pragma mark--
+#pragma mark --儿童查询
+
+-(NSMutableArray *)allChildren;
 @end

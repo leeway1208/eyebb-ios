@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20B0434A1AB081AC0081738D /* ChildrenListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B043491AB081AC0081738D /* ChildrenListViewController.m */; };
 		20BD16EE1A99FC7700039A31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16ED1A99FC7700039A31 /* main.m */; };
 		20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16F01A99FC7700039A31 /* AppDelegate.m */; };
 		20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20BD16F81A99FC7700039A31 /* Images.xcassets */; };
@@ -27,7 +28,7 @@
 		3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFCB1AA06C5300BC6C48 /* SerializationComplexEntities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */; };
 		3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */; };
-		3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */; };
+		3209FFD91AA1AC6600BC6C48 /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD81AA1AC6600BC6C48 /* KidslistViewController.m */; };
 		3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DACB1AA4151700661712 /* WelcomeViewController.m */; };
 		3240DAD31AA5591200661712 /* icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 3240DACD1AA5591200661712 /* icon-29.png */; };
 		3240DAD41AA5591200661712 /* icon-29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3240DACE1AA5591200661712 /* icon-29@2x.png */; };
@@ -123,6 +124,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20B043481AB081AC0081738D /* ChildrenListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildrenListViewController.h; sourceTree = "<group>"; };
+		20B043491AB081AC0081738D /* ChildrenListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildrenListViewController.m; sourceTree = "<group>"; };
 		20BD16E81A99FC7700039A31 /* EyeBB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyeBB.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20BD16EC1A99FC7700039A31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20BD16ED1A99FC7700039A31 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -161,8 +164,8 @@
 		3209FFD21AA1515700BC6C48 /* UIViewController+EyeBBDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBDB.h"; path = "EyeBB/db/UIViewController+EyeBBDB.h"; sourceTree = "<group>"; };
 		3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+EyeBBDB.m"; path = "EyeBB/db/UIViewController+EyeBBDB.m"; sourceTree = "<group>"; };
 		3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		3209FFD71AA1AC6600BC6C48 /* KindlistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KindlistViewController.h; sourceTree = "<group>"; };
-		3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KindlistViewController.m; sourceTree = "<group>"; };
+		3209FFD71AA1AC6600BC6C48 /* KidslistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidslistViewController.h; sourceTree = "<group>"; };
+		3209FFD81AA1AC6600BC6C48 /* KidslistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidslistViewController.m; sourceTree = "<group>"; };
 		3240DACA1AA4151700661712 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		3240DACB1AA4151700661712 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		3240DACD1AA5591200661712 /* icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-29.png"; path = "img/icon-29.png"; sourceTree = "<group>"; };
@@ -423,14 +426,18 @@
 				326A92481A9C480D00CAB4F3 /* MainViewController.m */,
 				92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */,
 				92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */,
-				3209FFD71AA1AC6600BC6C48 /* KindlistViewController.h */,
-				3209FFD81AA1AC6600BC6C48 /* KindlistViewController.m */,
+				3209FFD71AA1AC6600BC6C48 /* KidslistViewController.h */,
+				3209FFD81AA1AC6600BC6C48 /* KidslistViewController.m */,
 				9236323F1AA40CA600687F3F /* LoginViewController.h */,
 				923632401AA40CA600687F3F /* LoginViewController.m */,
 				927DBC791AA7325B00923122 /* ChildInformationMatchingViewController.h */,
 				927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */,
 				927DBC7C1AA9B46F00923122 /* KindergartenListViewController.h */,
 				927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */,
+				921D8D351AB02BC3003F1448 /* RequireQrCode.h */,
+				921D8D361AB02BC3003F1448 /* RequireQrCode.m */,
+				20B043481AB081AC0081738D /* ChildrenListViewController.h */,
+				20B043491AB081AC0081738D /* ChildrenListViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -986,6 +993,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3251C5EB1AB01A1D0080C508 /* EGOImageView.m in Sources */,
+				20B0434A1AB081AC0081738D /* ChildrenListViewController.m in Sources */,
 				3264D9501A9D6B72009CB9C2 /* ASIWebPageRequest.m in Sources */,
 				3264D9551A9D6B72009CB9C2 /* ASICloudFilesObject.m in Sources */,
 				3264D94E1A9D6B72009CB9C2 /* ASIInputStream.m in Sources */,
@@ -994,6 +1002,8 @@
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
 				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
 				3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */,
+				921D8D371AB02BC3003F1448 /* RequireQrCode.m in Sources */,
+				3209FFD91AA1AC6600BC6C48 /* KidslistViewController.m in Sources */,
 				3251C5EA1AB01A1D0080C508 /* EGOImageLoader.m in Sources */,
 				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
