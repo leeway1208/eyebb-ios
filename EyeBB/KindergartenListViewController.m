@@ -105,7 +105,9 @@
     if ([tag isEqualToString:GET_KINDERGARTEN_LIST]){
         NSData *responseData = [request responseData];
         //                NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:KindergartenListViewController_json_key_size];
+        //        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:KindergartenListViewController_json_key_size];
+        
+        
         _allLocationAreasInfoAr = [[[responseData mutableObjectFromJSONData] objectForKey:KindergartenListViewController_json_key_allLocationAreasInfo] copy];
         
         //NSLog(@"sadasdsadsafff--->%@ ",[_allLocationAreasInfoAr objectAtIndex:4]);
@@ -154,6 +156,9 @@
     static NSString *detailIndicated = @"tableCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     
+    
+    
+    [NSThread detachNewThreadSelector:@selector(loadKindergartenImage:) toTarget:self withObject:nil];
     
     if(tableView == self.kindergartenTable)
     {
@@ -206,7 +211,6 @@
                 
                 //[_cellLeftImg setImage:[UIImage imageWithData:data]];
                 
-                [NSThread detachNewThreadSelector:@selector(loadKindergartenImage) toTarget:self withObject:nil];
                 NSURL* urlOne = [NSURL URLWithString:[_imgPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
                 NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
                 //Get Image From URL
