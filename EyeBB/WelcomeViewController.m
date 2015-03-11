@@ -101,19 +101,19 @@
 //        }
 //        else
 //        {
-            logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
-            RegBtn.hidden=NO;
-            LoginBtn.hidden=NO;
-            CopyrightLbl.hidden=NO;
+//            logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+//            RegBtn.hidden=NO;
+//            LoginBtn.hidden=NO;
+//            CopyrightLbl.hidden=NO;
 //        }
-        
+//        
 //    }
 //    else
 //    {
-//        logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
-//        RegBtn.hidden=NO;
-//        LoginBtn.hidden=NO;
-//        CopyrightLbl.hidden=NO;
+        logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+        RegBtn.hidden=NO;
+        LoginBtn.hidden=NO;
+        CopyrightLbl.hidden=NO;
 //    }
 
 }
