@@ -867,9 +867,10 @@
                 kindRow =tempChildArray.count%4>0?tempChildArray.count/4:tempChildArray.count/4-1;
             }
            
-
+            
             UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
             return (110+(((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*kindRow));
+            tempChildArray=nil;
         }
         else
         {
@@ -2020,7 +2021,7 @@
         
         _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
          _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
-//        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
+
         responseData=nil;
 //        [_PersonageTableView reloadData];
         
@@ -2254,7 +2255,7 @@
     [_organizationTableView setHidden:YES];
     [_kidsMassageView setHidden:YES];
 }
-
+//提交按钮
 - (void)closeAction
 {
     [_PopupSView setHidden:YES];

@@ -41,7 +41,9 @@
     self.view.backgroundColor=[UIColor whiteColor];
     logoImgView=[[UIImageView alloc]initWithFrame:CGRectZero];
     logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
-    [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
+//    [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
+    [logoImgView setImage:[UIImage imageNamed:@"test"]];
+    
     [self.view addSubview:logoImgView];
 //    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
     
