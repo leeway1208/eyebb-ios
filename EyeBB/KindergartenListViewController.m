@@ -19,6 +19,8 @@
 @property (nonatomic,strong) NSArray * allLocationAreasInfoAr;
 /** use to keep json information */
 @property (nonatomic,strong) UIImageView * cellLeftImg;
+/** get image path */
+@property (nonatomic,strong) NSString * imgPath;
 @end
 
 
@@ -36,7 +38,7 @@
     
     self.title = LOCALIZATION(@"text_select_kid_kindergarten");
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
-    //[HUD show:YES];
+    [HUD show:YES];
     [self requestServer];
     [self loadWidget];
     [self loadParameter];
@@ -120,9 +122,6 @@
 
 //set sections in table view
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-    
-    
-    
     return 1;
 }
 
@@ -175,6 +174,7 @@
         /*save image */
         //get image path
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[_allLocationAreasInfoAr objectAtIndex:indexPath.row] objectForKey:KindergartenListViewController_json_key_icon]];
+        _imgPath = pathOne;
         NSLog(@"pathOne----%@",pathOne);
         if(pathOne.length > 1){
             //NSLog(@"SADSADSSSSSS----%@",pathOne);
@@ -200,11 +200,15 @@
             
             // fill in the image
             if ([self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil){
+                [HUD hide:YES afterDelay:0];
                 [_cellLeftImg setImage:[self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]];
             }else{
-                NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                
+                //[_cellLeftImg setImage:[UIImage imageWithData:data]];
+                
+                [NSThread detachNewThreadSelector:@selector(loadKindergartenImage) toTarget:self withObject:nil];
+                NSURL* urlOne = [NSURL URLWithString:[_imgPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
                 NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                [_cellLeftImg setImage:[UIImage imageWithData:data]];
                 //Get Image From URL
                 UIImage * imageFromURL  = nil;
                 imageFromURL=[UIImage imageWithData:data];
@@ -230,6 +234,25 @@
     }
     
     
+}
+#pragma mark - load image
+-(void)loadKindergartenImage:(NSNumber *)index{
+    //    NSLog(@"%i",i);
+    //currentThread方法可以取得当前操作线程
+    NSLog(@"current thread:%@",[NSThread currentThread]);
+    
+    NSURL* urlOne = [NSURL URLWithString:[_imgPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+    
+    [self performSelectorOnMainThread:@selector(updateKindergartenImage:) withObject:data waitUntilDone:YES];
+}
+
+#pragma mark - new a thread to update main image ui
+-(void)updateKindergartenImage:(NSData *)imageData{
+    
+    [HUD hide:YES afterDelay:0];
+    UIImage *image=[UIImage imageWithData:imageData];
+    _cellLeftImg.image=image;
 }
 
 #pragma mark - button action

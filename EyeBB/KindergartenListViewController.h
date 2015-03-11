@@ -11,7 +11,8 @@
 #import "ChildInformationMatchingViewController.h"
 
 @interface KindergartenListViewController : EyeBBViewController
-
-
-
+/* new a thread to load image with mutithread */
+@property (nonatomic,strong) NSData *data;
+/* image index */
+@property (nonatomic,assign) int index;
 @end
