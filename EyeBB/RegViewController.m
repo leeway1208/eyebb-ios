@@ -100,11 +100,7 @@
     [self setPopContentLabel:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
-    //    _regTView=nil;
-    //     _telTxt=nil;
-    //     _nicknameTxt=nil;
-    //     _PDTxt=nil;
-    //    self.view=nil;
+
 }
 
 
@@ -177,14 +173,14 @@
     //------------------------遮盖层------------------------
     
     //Popping view when you sign up successfully
-    _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith, Drive_Height)];
+    _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height)];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
     
     [self.view addSubview:_PopupSView];
     [_PopupSView setHidden:YES];
     
     
-    _popViewContainer=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-88, Drive_Wdith-10, 176)];
+    _popViewContainer=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-140, Drive_Wdith-10, 176)];
     [_popViewContainer setBackgroundColor:[UIColor whiteColor] ];
     //设置列表是否圆角
     [_popViewContainer.layer setMasksToBounds:YES];
@@ -233,19 +229,19 @@
     _popContentLabel.text = LOCALIZATION(@"text_binding_device");
     [_popViewContainer addSubview:_popContentLabel];
     
-    //Dividing top line
+    //pop view dividing top line
     UILabel * popTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 + 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
     [popTopLabel.layer setBorderWidth:1.0]; //边框宽度
     [popTopLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
     [_popViewContainer addSubview:popTopLabel];
     
-    //Dividing bottom line
+    //pop view dividing bottom line
     UILabel * popBottomLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 - 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
     [popBottomLabel.layer setBorderWidth:1.0]; //边框宽度
     [popBottomLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
     [_popViewContainer addSubview:popBottomLabel];
     
-    //Dividing button line
+    //pop view dividing button line
     UILabel * buttonLabel =[[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2, CGRectGetHeight(_popViewContainer.frame)/2 + 45, 1, CGRectGetHeight(_popViewContainer.frame)/2 - 20)];
     [buttonLabel.layer setBorderWidth:1.0]; //边框宽度
     [buttonLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];

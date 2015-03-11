@@ -32,7 +32,7 @@
     [self.navigationController.view addSubview:HUD];
     
     HUD.delegate = self;
-    HUD.labelText = @"Loading";
+    HUD.labelText = LOCALIZATION(@"text_loading");
 }
 
 

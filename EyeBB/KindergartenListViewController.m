@@ -36,7 +36,7 @@
     
     self.title = LOCALIZATION(@"text_select_kid_kindergarten");
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
-    
+    //[HUD show:YES];
     [self requestServer];
     [self loadWidget];
     [self loadParameter];
@@ -59,11 +59,11 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [_kindergartenTable removeFromSuperview];
-    
+    [_cellLeftImg removeFromSuperview];
     
     [self.view removeFromSuperview];
     [self setKindergartenTable:nil];
-    
+    [self setCellLeftImg:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
@@ -186,25 +186,25 @@
             
             NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
             
-            //ui image
-            UIImageView * kindergartenImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 60, 60)];
-            [kindergartenImgView.layer setCornerRadius:CGRectGetHeight([kindergartenImgView bounds]) / 2];
-            [kindergartenImgView.layer setMasksToBounds:YES];
-            [kindergartenImgView.layer setBorderWidth:2];
+            //ui image on the left
+            _cellLeftImg =[[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 60, 60)];
+            [_cellLeftImg.layer setCornerRadius:CGRectGetHeight([_cellLeftImg bounds]) / 2];
+            [_cellLeftImg.layer setMasksToBounds:YES];
+            [_cellLeftImg.layer setBorderWidth:2];
             
-            [kindergartenImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-            [cell addSubview:kindergartenImgView];
+            [_cellLeftImg.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [cell addSubview:_cellLeftImg];
             
             
             
             
             // fill in the image
             if ([self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil){
-                [kindergartenImgView setImage:[self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]];
+                [_cellLeftImg setImage:[self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]];
             }else{
                 NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
                 NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                [kindergartenImgView setImage:[UIImage imageWithData:data]];
+                [_cellLeftImg setImage:[UIImage imageWithData:data]];
                 //Get Image From URL
                 UIImage * imageFromURL  = nil;
                 imageFromURL=[UIImage imageWithData:data];

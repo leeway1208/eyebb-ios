@@ -9,6 +9,7 @@
 #import "ChildInformationMatchingViewController.h"
 #import "KindergartenListViewController.h"
 #import "UserDefaultsUtils.h"
+#import "RequireQrCode.h"
 
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
@@ -37,6 +38,32 @@
 @property (strong,nonatomic) UIView * dateViewContainer;
 /**date view container confirm button*/
 @property (nonatomic,strong) UIButton *dateViewContainerConfirmBtn;
+
+/**pop view*/
+@property (strong,nonatomic) UIScrollView * PopupSView;
+/**image view of pop view*/
+@property (strong,nonatomic) UIImageView * popUpImage;
+/**pop view container*/
+@property (strong,nonatomic) UIView * popViewContainer;
+
+/**pop view confirm button*/
+@property (strong,nonatomic) UIButton * confirmBtn;
+
+/**pop view cancel button*/
+@property (strong,nonatomic) UIButton * cancelBtn;
+/**pop view title*/
+@property (strong,nonatomic) UILabel * popTitleLabel;
+/**pop view content kids name label*/
+@property (strong,nonatomic) UILabel * popContentLabel;
+/**pop view content kindergarten name*/
+@property (strong,nonatomic) UILabel * popKindergartenNameLabel;
+/** arrary for response child information */
+@property (strong,nonatomic) NSMutableArray * getChildInformationArray;
+/** progress bar for get child information from server */
+@property (strong,nonatomic) UIProgressView * myProgressView;
+
+/** static child icon */
+@property (strong,nonatomic) NSString * childIcon;
 @end
 
 @implementation ChildInformationMatchingViewController
@@ -83,6 +110,16 @@
     [_searchBtn removeFromSuperview];
     [_dateViewContainer removeFromSuperview];
     [_dateViewContainerConfirmBtn removeFromSuperview];
+    
+    [_PopupSView removeFromSuperview];
+    [_popUpImage removeFromSuperview];
+    [_popViewContainer removeFromSuperview];
+    [_confirmBtn removeFromSuperview];
+    [_cancelBtn removeFromSuperview];
+    [_popTitleLabel removeFromSuperview];
+    [_popContentLabel removeFromSuperview];
+    [_popKindergartenNameLabel removeFromSuperview];
+    [_myProgressView removeFromSuperview];
     [self.view removeFromSuperview];
     [self setKidsNameTf:nil];
     [self setKidsNameLb:nil];
@@ -98,6 +135,16 @@
     [self setSearchBtn:nil];
     [self setDateViewContainer:nil];
     [self setDateViewContainerConfirmBtn:nil];
+    
+    [self setPopupSView:nil];
+    [self setPopUpImage:nil];
+    [self setPopViewContainer:nil];
+    [self setConfirmBtn:nil];
+    [self setCancelBtn:nil];
+    [self setPopTitleLabel:nil];
+    [self setPopContentLabel:nil];
+    [self setPopKindergartenNameLabel:nil];
+    [self setMyProgressView:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
@@ -155,7 +202,7 @@
     
     /** kids birthday button view */
     _kidsBirthdayBtn=[[UITextField alloc] initWithFrame:self.view.bounds];
-    _kidsBirthdayBtn.frame = CGRectMake(10 , (Drive_Height/4) - 20,self.view.frame.size.width , 40);
+    _kidsBirthdayBtn.frame = CGRectMake(10 , (Drive_Height/4) - 20,self.view.frame.size.width -20, 40);
     _kidsBirthdayBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
     if([childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth] != nil){
@@ -310,6 +357,10 @@
 
 #pragma mark - loadParameter
 -(void)loadParameter{
+    //init array
+    _getChildInformationArray = [[NSMutableArray alloc]init];
+    
+    //get the data from user defaults
     NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
     
     //    NSLog(@"ASDASDAS-_---> %@", [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth]);
@@ -351,6 +402,7 @@
     
     if(childName.length <= 0)
     {
+        
         mag=LOCALIZATION(@"text_something_has_gone_wrong");
         return mag;
     }
@@ -359,7 +411,7 @@
         mag=LOCALIZATION(@"text_something_has_gone_wrong");
         return mag;
     }
-    if (kId != nil) {
+    if (kId == nil) {
         
         mag=LOCALIZATION(@"text_something_has_gone_wrong");
         return mag;
@@ -368,7 +420,7 @@
     return mag;
 }
 
-#pragma - button action
+#pragma mark - button action
 - (void)loginSelectLeftAction:(id)sender{
     [[self navigationController] pushViewController:nil animated:YES];
 }
@@ -376,21 +428,23 @@
 - (void)searchChildAction:(id)sender{
     //Remove spaces at both ends
     //03-10 11:42:54.054: I/System.out(16330): username=>k 10/3/2015 2
+
+    
     NSString *childName = [self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *dateOfBirth= [self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *kId= _kindergartenId;
     
-    NSLog(@"time --- > %@", kId);
+    //NSLog(@"time --- > %@", kId);
     
     if([self verifyRequest:childName dateOfBirth:dateOfBirth kId:kId] != nil){
         
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                    message:LOCALIZATION(@"text_something_has_gone_wrong")
+                                    message:[self verifyRequest:childName dateOfBirth:dateOfBirth kId:kId]
                                    delegate:self
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
     }else{
-        
+        [HUD show:YES];
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:childName, ChildInformationMatchingViewController_KEY_childName, dateOfBirth,ChildInformationMatchingViewController_KEY_dateOfBirth,kId,ChildInformationMatchingViewController_KEY_kId,nil];
         
         
@@ -421,6 +475,21 @@
     
 }
 
+-(void)goToScanQrCodeAction:(id)sender{
+    RequireQrCode *rqAction = [[RequireQrCode alloc]init];
+    [[self navigationController] pushViewController:rqAction animated:YES];
+}
+
+-(void)btnCancelAction:(id)sender{
+    [_PopupSView removeFromSuperview];
+    [_popUpImage removeFromSuperview];
+    [_popViewContainer removeFromSuperview];
+    [_confirmBtn removeFromSuperview];
+    [_cancelBtn removeFromSuperview];
+    [_popTitleLabel removeFromSuperview];
+    [_popContentLabel removeFromSuperview];
+}
+
 #pragma mark - server return
 
 -(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
@@ -428,9 +497,26 @@
         
         NSData *responseData = [request responseData];
         
-        NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
-        NSLog(@"CHILD_CHECKING ----> %@ ",aString);
+        if([responseString isEqualToString:@"[]"]){
+            
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_child_not_exist")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+        }else{
+            _getChildInformationArray = [[responseData mutableObjectFromJSONData]  copy];
+//            NSLog(@"CHILD_CHECKING ----> %@ ",[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameSc"]);
+            
+            //[self popView];
+            [self popView:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"name"] ChildIcon:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"]KindergartenName:[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameTc"]];
+            [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
+            _childIcon = [[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"];
+        }
+        
+        
     }
     
     
@@ -513,6 +599,125 @@
     return [childInformation synchronize];
     
     
+}
+
+#pragma mark- pop view
+-(void) popView: (NSString *)childName ChildIcon:(NSDate *)data KindergartenName:(NSString *) kidergartenName{
+    //------------------------遮盖层------------------------
+    
+    //Popping view when you sign up successfully
+    _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height)];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
+    [self.view addSubview:_PopupSView];
+    //[_PopupSView setHidden:YES];
+    
+    /* pop View Container */
+    _popViewContainer=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-140, Drive_Wdith-10, 176)];
+    [_popViewContainer setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_popViewContainer.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_popViewContainer.layer setCornerRadius:4.0];
+    [_PopupSView addSubview:_popViewContainer];
+    
+    
+
+  
+    
+    //pop image view
+    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 20, 55, 55)];
+    [_popUpImage.layer setCornerRadius:CGRectGetHeight([_popUpImage bounds]) / 2];
+    [_popUpImage.layer setMasksToBounds:YES];
+    [_popUpImage.layer setBorderWidth:2];
+    [_popUpImage.layer setBorderColor:[UIColor whiteColor].CGColor];
+    //[_popUpImage setImage:[UIImage imageWithData:data]];
+    
+    [_popUpImage setTag:105];
+    [_popViewContainer addSubview:_popUpImage];
+    
+    
+    //confirm button
+    _confirmBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame) / 2 , 134 ,CGRectGetWidth(_popViewContainer.frame) / 2, 40)];
+    //设置按显示文字
+    [_confirmBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
+    [_confirmBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_confirmBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_confirmBtn addTarget:self action:@selector(goToScanQrCodeAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_popViewContainer addSubview:_confirmBtn];
+    
+    //cancel button
+    _cancelBtn=[[UIButton alloc]initWithFrame:CGRectMake(0 , 134 ,CGRectGetWidth(_popViewContainer.frame) / 2, 40)];
+    //设置按显示文字
+    [_cancelBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
+    [_cancelBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [_cancelBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_cancelBtn addTarget:self action:@selector(btnCancelAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_popViewContainer addSubview:_cancelBtn];
+    
+    //pop title label
+    _popTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 70 ,12,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popTitleLabel.text = LOCALIZATION(@"text_is_this_kid");
+    [_popTitleLabel setFont:[UIFont systemFontOfSize:19.0]];
+    [_popViewContainer addSubview:_popTitleLabel];
+    
+    
+    //pop centent kid name label
+    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2  - 15,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popContentLabel.text = childName;
+    [_popViewContainer addSubview:_popContentLabel];
+    
+    
+    //pop centent kindergarten name label
+    _popKindergartenNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2 + 10 ,CGRectGetWidth(_popViewContainer.frame),20)];
+    [_popKindergartenNameLabel setFont:[UIFont systemFontOfSize:12]];
+    _popKindergartenNameLabel.text = kidergartenName;
+    [_popViewContainer addSubview:_popKindergartenNameLabel];
+    
+    
+    //pop view dividing top line
+    UILabel * popTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 + 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
+    [popTopLabel.layer setBorderWidth:1.0]; //边框宽度
+    [popTopLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popViewContainer addSubview:popTopLabel];
+    
+    //pop view dividing bottom line
+    UILabel * popBottomLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 - 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
+    [popBottomLabel.layer setBorderWidth:1.0]; //边框宽度
+    [popBottomLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popViewContainer addSubview:popBottomLabel];
+    
+    //pop view dividing button line
+    UILabel * buttonLabel =[[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2, CGRectGetHeight(_popViewContainer.frame)/2 + 45, 1, CGRectGetHeight(_popViewContainer.frame)/2 - 20)];
+    [buttonLabel.layer setBorderWidth:1.0]; //边框宽度
+    [buttonLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popViewContainer addSubview:buttonLabel];
+
+}
+
+
+#pragma mark - get the image path from server
+- (void)loadImage
+{
+    NSString* pathOne = _childIcon;
+    
+    [_popUpImage.layer setBorderColor:[UIColor whiteColor].CGColor];
+    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+    [self performSelectorOnMainThread:@selector(updateImage:) withObject:data waitUntilDone:YES];
+  
+}
+
+#pragma mark - new a thread to update main image ui
+-(void)updateImage:(NSData *)imageData{
+    
+    [HUD hide:YES afterDelay:0];
+    UIImage *image=[UIImage imageWithData:imageData];
+    _popUpImage.image=image;
 }
 
 @end

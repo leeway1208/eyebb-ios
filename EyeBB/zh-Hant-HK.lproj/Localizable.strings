@@ -71,7 +71,7 @@
 "text_error_email"="郵件地址格式錯誤!";
 "text_error_nickname"="暱稱格式錯誤!";
 "text_error_password"="密碼格式錯誤! \n(例如：A-Z a-z 0-9) 長度：6-20";
-"text_loading"="加載中...;";
+"text_loading"="加載中...";
 "text_refreshTime"="自動刷新時間 (秒):";
 "text_enter_refresh_time"="請輸入更新時間";
 "text_no_record"="沒有記錄";
@@ -175,7 +175,7 @@
 "text_network_connecting"="連接中...;";
 "text_search_guset_activity_share_msg"="我想授權你觀看我的孩子情況，請你在完成安裝寶寶安後通知我，我會再次授權給你。連結：play.google.com/xxxxxxxx";
 "text_no_new_firmware"="抱歉,您的eyebb固件是最新的.";
-
+"text_is_this_kid"="是這個寶寶嗎?";
 
 
 //<!-- Button strings -->

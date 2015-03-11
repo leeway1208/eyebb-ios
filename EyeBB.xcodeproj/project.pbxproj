@@ -83,6 +83,7 @@
 		32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32FC01421AA83E3B001FB4D3 /* Images.xcassets */; };
 		32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01441AA83E3B001FB4D3 /* LDProgressView.m */; };
 		32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */; };
+		921D8D371AB02BC3003F1448 /* RequireQrCode.m in Sources */ = {isa = PBXBuildFile; fileRef = 921D8D361AB02BC3003F1448 /* RequireQrCode.m */; };
 		923632411AA40CA600687F3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923632401AA40CA600687F3F /* LoginViewController.m */; };
 		927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */; };
 		927DBC7E1AA9B46F00923122 /* KindergartenListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */; };
@@ -243,6 +244,8 @@
 		32FC01441AA83E3B001FB4D3 /* LDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDProgressView.m; sourceTree = "<group>"; };
 		32FC01451AA83E3B001FB4D3 /* UIColor+RGBValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+RGBValues.h"; sourceTree = "<group>"; };
 		32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+RGBValues.m"; sourceTree = "<group>"; };
+		921D8D351AB02BC3003F1448 /* RequireQrCode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RequireQrCode.h; sourceTree = "<group>"; };
+		921D8D361AB02BC3003F1448 /* RequireQrCode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RequireQrCode.m; sourceTree = "<group>"; };
 		9236323F1AA40CA600687F3F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		923632401AA40CA600687F3F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		927DBC781AA6C70F00923122 /* UserDefaultsUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsUtils.h; sourceTree = "<group>"; };
@@ -336,6 +339,8 @@
 				927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */,
 				927DBC7C1AA9B46F00923122 /* KindergartenListViewController.h */,
 				927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */,
+				921D8D351AB02BC3003F1448 /* RequireQrCode.h */,
+				921D8D361AB02BC3003F1448 /* RequireQrCode.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -797,6 +802,7 @@
 				3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */,
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
 				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
+				921D8D371AB02BC3003F1448 /* RequireQrCode.m in Sources */,
 				3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */,
 				3251C5EA1AB01A1D0080C508 /* EGOImageLoader.m in Sources */,
 				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
