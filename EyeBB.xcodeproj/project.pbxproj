@@ -37,6 +37,7 @@
 		3240DAD81AA5591200661712 /* icon-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3240DAD21AA5591200661712 /* icon-40@3x.png */; };
 		3240DADC1AA699FF00661712 /* MSCellAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DADB1AA699FF00661712 /* MSCellAccessory.m */; };
 		3240DADF1AA69A4A00661712 /* UIView+AccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DADE1AA69A4A00661712 /* UIView+AccessViewController.m */; };
+		3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5D41AB00FB40080C508 /* MBProgressHUD.m */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
 		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
 		32530F511AA002B400F66B6D /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F501AA002B400F66B6D /* HttpRequest.m */; };
@@ -145,6 +146,8 @@
 		3240DADB1AA699FF00661712 /* MSCellAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCellAccessory.m; sourceTree = "<group>"; };
 		3240DADD1AA69A4A00661712 /* UIView+AccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AccessViewController.h"; sourceTree = "<group>"; };
 		3240DADE1AA69A4A00661712 /* UIView+AccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AccessViewController.m"; sourceTree = "<group>"; };
+		3251C5D31AB00FB40080C508 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		3251C5D41AB00FB40080C508 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
 		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
@@ -402,6 +405,15 @@
 			path = MSCellAccessory;
 			sourceTree = "<group>";
 		};
+		3251C5D21AB00FB40080C508 /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				3251C5D31AB00FB40080C508 /* MBProgressHUD.h */,
+				3251C5D41AB00FB40080C508 /* MBProgressHUD.m */,
+			);
+			path = MBProgressHUD;
+			sourceTree = "<group>";
+		};
 		32530F461A9EE01100F66B6D /* locallistor */ = {
 			isa = PBXGroup;
 			children = (
@@ -556,6 +568,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				3251C5D21AB00FB40080C508 /* MBProgressHUD */,
 				32FC01411AA83E3B001FB4D3 /* LDProgressView */,
 				3240DAD91AA699FF00661712 /* MSCellAccessory */,
 				3209FFBF1AA06C5300BC6C48 /* json */,
@@ -710,6 +723,7 @@
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
 				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
 				3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */,
+				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
 				3264D94B1A9D6B72009CB9C2 /* ASIDownloadCache.m in Sources */,

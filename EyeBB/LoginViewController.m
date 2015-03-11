@@ -14,9 +14,9 @@
 #import "UserDefaultsUtils.h"
 
 @interface LoginViewController ()
-
 {
     int textHeight;
+    
 }
 /**user name*/
 @property (nonatomic,strong) UITextField *loginUserAccount;
@@ -297,6 +297,10 @@
     else
     {
         
+       
+        //开启加载
+       [HUD show:YES];
+        
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password, nil];
         // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         
@@ -311,7 +315,8 @@
 
 #pragma mark - server request
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
-    
+    //关闭加载
+    [HUD hide:YES afterDelay:0];
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
         

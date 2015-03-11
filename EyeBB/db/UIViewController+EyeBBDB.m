@@ -76,4 +76,46 @@
     return skillArray;
 }
 
+
+#pragma mark--
+#pragma mark --保存儿童信息
+
+-(void)SaveChildren:(NSArray *)childrenArray {
+
+    
+    sqlite3 *database;
+    if (sqlite3_open([[self findDBUrl] UTF8String] , &database) != SQLITE_OK) {
+        
+        sqlite3_close(database);
+        
+        NSAssert(0, @"打开数据库失败！");
+        
+    }
+    
+
+    for(int i=0;i<childrenArray.count;i++)
+    {
+        NSString *insert =@"INSERT INTO 'children' ('child_id', 'name', 'icon', 'phone', 'relation_with_user', 'mac_address') VALUES (?, ?, ?, ?, ?, ?)";
+        
+        sqlite3_stmt *statement;
+        
+        if (sqlite3_prepare_v2(database, [insert UTF8String], -1, &statement, nil) == SQLITE_OK) {
+            sqlite3_bind_text(statement, 1, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] UTF8String], -1,NULL);
+            sqlite3_bind_text(statement, 2, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]] UTF8String], -1,NULL);
+            sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] UTF8String], -1,NULL);
+            sqlite3_bind_text(statement, 1, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"" ]] UTF8String], -1,NULL);
+            sqlite3_bind_text(statement, 2, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]] UTF8String], -1,NULL);
+            sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"macAddress" ]] UTF8String], -1,NULL);
+        }
+        if (sqlite3_step(statement) != SQLITE_DONE) {
+            NSAssert(0, @"插入数据失败！");
+            
+            sqlite3_finalize(statement);
+        }
+
+    }
+      sqlite3_close(database);
+}
+
+
 @end

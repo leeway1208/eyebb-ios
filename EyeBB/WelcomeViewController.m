@@ -88,12 +88,19 @@
         NSString * accPdeStr=[userDefaultes objectForKey:LoginViewController_hashPassword];
     
 
-        if (![accNameStr isEqualToString:@""]&&![accPdeStr isEqualToString:@""]) {
+        if (accNameStr!=nil&&![accNameStr isEqualToString:@""]&&accPdeStr!=nil&&![accPdeStr isEqualToString:@""]) {
             NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
             // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
             
             [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
             
+        }
+        else
+        {
+            logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+            RegBtn.hidden=NO;
+            LoginBtn.hidden=NO;
+            CopyrightLbl.hidden=NO;
         }
         
     }
@@ -153,6 +160,7 @@
     RegBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), Drive_Height/14*9, (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
     [RegBtn setTitle:LOCALIZATION(@"btn_sign_up") forState:UIControlStateNormal];
+    [RegBtn.titleLabel setFont:[UIFont fontWithName:@"sans-serif-light" size:15.0]];
     //设置按钮背景颜色
     [RegBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //设置按钮响应事件

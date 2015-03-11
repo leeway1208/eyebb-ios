@@ -10,4 +10,8 @@
 
 @interface UIViewController(EyeBBDB)
 -(NSMutableArray *)allOrganization;
+
+#pragma mark--
+#pragma mark --保存儿童信息
+-(void)SaveChildren:(NSArray *)childrenArray;
 @end

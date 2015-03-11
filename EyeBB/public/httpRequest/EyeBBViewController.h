@@ -11,6 +11,8 @@
 #import "HttpRequest.h"
 #import "HttpRequestUtils.h"
 #import "JSONKit.h"
+//加载状态
+#import "MBProgressHUD.h"
 //访问服务器
 #import "UIViewController+EyeBBServie.h"
 //访问本地数据库
@@ -18,7 +20,10 @@
 //公用方法
 #import "ViewController+EyebbPublic.h"
 
-@interface EyeBBViewController : UIViewController
+@interface EyeBBViewController : UIViewController<MBProgressHUDDelegate>
+{
+    MBProgressHUD *HUD;
+}
 @property(nonatomic, retain)HttpRequest *httpRequest;
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag;
 - (void)requestFailed:(ASIHTTPRequest *)request;

@@ -27,6 +27,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do view setup here.
+    HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
+    [self.navigationController.view addSubview:HUD];
+    
+    HUD.delegate = self;
+    HUD.labelText = @"Loading";
 }
 
 
@@ -34,4 +39,7 @@
 #pragma mark --- 网络数据处理
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{}
 - (void)requestFailed:(ASIHTTPRequest *)request{}
+
+
+
 @end
