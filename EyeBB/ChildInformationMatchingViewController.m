@@ -9,7 +9,7 @@
 #import "ChildInformationMatchingViewController.h"
 #import "KindergartenListViewController.h"
 #import "UserDefaultsUtils.h"
-#import "RequireQrCode.h"
+#import "QRCodeViewController.h"
 
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
@@ -476,7 +476,7 @@
 }
 
 -(void)goToScanQrCodeAction:(id)sender{
-    RequireQrCode *rqAction = [[RequireQrCode alloc]init];
+    QRCodeViewController *rqAction = [[QRCodeViewController alloc]init];
     [[self navigationController] pushViewController:rqAction animated:YES];
 }
 
