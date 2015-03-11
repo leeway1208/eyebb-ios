@@ -77,7 +77,7 @@
     [self scanBtnAction];
     }
     else  if (self.OperationType==1) {
-        [self dismissModalViewControllerAnimated:YES];
+        [[self navigationController] popToRootViewControllerAnimated:YES];
     }
 }
 //-(void)viewDidDisappear:(BOOL)animated
@@ -159,6 +159,7 @@
     [picker dismissViewControllerAnimated:YES completion:^{
         [picker removeFromParentViewController];
     }];
+//    [[self navigationController] popToRootViewControllerAnimated:YES];
    
 //    [self dismissModalViewControllerAnimated:YES];
 //    [self.navigationController popViewControllerAnimated:YES];
@@ -203,6 +204,7 @@
         [picker removeFromParentViewController];
         
     }];
+
 }
 
 - (void)didReceiveMemoryWarning
