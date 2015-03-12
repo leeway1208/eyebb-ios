@@ -41,6 +41,17 @@
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+//    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    NSString* strLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
+//    NSArray * allLanguages = [defaults objectForKey:@"AppleLanguages"];
+//    
+//    NSString * preferredLang = [allLanguages objectAtIndex:0];
+    
+    NSLog(@"当前语言:%@", strLanguage);
+    
+
+    
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor=[UIColor whiteColor];
     logoImgView=[[UIImageView alloc]initWithFrame:CGRectZero];

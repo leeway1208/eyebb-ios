@@ -8,12 +8,8 @@
 
 #import "EyeBBViewController.h"
 
-@interface ChildrenListViewController : EyeBBViewController<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
-{
-    UITableView * tableview;
-    NSMutableArray * Aarray;
-    UISearchBar * searchBar;
-    UISearchDisplayController *searchControl;
+@interface ChildrenListViewController : EyeBBViewController{
+
 }
 
 @end

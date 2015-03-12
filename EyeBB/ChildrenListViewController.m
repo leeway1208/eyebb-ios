@@ -8,8 +8,16 @@
 
 #import "ChildrenListViewController.h"
 
-@interface ChildrenListViewController ()
+@interface ChildrenListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
 
+{
+    //数据源数组
+    NSMutableArray*_dataArray;
+    //搜索结果数组
+    NSMutableArray*_resultArray;
+    UITableView*_tableView;
+    UISearchBar*_searchBar;
+}
 @end
 
 @implementation ChildrenListViewController
@@ -17,8 +25,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-    //初始化背景图
-    [self initBackGroundView];
+    
+    [self iv];
+    [self lc];
+//    初始化背景图
+//    [self initBackGroundView];
 }
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -32,79 +43,162 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+#pragma mark --
+#pragma mark - 初始化页面元素
 
-#pragma -mark -functions
--(void)initBackGroundView
+/**
+ *初始化参数
+ */
+-(void)iv
 {
-    Aarray = [[NSMutableArray alloc] initWithObjects:@"+",@"我",@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"I",@"J",@"K",@"L",@"M",@"N",@"O",@"P",@"Q",@"R",@"S",@"T",@"U",@"V",@"W",@"X",@"Y",@"Z",@"#",nil];
-    
-    //tableView
-    tableview = [[UITableView alloc] initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height-44) style:UITableViewStylePlain];
-    tableview.tag = 101;
-    tableview.delegate = self;
-    tableview.dataSource = self;
-    [self.view addSubview:tableview];
-    
-    //searchView
-    searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
-    tableview.tableHeaderView = searchBar;
-    searchBar.showsScopeBar = YES;
-    searchBar.placeholder = @"在全部关注中搜索...";
-    
-    //搜索的时候会有左侧滑动的效果
-    searchControl = [[UISearchDisplayController alloc]initWithSearchBar:searchBar contentsController:self];
-    searchControl.delegate = self;
-    searchControl.searchResultsDataSource = self;
-    searchControl.searchResultsDelegate = self;
+    //实例化数组
+    _resultArray=[[NSMutableArray alloc]init];
+    _dataArray=[[NSMutableArray alloc]init];
     
 }
+
+/**
+ *加载控件
+ */
+-(void)lc
+{
+    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,320,416) style:UITableViewStylePlain];
+    _tableView.dataSource=self;
+    _tableView.delegate=self;
+    [self.view addSubview:_tableView];
+    
+    //组织数据源
+//    for(int i=97;i<123;i++)
+//    {
+//        NSMutableArray*subArray=[[NSMutableArray alloc]init];
+//        for(int j=0;j<10;j++)
+//        {
+//            [subArray addObject:[NSString stringWithFormat:@"%c%d",i,j]];
+//        }
+//        [_dataArray addObject:subArray];
+//    }
+    
+    _dataArray=[self allChildren];
+    
+    //搜索条
+    _searchBar=[[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
+    //把搜索条加到headerView上，其实不是很好，可以加到view上更好
+    _tableView.tableHeaderView=_searchBar;
+//    [_searchBar release];
+    //搜索控制器
+    UISearchDisplayController*sdc=[[UISearchDisplayController alloc]initWithSearchBar:_searchBar contentsController:self];
+    //设置代理(不需要遵循协议)
+    sdc.searchResultsDataSource=self;
+    sdc.searchResultsDelegate=self;
+
+}
+
+
 #pragma -mark -searchbar
 -(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
 {
     
 }
+#pragma mark --
+#pragma mark - 表单设置
+
 #pragma -mark -UITableViewDelegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    if(tableView!=_tableView)
+        return 1;
+    return [_dataArray count];
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if (section == 0) {
-        return 1;
+    if(tableView!=_tableView)
+    {
+        //先清空数组里的内容。每次搜索显示的不能一样吧。
+        [_resultArray removeAllObjects];
+        //把输入的内容与原有数据源比较，有相似的就加到_resultArray数组里
+        for(NSMutableArray*mArray in _dataArray)
+        {
+            for(NSString*str in mArray)
+            {
+                NSRange range=[str rangeOfString:_searchBar.text];
+                if(range.location!=NSNotFound){
+                    [_resultArray addObject:str];
+                }
+            }
+            
+        }
+        
+        return [_resultArray count];
     }
-    return 100;
+    else
+        return [[_dataArray objectAtIndex:section]count];
 }
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+//Cell的相关设置
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 40.0;
-}
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSString * strID = @"ID";
-    UITableViewCell * cell = [tableview dequeueReusableCellWithIdentifier:strID];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:strID];
+    static NSString*cellName=@"cell";
+    UITableViewCell*cell=[tableView dequeueReusableCellWithIdentifier:cellName];
+    if(cell==nil)
+    {
+        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
     }
-    
-    if (indexPath.section == 0 && indexPath.row == 0) {
-        cell.textLabel.text = @"找朋友";
-    }else if(indexPath.section ==1 && indexPath.row == 0){
-        cell.textLabel.text=@"row";
+    if(tableView!=_tableView){
+        cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
+    }else{
+        
+        cell.textLabel.text=[[_dataArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
     }
     return cell;
 }
+//设置索引条
+-(NSArray*)sectionIndexTitlesForTableView:(UITableView *)tableView
+{
+    NSMutableArray*titles=[[NSMutableArray alloc]init];
+    //加上了放大镜，如果搜索框加到view上，让其不动的话，不用加
+    [titles addObject:UITableViewIndexSearch];
+    //加入其他内容
+    for(int i=97;i<123;i++)
+    {
+        [titles addObject:[NSString stringWithFormat:@"%c",i]];
+    }
+    return titles ;
+}
+//设置索引条对应关系
+//如果不加放大镜。这个方法就不需要。
+-(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
+{
+    if(index==0)
+    {
+        //index是索引条的序号。从0开始，所以第0 个是放大镜。如果是放大镜坐标就移动到搜索框处
+        [tableView scrollRectToVisible:_searchBar.frame animated:NO];
+        return -1;
+    }else{
+        //因为返回的值是section的值。所以减1就是与section对应的值了
+        return index-1;
+    }
+}
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    // Return YES for supported orientations
+    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+}
+
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    if (section == 1) {
-        return @"我的资料";
+    if(tableView!=_tableView){
+        return @"搜索结果";
     }
-    return nil;
-}
--(NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView
-{
-    return [NSArray arrayWithObjects:UITableViewIndexSearch,@"+",@"A",@"B",@"C",@"D",@"E",@"F",@"G",@"H",@"I",@"J",@"K",@"L",@"M",@"N",@"O",@"P",@"Q",@"R",@"S",@"T",@"U",@"V",@"W",@"X",@"Y",@"Z",@"#", nil];
+    else
+        return [NSString stringWithFormat:@"%c",97+section];
 }
 
 @end

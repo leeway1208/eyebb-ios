@@ -444,7 +444,11 @@
     //设置按钮背景颜色
     [NewsBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
+//<<<<<<< Updated upstream
+//    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
+//=======
+    [NewsBtn addTarget:self action:@selector(showChildrenList) forControlEvents:UIControlEventTouchUpInside];
+//>>>>>>> Stashed changes
     
     [NewsView addSubview:NewsBtn];
     
@@ -1943,6 +1947,7 @@
         
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
+        [self SaveChildren:_childrenByAreaArray];
         responseData=nil;
         //机构名称列表选择-----------------------------
         NSString *organizationStr=[[[_organizationArray objectAtIndex:0] objectForKey:@"area"] objectForKey:@"nameSc"];
@@ -1978,7 +1983,7 @@
             if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
             {
                 [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
-                [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",(_kidsRoomArray.count-1)]];
+                [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
             }
             [tempChindrenArray removeAllObjects];
         }
@@ -2050,22 +2055,20 @@
     [_kidsMassageView setHidden:YES];
 }
 
--(void)reportViewChangeChildBtmAction:(id)sender
-{
-    _settingVc = [[SettingsViewController alloc] init];
-    [self.navigationController pushViewController:_settingVc animated:YES];
-    self.settingVc .title = @"";
-
-}
-
--(void)goToSettingAction:(id)sender
+-(void)showChildrenList
 {
     ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
     [self.navigationController pushViewController:tt animated:YES];
     self.settingVc .title = @"";
+}
+
+-(void)goToSettingAction:(id)sender
+{
+    _settingVc= [[SettingsViewController alloc] init];
     
-    //    [self.navigationController pushViewController:self.settingVc animated:YES];
-    //    self.settingVc.title = LOCALIZATION(@"btn_options");
+    
+        [self.navigationController pushViewController:self.settingVc animated:YES];
+        self.settingVc.title = LOCALIZATION(@"btn_options");
 }
 
 /**显示机构选择列表*/
@@ -2115,7 +2118,7 @@
     
     UITableViewCell *cell = (UITableViewCell *)[tempBtn superview];
     NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
-    NSLog(@"indexPath is = %i",indexPath.row);
+    NSLog(@"indexPath is = %zi",indexPath.row);
      NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
     [_PopupSView setHidden:NO];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
