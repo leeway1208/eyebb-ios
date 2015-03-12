@@ -23,12 +23,15 @@
 
 @implementation RootViewController
 
+#pragma mark - view load
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         // Custom initialization
     }
+    
+    
     return self;
 }
 
@@ -41,13 +44,19 @@
     [self setScanView];
     
     _readerView= [[ZBarReaderView alloc]init];
-    _readerView.frame =CGRectMake(0,64,Drive_Wdith, Drive_Height -64);
+    _readerView.frame =CGRectMake(0,0,Drive_Wdith, Drive_Height + 20);
     _readerView.tracksSymbols=NO;
     _readerView.readerDelegate =self;
     [_readerView addSubview:_scanView];
     //关闭闪光灯
     _readerView.torchMode =0;
     
+    
+    self.title = LOCALIZATION(@"text_qr_code");
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
+//    self.view.backgroundColor = [UIColor blackColor];
+//    self.view.alpha = TINTCOLOR_ALPHA;
     [self.view addSubview:_readerView];
     
     //扫描区域
@@ -58,6 +67,15 @@
     [self createTimer];
     
 }
+
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+}
+
+
 #pragma mark -- ZBarReaderViewDelegate
 -(void)readerView:(ZBarReaderView *)readerView didReadSymbols:(ZBarSymbolSet *)symbols fromImage:(UIImage *)image
 {
@@ -102,7 +120,7 @@
 //二维码的扫描区域
 - (void)setScanView
 {
-    _scanView=[[UIView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith,Drive_Height-64)];
+    _scanView=[[UIView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith-SCANVIEW_EdgeLeft ,Drive_Wdith-SCANVIEW_EdgeLeft)];
     _scanView.backgroundColor=[UIColor clearColor];
     
     //最上部view
@@ -136,7 +154,7 @@
     
     
     //底部view
-    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0,Drive_Wdith-2*SCANVIEW_EdgeLeft+SCANVIEW_EdgeTop,Drive_Wdith,Drive_Height-(Drive_Wdith-2*SCANVIEW_EdgeLeft+SCANVIEW_EdgeTop)-64)];
+    UIView *downView = [[UIView alloc]initWithFrame:CGRectMake(0,Drive_Wdith-2*SCANVIEW_EdgeLeft+SCANVIEW_EdgeTop,Drive_Wdith,Drive_Height-(Drive_Wdith-2*SCANVIEW_EdgeLeft+SCANVIEW_EdgeTop)- 44)];
     //downView.alpha = TINTCOLOR_ALPHA;
     downView.backgroundColor = [[UIColor blackColor]colorWithAlphaComponent:TINTCOLOR_ALPHA];
     [_scanView addSubview:downView];

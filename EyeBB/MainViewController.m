@@ -444,7 +444,7 @@
     //设置按钮背景颜色
     [NewsBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [NewsBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
+    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [NewsView addSubview:NewsBtn];
     
@@ -2048,6 +2048,14 @@
     [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:YES];
     [_kidsMassageView setHidden:YES];
+}
+
+-(void)reportViewChangeChildBtmAction:(id)sender
+{
+    _settingVc = [[SettingsViewController alloc] init];
+    [self.navigationController pushViewController:_settingVc animated:YES];
+    self.settingVc .title = @"";
+
 }
 
 -(void)goToSettingAction:(id)sender

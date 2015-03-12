@@ -239,15 +239,12 @@
 //    [self.navigationController pushViewController:reg animated:YES];
 //    reg.title = @"";
     
-    RootViewController *reg = [[RootViewController alloc] init];
-    reg.navigationController.navigationBarHidden = YES;
+//    reg.title = @"";
+    
+    
+    LoginViewController *reg = [[LoginViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
-//    reg.title = @"";
-    
-    
-//    LoginViewController *reg = [[LoginViewController alloc] init];
-//    [self.navigationController pushViewController:reg animated:YES];
-//    reg.title = @"";
+    reg.title = @"";
 //    if ([[Localisator sharedInstance] setLanguage:self.arrayOfLanguages[3]])
 //    {
 //        UIAlertView * alertView = [[UIAlertView alloc] initWithTitle:nil message:LOCALIZATION(@"languageChangedWarningMessage") delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];

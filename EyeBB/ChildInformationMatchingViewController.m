@@ -9,7 +9,7 @@
 #import "ChildInformationMatchingViewController.h"
 #import "KindergartenListViewController.h"
 #import "UserDefaultsUtils.h"
-#import "QRCodeViewController.h"
+#import "RootViewController.h"
 
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
@@ -73,7 +73,7 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
-    
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
     self.title = LOCALIZATION(@"text_child_information_matching");
     
@@ -476,7 +476,7 @@
 }
 
 -(void)goToScanQrCodeAction:(id)sender{
-    QRCodeViewController *rqAction = [[QRCodeViewController alloc]init];
+    RootViewController *rqAction = [[RootViewController alloc]init];
     [[self navigationController] pushViewController:rqAction animated:YES];
 }
 

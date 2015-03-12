@@ -176,7 +176,7 @@
 "text_search_guset_activity_share_msg"="我想授权你观看我的孩子情况，请你在完成安装宝宝安后通知我，我会再次授权给你。连结：play.google.com/xxxxxxxx";
 "text_no_new_firmware"="抱歉,您的eyebb固件是最新的.";
 "text_is_this_kid"="是这个宝宝吗?";
-
+"text_qr_code"="二维码";
 
 //<!-- Button strings -->
 "btn_sign_up"="注册";
