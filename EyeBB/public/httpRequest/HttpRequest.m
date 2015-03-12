@@ -12,6 +12,7 @@
 #import "EyeBBViewController.h"
 #import "ASIDownloadCache.h"
 @interface HttpRequest()
+
 @property(strong,nonatomic) NSMutableDictionary *clientDelegates;
 @property (strong,nonatomic) NSString *methodStr;
 @end
@@ -73,7 +74,7 @@ static HttpRequest *instance;
     [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
     [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
     
-    
+    [request setValidatesSecureCertificate:NO];
     [request setDelegate:self];
     
     [request startAsynchronous];

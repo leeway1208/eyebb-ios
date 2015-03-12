@@ -18,6 +18,7 @@
 		20C14C9B1A9B09A60097C891 /* RegViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C14C9A1A9B09A60097C891 /* RegViewController.m */; };
 		20C14C9E1A9B4D0C0097C891 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA01A9B4D0C0097C891 /* Localizable.strings */; };
 		20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA51A9B69910097C891 /* 20150207105906.png */; };
+		20C2058F1AB1D9C200901826 /* IIILocalizedIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C2058E1AB1D9C200901826 /* IIILocalizedIndex.m */; };
 		20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */; };
 		3209FFBE1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFBD1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m */; };
 		3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFC11AA06C5300BC6C48 /* CJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -47,7 +48,6 @@
 		3251C5EE1AB01B430080C508 /* ExampleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5ED1AB01B430080C508 /* ExampleCell.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3251C5F31AB02FA60080C508 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5EF1AB02FA60080C508 /* RootViewController.m */; };
 		3251C5F41AB02FA60080C508 /* QRCodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5F11AB02FA60080C508 /* QRCodeViewController.m */; };
-		3251C6331AB032630080C508 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3251C6321AB032630080C508 /* QuartzCore.framework */; };
 		3251C6351AB032700080C508 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3251C6341AB032700080C508 /* CoreVideo.framework */; };
 		3251C6371AB032790080C508 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3251C6361AB032790080C508 /* CoreMedia.framework */; };
 		3251C6391AB032820080C508 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3251C6381AB032820080C508 /* AVFoundation.framework */; };
@@ -145,6 +145,8 @@
 		20C14CA21A9B4E930097C891 /* zh-Hant-HK */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant-HK"; path = "zh-Hant-HK.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA31A9B59980097C891 /* zh-Hans-CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans-CN"; path = "zh-Hans-CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		20C14CA51A9B69910097C891 /* 20150207105906.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 20150207105906.png; sourceTree = "<group>"; };
+		20C2058D1AB1D9C200901826 /* IIILocalizedIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIILocalizedIndex.h; sourceTree = "<group>"; };
+		20C2058E1AB1D9C200901826 /* IIILocalizedIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIILocalizedIndex.m; sourceTree = "<group>"; };
 		20E2CC771AAC929B0027A7A8 /* ViewController+EyebbPublic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ViewController+EyebbPublic.h"; path = "EyeBB/public/ViewController+EyebbPublic.h"; sourceTree = "<group>"; };
 		20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ViewController+EyebbPublic.m"; path = "EyeBB/public/ViewController+EyebbPublic.m"; sourceTree = "<group>"; };
 		3209FFBC1AA04B6500BC6C48 /* UIViewController+EyeBBServie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBServie.h"; path = "EyeBB/public/httpRequest/UIViewController+EyeBBServie.h"; sourceTree = "<group>"; };
@@ -347,7 +349,6 @@
 				3251C6391AB032820080C508 /* AVFoundation.framework in Frameworks */,
 				3251C6371AB032790080C508 /* CoreMedia.framework in Frameworks */,
 				3251C6351AB032700080C508 /* CoreVideo.framework in Frameworks */,
-				3251C6331AB032630080C508 /* QuartzCore.framework in Frameworks */,
 				3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */,
 				3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */,
 				3264D9781A9D6BBB009CB9C2 /* libz.dylib in Frameworks */,
@@ -484,6 +485,15 @@
 			);
 			name = img;
 			path = EyeBB;
+			sourceTree = "<group>";
+		};
+		20C2058C1AB1D9C200901826 /* IIILocalizedIndex */ = {
+			isa = PBXGroup;
+			children = (
+				20C2058D1AB1D9C200901826 /* IIILocalizedIndex.h */,
+				20C2058E1AB1D9C200901826 /* IIILocalizedIndex.m */,
+			);
+			path = IIILocalizedIndex;
 			sourceTree = "<group>";
 		};
 		20C320121A9F6C8400DCB519 /* public */ = {
@@ -836,6 +846,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				20C2058C1AB1D9C200901826 /* IIILocalizedIndex */,
 				3251C6431AB03DFF0080C508 /* QRCode */,
 				3251C5D61AB01A1D0080C508 /* EGOImageLoading */,
 				3251C5D21AB00FB40080C508 /* MBProgressHUD */,
@@ -1054,6 +1065,7 @@
 				3209FFCF1AA06C5300BC6C48 /* JSONAutoSerializer.m in Sources */,
 				3264D9581A9D6B72009CB9C2 /* ASIS3Bucket.m in Sources */,
 				3264D94C1A9D6B72009CB9C2 /* ASIFormDataRequest.m in Sources */,
+				20C2058F1AB1D9C200901826 /* IIILocalizedIndex.m in Sources */,
 				3264D95D1A9D6B72009CB9C2 /* ASIS3ServiceRequest.m in Sources */,
 				3264D9591A9D6B72009CB9C2 /* ASIS3BucketObject.m in Sources */,
 				3251C6741AB03DFF0080C508 /* mask.c in Sources */,

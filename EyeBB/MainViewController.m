@@ -127,8 +127,8 @@
 @property (nonatomic,strong) NSDateFormatter *dateFormatter;
 /**图片本地存储地址*/
 @property (nonatomic,strong)NSString * documentsDirectoryPath;
-
-
+/***/
+@property (nonatomic,strong) NSString *avgDaysStr;
 
 @end
 
@@ -1732,6 +1732,7 @@
         if (indexPath.row==0) {
             str3=LOCALIZATION(@"this_Week");
             [_conditionLbl setText:str3];
+            
         }
         else if(indexPath.row==1)
         {

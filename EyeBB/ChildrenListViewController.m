@@ -7,17 +7,25 @@
 //
 
 #import "ChildrenListViewController.h"
+#import "IIILocalizedIndex.h"
 
 @interface ChildrenListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
 
 {
+    //数据源数组
+    NSMutableArray*_childrenArray;
     //数据源数组
     NSMutableArray*_dataArray;
     //搜索结果数组
     NSMutableArray*_resultArray;
     UITableView*_tableView;
     UISearchBar*_searchBar;
+    
+    
 }
+
+@property (strong, nonatomic) NSDictionary *data;
+@property (strong, nonatomic) NSArray *keys;
 @end
 
 @implementation ChildrenListViewController
@@ -53,6 +61,7 @@
 {
     //实例化数组
     _resultArray=[[NSMutableArray alloc]init];
+    _childrenArray=[[NSMutableArray alloc]init];
     _dataArray=[[NSMutableArray alloc]init];
     
 }
@@ -67,7 +76,7 @@
     _tableView.delegate=self;
     [self.view addSubview:_tableView];
     
-    //组织数据源
+//    //组织数据源
 //    for(int i=97;i<123;i++)
 //    {
 //        NSMutableArray*subArray=[[NSMutableArray alloc]init];
@@ -77,8 +86,16 @@
 //        }
 //        [_dataArray addObject:subArray];
 //    }
+    _childrenArray=[self allChildren];
+    for (int i=0; i<_childrenArray.count; i++) {
+        [_dataArray addObject:[[_childrenArray objectAtIndex:i] objectForKey:@"name"]];
+
+    }
     
-    _dataArray=[self allChildren];
+    self.data = [IIILocalizedIndex indexed:_dataArray];
+    self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
+   
+//    _dataArray=[self allChildren];
     
     //搜索条
     _searchBar=[[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
@@ -107,7 +124,7 @@
 {
     if(tableView!=_tableView)
         return 1;
-    return [_dataArray count];
+    return self.keys.count;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -131,11 +148,17 @@
         return [_resultArray count];
     }
     else
-        return [[_dataArray objectAtIndex:section]count];
+    {
+        NSString *key = [self.keys objectAtIndex:section];
+    NSArray *arr = [self.data objectForKey:key];
+    return arr.count;
+    }
 }
 //Cell的相关设置
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    int section = indexPath.section;
+    int row = indexPath.row;
     static NSString*cellName=@"cell";
     UITableViewCell*cell=[tableView dequeueReusableCellWithIdentifier:cellName];
     if(cell==nil)
@@ -146,23 +169,21 @@
         cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
     }else{
         
-        cell.textLabel.text=[[_dataArray objectAtIndex:indexPath.section] objectForKey:@"name"];
+        NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
+        cell.textLabel.text = [arr objectAtIndex:row];
     }
     return cell;
 }
 //设置索引条
 -(NSArray*)sectionIndexTitlesForTableView:(UITableView *)tableView
 {
-    NSMutableArray*titles=[[NSMutableArray alloc]init];
-    //加上了放大镜，如果搜索框加到view上，让其不动的话，不用加
-    [titles addObject:UITableViewIndexSearch];
-    //加入其他内容
-    for(int i=97;i<123;i++)
-    {
-        [titles addObject:[NSString stringWithFormat:@"%c",i]];
-    }
-    return titles ;
+   return self.keys;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 0.0;
+}
+
 //设置索引条对应关系
 //如果不加放大镜。这个方法就不需要。
 -(NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index
@@ -198,7 +219,7 @@
         return @"搜索结果";
     }
     else
-        return [NSString stringWithFormat:@"%c",97+section];
+        return [self.keys objectAtIndex:section];
 }
 
 @end
