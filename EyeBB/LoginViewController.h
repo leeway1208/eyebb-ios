@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "EyeBBViewController.h"
 
-@interface LoginViewController : EyeBBViewController
+@interface LoginViewController : EyeBBViewController<UIGestureRecognizerDelegate>
 
 @end

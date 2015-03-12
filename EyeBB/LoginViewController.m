@@ -41,7 +41,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
+    
+    
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
     
     
@@ -51,7 +55,14 @@
     
 }
 
-
+-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){
+        return  NO;
+        
+    }else{
+        return YES;
+    }
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -297,9 +308,9 @@
     else
     {
         
-       
+        
         //开启加载
-       [HUD show:YES];
+        [HUD show:YES];
         
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password, nil];
         // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
@@ -352,13 +363,13 @@
 }
 #pragma mark - check the string
 /**
-*  verify the password and username whether is null or not.
-*
-*  @param userAccount userAccount description
-*  @param passWord    <#passWord description#>
-*
-*  @return <#return value description#>
-*/
+ *  verify the password and username whether is null or not.
+ *
+ *  @param userAccount userAccount description
+ *  @param passWord    <#passWord description#>
+ *
+ *  @return <#return value description#>
+ */
 
 - (NSString *)verifyRequest:(NSString *)userAccount withpwd:(NSString *)passWord
 {
@@ -397,7 +408,7 @@
     
     [loginStatus setObject:registrationId forKey:LoginViewController_registrationId];
     //password
-     NSString *hashUserPassword= [self.loginPassword.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *hashUserPassword= [self.loginPassword.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     [loginStatus setObject:[CommonUtils getSha256String:hashUserPassword].uppercaseString  forKey:LoginViewController_hashPassword];
     
     return [loginStatus synchronize];
