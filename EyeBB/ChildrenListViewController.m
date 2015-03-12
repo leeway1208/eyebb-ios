@@ -8,6 +8,7 @@
 
 #import "ChildrenListViewController.h"
 #import "IIILocalizedIndex.h"
+#import "EGOImageView.h"
 
 @interface ChildrenListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
 
@@ -23,7 +24,8 @@
     
     
 }
-
+/**图片本地存储地址*/
+@property (nonatomic,strong)NSString * documentsDirectoryPath;
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSArray *keys;
 @end
@@ -63,7 +65,7 @@
     _resultArray=[[NSMutableArray alloc]init];
     _childrenArray=[[NSMutableArray alloc]init];
     _dataArray=[[NSMutableArray alloc]init];
-    
+    _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
 /**
@@ -74,18 +76,12 @@
     _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,320,416) style:UITableViewStylePlain];
     _tableView.dataSource=self;
     _tableView.delegate=self;
+//    _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
+//    _tableView.sectionIndexColor = [UIColor blueColor];
+//    _tableView.sectionHeaderHeight=108.0f;
     [self.view addSubview:_tableView];
     
-//    //组织数据源
-//    for(int i=97;i<123;i++)
-//    {
-//        NSMutableArray*subArray=[[NSMutableArray alloc]init];
-//        for(int j=0;j<10;j++)
-//        {
-//            [subArray addObject:[NSString stringWithFormat:@"%c%d",i,j]];
-//        }
-//        [_dataArray addObject:subArray];
-//    }
+
     _childrenArray=[self allChildren];
     for (int i=0; i<_childrenArray.count; i++) {
         [_dataArray addObject:[[_childrenArray objectAtIndex:i] objectForKey:@"name"]];
@@ -118,6 +114,12 @@
 }
 #pragma mark --
 #pragma mark - 表单设置
+
+/**tableViewCell的高度*/
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+        return  60;
+    }
 
 #pragma -mark -UITableViewDelegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -160,17 +162,79 @@
     int section = indexPath.section;
     int row = indexPath.row;
     static NSString*cellName=@"cell";
+    NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
     UITableViewCell*cell=[tableView dequeueReusableCellWithIdentifier:cellName];
     if(cell==nil)
     {
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
+        
+        //儿童图标
+        EGOImageView * KidsImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+        KidsImgView.frame=CGRectMake(10, 2.5, 55, 55);
+        [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
+        [KidsImgView.layer setMasksToBounds:YES];
+        [KidsImgView.layer setBorderWidth:2];
+        
+        [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+        
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[_childrenArray objectAtIndex:row] objectForKey:@"icon"]];
+        KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+        
+        pathOne=nil;
+        
+        KidsImgView.tag=101;
+        [cell addSubview:KidsImgView];
+        if(tableView!=_tableView){
+            cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
+        }else{
+           
+            
+            //儿童名称
+            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 20, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            
+            if (arr.count>0) {
+                
+                [KidsLbl setText:[arr objectAtIndex:row]];
+            }
+            else
+            {
+                [KidsLbl setText:@"*****"];
+            }
+            [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [KidsLbl setTextColor:[UIColor blackColor]];
+            [KidsLbl setTextAlignment:NSTextAlignmentLeft];
+            KidsLbl.tag=102;
+            [cell addSubview:KidsLbl];
+
+        }
     }
+    EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
+    
+    NSString* pathOne =[NSString stringWithFormat: @"%@",[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+
+    KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+
+    pathOne=nil;
+    
+
     if(tableView!=_tableView){
         cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
     }else{
         
-        NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
-        cell.textLabel.text = [arr objectAtIndex:row];
+        //儿童名称
+        UILabel * KidsLbl =(UILabel *)[cell viewWithTag:102];
+        if (arr.count>0) {
+            
+            [KidsLbl setText:[arr objectAtIndex:row]];
+        }
+        else
+        {
+            [KidsLbl setText:@"*****"];
+        }
+        
+        
+        
     }
     return cell;
 }

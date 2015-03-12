@@ -1104,12 +1104,6 @@
            
             
             EGOImageView * RoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-
-            RoomImgView.frame=CGRectMake(10, 15, 60, 60);
-//            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
-
-
-            
             RoomImgView.frame=CGRectMake(10, 15, 60, 60);
             [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
             [RoomImgView.layer setMasksToBounds:YES];
@@ -1117,47 +1111,11 @@
             
             [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
-            
-//            if (_roomArray.count>0&&![[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]] isEqualToString:@""]) {
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-//            if (EGORoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
                 RoomImgView.imageURL = [NSURL URLWithString:pathOne];
-//            }
 
              pathOne=nil;
-//                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-//                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-//                //图片保存的本地的地址获取
-//                
-//                //判断文件夹是否已经存在对应图片
-//                if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
-//                    
-//                    
-//                    [RoomImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
-//                }
-//                else
-//                {
-//                    //不存在
-//                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-//                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-//                    [RoomImgView setImage:[UIImage imageWithData:data]];
-//                    //Get Image From URL
-//                    UIImage * imageFromURL  = nil;
-//                    imageFromURL=[UIImage imageWithData:data];
-//                    //Save Image to Directory
-//                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-//                    
-//                    
-//                }
-//                pathOne=nil;
-//                array=nil;
-//                array2=nil;
-//            }
-//            else
-//            {
-//                RoomImgView = [[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-////                [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
-//            }
+
             RoomImgView.tag=202;
             [RoomBtn addSubview:RoomImgView];
             
