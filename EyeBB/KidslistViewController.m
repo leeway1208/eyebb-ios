@@ -1,5 +1,5 @@
 //
-//  KindlistViewController.m
+//  KidslistViewController.m
 //  EyeBB
 //
 //  Created by evan.Yan on 15-2-28.

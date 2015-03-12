@@ -28,7 +28,6 @@
 		3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFCB1AA06C5300BC6C48 /* SerializationComplexEntities.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */; };
 		3209FFD61AA1704400BC6C48 /* libsqlite3.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */; };
-		3209FFD91AA1AC6600BC6C48 /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFD81AA1AC6600BC6C48 /* KidslistViewController.m */; };
 		3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DACB1AA4151700661712 /* WelcomeViewController.m */; };
 		3240DAD31AA5591200661712 /* icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 3240DACD1AA5591200661712 /* icon-29.png */; };
 		3240DAD41AA5591200661712 /* icon-29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3240DACE1AA5591200661712 /* icon-29@2x.png */; };
@@ -103,6 +102,7 @@
 		3264D9781A9D6BBB009CB9C2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9771A9D6BBB009CB9C2 /* libz.dylib */; };
 		3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9791A9D6DA5009CB9C2 /* libxml2.dylib */; };
 		326A92491A9C480D00CAB4F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A92481A9C480D00CAB4F3 /* MainViewController.m */; };
+		32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32D377DF1AB120C20055A8DE /* KidslistViewController.m */; };
 		32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32FC01421AA83E3B001FB4D3 /* Images.xcassets */; };
 		32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01441AA83E3B001FB4D3 /* LDProgressView.m */; };
 		32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01461AA83E3B001FB4D3 /* UIColor+RGBValues.m */; };
@@ -164,8 +164,6 @@
 		3209FFD21AA1515700BC6C48 /* UIViewController+EyeBBDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBDB.h"; path = "EyeBB/db/UIViewController+EyeBBDB.h"; sourceTree = "<group>"; };
 		3209FFD31AA1515700BC6C48 /* UIViewController+EyeBBDB.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+EyeBBDB.m"; path = "EyeBB/db/UIViewController+EyeBBDB.m"; sourceTree = "<group>"; };
 		3209FFD51AA1704400BC6C48 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
-		3209FFD71AA1AC6600BC6C48 /* KidslistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidslistViewController.h; sourceTree = "<group>"; };
-		3209FFD81AA1AC6600BC6C48 /* KidslistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidslistViewController.m; sourceTree = "<group>"; };
 		3240DACA1AA4151700661712 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
 		3240DACB1AA4151700661712 /* WelcomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WelcomeViewController.m; sourceTree = "<group>"; };
 		3240DACD1AA5591200661712 /* icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon-29.png"; path = "img/icon-29.png"; sourceTree = "<group>"; };
@@ -316,6 +314,8 @@
 		3264D97D1A9D6E33009CB9C2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		326A92471A9C480D00CAB4F3 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		326A92481A9C480D00CAB4F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		32D377DE1AB120C20055A8DE /* KidslistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidslistViewController.h; sourceTree = "<group>"; };
+		32D377DF1AB120C20055A8DE /* KidslistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidslistViewController.m; sourceTree = "<group>"; };
 		32FC01421AA83E3B001FB4D3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		32FC01431AA83E3B001FB4D3 /* LDProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LDProgressView.h; sourceTree = "<group>"; };
 		32FC01441AA83E3B001FB4D3 /* LDProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LDProgressView.m; sourceTree = "<group>"; };
@@ -410,6 +410,8 @@
 		20BD16EA1A99FC7700039A31 /* EyeBB */ = {
 			isa = PBXGroup;
 			children = (
+				32D377DE1AB120C20055A8DE /* KidslistViewController.h */,
+				32D377DF1AB120C20055A8DE /* KidslistViewController.m */,
 				3251C5EF1AB02FA60080C508 /* RootViewController.m */,
 				3251C5F01AB02FA60080C508 /* QRCodeViewController.h */,
 				3251C5F11AB02FA60080C508 /* QRCodeViewController.m */,
@@ -426,16 +428,12 @@
 				326A92481A9C480D00CAB4F3 /* MainViewController.m */,
 				92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */,
 				92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */,
-				3209FFD71AA1AC6600BC6C48 /* KidslistViewController.h */,
-				3209FFD81AA1AC6600BC6C48 /* KidslistViewController.m */,
 				9236323F1AA40CA600687F3F /* LoginViewController.h */,
 				923632401AA40CA600687F3F /* LoginViewController.m */,
 				927DBC791AA7325B00923122 /* ChildInformationMatchingViewController.h */,
 				927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */,
 				927DBC7C1AA9B46F00923122 /* KindergartenListViewController.h */,
 				927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */,
-				921D8D351AB02BC3003F1448 /* RequireQrCode.h */,
-				921D8D361AB02BC3003F1448 /* RequireQrCode.m */,
 				20B043481AB081AC0081738D /* ChildrenListViewController.h */,
 				20B043491AB081AC0081738D /* ChildrenListViewController.m */,
 			);
@@ -1001,9 +999,6 @@
 				3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */,
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
 				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
-				3209FFD91AA1AC6600BC6C48 /* KindlistViewController.m in Sources */,
-				921D8D371AB02BC3003F1448 /* RequireQrCode.m in Sources */,
-				3209FFD91AA1AC6600BC6C48 /* KidslistViewController.m in Sources */,
 				3251C5EA1AB01A1D0080C508 /* EGOImageLoader.m in Sources */,
 				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
@@ -1019,6 +1014,7 @@
 				3264D94D1A9D6B72009CB9C2 /* ASIHTTPRequest.m in Sources */,
 				927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */,
 				3251C5E71AB01A1D0080C508 /* README.mdown in Sources */,
+				32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */,
 				3264D9571A9D6B72009CB9C2 /* ASICloudFilesRequest.m in Sources */,
 				3264D9511A9D6B72009CB9C2 /* ASICloudFilesCDNRequest.m in Sources */,
 				927DBC7E1AA9B46F00923122 /* KindergartenListViewController.m in Sources */,

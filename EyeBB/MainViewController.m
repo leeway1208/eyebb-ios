@@ -1100,11 +1100,13 @@
            
             
             EGOImageView * RoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+
             RoomImgView.frame=CGRectMake(10, 15, 60, 60);
 //            UIImageView * RoomImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
-            [RoomImgView setImage:[UIImage imageNamed:@"logo_en"]];
+
+
             
-            
+            RoomImgView.frame=CGRectMake(10, 15, 60, 60);
             [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
             [RoomImgView.layer setMasksToBounds:YES];
             [RoomImgView.layer setBorderWidth:2];
@@ -1117,9 +1119,7 @@
 //            if (EGORoomImgView.imageURL!=[NSURL URLWithString:pathOne]) {
                 RoomImgView.imageURL = [NSURL URLWithString:pathOne];
 //            }
-//            RoomImgView.image=[EGORoomImgView.image copy];
-//            [EGORoomImgView removeFromSuperview];
-//            EGORoomImgView=nil;
+
              pathOne=nil;
 //                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
 //                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
@@ -1293,6 +1293,7 @@
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
+
             
 //             EGOImageView * EGORoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
 //            EGORoomImgView.frame=CGRectMake(10, 15, 60, 60);
@@ -1309,6 +1310,7 @@
 //            }
 //             RoomImgView.placeholderImage=RoomImgView.image;
 //            NSLog(@"%zi 加载后 %@",indexPath.row, RoomImgView.imageURL);
+
            
 //             NSLog(@"RoomImgView.placeholderImage.class 加载后 %@",RoomImgView.placeholderImage.);
             
