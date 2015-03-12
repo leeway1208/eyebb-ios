@@ -27,4 +27,12 @@
 @property(nonatomic, retain)HttpRequest *httpRequest;
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag;
 - (void)requestFailed:(ASIHTTPRequest *)request;
+
++(NSBundle *)bundle;//获取当前资源文件
+
++(void)initUserLanguage;//初始化语言文件
+
++(NSString *)userLanguage;//获取应用当前语言
+
++(void)setUserlanguage:(NSString *)language;//设置当前语言
 @end

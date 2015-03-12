@@ -48,6 +48,10 @@
 //    [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
     [logoImgView setImage:[UIImage imageNamed:@"test"]];
     
+    //can cancel swipe gesture
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    
     [self.view addSubview:logoImgView];
 //    self.view.backgroundColor= [UIColor colorWithPatternImage:[UIImage imageNamed:@"Image"]];
     
@@ -80,6 +84,7 @@
     LoginBtn.hidden=YES;
     CopyrightLbl.hidden=YES;
 }
+
 //页面显示后执行事件
 -(void)viewDidAppear:(BOOL)animated
 {
@@ -117,6 +122,18 @@
     }
 
 }
+
+// gesture to cancel swipe (use for ios 8)
+-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){
+        return  NO;
+        
+    }else{
+        return YES;
+    }
+}
+
+
 -(void)viewDidDisappear:(BOOL)animated
 {
 

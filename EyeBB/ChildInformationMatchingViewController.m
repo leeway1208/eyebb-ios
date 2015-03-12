@@ -76,6 +76,9 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
     self.title = LOCALIZATION(@"text_child_information_matching");
+    //can cancel swipe gesture
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
     
     
@@ -85,6 +88,18 @@
     [self loadParameter];
     
 }
+
+
+// gesture to cancel swipe (focus on ios8)
+-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){
+        return  NO;
+        
+    }else{
+        return YES;
+    }
+}
+
 
 -(void)viewWillAppear:(BOOL)animated
 {

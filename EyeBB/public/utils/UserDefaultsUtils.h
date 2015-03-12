@@ -26,3 +26,8 @@
 #define ChildInformationMatchingViewController_userDefaults_childName @"childName"
 #define ChildInformationMatchingViewController_userDefaults_dateOfBirth @"dateOfBirth"
 #define ChildInformationMatchingViewController_userDefaults_kId @"kId"
+
+
+//EyeBBViewController
+#define EyeBBViewController_userDefaults_userLanguage @"userLanguage"
+#define EyeBBViewController_userDefaults_AppleLanguages @"AppleLanguages"

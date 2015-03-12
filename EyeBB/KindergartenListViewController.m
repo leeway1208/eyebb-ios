@@ -38,11 +38,18 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.title = LOCALIZATION(@"text_select_kid_kindergarten");
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
+    
+    //can cancel swipe gesture
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    
+    
     [HUD show:YES];
     [self requestServer];
     [self loadWidget];
     [self loadParameter];
 }
+
 
 
 -(void)viewWillAppear:(BOOL)animated
@@ -52,6 +59,15 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
 }
 
+// gesture to cancel swipe (use for ios 8)
+-(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
+    if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){
+        return  NO;
+        
+    }else{
+        return YES;
+    }
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
