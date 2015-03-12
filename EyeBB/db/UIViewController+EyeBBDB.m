@@ -168,34 +168,41 @@
     if (sqlite3_prepare_v2(database, [qChildren UTF8String], -1, &statement, nil) == SQLITE_OK) {
         
         while (sqlite3_step(statement) == SQLITE_ROW) {
-            //临时装载信息
-            NSMutableDictionary *row=[NSMutableDictionary dictionaryWithCapacity:4];
-            
-            //获得数据
-            int child_id = sqlite3_column_int(statement, 0);
-            
-            char* name = (char *)sqlite3_column_text(statement, 1);
-            NSString *namestr =  [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
-            
-            char* icon = (char *)sqlite3_column_text(statement, 2);
-            NSString *iconstr =  [NSString stringWithCString:icon encoding:NSUTF8StringEncoding];
-            
-            char* relation = (char *)sqlite3_column_text(statement, 3);
-            NSString *relationstr=@"";
-            if(!relation)
-            {
-            relationstr =  [NSString stringWithCString:relation encoding:NSUTF8StringEncoding];
+            @try {
+                //临时装载信息
+                NSMutableDictionary *row=[NSMutableDictionary dictionaryWithCapacity:4];
+                
+                //获得数据
+                int child_id = sqlite3_column_int(statement, 0);
+                
+                char* name = (char *)sqlite3_column_text(statement, 1);
+                NSString *namestr =  [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
+                
+                char* icon = (char *)sqlite3_column_text(statement, 2);
+                NSString *iconstr =  [NSString stringWithCString:icon encoding:NSUTF8StringEncoding];
+                
+                char* relation = (char *)sqlite3_column_text(statement, 3);
+                
+                NSString * relationstr =  [NSString stringWithCString:relation encoding:NSUTF8StringEncoding];
+                
+                char* macAddress = (char *)sqlite3_column_text(statement, 3);
+                NSString *macAddressstr =  [NSString stringWithCString:macAddress encoding:NSUTF8StringEncoding];
+                
+                [row setObject:[NSString stringWithFormat:@"%i", child_id] forKey:@"child_id"];
+                [row setObject:namestr forKey:@"name"];
+                [row setObject:iconstr forKey:@"icon"];
+                [row setObject:relationstr forKey:@"relation_with_user"];
+                [row setObject:macAddressstr forKey:@"mac_address"];
+                
+                [ChildrenArray addObject:row];
+
             }
-            char* macAddress = (char *)sqlite3_column_text(statement, 3);
-            NSString *macAddressstr =  [NSString stringWithCString:macAddress encoding:NSUTF8StringEncoding];
-            
-            [row setObject:[NSString stringWithFormat:@"%i", child_id] forKey:@"child_id"];
-            [row setObject:namestr forKey:@"name"];
-            [row setObject:iconstr forKey:@"icon"];
-            [row setObject:relationstr forKey:@"relation_with_user"];
-            [row setObject:macAddressstr forKey:@"mac_address"];
-            
-            [ChildrenArray addObject:row];
+            @catch (NSException *exception) {
+                
+            }
+            @finally {
+                
+            }
             
         }
         

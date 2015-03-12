@@ -132,6 +132,7 @@ static HttpRequest *instance;
 {
     
     NSError *error = [request error];
+//    [HUD hide:YES afterDelay:0];
     
 }
 

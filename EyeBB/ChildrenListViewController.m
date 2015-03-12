@@ -146,7 +146,7 @@
         cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
     }else{
         
-        cell.textLabel.text=[[_dataArray objectAtIndex:indexPath.section]objectAtIndex:indexPath.row];
+        cell.textLabel.text=[[_dataArray objectAtIndex:indexPath.section] objectForKey:@"name"];
     }
     return cell;
 }
