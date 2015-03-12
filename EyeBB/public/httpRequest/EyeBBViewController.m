@@ -42,66 +42,31 @@ static NSBundle *bundle = nil;
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{}
 - (void)requestFailed:(ASIHTTPRequest *)request{}
 
-
-#pragma mark - set app language and save the current app language
-+(void)initUserLanguage{
-    
+#pragma mark - set user language
+/**
+ *  set user languages
+ *
+ *  @param language language (1 is Chinese, 2 is Cantonese, default is English)
+ */
++(void)setUserLanguge:(int)language {
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    
-    NSString *string = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
-    
-    if(string.length == 0){
-        
-        //获取系统当前语言版本(中文zh-Hans,英文en)
-        
-        NSArray* languages = [def objectForKey:EyeBBViewController_userDefaults_AppleLanguages];
-        
-        NSString *current = [languages objectAtIndex:0];
-        
-        string = current;
-        
-        [def setValue:current forKey:EyeBBViewController_userDefaults_userLanguage];
-        
-        [def synchronize];//持久化，不加的话不会保存
+    switch (language) {
+        case 1:
+            
+            [def setObject:@"zh-Hans-CN" forKey:EyeBBViewController_userDefaults_userLanguage];
+            [def synchronize];
+            
+            break;
+        case 2:
+            
+            [def setObject:@"zh-Hant-HK" forKey:EyeBBViewController_userDefaults_userLanguage];
+            [def synchronize];
+            break;
+        default:
+            [def setObject:@"en" forKey:EyeBBViewController_userDefaults_userLanguage];
+            [def synchronize];
+            break;
     }
-    
-    //获取文件路径
-    NSString *path = [[NSBundle mainBundle] pathForResource:string ofType:@"lproj"];
-    NSLog( @"get path-- %@" , path);
-    bundle = [NSBundle bundleWithPath:path];//生成bundle
-}
-
-+ ( NSBundle * )bundle{
-    
-    return bundle;
-    
-}
-
-#pragma mark - get current language
-+(NSString *)userLanguage{
-    
-    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    
-    NSString *language = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
-    
-    return language;
-}
-
-#pragma mark - set the app language
-+(void)setUserlanguage:(NSString *)language{
-    
-    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    
-    //1.第一步改变bundle的值
-    NSString *path = [[NSBundle mainBundle] pathForResource:language ofType:@"lproj" ];
-       NSLog( @"path-- %@" , path);
-     NSLog( @"language-- %@" , language);
-    bundle = [NSBundle bundleWithPath:path];
-    
-    //2.持久化
-    [def setValue:language forKey:EyeBBViewController_userDefaults_userLanguage];
-    
-    [def synchronize];
 }
 
 

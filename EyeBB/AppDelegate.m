@@ -38,7 +38,7 @@
     float systemVersion=[[NSString stringWithFormat:@"%@.%@",[array objectAtIndex:0],[array objectAtIndex:1]]doubleValue];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-
+    
     
     //set init view
     WelcomeViewController *welcome = [[WelcomeViewController alloc] init];
@@ -79,6 +79,25 @@
     self.window.rootViewController = navController;
     [[UIApplication sharedApplication] setStatusBarHidden:YES];
     [self.window makeKeyAndVisible];
+    
+    
+    
+    
+    //set language
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    
+    NSString *appLanguage = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
+    NSArray *arrayOfLanguages = [[NSArray alloc]init];
+    arrayOfLanguages = [[[Localisator sharedInstance] availableLanguagesArray] copy];
+    if([appLanguage isEqualToString:@"zh-Hans-CN"]){
+        //zh-Hans-CN   zh-Hant-HK
+        [[Localisator sharedInstance] setLanguage:arrayOfLanguages[2]];
+    }else if([appLanguage isEqualToString:@"zh-Hant-HK"]){
+        [[Localisator sharedInstance] setLanguage:arrayOfLanguages[1]];
+    }else{
+        [[Localisator sharedInstance] setLanguage:arrayOfLanguages[0]];
+    }
+    
     
     return YES;
 }

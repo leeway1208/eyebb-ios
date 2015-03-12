@@ -48,20 +48,7 @@
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
-    
-    [EyeBBViewController initUserLanguage];
-    
-    NSString *lan = [EyeBBViewController userLanguage];
-      NSLog( @"%@" , lan);
-    if([lan isEqualToString:@"en"]){//判断当前的语言，进行改变
-        //zh-Hans-CN   zh-Hant-HK
-        [EyeBBViewController setUserlanguage:@"zh-Hans-CN"];
-        
-    }
-    else{
-        
-        [EyeBBViewController setUserlanguage:@"en"];
-    }
+    [EyeBBViewController setUserLanguge:1];
     
     [self loadParameter];
     [self loadWidget];
@@ -126,9 +113,7 @@
     //登录按钮
     _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 80 +(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
-    //[_loginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
-    NSBundle *bundle = [EyeBBViewController bundle];
-    [_loginBtn setTitle:[bundle localizedStringForKey:@"btn_login" value:nil table:@"Localizable"] forState:UIControlStateNormal];
+    [_loginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [_loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     
     //设置按钮背景颜色

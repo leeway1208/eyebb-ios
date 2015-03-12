@@ -515,7 +515,7 @@
         NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
         if([responseString isEqualToString:@"[]"]){
-            
+            [HUD hide:YES afterDelay:0];
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"text_child_not_exist")
                                        delegate:self
