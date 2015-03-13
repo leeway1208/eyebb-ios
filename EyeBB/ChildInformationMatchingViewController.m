@@ -79,7 +79,11 @@
 //    
 
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(childInformationSelectLeftAction:)];
-    newBackButton.title = LOCALIZATION(@"btn_back");
+//    [newBackButton setTitle:LOCALIZATION(@"btn_back") forState:UIControlStateNormal];
+//    [newBackButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    
+//    
+    
     self.navigationItem.leftBarButtonItem = newBackButton;
     
     self.title = LOCALIZATION(@"text_child_information_matching");
@@ -96,8 +100,6 @@
     
 }
 
-
-
 // gesture to cancel swipe (focus on ios8)
 -(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){
@@ -107,6 +109,7 @@
         return YES;
     }
 }
+
 
 
 -(void)viewWillAppear:(BOOL)animated

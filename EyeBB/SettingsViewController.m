@@ -126,7 +126,7 @@
     sectionTopView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 40.0f)];
     [sectionTopView setBackgroundColor:[UIColor colorWithRed:236.0f/255.0f green:236.0f/255.0f blue:236.0f/255.0f alpha:1.0]];
     
-    //label
+    //head label in each items
     UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(17.0f, 0.0f, Drive_Wdith-34, 30.0f)];
     [labelTitle setBackgroundColor:[UIColor clearColor]];
     labelTitle.font=[UIFont fontWithName:@"Helvetica-Bold" size:12];
@@ -161,14 +161,8 @@
 // 设置cell的高度
 - (CGFloat)tableView:(UITableView *)atableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    //    if (indexPath.section==1&&indexPath.row==1) {
-    //        return 60;
-    //    }
-    //    else
-    //    {
-    //        return 60;
-    //    }
-    return 45;
+
+    return 60;
 }
 
 
@@ -190,10 +184,16 @@
     
 }
 
-
+/**
+ *  set each items in tableview
+ *
+ *  @param textName <#textName description#>
+ *
+ *  @return <#return value description#>
+ */
 -(UILabel *) settingLable: (NSString *)textName{
     
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(17.0f, 0.0f, Drive_Wdith-34, 44)];
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(17.0f,0, Drive_Wdith-34, 59)];
     [label setBackgroundColor:[UIColor clearColor]];
     label.font=[UIFont fontWithName:@"Helvetica-Bold" size:14];
     label.textAlignment = NSTextAlignmentLeft;

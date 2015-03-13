@@ -126,7 +126,7 @@
             UIView * bindView=[[UIView alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, _cellHeight-10)];
             
             [bindView setBackgroundColor:[UIColor colorWithRed:0.467 green:0.843 blue:0.639 alpha:1]];
-            //设置按钮是否圆角
+            //设置按钮是否圆角bu
             [bindView.layer setMasksToBounds:YES];
             //圆角像素化
             [bindView.layer setCornerRadius:4.0];
