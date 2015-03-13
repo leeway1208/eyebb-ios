@@ -65,7 +65,7 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
     
-    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
     
     self.navigationItem.leftBarButtonItem = newBackButton;
 //    self.view.backgroundColor = [UIColor blackColor];

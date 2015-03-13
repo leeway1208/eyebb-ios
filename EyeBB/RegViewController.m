@@ -59,7 +59,7 @@
     // Do any additional setup after loading the view.
 //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
     
-    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(regViewLeftAction:)];
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(regViewLeftAction:)];
     
     self.navigationItem.leftBarButtonItem = newBackButton;
     

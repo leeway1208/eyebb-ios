@@ -78,7 +78,7 @@
 //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(childInformationSelectLeftAction:)];
 //    
 
-    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(childInformationSelectLeftAction:)]; 
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(childInformationSelectLeftAction:)]; 
     
     self.navigationItem.leftBarButtonItem = newBackButton;
     
