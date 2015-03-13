@@ -8,7 +8,7 @@
 
 #import "RegViewController.h"
 #import "CommonUtils.h"
-
+#import "WelcomeViewController.h"
 #import "JSONKit.h"
 #import "ChildInformationMatchingViewController.h"
 
@@ -57,7 +57,12 @@
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     // Do any additional setup after loading the view.
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
+//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
+    
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(regViewLeftAction:)];
+    
+    self.navigationItem.leftBarButtonItem = newBackButton;
+    
     self.title = LOCALIZATION(@"btn_sign_up");
     
     //can cancel swipe gesture
@@ -750,9 +755,11 @@
 }
 
 /**返回*/
--(void)selectLeftAction:(id)sender
+-(void)regViewLeftAction:(id)sender
 {
-    [[self navigationController] pushViewController:nil animated:YES];
+    
+    WelcomeViewController *wvc = [[WelcomeViewController alloc]init];
+    [[self navigationController] pushViewController:wvc animated:YES];
 }
 
 -(void)goToChildInformationMatchingAction:(id)sender{

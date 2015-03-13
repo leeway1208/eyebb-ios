@@ -37,8 +37,12 @@
     // Do any additional setup after loading the view.
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.title = LOCALIZATION(@"text_select_kid_kindergarten");
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
+//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
     
+    
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(KindergartenListViewControllerLeftAction:)];
+    
+    self.navigationItem.leftBarButtonItem = newBackButton;
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
@@ -277,7 +281,9 @@
 
 #pragma mark - button action
 -(void)KindergartenListViewControllerLeftAction:(id) sender{
-    [[self navigationController] pushViewController:nil animated:YES];
+    
+    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
+    [[self navigationController] pushViewController:cimvc animated:YES];
 }
 
 

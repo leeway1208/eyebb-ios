@@ -11,6 +11,7 @@
 #import "JSONKit.h"
 #import "ZBarSDK.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import "ChildInformationMatchingViewController.h"
 
 #define SCANVIEW_EdgeTop 40.0
 #define SCANVIEW_EdgeLeft 50.0
@@ -62,7 +63,11 @@
     
     self.title = LOCALIZATION(@"text_qr_code");
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
+//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
+    
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
+    
+    self.navigationItem.leftBarButtonItem = newBackButton;
 //    self.view.backgroundColor = [UIColor blackColor];
 //    self.view.alpha = TINTCOLOR_ALPHA;
     
@@ -291,6 +296,12 @@
 #pragma mark - vibrate
 -(void)enabelVibrate{
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
+#pragma mark - btn action
+-(void)qrCodeNavigationBarLeftBtnAction:(id)sender{
+    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
+    [[self navigationController]pushViewController:cimvc animated:YES];
 }
 
 
