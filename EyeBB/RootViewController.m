@@ -1,7 +1,16 @@
+//
+//  RegViewController.m
+//  EyeBB
+//
+//  Created by Evan on 15/2/23.
+//  Copyright (c) 2015年 EyeBB. All rights reserved.
+//
+
 #import "RootViewController.h"
 #import "AppDelegate.h"
 #import "JSONKit.h"
 #import "ZBarSDK.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 #define SCANVIEW_EdgeTop 40.0
 #define SCANVIEW_EdgeLeft 50.0
@@ -39,7 +48,6 @@
 {
     [super viewDidLoad];
     
-    self.title=@"扫描二维码";
     //初始化扫描界面
     [self setScanView];
     
@@ -97,6 +105,9 @@
 #pragma mark -- ZBarReaderViewDelegate
 -(void)readerView:(ZBarReaderView *)readerView didReadSymbols:(ZBarSymbolSet *)symbols fromImage:(UIImage *)image
 {
+    [self playSound];
+    [self enabelVibrate];
+    
     const zbar_symbol_t *symbol =zbar_symbol_set_first_symbol(symbols.zbarSymbolSet);
     NSString *symbolStr = [NSString stringWithUTF8String:zbar_symbol_get_data(symbol)];
     
@@ -105,7 +116,7 @@
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
     
     
-    UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@""message:symbolStr delegate:nil cancelButtonTitle:@"取消" otherButtonTitles:nil];
+    UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@""message:symbolStr delegate:nil cancelButtonTitle:LOCALIZATION(@"btn_cancel") otherButtonTitles:nil];
     [alertView show];
     
     //判断是否包含 头'ssid:'
@@ -185,7 +196,7 @@
     labIntroudction.font=[UIFont systemFontOfSize:15.0];
     labIntroudction.textAlignment=NSTextAlignmentCenter;
     labIntroudction.textColor=[UIColor whiteColor];
-    labIntroudction.text=@"将二维码对准方框，即可自动扫描";
+    labIntroudction.text=LOCALIZATION(@"text_scan_qr_code_hint");
     [downView addSubview:labIntroudction];
     
     UIView *darkView = [[UIView alloc]initWithFrame:CGRectMake(0, downView.frame.size.height-100.0,Drive_Wdith,100.0)];
@@ -194,7 +205,7 @@
     
     //用于开关灯操作的button
     UIButton *openButton=[[UIButton alloc]initWithFrame:CGRectMake(10,20,300.0, 40.0)];
-    [openButton setTitle:@"开启闪光灯" forState:UIControlStateNormal];
+    [openButton setTitle:LOCALIZATION(@"text_turn_on_the_flash") forState:UIControlStateNormal];
     [openButton setTitleColor:[UIColor whiteColor]forState:UIControlStateNormal];
     openButton.titleLabel.textAlignment=NSTextAlignmentCenter;
     openButton.backgroundColor=[UIColor blackColor];
@@ -267,4 +278,20 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+
+#pragma mark - sound 
+/**
+ *  Tink.caf PINKeyPressed
+ */
+-(void)playSound{
+    AudioServicesPlaySystemSound(1057);
+}
+
+#pragma mark - vibrate
+-(void)enabelVibrate{
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
+
+
 @end

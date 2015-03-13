@@ -268,8 +268,7 @@
 //    reg.title = @"";
     
 //    reg.title = @"";
-    
-    
+
     LoginViewController *reg = [[LoginViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
     reg.title = @"";

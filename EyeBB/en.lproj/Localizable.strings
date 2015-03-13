@@ -173,6 +173,8 @@
 "text_no_new_firmware"="Sorry. There is no need to update the firmware of eyebb device.";
 "text_is_this_kid"="Is this kid right?";
 "text_qr_code"="QR Code";
+"text_scan_qr_code_hint" = "Align QR code within frame to scan";
+"text_turn_on_the_flash" = "Turn on the flash";
 
 //<!-- Button strings -->
 "btn_sign_up"="Sign Up";

@@ -47,6 +47,7 @@
 }
 
 
+
 // gesture to cancel swipe (use for ios 8)
 -(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){

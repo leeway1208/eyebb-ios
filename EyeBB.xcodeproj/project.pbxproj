@@ -109,6 +109,7 @@
 		923632411AA40CA600687F3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923632401AA40CA600687F3F /* LoginViewController.m */; };
 		927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */; };
 		927DBC7E1AA9B46F00923122 /* KindergartenListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */; };
+		927E413C1AB288A1001941E3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927E413B1AB288A1001941E3 /* AudioToolbox.framework */; };
 		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
 		92FF92D41AA5592E00E04E0A /* CommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FF92D31AA5592E00E04E0A /* CommonUtils.m */; };
 /* End PBXBuildFile section */
@@ -330,6 +331,7 @@
 		927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildInformationMatchingViewController.m; sourceTree = "<group>"; };
 		927DBC7C1AA9B46F00923122 /* KindergartenListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KindergartenListViewController.h; sourceTree = "<group>"; };
 		927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KindergartenListViewController.m; sourceTree = "<group>"; };
+		927E413B1AB288A1001941E3 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		92FF92D21AA5592E00E04E0A /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
@@ -342,6 +344,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				927E413C1AB288A1001941E3 /* AudioToolbox.framework in Frameworks */,
 				3251C6411AB032B60080C508 /* libiconv.dylib in Frameworks */,
 				3251C63D1AB0329A0080C508 /* Foundation.framework in Frameworks */,
 				3251C67B1AB03DFF0080C508 /* libzbar.a in Frameworks */,
@@ -372,6 +375,7 @@
 		20BD16DF1A99FC7700039A31 = {
 			isa = PBXGroup;
 			children = (
+				927E413B1AB288A1001941E3 /* AudioToolbox.framework */,
 				3251C6401AB032B60080C508 /* libiconv.dylib */,
 				3251C63E1AB032A70080C508 /* SenTestingKit.framework */,
 				3251C63C1AB0329A0080C508 /* Foundation.framework */,

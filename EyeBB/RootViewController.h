@@ -1,9 +1,9 @@
 //
-//  RootViewController.h
-//  zcdh
+//  RegViewController.m
+//  EyeBB
 //
-//  Created by evan.Yan on 14-10-13.
-//
+//  Created by Evan on 15/2/23.
+//  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

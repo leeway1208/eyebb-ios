@@ -13,6 +13,7 @@
 #import "JSONKit.h"
 #import "UserDefaultsUtils.h"
 
+
 @interface LoginViewController ()
 {
     int textHeight;
@@ -47,7 +48,13 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
+    self.navigationController.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
+  
+//    UIBarButtonItem *leftButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
+//
+//    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleBordered  target:self action:@selector(loginSelectLeftAction:)]];
+    
+    
     [EyeBBViewController setUserLanguge:1];
     
     [self loadParameter];
@@ -62,7 +69,16 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
+    
+ 
+    
+    [super viewWillDisappear:animated];
 }
+
+
+
+
 
 // gesture to cancel swipe (use for ios 8)
 -(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
@@ -289,12 +305,15 @@
  */
 -(void)loginSelectLeftAction:(id)sender
 {
+    
     [[self navigationController] pushViewController:nil animated:YES];
+    
 }
+
 
 -(void)loginAction:(id)sender{
     
-    
+ 
     
     NSString *userAccount = [self.loginUserAccount.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *hashUserPassword= [self.loginPassword.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];

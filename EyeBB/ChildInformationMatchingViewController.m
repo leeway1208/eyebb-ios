@@ -10,6 +10,7 @@
 #import "KindergartenListViewController.h"
 #import "UserDefaultsUtils.h"
 #import "RootViewController.h"
+#import "RegViewController.h"
 
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
@@ -74,7 +75,13 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(loginSelectLeftAction:)];
+//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(childInformationSelectLeftAction:)];
+//    
+
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"arrow_gobigleft.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(childInformationSelectLeftAction:)];
+    newBackButton.title = LOCALIZATION(@"btn_back");
+    self.navigationItem.leftBarButtonItem = newBackButton;
+    
     self.title = LOCALIZATION(@"text_child_information_matching");
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
@@ -88,6 +95,7 @@
     [self loadParameter];
     
 }
+
 
 
 // gesture to cancel swipe (focus on ios8)
@@ -436,8 +444,9 @@
 }
 
 #pragma mark - button action
-- (void)loginSelectLeftAction:(id)sender{
-    [[self navigationController] pushViewController:nil animated:YES];
+- (void)childInformationSelectLeftAction:(id)sender{
+    RegViewController *rvc = [[RegViewController alloc]init];
+    [[self navigationController] pushViewController:rvc animated:YES];
 }
 
 - (void)searchChildAction:(id)sender{
@@ -475,9 +484,9 @@
 - (void)kidsKindergartenAciton:(id)sender{
     
     if([self saveNSUserDefaults:[self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] dateOfBirth:[self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] kId:_kindergartenId]){
-        KindergartenListViewController *reg = [[KindergartenListViewController alloc] init];
-        [self.navigationController pushViewController:reg animated:YES];
-        reg.title = @"";
+        KindergartenListViewController *klvc = [[KindergartenListViewController alloc] init];
+        [self.navigationController pushViewController:klvc animated:YES];
+        klvc.title = @"";
     }
     
     
