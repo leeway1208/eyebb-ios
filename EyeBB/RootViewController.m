@@ -125,7 +125,7 @@
     [alertView show];
     
     //判断是否包含 头'ssid:'
-    NSString *ssid =@"ssid+:[^\\s]*";;
+    NSString *ssid =@"ssid+:[^\\s]*";
     NSPredicate *ssidPre = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",ssid];
     
     if ([predicate evaluateWithObject:symbolStr]) {

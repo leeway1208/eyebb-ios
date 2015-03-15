@@ -113,6 +113,8 @@
             // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
             
             [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
+            //开启加载
+            [HUD show:YES];
             
         }
         else
@@ -310,7 +312,8 @@
         }
         
     }
-    
+    //关闭加载
+    [HUD hide:YES afterDelay:0];
 }
 
 

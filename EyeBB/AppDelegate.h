@@ -14,5 +14,8 @@
 
 //判断APP是否第一次启动
 @property bool appIsFirstStart;
+
+/**存储孩子信息*/
+@property (strong, nonatomic) NSDictionary * childDictionary;
 @end
 

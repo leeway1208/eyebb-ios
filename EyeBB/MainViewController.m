@@ -14,7 +14,7 @@
 #import "LDProgressView.h"
 #import "UserDefaultsUtils.h"
 #import "EGOImageView.h"
-
+#import "AppDelegate.h"
 #import "ChildrenListViewController.h"
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
@@ -23,6 +23,7 @@
     int huaHMSegmentedControl;
     
    EGOImageView* eimageView;
+    AppDelegate * myDelegate;
     
 }
 //-------------------视图控件--------------------
@@ -90,6 +91,9 @@
 @property (strong,nonatomic) UILabel *divisionTwoLbl;
 //间隔线4
 @property (strong,nonatomic) UILabel *divisionFourLbl;
+
+//简报儿童头像
+@property (strong,nonatomic) UIImageView * kidImgView;
 //-------------------视图变量--------------------
 /**房间背景颜色数组*/
 @property (strong,nonatomic) NSArray *colorArray;
@@ -123,6 +127,13 @@
 @property (nonatomic) BOOL isallRoomOn;
 /**自动刷新功能打开*/
 @property (nonatomic) BOOL isautoOn;
+/**是否刷新房间列表*/
+@property (nonatomic) BOOL isreloadRoomList;
+/**是否刷新系统通知*/
+@property (nonatomic) BOOL isreloadpersonal;
+/**机构下标*/
+@property (nonatomic) int organizationIndex;
+
 /**时间格式*/
 @property (nonatomic,strong) NSDateFormatter *dateFormatter;
 /**图片本地存储地址*/
@@ -133,7 +144,7 @@
 @end
 
 @implementation MainViewController
-
+@synthesize kidImgView;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -162,6 +173,46 @@
     if(self.settingVc!=nil)
     {
         self.settingVc=nil;
+    }
+    
+    if (myDelegate.childDictionary!=nil) {
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
+        
+        NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+        NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+        
+        
+     
+        
+        
+        if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+            NSLog(@"_documentsDirectoryPath is%@",_documentsDirectoryPath);
+            [kidImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] ];
+        }
+        else
+        {
+            NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+            NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+            [kidImgView setImage:[UIImage imageWithData:data]];
+            //Get Image From URL
+            UIImage * imageFromURL  = nil;
+            imageFromURL=[UIImage imageWithData:data];
+            //Save Image to Directory
+            [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+            
+            
+        }
+        pathOne=nil;
+        array=nil;
+        array2=nil;
+
+            NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
+            [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
+            tempDictionary=nil;
+        //开启加载
+        [HUD show:YES];
+        
+       
     }
 }
 
@@ -195,11 +246,23 @@
     _personalDetailsArray=[[NSMutableArray alloc]init];
     _kidsRoomArray=[[NSMutableArray alloc]init];
     _childrenByRoomDictionary=[[NSMutableDictionary alloc]init];
+    _dailyAvgFigureArray=[[NSMutableArray alloc]init];
+    _activityInfosArray=[[NSMutableArray alloc]init];
     _isallRoomOn=NO;
     _isautoOn=NO;
+    _isreloadRoomList=YES;
+    _isreloadpersonal=YES;
+    self.avgDaysStr=@"5";
+    self.organizationIndex=0;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    // 创建目录
+//    [fileManager createDirectoryAtPath:@"localImg" withIntermediateDirectories:YES attributes:nil error:nil];
+//     _documentsDirectoryPath=[NSString stringWithFormat:@"%@/%@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0],@"localImg"];
+    _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    NSLog(@"_documentsDirectoryPath is%@",_documentsDirectoryPath);
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-    
-     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//    [fileManager removeItemAtPath:_documentsDirectoryPath error:nil];
 }
 
 /**
@@ -439,7 +502,7 @@
     [NewsView addSubview:NewsLbl];
     
     //选择要查看的儿童
-    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-82, 5, 62, 44)];
+    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-92, 5, 72, 44)];
 
     //设置按钮背景颜色
     [NewsBtn setBackgroundColor:[UIColor clearColor]];
@@ -454,13 +517,14 @@
     
     [_MainInfoScrollView addSubview:NewsView];
     //kids头像
-    UIImageView * kidImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 12, 20, 20)];
+    kidImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 7, 30, 30)];
     [kidImgView.layer setCornerRadius:CGRectGetHeight([kidImgView bounds]) / 2];
     [kidImgView.layer setMasksToBounds:YES];
     [kidImgView.layer setBorderWidth:2];
     
     [kidImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+    
+//    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
     //    kindImgView.tag=206;
     [NewsBtn addSubview:kidImgView];
     
@@ -468,7 +532,7 @@
     
     
     
-    UILabel *revampLbl = [[UILabel alloc] initWithFrame:CGRectMake(22.0f, 0.0f, CGRectGetWidth(NewsBtn.bounds)-32, 44.0f)];
+    UILabel *revampLbl = [[UILabel alloc] initWithFrame:CGRectMake(32.0f, 0.0f, CGRectGetWidth(NewsBtn.bounds)-42, 44.0f)];
     [revampLbl setBackgroundColor:[UIColor clearColor]];
     revampLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
     revampLbl.textAlignment = NSTextAlignmentLeft;
@@ -479,8 +543,8 @@
     if(revampLbl.text.length>2)
     {
        
-        NewsBtn.frame=CGRectMake(Drive_Wdith-((revampLbl.text.length*9)+45), 5, (revampLbl.text.length*9)+35, 44);
-         revampLbl.frame=CGRectMake(22.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
+        NewsBtn.frame=CGRectMake(Drive_Wdith-((revampLbl.text.length*9)+55), 5, (revampLbl.text.length*9)+45, 44);
+         revampLbl.frame=CGRectMake(32.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
     }
     
     UIImageView * ImgView=[[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(NewsBtn.bounds)-12, 14, 12, 16)];
@@ -926,7 +990,7 @@
         return 1;
     }
     else if(tableView == self.ActivitiesTableView){
-        return 1;
+        return _activityInfosArray.count;
     }
     else if(tableView == self.PersonageTableView){
         return _personalDetailsArray.count;
@@ -938,7 +1002,7 @@
         return _organizationArray.count;
     }
     else if(tableView == self.PerformanceTableView){
-        return 2;
+        return _dailyAvgFigureArray.count;
     }
     else if(tableView == self.dateTableView){
         return 3;
@@ -1520,7 +1584,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             
             UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(20, 0, Drive_Wdith-60, 30)];
-            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+//            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
             [roomNameLbl setTextColor:[UIColor blackColor]];
             [roomNameLbl setFont:[UIFont systemFontOfSize: 18.0]];
             [roomNameLbl setTag:209];
@@ -1528,31 +1592,135 @@
             
             UIView * compareView=[[UIView alloc]initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 50)];
             [compareView setBackgroundColor:[UIColor colorWithRed:0.957 green:0.957 blue:0.922 alpha:1]];
-//            [roomNameLbl setTag:210];
+            [compareView setTag:222];
             [cell addSubview:compareView];
+            compareView.hidden=YES;
+            //本日数据条
             LDProgressView *progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
             progressView.showText = @NO;
-            progressView.progress = 0.40;
+
             progressView.borderRadius = @0;
             progressView.type = LDProgressSolid;
             progressView.color = [UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1];
-
+            progressView.tag=210;
             [cell addSubview:progressView];
             
+            //本日数据
+            UILabel *progressLbl =[[UILabel alloc]initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
+
+            
+            [progressLbl setTextColor:[UIColor colorWithRed:0.808 green:0.808 blue:0.776 alpha:1]];
+            [progressLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [progressLbl setTextAlignment:NSTextAlignmentRight];
+            [progressLbl setTag:224];
+            [cell addSubview:progressLbl];
+            
+            
+    
+            //自定义数据条
             progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
             progressView.showText = @NO;
-            progressView.progress = 0.70;
             progressView.borderRadius = @0;
             progressView.type = LDProgressSolid;
             progressView.color = [UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1];
+            progressView.tag=223;
             [cell addSubview:progressView];
+         
+           
+            //自定义数据
+             UILabel * progressLbl2 =[[UILabel alloc]initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
+
+
+            [progressLbl2 setTextColor:[UIColor colorWithRed:0.808 green:0.808 blue:0.776 alpha:1]];
+            [progressLbl2 setFont:[UIFont systemFontOfSize: 18.0]];
+            [progressLbl2 setTextAlignment:NSTextAlignmentRight];
+            [progressLbl2 setTag:225];
+            [cell addSubview:progressLbl2];
+            
             
         }
         if([cell viewWithTag:209]!=nil)
         {
             UILabel * roomNameLbl =(UILabel *)[cell viewWithTag:209];
-            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            if (_dailyAvgFigureArray.count>0) {
+                    [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameTc"]];
+                
+               
+                roomNameLbl.hidden=NO;
+            }
+            else
+            {
+                roomNameLbl.hidden=YES;
+            }
+            
         }
+        if([cell viewWithTag:222]!=nil)
+        {
+            UIView * compareView=(UIView *)[cell viewWithTag:222];
+            if (_dailyAvgFigureArray.count>0) {
+                compareView.hidden=NO;
+            }
+            else
+            {
+
+                compareView.hidden=YES;
+            }
+        }
+        if([cell viewWithTag:210]!=nil)
+        {
+
+             LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:210];
+            if (_dailyAvgFigureArray.count>0) {
+                if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"daily"] integerValue]>0) {
+                    progressView.progress = 0.30;
+                    UILabel *progressLbl =(UILabel *)[cell viewWithTag:224];
+                    
+                    int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"daily"]doubleValue];
+                    
+                    [progressLbl setText:[NSString stringWithFormat:@"%dhr %dmin",num/60,num%60]];
+                }
+                else
+                {
+                    progressView.progress = 0.00;
+                }
+            }
+            else
+            {
+                progressView.progress = 0.00;
+                
+               
+            }
+
+            
+        }
+        
+        if([cell viewWithTag:223]!=nil)
+        {
+            LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:223];
+            if (_dailyAvgFigureArray.count>0) {
+                
+                if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"average"] integerValue]>0) {
+                    progressView.progress = 0.50;
+                    
+                    int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"average"]doubleValue];
+                    
+                    UILabel *progressLbl =(UILabel *)[cell viewWithTag:225];
+                    [progressLbl setText:[NSString stringWithFormat:@"%dhr %dmin",num/60,num%60]];
+                }
+                else
+                {
+                    progressView.progress = 0.00;
+                }
+            }
+            else
+            {
+                progressView.progress = 0.00;
+               
+            
+            }
+
+        }
+
     }
     //活动
     else if (tableView==self.ActivitiesTableView)
@@ -1561,14 +1729,17 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //活动图标
-            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            EGOImageView * messageImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
+            messageImgView.frame=CGRectMake(10, 15, 60, 60);
+            
+//            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             //设置按钮为圆形
             [messageImgView.layer setCornerRadius:CGRectGetHeight([messageImgView bounds]) / 2];
             [messageImgView.layer setMasksToBounds:YES];
             [messageImgView.layer setBorderWidth:2];
             
             [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+//            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
             messageImgView.tag=211;
             [cell addSubview:messageImgView];
             
@@ -1593,21 +1764,24 @@
         }
         if([cell viewWithTag:211]!=nil)
         {
-            UIImageView * messageImgView=(UIImageView *)[cell viewWithTag:211];
-            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            EGOImageView * messageImgView=(EGOImageView *)[cell viewWithTag:211];
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+  
+            messageImgView.imageURL = [NSURL URLWithString:pathOne];
+
             
         }
         
         if([cell viewWithTag:212]!=nil)
         {
             UILabel * messageLbl =(UILabel *)[cell viewWithTag:212];
-            [messageLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleTc"]];
             
         }
         if([cell viewWithTag:213]!=nil)
         {
             UILabel * timeLbl =(UILabel *)[cell viewWithTag:213];
-            [timeLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            [timeLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"validUntil"]];
             
         }
         
@@ -1690,22 +1864,47 @@
         if (indexPath.row==0) {
             str3=LOCALIZATION(@"this_Week");
             [_conditionLbl setText:str3];
+            self.avgDaysStr=@"5";
             
         }
         else if(indexPath.row==1)
         {
             str3=LOCALIZATION(@"Last_14_days");
             [_conditionLbl setText:str3];
+            self.avgDaysStr=@"14";
         }
         else if (indexPath.row==2)
         {
             str3=LOCALIZATION(@"50_days");
             [_conditionLbl setText:str3];
+             self.avgDaysStr=@"50";
         }
         //查询条件
         _conditionLbl.frame = CGRectMake(temp.origin.x, temp.origin.y, (str3.length>2?str3.length*8.0f:str3.length*15), temp.size.height);
         _conditionImgView.frame=CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 14.0f, 15.0F, 15.0F);
         [_PopupSView setHidden:YES];
+        
+        if (myDelegate.childDictionary!=nil) {
+            NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
+            [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
+            tempDictionary=nil;
+            //开启加载
+            [HUD show:YES];
+//            [_PerformanceTableView reloadData];
+        }
+    }
+    //个人表现时间段查询
+    else if(tableView ==self.organizationTableView)
+    {
+        self.organizationIndex=indexPath.row;
+        
+        //机构名称列表选择-----------------------------
+        NSString *organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+        [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
+        
+        UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
+        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15);
+        [_RoomTableView reloadData];
     }
     
 }
@@ -1848,7 +2047,14 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
+
+                    if(_isreloadRoomList==YES)
+                    {
+                        [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
+                        //开启加载
+                        [HUD show:YES];
+                    }
+                    
                     break;
                 case 2:
                     [_HomeBtn setSelected:NO];
@@ -1859,7 +2065,6 @@
                     [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                     [self getRequest:GET_REPORTS delegate:self RequestDictionary:nil];
                     
                     break;
                 case 3:
@@ -1871,7 +2076,12 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:YES];
                     [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                    if(_isreloadpersonal==YES)
+                    {
                     [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
+                        //开启加载
+                        [HUD show:YES];
+                    }
                     break;
                     
                 default:
@@ -1896,20 +2106,38 @@
         }
     }
 }
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
+    NSLog(@"scrollView is %@",scrollView.class);
+
+    if (scrollView==_RoomTableView) {
+        [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
+        //开启加载
+        [HUD show:YES];
+       }
+    if(scrollView==_PersonageTableView)
+    {
+         [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
+        //开启加载
+        [HUD show:YES];
+    }
+}
 #pragma mark --
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-    //请求机构列表
+    //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
         NSData *responseData = [request responseData];
         
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
+        [self delLodChild];
         [self SaveChildren:_childrenByAreaArray];
+        
         responseData=nil;
         //机构名称列表选择-----------------------------
-        NSString *organizationStr=[[[_organizationArray objectAtIndex:0] objectForKey:@"area"] objectForKey:@"nameSc"];
+        NSString *organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
         
         UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
@@ -1919,11 +2147,11 @@
         _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
         [_organizationTableView reloadData];
         
-        NSArray *tempArray=[[_childrenByAreaArray objectAtIndex:0] objectForKey:@"childrenBean"];
+        NSArray *tempArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         
 //        NSLog(@"_childrenArray %@\n",_childrenArray);
         
-       _allRoomArray=[[[_organizationArray objectAtIndex:0] objectForKey:@"locations"] copy];
+       _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
          NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
         
         for(int i=0;i<_allRoomArray.count;i++)
@@ -1958,6 +2186,8 @@
         [tempChindrenArray removeAllObjects];
         tempChindrenArray=nil;
         tempArray=nil;
+        _isreloadRoomList=NO;
+        
     }
     
     //请求个人信息
@@ -1968,30 +2198,115 @@
        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
         responseData=nil;
         [_PersonageTableView reloadData];
-        
+        _isreloadpersonal=NO;
         
     }
     //请求简报
     if ([tag isEqualToString:GET_REPORTS]) {
         NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
+       
+        
+        NSString *activityInfoStr=[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"];
+        if ((NSNull *)activityInfoStr != [NSNull null]) {
+             _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
+        }
+        else
+        {
+            _activityInfosArray=nil;
+            _activityInfosArray=[[NSMutableArray alloc]init];
+        }
         
         
+//        if (_activityInfosArray==nil) {
+//        
+//         _activityInfosArray=[[NSMutableArray alloc]init];
+//        }
+        NSString *dailyAvgStr=[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"];
+        if ((NSNull *)dailyAvgStr != [NSNull null]) {
+             _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
+        }
+        else
+        {
+            _dailyAvgFigureArray=nil;
+            _dailyAvgFigureArray=[[NSMutableArray alloc]init];
+        }
+//        _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
+//        if (_dailyAvgFigureArray==nil) {
+//            _dailyAvgFigureArray=[[NSMutableArray alloc]init];
+//        }
         
-        
-        _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
-         _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
+       
 
         responseData=nil;
-//        [_PersonageTableView reloadData];
+
         
-        
+         [_PerformanceTableView reloadData];
+        [_ActivitiesTableView reloadData];
     }
     
     
-    
+    //关闭加载
+    [HUD hide:YES afterDelay:0];
     
 }
+#pragma mark - 本地数据处理
+/**根据选择的机构加载房间和儿童信息*/
+-(void)loadroomMessage
+{
+    if (_childrenDictionary.count>0) {
+        [_childrenDictionary removeAllObjects];
+    }
+    if (_kidsRoomArray.count>0) {
+        [_kidsRoomArray removeAllObjects];
+    }
+    if (_childrenByRoomDictionary.count>0) {
+        [_childrenByRoomDictionary removeAllObjects];
+    }
+    NSArray *tempArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+    
+    //        NSLog(@"_childrenArray %@\n",_childrenArray);
+    
+    _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
+    NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
+    
+    for(int i=0;i<_allRoomArray.count;i++)
+    {
+        for(int j=0;j<tempArray.count;j++)
+        {
+            NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
+            if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
+            {
+                [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
+                
+                
+            }
+        }
+        [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
+        if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
+        {
+            [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
+            [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
+        }
+        [tempChindrenArray removeAllObjects];
+    }
+    //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+    if (_isallRoomOn==YES) {
+        _roomArray=_allRoomArray;
+    }
+    else
+    {
+        _roomArray=_kidsRoomArray;
+    }
+    [_RoomTableView reloadData];
+    [tempChindrenArray removeAllObjects];
+    tempChindrenArray=nil;
+    tempArray=nil;
+    _isreloadRoomList=NO;
+
+}
+
+
 #pragma mark --
 #pragma mark - Handle Gestures
 
@@ -1999,6 +2314,7 @@
 {
     [_PopupSView setHidden:YES];
 }
+
 
 
 #pragma mark --点击事件
@@ -2175,12 +2491,15 @@
 //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         }
         if (num==2) {
-            NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:@"2", @"childId",@"5", @"avgDays", nil];
-            [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
-            tempDictionary=nil;
+        
         }
         if (num==3) {
-             [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
+            if(_isreloadpersonal==YES)
+            {
+                [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
+                //开启加载
+                [HUD show:YES];
+            }
         }
     }
     else

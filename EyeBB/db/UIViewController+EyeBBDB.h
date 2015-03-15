@@ -19,4 +19,9 @@
 #pragma mark --儿童查询
 
 -(NSMutableArray *)allChildren;
+
+#pragma mark--
+#pragma mark --清除旧的儿童数据
+/**清除旧的儿童数据*/
+-(void)delLodChild;
 @end

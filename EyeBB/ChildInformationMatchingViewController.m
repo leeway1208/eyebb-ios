@@ -443,9 +443,16 @@
 }
 
 #pragma mark - button action
+//<<<<<<< Updated upstream
 - (void)childInformationSelectLeftAction:(id)sender{
     RegViewController *rvc = [[RegViewController alloc]init];
     [[self navigationController] pushViewController:rvc animated:YES];
+//=======
+//- (void)loginSelectLeftAction:(id)sender{
+////    [[self navigationController] pushViewController:nil animated:YES];
+//    [self.navigationController popViewControllerAnimated:YES];
+//    
+//>>>>>>> Stashed changes
 }
 
 - (void)searchChildAction:(id)sender{

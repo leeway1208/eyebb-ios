@@ -212,7 +212,43 @@
       sqlite3_close(database);
     return ChildrenArray;
 }
+//清除旧的儿童数据
+-(void)delLodChild
+{
+    char *errorMsg;
+    sqlite3 *database;
+    if (sqlite3_open([[self findDBUrl] UTF8String] , &database) != SQLITE_OK) {
+        
+        sqlite3_close(database);
+        
+        NSAssert(0, @"打开数据库失败！");
+        
+    }
+    
+    
+    NSString *deleteSQL = @"DELETE FROM children ";
+    
+    
+    if (sqlite3_exec(database, [deleteSQL UTF8String], NULL, NULL, &errorMsg) == SQLITE_OK) {
+        NSLog(@"OK");
+    }
+    else {
+        [self ErrorReport:deleteSQL];
+    }
+    
+}
 
 
-
+-(void) ErrorReport:(NSString *)item
+{
+    char *errorMsg;
+    sqlite3 *database;
+    if (sqlite3_exec(database, [item UTF8String], NULL, NULL, &errorMsg) == SQLITE_OK) {
+        NSLog(@"%@ ok\n", item);
+    }
+    else {
+        printf("error: %s", errorMsg);
+        sqlite3_free(errorMsg);
+    }
+}
 @end

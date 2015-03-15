@@ -9,6 +9,7 @@
 #import "ChildrenListViewController.h"
 #import "IIILocalizedIndex.h"
 #import "EGOImageView.h"
+#import "AppDelegate.h"
 
 @interface ChildrenListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
 
@@ -17,11 +18,11 @@
     NSMutableArray*_childrenArray;
     //数据源数组
     NSMutableArray*_dataArray;
-    //搜索结果数组
-    NSMutableArray*_resultArray;
+    //记录未搜索结果数组
+    NSArray*_resultArray;
     UITableView*_tableView;
     UISearchBar*_searchBar;
-    
+     AppDelegate *myDelegate;
     
 }
 /**图片本地存储地址*/
@@ -41,6 +42,14 @@
 //    初始化背景图
 //    [self initBackGroundView];
 }
+
+- (void)viewDidUnload
+{
+    [super viewDidUnload];
+    // Release any retained subviews of the main view.
+    // e.g. self.myOutlet = nil;
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -62,10 +71,11 @@
 -(void)iv
 {
     //实例化数组
-    _resultArray=[[NSMutableArray alloc]init];
+    _resultArray=[[NSArray alloc]init];
     _childrenArray=[[NSMutableArray alloc]init];
     _dataArray=[[NSMutableArray alloc]init];
     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 /**
@@ -73,11 +83,11 @@
  */
 -(void)lc
 {
-    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,320,416) style:UITableViewStylePlain];
+    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,44,Drive_Wdith,Drive_Height-44) style:UITableViewStylePlain];
     _tableView.dataSource=self;
     _tableView.delegate=self;
-//    _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
-//    _tableView.sectionIndexColor = [UIColor blueColor];
+    _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
+    _tableView.sectionIndexColor = [UIColor blueColor];
 //    _tableView.sectionHeaderHeight=108.0f;
     [self.view addSubview:_tableView];
     
@@ -87,31 +97,74 @@
         [_dataArray addObject:[[_childrenArray objectAtIndex:i] objectForKey:@"name"]];
 
     }
-    
+    _resultArray=(NSArray *)_dataArray;
     self.data = [IIILocalizedIndex indexed:_dataArray];
     self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
    
 //    _dataArray=[self allChildren];
     
-    //搜索条
-    _searchBar=[[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, 320, 44)];
-    //把搜索条加到headerView上，其实不是很好，可以加到view上更好
-    _tableView.tableHeaderView=_searchBar;
-//    [_searchBar release];
-    //搜索控制器
-    UISearchDisplayController*sdc=[[UISearchDisplayController alloc]initWithSearchBar:_searchBar contentsController:self];
-    //设置代理(不需要遵循协议)
-    sdc.searchResultsDataSource=self;
-    sdc.searchResultsDelegate=self;
-
+//    //搜索条
+//    _searchBar=[[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
+    //搜索框
+    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
+    _searchBar.delegate = self;
+    _searchBar.placeholder = LOCALIZATION(@"btn_search");
+    _searchBar.keyboardType =  UIKeyboardTypeDefault;
+    [self.view addSubview:_searchBar];
 }
 
 
-#pragma -mark -searchbar
--(void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope
+#pragma mark -
+#pragma mark 模糊搜索/search bar delegate
+
+- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar
 {
-    
+    return YES;
 }
+
+- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text
+{
+    return YES;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
+{
+    NSLog(@"searchText is %@",searchText);
+    if ([searchText isEqualToString:@""]) {
+        _dataArray = (NSMutableArray *)_resultArray;
+        self.data = [IIILocalizedIndex indexed:_dataArray];
+        self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
+        [_tableView reloadData];
+        return;
+    }
+
+    /**< 模糊查找*/
+//    NSPredicate *predicateString = [NSPredicate predicateWithFormat:@"%K BEGINSWITH %@",keyName, searchText];
+    /**< 精确查找*/
+    //  NSPredicate *predicateString = [NSPredicate predicateWithFormat:@"%K == %@", keyName, searchText];
+//    NSLog(@"predicateString:%@",predicateString);
+//    NSLog(@"_resultArray:%@",_resultArray);
+//    NSMutableArray  *filteredArray = (NSMutableArray *)[_resultArray filteredArrayUsingPredicate:predicateString];
+    
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF contains [cd] %@", searchText];
+    NSLog(@"predicate:%@",predicate);
+    NSArray *results = [_resultArray filteredArrayUsingPredicate:predicate];
+    _dataArray = (NSMutableArray *)results;
+    self.data = [IIILocalizedIndex indexed:_dataArray];
+    self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    [_tableView reloadData];
+}
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
+{
+    [_searchBar resignFirstResponder];
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    [_searchBar resignFirstResponder];
+}
+
 #pragma mark --
 #pragma mark - 表单设置
 
@@ -132,21 +185,21 @@
 {
     if(tableView!=_tableView)
     {
-        //先清空数组里的内容。每次搜索显示的不能一样吧。
-        [_resultArray removeAllObjects];
-        //把输入的内容与原有数据源比较，有相似的就加到_resultArray数组里
-        for(NSMutableArray*mArray in _dataArray)
-        {
-            for(NSString*str in mArray)
-            {
-                NSRange range=[str rangeOfString:_searchBar.text];
-                if(range.location!=NSNotFound){
-                    [_resultArray addObject:str];
-                }
-            }
-            
-        }
-        
+//        //先清空数组里的内容。每次搜索显示的不能一样吧。
+//        [_resultArray removeAllObjects];
+//        //把输入的内容与原有数据源比较，有相似的就加到_resultArray数组里
+//        for(NSMutableArray*mArray in _dataArray)
+//        {
+//            for(NSString*str in mArray)
+//            {
+//                NSRange range=[str rangeOfString:_searchBar.text];
+//                if(range.location!=NSNotFound){
+//                    [_resultArray addObject:str];
+//                }
+//            }
+//            
+//        }
+//        
         return [_resultArray count];
     }
     else
@@ -263,12 +316,7 @@
     }
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
@@ -284,6 +332,39 @@
     }
     else
         return [self.keys objectAtIndex:section];
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if(tableView!=_tableView){
+        
+    }
+    else
+    {
+        if (myDelegate.childDictionary==nil) {
+            myDelegate.childDictionary=[[NSDictionary alloc]init];
+        }
+        myDelegate.childDictionary=[_childrenArray objectAtIndex:indexPath.row];
+
+        [self.navigationController popViewControllerAnimated:YES];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+
+{
+    
+    if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
+        
+        [cell setSeparatorInset:UIEdgeInsetsZero];
+        
+    }
+    
+    if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
+        
+        [cell setLayoutMargins:UIEdgeInsetsZero];
+        
+    }
+    
 }
 
 @end
