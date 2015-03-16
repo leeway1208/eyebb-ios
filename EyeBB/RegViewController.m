@@ -211,8 +211,8 @@
     
     
     //pop image view
-    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 20, 45, 45)];
-    [_popUpImage setImage:[UIImage imageNamed:@"Image"]];
+    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - CGRectGetWidth(_popViewContainer.frame)/4 - 20,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 60, 60)];
+    [_popUpImage setImage:[UIImage imageNamed:@"logo_en"]];
     [_popUpImage setTag:105];
     [_popViewContainer addSubview:_popUpImage];
     
@@ -239,14 +239,19 @@
     [_popViewContainer addSubview:_cancelBtn];
     
     //pop title label
-    _popTitleLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 -10 ,12,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popTitleLabel = [[UILabel alloc]init];
     _popTitleLabel.text = LOCALIZATION(@"text_tips");
-    [_popTitleLabel setFont:[UIFont systemFontOfSize:12.0]];
+    UIFont *fnt = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
+    _popTitleLabel.font = fnt;
+    CGSize size = [ _popTitleLabel.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:fnt,NSFontAttributeName, nil]];
+    CGFloat nameW = size.width;
+    
+    _popTitleLabel.frame = CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - nameW/2 ,12,Drive_Wdith,20);
     [_popViewContainer addSubview:_popTitleLabel];
     
     
     //pop centent label
-    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2 - 10 ,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2  ,CGRectGetHeight(_popViewContainer.frame)/2 - 10 ,CGRectGetWidth(_popViewContainer.frame),20)];
     _popContentLabel.text = LOCALIZATION(@"text_binding_device");
     [_popViewContainer addSubview:_popContentLabel];
     
@@ -507,7 +512,7 @@
                 _telTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
                 _telTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
-                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_phone"]];
                 _telTxt.leftView=imgV;//设置输入框内左边的图标
                 _telTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _telTxt.leftViewMode=UITextFieldViewModeAlways;
@@ -538,7 +543,7 @@
                 _nicknameTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
                 _nicknameTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
-                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
                 _nicknameTxt.leftView=imgV;//设置输入框内左边的图标
                 _nicknameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _nicknameTxt.leftViewMode=UITextFieldViewModeAlways;
@@ -567,7 +572,7 @@
                 _pDTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
                 _pDTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
-                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
                 _pDTxt.leftView=imgV;//设置输入框内左边的图标
                 _pDTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _pDTxt.leftViewMode=UITextFieldViewModeAlways;
@@ -595,7 +600,7 @@
                 _verifyTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
                 _verifyTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
-                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
                 _verifyTxt.leftView=imgV;//设置输入框内左边的图标
                 _verifyTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _verifyTxt.leftViewMode=UITextFieldViewModeAlways;
@@ -625,7 +630,7 @@
                 _emailTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
                 _emailTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
-                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"20150207105906"]];
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_email"]];
                 _emailTxt.leftView=imgV;//设置输入框内左边的图标
                 _emailTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _emailTxt.leftViewMode=UITextFieldViewModeAlways;
