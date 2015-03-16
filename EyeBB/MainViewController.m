@@ -131,6 +131,8 @@
 @property (nonatomic) BOOL isreloadRoomList;
 /**是否刷新系统通知*/
 @property (nonatomic) BOOL isreloadpersonal;
+/**是否加载简报信息*/
+@property (nonatomic) BOOL isloadNews;
 /**机构下标*/
 @property (nonatomic) int organizationIndex;
 
@@ -176,42 +178,8 @@
     }
     
     if (myDelegate.childDictionary!=nil) {
-        NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
         
-        NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-        NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-        
-        
-     
-        
-        
-        if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-            NSLog(@"_documentsDirectoryPath is%@",_documentsDirectoryPath);
-            [kidImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] ];
-        }
-        else
-        {
-            NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-            NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-            [kidImgView setImage:[UIImage imageWithData:data]];
-            //Get Image From URL
-            UIImage * imageFromURL  = nil;
-            imageFromURL=[UIImage imageWithData:data];
-            //Save Image to Directory
-            [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-            
-            
-        }
-        pathOne=nil;
-        array=nil;
-        array2=nil;
-
-            NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
-            [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
-            tempDictionary=nil;
-        //开启加载
-        [HUD show:YES];
-        
+        [self insertChildMessage];
        
     }
 }
@@ -252,6 +220,7 @@
     _isautoOn=NO;
     _isreloadRoomList=YES;
     _isreloadpersonal=YES;
+    _isloadNews=YES;
     self.avgDaysStr=@"5";
     self.organizationIndex=0;
     NSFileManager *fileManager = [NSFileManager defaultManager];
@@ -270,25 +239,7 @@
  */
 -(void)lc
 {
-    
-//    UISegmentedControl *segmentedControl = [ [ UISegmentedControl alloc ]initWithItems:[NSArray arrayWithObjects:@"",@"",@"",@"",nil]];
-//    segmentedControl.frame=CGRectMake(0, 20, Drive_Wdith, 44);
-//    segmentedControl.segmentedControlStyle =
-//    UISegmentedControlStyleBar;
-//  
-//    segmentedControl.tintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
-////    [ segmentedControl insertSegmentWithTitle:
-////     @"All" atIndex: 0 animated: NO ];
-////    [ segmentedControl insertSegmentWithTitle:
-////     @"Missed" atIndex: 1 animated: NO ];
-//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_home"] forSegmentAtIndex:0];
-//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_tracking"] forSegmentAtIndex:1];
-//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_profile"] forSegmentAtIndex:2];
-//    [segmentedControl setImage:[UIImage imageNamed:@"actbar_report"] forSegmentAtIndex:3];
-//    segmentedControl.selectedSegmentIndex = 0;
-//    
-//    [segmentedControl addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventValueChanged];
-//    [self.view addSubview:segmentedControl];
+
     
     //室内定位选择按钮
     _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
@@ -993,7 +944,7 @@
         return _activityInfosArray.count;
     }
     else if(tableView == self.PersonageTableView){
-        return _personalDetailsArray.count;
+        return (_personalDetailsArray.count+1);
     }
     else if(tableView == self.listTypeTableView){
         return 2;
@@ -1108,7 +1059,21 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         }
-        cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameSc"];
+        switch (myDelegate.applanguage) {
+            case 0:
+                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameSc"];
+                break;
+            case 1:
+                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameTc"];
+                break;
+            case 2:
+                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"name"];
+                break;
+                
+            default:
+                break;
+        }
+        
         cell.textLabel.textColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
     }
     //房间列表
@@ -1189,7 +1154,22 @@
             
             if (_roomArray.count>0) {
 
-               [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                switch (myDelegate.applanguage) {
+                    case 0:
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                        break;
+                    case 1:
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]];
+                        break;
+                    case 2:
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"namec"]];
+                        break;
+                        
+                    default:
+                        break;
+                }
+
+               
             }
             else
             {
@@ -1345,7 +1325,20 @@
             UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
             if (_roomArray.count>0) {
                 
-                [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                switch (myDelegate.applanguage) {
+                    case 0:
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                        break;
+                    case 1:
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]];
+                        break;
+                    case 2:
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"namec"]];
+                        break;
+                        
+                    default:
+                        break;
+                }
             }
             else
             {
@@ -1448,9 +1441,16 @@
     //个人设置
     else if (tableView==self.PersonageTableView)
     {
-        NSDictionary *tempDictionary=[[_personalDetailsArray objectAtIndex:indexPath.row]copy];
         
-         NSString* pathOne =[NSString stringWithFormat: @"%@",[tempDictionary objectForKey:@"icon"]];
+        NSDictionary *tempDictionary;
+        NSString* pathOne;
+        if (indexPath.row>0) {
+            tempDictionary=[[_personalDetailsArray objectAtIndex:(indexPath.row-1)]copy];
+            pathOne=[NSString stringWithFormat: @"%@",[tempDictionary objectForKey:@"icon"]];
+        }
+        
+        
+        
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //房间图标
@@ -1462,7 +1462,8 @@
             
             [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
-            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]) {
+            
+            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]&&indexPath.row>0) {
                
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
@@ -1502,7 +1503,29 @@
             [cell addSubview:messageImgView];
             
             UILabel * messageLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 27, CGRectGetWidth(cell.frame)-100, 20)];
-            [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
+            if (indexPath.row>0) {
+                switch (myDelegate.applanguage) {
+                    case 0:
+                        [messageLbl setText:[tempDictionary objectForKey:@"titleSc"]];
+                        break;
+                    case 1:
+                        [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
+                        break;
+                    case 2:
+                        [messageLbl setText:[tempDictionary objectForKey:@"title"]];
+                        break;
+                        
+                    default:
+                        break;
+                }
+
+            }
+            else
+            {
+
+                [messageLbl setText:LOCALIZATION(@"text_feed_back")];
+            }
+
 //            [messageLbl setAlpha:0.6];
             [messageLbl setFont:[UIFont systemFontOfSize: 15.0]];
             [messageLbl setTextColor:[UIColor blackColor]];
@@ -1511,7 +1534,13 @@
             [cell addSubview:messageLbl];
             
             UILabel * timeLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 47, CGRectGetWidth(cell.frame)-100, 20)];
+            if (indexPath.row>0) {
             [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
+            }
+            else
+            {
+                [timeLbl setText:@""];
+            }
             //            [messageLbl setAlpha:0.6];
             [timeLbl setFont:[UIFont systemFontOfSize: 15.0]];
             [timeLbl setTextColor:[UIColor blackColor]];
@@ -1523,7 +1552,7 @@
         if([cell viewWithTag:206]!=nil)
         {
             UIImageView * messageImgView=(UIImageView *)[cell viewWithTag:206];
-            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]) {
+            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]&&indexPath.row>0) {
                 
                 
                 NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
@@ -1564,13 +1593,41 @@
         if([cell viewWithTag:207]!=nil)
         {
             UILabel * messageLbl =(UILabel *)[cell viewWithTag:207];
-            [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
+            if (indexPath.row>0) {
+                switch (myDelegate.applanguage) {
+                    case 0:
+                        [messageLbl setText:[tempDictionary objectForKey:@"titleSc"]];
+                        break;
+                    case 1:
+                        [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
+                        break;
+                    case 2:
+                        [messageLbl setText:[tempDictionary objectForKey:@"title"]];
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
+            }
+            else
+            {
+                
+                [messageLbl setText:LOCALIZATION(@"text_feed_back")];
+            }
+            
             
         }
         if([cell viewWithTag:208]!=nil)
         {
             UILabel * timeLbl =(UILabel *)[cell viewWithTag:208];
-            [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
+            if (indexPath.row>0) {
+                [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
+            }
+            else
+            {
+                [timeLbl setText:@""];
+            }
             
         }
         
@@ -1643,7 +1700,21 @@
         {
             UILabel * roomNameLbl =(UILabel *)[cell viewWithTag:209];
             if (_dailyAvgFigureArray.count>0) {
-                    [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameTc"]];
+                switch (myDelegate.applanguage) {
+                    case 0:
+                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameSc"]];
+                        break;
+                    case 1:
+                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameTc"]];
+                        break;
+                    case 2:
+                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locName"]];
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
                 
                
                 roomNameLbl.hidden=NO;
@@ -1775,7 +1846,21 @@
         if([cell viewWithTag:212]!=nil)
         {
             UILabel * messageLbl =(UILabel *)[cell viewWithTag:212];
-            [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleTc"]];
+          
+            switch (myDelegate.applanguage) {
+                case 0:
+                      [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleSc"]];
+                    break;
+                case 1:
+                      [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleTc"]];
+                    break;
+                case 2:
+                      [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
+                    break;
+                    
+                default:
+                    break;
+            }
             
         }
         if([cell viewWithTag:213]!=nil)
@@ -1899,7 +1984,22 @@
         self.organizationIndex=indexPath.row;
         
         //机构名称列表选择-----------------------------
-        NSString *organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+        NSString *organizationStr;
+        switch (myDelegate.applanguage) {
+            case 0:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+                break;
+            case 1:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
+                break;
+            case 2:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+                break;
+                
+            default:
+                break;
+        }
+
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
         
         UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
@@ -2065,6 +2165,10 @@
                     [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                     [_PersonageBtn setSelected:NO];
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                    if(_isloadNews==YES)
+                    {
+                        [self insertChildMessage];
+                    }
                     
                     break;
                 case 3:
@@ -2126,18 +2230,37 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
+    NSString *responseString = [request responseString];
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
         NSData *responseData = [request responseData];
         
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
+        if (_childrenByAreaArray.count>0) {
+            myDelegate.childDictionary=[_childrenByAreaArray objectAtIndex:0];
+        }
+        
         [self delLodChild];
         [self SaveChildren:_childrenByAreaArray];
         
         responseData=nil;
         //机构名称列表选择-----------------------------
-        NSString *organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+        NSString *organizationStr;
+        switch (myDelegate.applanguage) {
+            case 0:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+                break;
+            case 1:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
+                break;
+            case 2:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+                break;
+                
+            default:
+                break;
+        }
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
         
         UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
@@ -2306,6 +2429,44 @@
 
 }
 
+-(void)insertChildMessage
+{
+    NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
+    
+    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+    
+    
+    
+    
+    
+    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+        NSLog(@"_documentsDirectoryPath is%@",_documentsDirectoryPath);
+        [kidImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] ];
+    }
+    else
+    {
+        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+        [kidImgView setImage:[UIImage imageWithData:data]];
+        //Get Image From URL
+        UIImage * imageFromURL  = nil;
+        imageFromURL=[UIImage imageWithData:data];
+        //Save Image to Directory
+        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+        
+        
+    }
+    pathOne=nil;
+    array=nil;
+    array2=nil;
+    
+    NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
+    [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
+    tempDictionary=nil;
+    //开启加载
+    [HUD show:YES];
+}
 
 #pragma mark --
 #pragma mark - Handle Gestures
@@ -2491,7 +2652,10 @@
 //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
         }
         if (num==2) {
-        
+            if(_isloadNews==YES)
+            {
+                [self insertChildMessage];
+            }
         }
         if (num==3) {
             if(_isreloadpersonal==YES)

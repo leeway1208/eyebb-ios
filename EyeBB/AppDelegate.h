@@ -17,5 +17,8 @@
 
 /**存储孩子信息*/
 @property (strong, nonatomic) NSDictionary * childDictionary;
+
+/**存储当前app的语言环境(0为中文简体,1为中文繁体,2为英语)*/
+@property int applanguage;
 @end
 
