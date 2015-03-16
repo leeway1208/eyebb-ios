@@ -69,5 +69,17 @@ static NSBundle *bundle = nil;
     }
 }
 
+/**
+ *  get current language
+ *
+ *  @return current language
+ */
++ (NSString *)getCurrentLanguage
+{
+    NSArray *languages = [NSLocale preferredLanguages];
+    NSString *currentLanguage = [languages objectAtIndex:0];
+
+    return currentLanguage;
+}
 
 @end

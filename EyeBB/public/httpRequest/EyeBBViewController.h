@@ -33,4 +33,6 @@
  *  @param language language (1 is Chinese, 2 is Cantonese, default is English)
  */
 +(void)setUserLanguge:(int)language;
++ (NSString *)getCurrentLanguage;
+
 @end

@@ -83,7 +83,7 @@
     
     
     
-    //set language
+    //set language from user (user may set in the options view)
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     
     NSString *appLanguage = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
