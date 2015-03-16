@@ -2237,12 +2237,9 @@
         
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
-        if (_childrenByAreaArray.count>0) {
-            myDelegate.childDictionary=[_childrenByAreaArray objectAtIndex:0];
-        }
         
         [self delLodChild];
-        [self SaveChildren:_childrenByAreaArray];
+        
         
         responseData=nil;
         //机构名称列表选择-----------------------------
@@ -2297,7 +2294,44 @@
             }
             [tempChindrenArray removeAllObjects];
         }
-//        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+        if (_childrenDictionary.count>0) {
+            if(myDelegate.childDictionary !=nil)
+            {
+                myDelegate.childDictionary=nil;
+                
+                myDelegate.childDictionary=[[NSDictionary alloc]init];
+            }
+            if(myDelegate.childDictionary ==nil)
+            {
+                
+                
+                 myDelegate.childDictionary=[[NSDictionary alloc]init];
+            }
+             NSLog(@"_childrenDictionary %@\n",[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]);
+             NSLog(@"_childrenDictionary %@\n",[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]);
+            NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+            
+            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+            
+           
+            
+            
+            [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+            
+            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+            
+            [tempDictionary setObject:[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+            
+            [tempDictionary setObject:[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"macAddress"] forKey:@"mac_address"];
+            
+            myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
+            [tempDictionary removeAllObjects];
+            tempDictionary=nil;
+            
+            [self SaveChildren:_childrenDictionary];
+        }
+
+        NSLog(@"myDelegate.childDictionary %@\n",myDelegate.childDictionary);
         if (_isallRoomOn==YES) {
             _roomArray=_allRoomArray;
         }
@@ -2366,6 +2400,7 @@
         
          [_PerformanceTableView reloadData];
         [_ActivitiesTableView reloadData];
+        _isloadNews=NO;
     }
     
     
@@ -2569,7 +2604,21 @@
     UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
     [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
     UILabel * roomNameLbl =(UILabel *)[_kidsMassageView viewWithTag:221];
-     [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]]];
+    switch (myDelegate.applanguage) {
+        case 0:
+            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]]];
+            break;
+        case 1:
+            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]]];
+            break;
+        case 2:
+            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"name"]]];
+            break;
+            
+        default:
+            break;
+    }
+    
 }
 
 /**显示表现*/
@@ -2655,6 +2704,7 @@
             if(_isloadNews==YES)
             {
                 [self insertChildMessage];
+                
             }
         }
         if (num==3) {
