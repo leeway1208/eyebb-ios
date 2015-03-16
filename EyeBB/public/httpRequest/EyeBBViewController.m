@@ -70,16 +70,31 @@ static NSBundle *bundle = nil;
 }
 
 /**
- *  get current language
+ *  get current System language
  *
- *  @return current language
+ *  @return current System language
  */
-+ (NSString *)getCurrentLanguage
++ (NSString *)getCurrentSystemLanguage
 {
     NSArray *languages = [NSLocale preferredLanguages];
     NSString *currentLanguage = [languages objectAtIndex:0];
 
     return currentLanguage;
 }
+
+/**
+ *  get current App language
+ *
+ *  @return current App language
+ */
++ (NSString *)getCurrentAppLanguage
+{
+    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+    
+    NSString *appLanguage = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
+    
+    return appLanguage;
+}
+
 
 @end
