@@ -14,8 +14,7 @@
 @interface ChildrenListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
 
 {
-    //数据源数组
-    NSMutableArray*_childrenArray;
+
     //数据源数组
     NSMutableArray*_dataArray;
     //记录未搜索结果数组
@@ -32,7 +31,7 @@
 @end
 
 @implementation ChildrenListViewController
-
+@synthesize _childrenArray;
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -72,7 +71,7 @@
 {
     //实例化数组
     _resultArray=[[NSArray alloc]init];
-    _childrenArray=[[NSMutableArray alloc]init];
+//    _childrenArray=[[NSMutableArray alloc]init];
     _dataArray=[[NSMutableArray alloc]init];
     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
@@ -83,7 +82,7 @@
  */
 -(void)lc
 {
-    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,44,Drive_Wdith,Drive_Height-44) style:UITableViewStylePlain];
+    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,44,Drive_Wdith,Drive_Height-80) style:UITableViewStylePlain];
     _tableView.dataSource=self;
     _tableView.delegate=self;
     _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
@@ -92,9 +91,9 @@
     [self.view addSubview:_tableView];
     
 
-    _childrenArray=[self allChildren];
+//    _childrenArray=[self allChildren];
     for (int i=0; i<_childrenArray.count; i++) {
-        [_dataArray addObject:[[_childrenArray objectAtIndex:i] objectForKey:@"name"]];
+        [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
 
     }
     _resultArray=(NSArray *)_dataArray;
@@ -230,7 +229,11 @@
         
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
-        NSString* pathOne =[NSString stringWithFormat: @"%@",[[_childrenArray objectAtIndex:row] objectForKey:@"icon"]];
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[_childrenArray objectAtIndex:row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+        
+        
+        
+        
         KidsImgView.imageURL = [NSURL URLWithString:pathOne];
         
         pathOne=nil;
@@ -264,7 +267,7 @@
     }
     EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
     
-    NSString* pathOne =[NSString stringWithFormat: @"%@",[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[_childrenArray objectAtIndex:row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
 
     KidsImgView.imageURL = [NSURL URLWithString:pathOne];
 
@@ -340,10 +343,43 @@
     }
     else
     {
-        if (myDelegate.childDictionary==nil) {
+//        if (myDelegate.childDictionary==nil) {
+//            myDelegate.childDictionary=[[NSDictionary alloc]init];
+//        }
+//        myDelegate.childDictionary=[_childrenArray objectAtIndex:indexPath.row];
+        
+        
+        if(myDelegate.childDictionary !=nil)
+        {
+            myDelegate.childDictionary=nil;
+            
             myDelegate.childDictionary=[[NSDictionary alloc]init];
         }
-        myDelegate.childDictionary=[_childrenArray objectAtIndex:indexPath.row];
+        if(myDelegate.childDictionary ==nil)
+        {
+            
+            
+            myDelegate.childDictionary=[[NSDictionary alloc]init];
+        }
+       
+        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+        
+        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+        
+        
+        
+        
+        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+        
+        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+        
+        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+        
+        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
+        
+        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
+        [tempDictionary removeAllObjects];
+        tempDictionary=nil;
 
         [self.navigationController popViewControllerAnimated:YES];
     }
@@ -366,5 +402,9 @@
     }
     
 }
+
+
+
+
 
 @end

@@ -1107,7 +1107,7 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
-            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
+//            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
             UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*kindRow)];
             
             //设置按钮背景颜色
@@ -1743,11 +1743,11 @@
              LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:210];
             if (_dailyAvgFigureArray.count>0) {
                 if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"daily"] integerValue]>0) {
-                    progressView.progress = 0.30;
+                  
                     UILabel *progressLbl =(UILabel *)[cell viewWithTag:224];
                     
                     int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"daily"]doubleValue];
-                    
+                    progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
                     [progressLbl setText:[NSString stringWithFormat:@"%dhr %dmin",num/60,num%60]];
                 }
                 else
@@ -1771,9 +1771,14 @@
             if (_dailyAvgFigureArray.count>0) {
                 
                 if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"average"] integerValue]>0) {
-                    progressView.progress = 0.50;
+                    
+                    
+                    
+//                    progressView.progress = 0.50;
                     
                     int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"average"]doubleValue];
+                    progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
+                    
                     
                     UILabel *progressLbl =(UILabel *)[cell viewWithTag:225];
                     [progressLbl setText:[NSString stringWithFormat:@"%dhr %dmin",num/60,num%60]];
@@ -2294,6 +2299,7 @@
             }
             [tempChindrenArray removeAllObjects];
         }
+        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
         if (_childrenDictionary.count>0) {
             if(myDelegate.childDictionary !=nil)
             {
@@ -2328,7 +2334,7 @@
             [tempDictionary removeAllObjects];
             tempDictionary=nil;
             
-            [self SaveChildren:_childrenDictionary];
+//            [self SaveChildren:_childrenDictionary];
         }
 
         NSLog(@"myDelegate.childDictionary %@\n",myDelegate.childDictionary);
@@ -2448,7 +2454,7 @@
         }
         [tempChindrenArray removeAllObjects];
     }
-    //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+//            NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
     if (_isallRoomOn==YES) {
         _roomArray=_allRoomArray;
     }
@@ -2525,10 +2531,11 @@
     [_organizationTableView setHidden:YES];
     [_kidsMassageView setHidden:YES];
 }
-
+/**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
     ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
+    tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
     [self.navigationController pushViewController:tt animated:YES];
     self.settingVc .title = @"";
 }
@@ -2571,6 +2578,8 @@
     [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
     KidslistViewController * kindlist = [[KidslistViewController alloc] init];
+    kindlist._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+
     [self.navigationController pushViewController:kindlist animated:YES];
     kindlist.title = @"";
 }
@@ -2759,7 +2768,6 @@
 {
     [_PopupSView setHidden:YES];
 }
-
 
 
 

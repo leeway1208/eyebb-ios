@@ -13,12 +13,21 @@
 /**兒童列表*/
 @property (strong,nonatomic) UITableView * KindlistTView;
 
+/**Binding 绑定数据源*/
+@property (strong,nonatomic) NSMutableArray * BindingArray;
+
+/**unBinding 未绑定数据源*/
+@property (strong,nonatomic) NSMutableArray * unBindingArray;
+
+/**granted 已授权数据源*/
+@property (strong,nonatomic) NSMutableArray * grantedArray;
+
 //-------------------视图变量--------------------
 @property NSInteger cellHeight;
 @end
 
 @implementation KidslistViewController
-
+@synthesize  _childrenArray;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -51,7 +60,43 @@
  */
 -(void)iv
 {
-    _cellHeight=120;
+    self.BindingArray=[[NSMutableArray alloc]init];
+    
+    self.unBindingArray=[[NSMutableArray alloc]init];
+    
+    self.grantedArray=[[NSMutableArray alloc]init];
+    
+    for(int i=0;i<_childrenArray.count; i++)
+    {
+        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+        
+        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+
+        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+        
+        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+        
+        [tempDictionary setObject:[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+        
+        [tempDictionary setObject:[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
+        
+        
+        if (![[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+            [self.BindingArray addObject:tempDictionary];
+        }
+        
+        if ([[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+            [self.unBindingArray addObject:tempDictionary];
+        }
+        
+        if (![[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
+            [self.grantedArray addObject:tempDictionary];
+        }
+        
+        [tempDictionary removeAllObjects];
+        tempDictionary=nil;
+    }
+//    _cellHeight=120;
 }
 
 /**

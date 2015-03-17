@@ -11,5 +11,6 @@
 @interface ChildrenListViewController : EyeBBViewController{
 
 }
-
+/**数据源数组*/
+@property (nonatomic,strong) NSMutableArray*_childrenArray;
 @end
