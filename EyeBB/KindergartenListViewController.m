@@ -282,6 +282,7 @@
 #pragma mark - button action
 -(void)KindergartenListViewControllerLeftAction:(id) sender{
     
+//<<<<<<< Updated upstream
     for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
     {
         if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
@@ -289,6 +290,12 @@
         }
     }
     
+//=======
+//    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
+//    [[self navigationController] pushViewController:cimvc animated:YES];
+    /*用法：[self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: ([self.navigationController.viewControllers count] -层次)] animated:YES];*/
+//    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: 1] animated:YES];
+//>>>>>>> Stashed changes
 
 }
 

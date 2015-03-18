@@ -367,7 +367,7 @@
     //------------------------室内定位-------------------------------
     
     //房间加载时的彩色进度条
-    CGRect frame = CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
+    CGRect frame = CGRectMake(0, 0.0f, Drive_Wdith, 3.0f);
     self.progressView = [[GradientProgressView alloc] initWithFrame:frame];
     [_MainInfoScrollView addSubview:self.progressView];
     _progressView.hidden=NO;
@@ -2176,7 +2176,7 @@
             huaHMSegmentedControl = (int)page;
             switch (huaHMSegmentedControl) {
                 case 0:
-                    _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
+                    _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
                     [_HomeBtn setSelected:YES];
                     [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
@@ -2211,7 +2211,7 @@
                     
                     break;
                 case 3:
-                    _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 1.0f);
+                    _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
                     [_HomeBtn setSelected:NO];
                     [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
