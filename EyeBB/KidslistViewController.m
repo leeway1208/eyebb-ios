@@ -7,7 +7,7 @@
 //
 
 #import "KidslistViewController.h"
-
+#import "ChildInformationMatchingViewController.h"
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 //-------------------视图控件--------------------
 /**兒童列表*/
@@ -369,6 +369,8 @@
 
 -(void)addAction
 {
+    ChildInformationMatchingViewController *cfm=[[ChildInformationMatchingViewController alloc]init];
+    [self.navigationController pushViewController:cfm animated:YES];
 //    [_KindlistTView reloadData];
 }
 
