@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface WebViewController : UIViewController
+#import "EyeBBViewController.h"
+@interface WebViewController : EyeBBViewController
+//web内容请求地址
+@property (retain,nonatomic) NSString * urlStr;
 
 @end

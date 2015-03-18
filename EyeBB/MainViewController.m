@@ -18,6 +18,8 @@
 #import "ChildrenListViewController.h"
 //彩色进度条
 #import "GradientProgressView.h"
+
+#import "WebViewController.h"
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
     /**滑动HMSegmentedControl*/
@@ -147,6 +149,8 @@
 /***/
 @property (nonatomic,strong) NSString *avgDaysStr;
 
+//-------------------跳转页面--------------------
+@property (nonatomic,strong) WebViewController * web;
 @end
 
 @implementation MainViewController
@@ -201,7 +205,9 @@
     {
         self.settingVc=nil;
     }
-    
+    if (self.web!=nil) {
+        self.web =nil;
+    }
     if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2) {
         
         [self insertChildMessage];
@@ -995,11 +1001,13 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
     //    int row=indexPath.row;
     //    NSString *CellIdentifier;
     static NSString *detailIndicated = @"tableCell";
     
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //房间列表显示/刷新设置
     if(tableView == self.listTypeTableView)
     {
@@ -2043,7 +2051,64 @@
         osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15);
         [_RoomTableView reloadData];
     }
-    
+    //活动
+    else if(tableView ==self.ActivitiesTableView)
+    {
+        NSString *urlStr;
+        
+        switch (myDelegate.applanguage) {
+            case 0:
+               urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activitySc"];
+                break;
+            case 1:
+                 urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activityTc"];
+                break;
+            case 2:
+                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activity"];
+                break;
+                
+            default:
+                break;
+        }
+        if (self.web==nil) {
+            self.web =[[WebViewController alloc]init];
+        }
+       //为web页面赋值
+        self.web.urlStr=urlStr;
+        [self.navigationController pushViewController:self.web animated:YES];
+    }
+   
+    //个人设置
+    else if (tableView==self.PersonageTableView)
+    {
+        if (indexPath.row==0) {
+            
+        }
+        else
+        {
+ NSString *urlStr;
+            switch (myDelegate.applanguage) {
+                case 0:
+                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"noticeSc"];
+                    break;
+                case 1:
+                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"noticeTc"];
+                    break;
+                case 2:
+                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"notice"];
+                    break;
+                    
+                default:
+                    break;
+            }
+            if (self.web==nil) {
+                self.web =[[WebViewController alloc]init];
+            }
+            //为web页面赋值
+            self.web.urlStr=urlStr;
+            [self.navigationController pushViewController:self.web animated:YES];
+        }
+    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
