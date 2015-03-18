@@ -208,7 +208,7 @@
     if (self.web!=nil) {
         self.web =nil;
     }
-    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2) {
+    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2&&self.isloadNews==YES) {
         
         [self insertChildMessage];
        
@@ -2686,6 +2686,7 @@ CGPoint pt = [scrollView contentOffset];
 /**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
+    _isloadNews=YES;
     ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
     tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
     [self.navigationController pushViewController:tt animated:YES];
