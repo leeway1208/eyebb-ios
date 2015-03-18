@@ -38,6 +38,8 @@
 		3240DAD81AA5591200661712 /* icon-40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 3240DAD21AA5591200661712 /* icon-40@3x.png */; };
 		3240DADC1AA699FF00661712 /* MSCellAccessory.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DADB1AA699FF00661712 /* MSCellAccessory.m */; };
 		3240DADF1AA69A4A00661712 /* UIView+AccessViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3240DADE1AA69A4A00661712 /* UIView+AccessViewController.m */; };
+		3245EFDC1AB944AB001431E2 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3245EFDB1AB944AB001431E2 /* WebViewController.m */; };
+		3245EFE01AB94CA3001431E2 /* GradientProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3245EFDF1AB94CA3001431E2 /* GradientProgressView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5D41AB00FB40080C508 /* MBProgressHUD.m */; };
 		3251C5E61AB01A1D0080C508 /* EGOCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5D91AB01A1D0080C508 /* EGOCache.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3251C5E71AB01A1D0080C508 /* README.mdown in Sources */ = {isa = PBXBuildFile; fileRef = 3251C5DA1AB01A1D0080C508 /* README.mdown */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -179,6 +181,10 @@
 		3240DADB1AA699FF00661712 /* MSCellAccessory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MSCellAccessory.m; sourceTree = "<group>"; };
 		3240DADD1AA69A4A00661712 /* UIView+AccessViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+AccessViewController.h"; sourceTree = "<group>"; };
 		3240DADE1AA69A4A00661712 /* UIView+AccessViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+AccessViewController.m"; sourceTree = "<group>"; };
+		3245EFDA1AB944AB001431E2 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
+		3245EFDB1AB944AB001431E2 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
+		3245EFDE1AB94CA3001431E2 /* GradientProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientProgressView.h; sourceTree = "<group>"; };
+		3245EFDF1AB94CA3001431E2 /* GradientProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientProgressView.m; sourceTree = "<group>"; };
 		3251C5D31AB00FB40080C508 /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
 		3251C5D41AB00FB40080C508 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		3251C5D81AB01A1D0080C508 /* EGOCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGOCache.h; sourceTree = "<group>"; };
@@ -441,6 +447,8 @@
 				927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */,
 				20B043481AB081AC0081738D /* ChildrenListViewController.h */,
 				20B043491AB081AC0081738D /* ChildrenListViewController.m */,
+				3245EFDA1AB944AB001431E2 /* WebViewController.h */,
+				3245EFDB1AB944AB001431E2 /* WebViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -537,6 +545,15 @@
 				3240DADB1AA699FF00661712 /* MSCellAccessory.m */,
 			);
 			path = MSCellAccessory;
+			sourceTree = "<group>";
+		};
+		3245EFDD1AB94CA3001431E2 /* GradientProgress */ = {
+			isa = PBXGroup;
+			children = (
+				3245EFDE1AB94CA3001431E2 /* GradientProgressView.h */,
+				3245EFDF1AB94CA3001431E2 /* GradientProgressView.m */,
+			);
+			path = GradientProgress;
 			sourceTree = "<group>";
 		};
 		3251C5D21AB00FB40080C508 /* MBProgressHUD */ = {
@@ -850,6 +867,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				3245EFDD1AB94CA3001431E2 /* GradientProgress */,
 				20C2058C1AB1D9C200901826 /* IIILocalizedIndex */,
 				3251C6431AB03DFF0080C508 /* QRCode */,
 				3251C5D61AB01A1D0080C508 /* EGOImageLoading */,
@@ -1020,6 +1038,7 @@
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
 				3264D94B1A9D6B72009CB9C2 /* ASIDownloadCache.m in Sources */,
 				3264D9491A9D6B72009CB9C2 /* ASIDataCompressor.m in Sources */,
+				3245EFE01AB94CA3001431E2 /* GradientProgressView.m in Sources */,
 				3251C5F31AB02FA60080C508 /* RootViewController.m in Sources */,
 				3251C6761AB03DFF0080C508 /* qrencode.c in Sources */,
 				32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */,
@@ -1074,6 +1093,7 @@
 				3264D9591A9D6B72009CB9C2 /* ASIS3BucketObject.m in Sources */,
 				3251C6741AB03DFF0080C508 /* mask.c in Sources */,
 				92FF92D41AA5592E00E04E0A /* CommonUtils.m in Sources */,
+				3245EFDC1AB944AB001431E2 /* WebViewController.m in Sources */,
 				20C14C9B1A9B09A60097C891 /* RegViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

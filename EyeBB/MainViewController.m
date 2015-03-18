@@ -16,7 +16,8 @@
 #import "EGOImageView.h"
 #import "AppDelegate.h"
 #import "ChildrenListViewController.h"
-
+//彩色进度条
+#import "GradientProgressView.h"
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
     /**滑动HMSegmentedControl*/
@@ -94,6 +95,9 @@
 
 //简报儿童头像
 @property (strong,nonatomic) UIImageView * kidImgView;
+
+//彩色进度条
+@property (strong,nonatomic) GradientProgressView *progressView;
 //-------------------视图变量--------------------
 /**房间背景颜色数组*/
 @property (strong,nonatomic) NSArray *colorArray;
@@ -162,10 +166,31 @@
     [self lc];
 }
 
+- (void)simulateProgress {
+    
+    double delayInSeconds = 0.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+        CGFloat increment = (arc4random() % 5) / 10.0f + 0.1;
+        CGFloat progress  = [_progressView progress] + increment;
+        [_progressView setProgress:progress];
+        if (progress < 1.0) {
+            
+            [self simulateProgress];
+        }
+    });
+}
+
+
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+     [_progressView startAnimating];
+    
+    [self simulateProgress];
     self.navigationController.navigationBarHidden = YES;
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     if(self.settingVc!=nil)
@@ -177,7 +202,7 @@
         self.settingVc=nil;
     }
     
-    if (myDelegate.childDictionary!=nil) {
+    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2) {
         
         [self insertChildMessage];
        
@@ -340,8 +365,14 @@
     _MainInfoScrollView.pagingEnabled = YES;
     [self.view addSubview:_MainInfoScrollView];
     //------------------------室内定位-------------------------------
+    
+    //房间加载时的彩色进度条
+    CGRect frame = CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
+    self.progressView = [[GradientProgressView alloc] initWithFrame:frame];
+    [_MainInfoScrollView addSubview:self.progressView];
+    _progressView.hidden=NO;
     //室内定位titleView
-    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
+    UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 1, Drive_Wdith, 44)];
     titleView.backgroundColor=[UIColor clearColor];
     UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 44.0f)];
     [labelTitle setBackgroundColor:[UIColor clearColor]];
@@ -371,7 +402,7 @@
     [_MainInfoScrollView addSubview:titleView];
     
     //房间显示选择View
-    UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 44, Drive_Wdith, 44)];
+    UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 45, Drive_Wdith, 44)];
     organizationShowBtnShowView.backgroundColor=[UIColor whiteColor];
     //室内定位显示选择
     NSString *organizationStr=@"****";
@@ -414,10 +445,10 @@
     [childrenListBtn addTarget:self action:@selector(childrenListAction:) forControlEvents:UIControlEventTouchUpInside];
     [_MainInfoScrollView addSubview:childrenListBtn];
     
-    
+   
     
     //初始化房间信息
-    _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 88, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-128)];
+    _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 89, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-129)];
     
     _RoomTableView.dataSource = self;
     _RoomTableView.delegate = self;
@@ -1078,6 +1109,7 @@
     }
     //房间列表
     else if(tableView == self.RoomTableView){
+        
         NSArray *tempChildArray;
         if (self.isallRoomOn==YES) {
             tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
@@ -2144,6 +2176,8 @@
             huaHMSegmentedControl = (int)page;
             switch (huaHMSegmentedControl) {
                 case 0:
+                    _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
+                    _progressView.hidden=YES;
                     [_HomeBtn setSelected:YES];
                     [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                     [_RadarBtn setSelected:NO];
@@ -2177,6 +2211,8 @@
                     
                     break;
                 case 3:
+                    _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 1.0f);
+                    _progressView.hidden=YES;
                     [_HomeBtn setSelected:NO];
                     [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
                     [_RadarBtn setSelected:NO];
@@ -2220,12 +2256,22 @@
     NSLog(@"scrollView is %@",scrollView.class);
 
     if (scrollView==_RoomTableView) {
+        _progressView.hidden=NO;
+//        [_progressView setProgress:0.0];
+        
+        
+//        [self simulateProgress];
         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
         //开启加载
         [HUD show:YES];
        }
     if(scrollView==_PersonageTableView)
     {
+        _progressView.hidden=NO;
+//        [_progressView setProgress:0.0];
+        
+        
+//        [self simulateProgress];
          [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
         //开启加载
         [HUD show:YES];
@@ -2409,7 +2455,7 @@
         _isloadNews=NO;
     }
     
-    
+    [_progressView setHidden:YES];
     //关闭加载
     [HUD hide:YES afterDelay:0];
     
@@ -2592,7 +2638,8 @@
 /**儿童头像点击事件*/
 - (void)ShowKindAction:(id)sender
 {
-    
+
+   
     UIButton *tempBtn=sender;
     
     
@@ -2670,6 +2717,8 @@
     {
         switch (tempBtn.tag) {
             case 214:
+                _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
+                _progressView.hidden=YES;
                 [_HomeBtn setSelected:YES];
                 [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                 [_RadarBtn setSelected:NO];
@@ -2690,6 +2739,8 @@
                 [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
                 break;
             case 217:
+                _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 1.0f);
+                _progressView.hidden=YES;
                 [_HomeBtn setSelected:NO];
                 [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
                 [_RadarBtn setSelected:NO];
