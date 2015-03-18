@@ -282,9 +282,13 @@
 #pragma mark - button action
 -(void)KindergartenListViewControllerLeftAction:(id) sender{
     
-//    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
-//    [[self navigationController] pushViewController:cimvc animated:YES];
-    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: 1] animated:YES];
+    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+    {
+        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
+            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+        }
+    }
+    
 
 }
 

@@ -445,8 +445,13 @@
 #pragma mark - button action
 
 - (void)childInformationSelectLeftAction:(id)sender{
-  [self.navigationController.navigationController popViewControllerAnimated:YES];
-
+    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+    {
+        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[RegViewController class]]){
+            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+        }
+    }
+    
 }
 
 - (void)searchChildAction:(id)sender{

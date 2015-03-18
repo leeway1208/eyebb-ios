@@ -57,7 +57,7 @@
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     // Do any additional setup after loading the view.
-//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
+    //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
     
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(regViewLeftAction:)];
     
@@ -121,7 +121,7 @@
     [self setPopContentLabel:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
-
+    
 }
 
 
@@ -763,8 +763,15 @@
 -(void)regViewLeftAction:(id)sender
 {
     
-    WelcomeViewController *wvc = [[WelcomeViewController alloc]init];
-    [[self navigationController] pushViewController:wvc animated:YES];
+    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+    {
+        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[WelcomeViewController class]]){
+          [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+        }
+    }
+    
+    
+   
 }
 
 -(void)goToChildInformationMatchingAction:(id)sender{
