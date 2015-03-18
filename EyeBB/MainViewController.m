@@ -2254,9 +2254,10 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     NSLog(@"scrollView is %@",scrollView.class);
-
-    if (scrollView==_RoomTableView) {
-        _progressView.hidden=NO;
+CGPoint pt = [scrollView contentOffset];
+    if (scrollView==_RoomTableView&& pt.y < -68.500000) {
+        
+               _progressView.hidden=NO;
 //        [_progressView setProgress:0.0];
         
         
@@ -2265,7 +2266,7 @@
         //开启加载
         [HUD show:YES];
        }
-    if(scrollView==_PersonageTableView)
+    if(scrollView==_PersonageTableView&& pt.y < -68.500000)
     {
         _progressView.hidden=NO;
 //        [_progressView setProgress:0.0];
@@ -2285,7 +2286,41 @@
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
         NSData *responseData = [request responseData];
-        
+        if(_organizationArray!=nil&&_organizationArray.count>0)
+        {
+            _organizationArray=nil;
+            _organizationArray=[NSMutableArray array];
+//            [_organizationArray removeAllObjects];
+            
+        }
+        if(_childrenByAreaArray!=nil&&_childrenByAreaArray.count>0)
+        {
+            _childrenByAreaArray=nil;
+            _childrenByAreaArray=[NSMutableArray array];
+            
+        }
+        if(_allRoomArray!=nil&&_allRoomArray.count>0)
+        {
+            _allRoomArray=nil;
+            _allRoomArray=[NSMutableArray array];
+            
+        }
+        if(_childrenDictionary!=nil&&_childrenDictionary.count>0)
+        {
+            [_childrenDictionary removeAllObjects];
+            
+        }
+        if(_kidsRoomArray!=nil&&_kidsRoomArray.count>0)
+        {
+            _kidsRoomArray=nil;
+            _kidsRoomArray=[NSMutableArray array];
+            
+        }
+        if(_childrenByRoomDictionary!=nil&&_childrenByRoomDictionary.count>0)
+        {
+            [_childrenByRoomDictionary removeAllObjects];
+            
+        }
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
         
@@ -2321,7 +2356,7 @@
         NSArray *tempArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         
 //        NSLog(@"_childrenArray %@\n",_childrenArray);
-        
+   
        _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
          NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
         
@@ -2345,7 +2380,7 @@
             }
             [tempChindrenArray removeAllObjects];
         }
-        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+//        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
         if (_childrenDictionary.count>0) {
             if(myDelegate.childDictionary !=nil)
             {
@@ -2403,7 +2438,11 @@
     if ([tag isEqualToString:GET_NOTICES]) {
 
         NSData *responseData = [request responseData];
-        
+        if(_personalDetailsArray!=nil)
+        {
+            _personalDetailsArray=nil;
+            _personalDetailsArray=[NSMutableArray array];
+        }
        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
         responseData=nil;
         [_PersonageTableView reloadData];
@@ -2415,16 +2454,22 @@
         NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
        
-        
+        if(_activityInfosArray!=nil)
+        {
+            _activityInfosArray=nil;
+            _activityInfosArray=[NSMutableArray array];
+        }
+        if(_dailyAvgFigureArray!=nil)
+        {
+            _dailyAvgFigureArray=nil;
+            _dailyAvgFigureArray=[NSMutableArray array];
+        }
+
         NSString *activityInfoStr=[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"];
         if ((NSNull *)activityInfoStr != [NSNull null]) {
              _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
         }
-        else
-        {
-            _activityInfosArray=nil;
-            _activityInfosArray=[[NSMutableArray alloc]init];
-        }
+        
         
         
 //        if (_activityInfosArray==nil) {
@@ -2435,11 +2480,7 @@
         if ((NSNull *)dailyAvgStr != [NSNull null]) {
              _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
         }
-        else
-        {
-            _dailyAvgFigureArray=nil;
-            _dailyAvgFigureArray=[[NSMutableArray alloc]init];
-        }
+       
 //        _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
 //        if (_dailyAvgFigureArray==nil) {
 //            _dailyAvgFigureArray=[[NSMutableArray alloc]init];
