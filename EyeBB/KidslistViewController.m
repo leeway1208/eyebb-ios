@@ -8,6 +8,8 @@
 
 #import "KidslistViewController.h"
 #import "ChildInformationMatchingViewController.h"
+
+#import "AddGuardianViewController.h"//添加监护人
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 //-------------------视图控件--------------------
 /**兒童列表*/
@@ -21,7 +23,7 @@
 
 /**granted 已授权数据源*/
 @property (strong,nonatomic) NSMutableArray * grantedArray;
-
+@property (strong,nonatomic)  AddGuardianViewController *addGuardian;
 //-------------------视图变量--------------------
 @property NSInteger cellHeight;
 @end
@@ -369,8 +371,10 @@
 
 -(void)addAction
 {
-    ChildInformationMatchingViewController *cfm=[[ChildInformationMatchingViewController alloc]init];
-    [self.navigationController pushViewController:cfm animated:YES];
+    _addGuardian =[[AddGuardianViewController alloc]init];
+    [self.navigationController pushViewController:_addGuardian animated:YES];
+//    ChildInformationMatchingViewController *cfm=[[ChildInformationMatchingViewController alloc]init];
+//    [self.navigationController pushViewController:cfm animated:YES];
 //    [_KindlistTView reloadData];
 }
 

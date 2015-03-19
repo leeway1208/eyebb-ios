@@ -104,6 +104,9 @@
 		3264D9781A9D6BBB009CB9C2 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9771A9D6BBB009CB9C2 /* libz.dylib */; };
 		3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9791A9D6DA5009CB9C2 /* libxml2.dylib */; };
 		326A92491A9C480D00CAB4F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A92481A9C480D00CAB4F3 /* MainViewController.m */; };
+		327D13BA1ABAAA74002E5F73 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 327D13B91ABAAA74002E5F73 /* Social.framework */; };
+		327D13BD1ABAAACE002E5F73 /* AddGuardianViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */; };
+		327D13C01ABABB71002E5F73 /* KidMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */; };
 		32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32D377DF1AB120C20055A8DE /* KidslistViewController.m */; };
 		32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32FC01421AA83E3B001FB4D3 /* Images.xcassets */; };
 		32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 32FC01441AA83E3B001FB4D3 /* LDProgressView.m */; };
@@ -323,6 +326,11 @@
 		3264D97D1A9D6E33009CB9C2 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		326A92471A9C480D00CAB4F3 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		326A92481A9C480D00CAB4F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		327D13B91ABAAA74002E5F73 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		327D13BB1ABAAACE002E5F73 /* AddGuardianViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGuardianViewController.h; sourceTree = "<group>"; };
+		327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGuardianViewController.m; sourceTree = "<group>"; };
+		327D13BE1ABABB71002E5F73 /* KidMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidMessageViewController.h; sourceTree = "<group>"; };
+		327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidMessageViewController.m; sourceTree = "<group>"; };
 		32D377DE1AB120C20055A8DE /* KidslistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidslistViewController.h; sourceTree = "<group>"; };
 		32D377DF1AB120C20055A8DE /* KidslistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidslistViewController.m; sourceTree = "<group>"; };
 		32FC01421AA83E3B001FB4D3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -350,6 +358,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				327D13BA1ABAAA74002E5F73 /* Social.framework in Frameworks */,
 				927E413C1AB288A1001941E3 /* AudioToolbox.framework in Frameworks */,
 				3251C6411AB032B60080C508 /* libiconv.dylib in Frameworks */,
 				3251C63D1AB0329A0080C508 /* Foundation.framework in Frameworks */,
@@ -381,6 +390,7 @@
 		20BD16DF1A99FC7700039A31 = {
 			isa = PBXGroup;
 			children = (
+				327D13B91ABAAA74002E5F73 /* Social.framework */,
 				927E413B1AB288A1001941E3 /* AudioToolbox.framework */,
 				3251C6401AB032B60080C508 /* libiconv.dylib */,
 				3251C63E1AB032A70080C508 /* SenTestingKit.framework */,
@@ -449,6 +459,10 @@
 				20B043491AB081AC0081738D /* ChildrenListViewController.m */,
 				3245EFDA1AB944AB001431E2 /* WebViewController.h */,
 				3245EFDB1AB944AB001431E2 /* WebViewController.m */,
+				327D13BB1ABAAACE002E5F73 /* AddGuardianViewController.h */,
+				327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */,
+				327D13BE1ABABB71002E5F73 /* KidMessageViewController.h */,
+				327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -1028,6 +1042,7 @@
 				3264D9501A9D6B72009CB9C2 /* ASIWebPageRequest.m in Sources */,
 				3264D9551A9D6B72009CB9C2 /* ASICloudFilesObject.m in Sources */,
 				3264D94E1A9D6B72009CB9C2 /* ASIInputStream.m in Sources */,
+				327D13BD1ABAAACE002E5F73 /* AddGuardianViewController.m in Sources */,
 				3251C5E81AB01A1D0080C508 /* EGOImageButton.m in Sources */,
 				3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */,
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,
@@ -1081,6 +1096,7 @@
 				32530F491A9EE01100F66B6D /* Localisator.m in Sources */,
 				3251C6771AB03DFF0080C508 /* qrinput.c in Sources */,
 				3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */,
+				327D13C01ABABB71002E5F73 /* KidMessageViewController.m in Sources */,
 				3251C67A1AB03DFF0080C508 /* split.c in Sources */,
 				3251C5F41AB02FA60080C508 /* QRCodeViewController.m in Sources */,
 				92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */,

@@ -18,7 +18,7 @@
 #import "RootViewController.h"
 
 
-@interface WelcomeViewController ()
+@interface WelcomeViewController ()<UIGestureRecognizerDelegate>
 {
      AppDelegate *myDelegate;
 }
