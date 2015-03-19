@@ -9,7 +9,9 @@
 #import "KidslistViewController.h"
 #import "ChildInformationMatchingViewController.h"
 
-#import "AddGuardianViewController.h"//添加监护人
+#import "KidMessageViewController.h"
+
+//#import "AddGuardianViewController.h"//添加监护人
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 //-------------------视图控件--------------------
 /**兒童列表*/
@@ -23,7 +25,8 @@
 
 /**granted 已授权数据源*/
 @property (strong,nonatomic) NSMutableArray * grantedArray;
-@property (strong,nonatomic)  AddGuardianViewController *addGuardian;
+//@property (strong,nonatomic)  AddGuardianViewController *addGuardian;
+@property (strong,nonatomic)  KidMessageViewController * km;
 //-------------------视图变量--------------------
 @property NSInteger cellHeight;
 @end
@@ -119,20 +122,7 @@
 }
 #pragma mark --
 #pragma mark - 表单设置
-////标签数
-//- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-//    return 1;
-//}
 
-//// 设置section的高度
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-//    return 0;
-//}
-
-////section （标签）标题显示
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
-//    return nil;
-//}
 
 // 设置cell的高度
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -271,7 +261,7 @@
             [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
             [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
             //设置按钮响应事件
-            [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+            [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
             kindBtn.tag=102+i;
             [bindView addSubview:kindBtn];
         }
@@ -358,7 +348,7 @@
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
                 [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
-                [kindBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
+                [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=102+i;
                 [bindView addSubview:kindBtn];
                 
@@ -368,14 +358,23 @@
     return cell;
 }
 
-
--(void)addAction
+-(void)ShowKidMessageAction:(id)sender
 {
-    _addGuardian =[[AddGuardianViewController alloc]init];
-    [self.navigationController pushViewController:_addGuardian animated:YES];
-//    ChildInformationMatchingViewController *cfm=[[ChildInformationMatchingViewController alloc]init];
-//    [self.navigationController pushViewController:cfm animated:YES];
-//    [_KindlistTView reloadData];
+    _km =[[KidMessageViewController alloc]init];
+    [self.navigationController pushViewController:_km animated:YES];
+    _km.title = @"";
+
 }
+
+
+
+//-(void)addAction
+//{
+//    _addGuardian =[[AddGuardianViewController alloc]init];
+//    [self.navigationController pushViewController:_addGuardian animated:YES];
+////    ChildInformationMatchingViewController *cfm=[[ChildInformationMatchingViewController alloc]init];
+////    [self.navigationController pushViewController:cfm animated:YES];
+////    [_KindlistTView reloadData];
+//}
 
 @end

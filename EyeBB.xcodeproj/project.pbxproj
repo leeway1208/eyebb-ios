@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2051945E1ABB1C95002C49CD /* AccreditViewController.m */; };
+		20A6D8021ABAFC530028388B /* RMDisplayLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A6D7FF1ABAFC530028388B /* RMDisplayLabel.m */; };
+		20A6D8031ABAFC530028388B /* RMDownloadIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A6D8011ABAFC530028388B /* RMDownloadIndicator.m */; };
 		20B0434A1AB081AC0081738D /* ChildrenListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20B043491AB081AC0081738D /* ChildrenListViewController.m */; };
 		20BD16EE1A99FC7700039A31 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16ED1A99FC7700039A31 /* main.m */; };
 		20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20BD16F01A99FC7700039A31 /* AppDelegate.m */; };
@@ -130,6 +133,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2051945D1ABB1C95002C49CD /* AccreditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccreditViewController.h; sourceTree = "<group>"; };
+		2051945E1ABB1C95002C49CD /* AccreditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccreditViewController.m; sourceTree = "<group>"; };
+		20A6D7FE1ABAFC530028388B /* RMDisplayLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMDisplayLabel.h; sourceTree = "<group>"; };
+		20A6D7FF1ABAFC530028388B /* RMDisplayLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMDisplayLabel.m; sourceTree = "<group>"; };
+		20A6D8001ABAFC530028388B /* RMDownloadIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RMDownloadIndicator.h; sourceTree = "<group>"; };
+		20A6D8011ABAFC530028388B /* RMDownloadIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMDownloadIndicator.m; sourceTree = "<group>"; };
 		20B043481AB081AC0081738D /* ChildrenListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildrenListViewController.h; sourceTree = "<group>"; };
 		20B043491AB081AC0081738D /* ChildrenListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildrenListViewController.m; sourceTree = "<group>"; };
 		20BD16E81A99FC7700039A31 /* EyeBB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyeBB.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -387,6 +396,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		20A6D7FD1ABAFC530028388B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				20A6D7FE1ABAFC530028388B /* RMDisplayLabel.h */,
+				20A6D7FF1ABAFC530028388B /* RMDisplayLabel.m */,
+				20A6D8001ABAFC530028388B /* RMDownloadIndicator.h */,
+				20A6D8011ABAFC530028388B /* RMDownloadIndicator.m */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		20BD16DF1A99FC7700039A31 = {
 			isa = PBXGroup;
 			children = (
@@ -463,6 +483,8 @@
 				327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */,
 				327D13BE1ABABB71002E5F73 /* KidMessageViewController.h */,
 				327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */,
+				2051945D1ABB1C95002C49CD /* AccreditViewController.h */,
+				2051945E1ABB1C95002C49CD /* AccreditViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -881,6 +903,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				20A6D7FD1ABAFC530028388B /* Components */,
 				3245EFDD1AB94CA3001431E2 /* GradientProgress */,
 				20C2058C1AB1D9C200901826 /* IIILocalizedIndex */,
 				3251C6431AB03DFF0080C508 /* QRCode */,
@@ -1049,6 +1072,7 @@
 				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
 				3251C5EA1AB01A1D0080C508 /* EGOImageLoader.m in Sources */,
 				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
+				20A6D8031ABAFC530028388B /* RMDownloadIndicator.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
 				3264D94B1A9D6B72009CB9C2 /* ASIDownloadCache.m in Sources */,
@@ -1059,6 +1083,7 @@
 				32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */,
 				3264D96E1A9D6B72009CB9C2 /* Reachability.m in Sources */,
 				20BD16EE1A99FC7700039A31 /* main.m in Sources */,
+				20A6D8021ABAFC530028388B /* RMDisplayLabel.m in Sources */,
 				3251C6791AB03DFF0080C508 /* rscode.c in Sources */,
 				3264D94D1A9D6B72009CB9C2 /* ASIHTTPRequest.m in Sources */,
 				927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */,
@@ -1104,6 +1129,7 @@
 				3209FFCF1AA06C5300BC6C48 /* JSONAutoSerializer.m in Sources */,
 				3264D9581A9D6B72009CB9C2 /* ASIS3Bucket.m in Sources */,
 				3264D94C1A9D6B72009CB9C2 /* ASIFormDataRequest.m in Sources */,
+				2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */,
 				20C2058F1AB1D9C200901826 /* IIILocalizedIndex.m in Sources */,
 				3264D95D1A9D6B72009CB9C2 /* ASIS3ServiceRequest.m in Sources */,
 				3264D9591A9D6B72009CB9C2 /* ASIS3BucketObject.m in Sources */,

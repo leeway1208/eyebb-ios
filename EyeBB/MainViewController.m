@@ -8,18 +8,21 @@
 
 #import "MainViewController.h"
 #import "SettingsViewController.h"
-#import "KidslistViewController.h"
+#import "KidslistViewController.h"//儿童列表
 #import "JSONKit.h"
 #import "MSCellAccessory.h"
 #import "LDProgressView.h"
 #import "UserDefaultsUtils.h"
 #import "EGOImageView.h"
 #import "AppDelegate.h"
-#import "ChildrenListViewController.h"
+#import "ChildrenListViewController.h"//查询简报儿童列表
 //彩色进度条
 #import "GradientProgressView.h"
 
 #import "WebViewController.h"
+
+
+
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
     /**滑动HMSegmentedControl*/

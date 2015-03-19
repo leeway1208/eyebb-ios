@@ -6,8 +6,8 @@
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "EyeBBViewController.h"
 
-@interface KidMessageViewController : UIViewController
+@interface KidMessageViewController : EyeBBViewController
 
 @end
