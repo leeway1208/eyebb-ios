@@ -15,7 +15,7 @@
 @property (weak, nonatomic) RMDownloadIndicator *closedIndicator;
 
 /**选项列表*/
-@property (strong,nonatomic) UITableView * sessionTView;
+@property (strong,nonatomic) UITableView * SelectedTView;
 @end
 
 @implementation KidMessageViewController
@@ -83,14 +83,14 @@
     [_closedIndicator updateWithTotalBytes:100 downloadedBytes:50.0];
 
     //选项列表
-    _sessionTView=[[UITableView alloc] initWithFrame:CGRectMake(0, Drive_Height/6*2, Drive_Wdith, Drive_Height/6*4)];
-    _sessionTView.dataSource = self;
-    _sessionTView.delegate = self;
+    _SelectedTView=[[UITableView alloc] initWithFrame:CGRectMake(0, Drive_Height/6*2, Drive_Wdith, Drive_Height/6*4)];
+    _SelectedTView.dataSource = self;
+    _SelectedTView.delegate = self;
     //设置table是否可以滑动
-    _sessionTView.scrollEnabled = YES;
+    _SelectedTView.scrollEnabled = YES;
     //隐藏table自带的cell下划线
-//    _sessionTView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    [self.view addSubview:_sessionTView];
+//    _SelectedTView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    [self.view addSubview:_SelectedTView];
     
 }
 

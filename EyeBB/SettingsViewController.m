@@ -9,12 +9,15 @@
 #import "SettingsViewController.h"
 
 #import "ASIDownloadCache.h"
-
+#import "AccreditViewController.h"
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 /** all items */
 @property (nonatomic,strong) UITableView * optionsTable;
 /**右按钮*/
-@property(nonatomic, retain) UIBarButtonItem *rightBtnItem;
+@property(nonatomic, strong) UIBarButtonItem *rightBtnItem;
+
+/**授权列表*/
+@property(nonatomic, strong) AccreditViewController * accred;
 @end
 
 @implementation SettingsViewController
@@ -281,6 +284,20 @@
     
     return cell;
 }
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    if (indexPath.section == 1){
+    if(indexPath.row==1)
+    {
+        if (_accred==nil) {
+            _accred= [[AccreditViewController alloc] init];
+        }
+        [self.navigationController pushViewController:_accred animated:YES];
+    }
+    }
+}
+
 
 #pragma mark - button action
 /*

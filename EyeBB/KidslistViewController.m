@@ -133,28 +133,18 @@
     switch (indexPath.row) {
         case 0:
             row=_BindingArray.count%5>0?_BindingArray.count/5+1:_BindingArray.count/5;
-            if (row<1) {
-                row=1;
-            }
-//           _cellHeight= 35+((CGRectGetWidth(cell.frame)-100)/5+10)*row;
-            
             break;
         case 1:
             row=_unBindingArray.count%5>0?_unBindingArray.count/5+1:_unBindingArray.count/5;
-            if (row<1) {
-                row=1;
-            }
-//            _cellHeight= 35+((CGRectGetWidth(cell.frame)-100)/5+10)*row;
             break;
         case 2:
             row=_grantedArray.count%5>0?_grantedArray.count/5+1:_grantedArray.count/5;
-            if (row<1) {
-                row=1;
-            }
-//            _cellHeight= 35+((CGRectGetWidth(cell.frame)-100)/5+10)*row;
             break;
         default:
             break;
+    }
+    if (row<1) {
+        row=1;
     }
     NSLog(@"_cellHeight is %ld row is %zi",(long)_cellHeight,indexPath.row);
     return (35+((CGRectGetWidth(cell.frame)-100)/5+10)*row);
@@ -184,30 +174,20 @@
     switch (indexPath.row) {
         case 0:
             kidsLogoListrow=_BindingArray.count%5>0?_BindingArray.count/5+1:_BindingArray.count/5;
-            if (kidsLogoListrow<1) {
-                kidsLogoListrow=1;
-            }
-            _cellHeight= 35+((CGRectGetWidth(self.view.frame)-100)/5+10)*kidsLogoListrow;
-            
             break;
         case 1:
             kidsLogoListrow=_unBindingArray.count%5>0?_unBindingArray.count/5+1:_unBindingArray.count/5;
-            if (kidsLogoListrow<1) {
-                kidsLogoListrow=1;
-            }
-            _cellHeight= 35+((CGRectGetWidth(self.view.frame)-100)/5+10)*kidsLogoListrow;
             break;
         case 2:
             kidsLogoListrow=_grantedArray.count%5>0?_grantedArray.count/5+1:_grantedArray.count/5;
-            if (kidsLogoListrow<1) {
-                kidsLogoListrow=1;
-            }
-            _cellHeight= 35+((CGRectGetWidth(self.view.frame)-100)/5+10)*kidsLogoListrow;
             break;
         default:
             break;
     }
-
+    if (kidsLogoListrow<1) {
+        kidsLogoListrow=1;
+    }
+    _cellHeight= 35+((CGRectGetWidth(self.view.frame)-100)/5+10)*kidsLogoListrow;
      NSArray *tempArray=[[NSArray alloc]init];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];

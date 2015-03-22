@@ -1224,7 +1224,7 @@
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
 
-            //当前房价人数
+            //当前房间人数
             UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20)];
             //设置按钮是否圆角
             [roomKindNumView.layer setMasksToBounds:YES];
@@ -2392,6 +2392,16 @@ CGPoint pt = [scrollView contentOffset];
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
         
+        if (myDelegate.childrenBeanArray==nil) {
+            myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
+        }
+        else
+        {
+            myDelegate.childrenBeanArray=nil;
+            myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
+        }
+        myDelegate.childrenBeanArray=(NSDictionary *)[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"] ;
+
         [self delLodChild];
         
         
@@ -2483,10 +2493,12 @@ CGPoint pt = [scrollView contentOffset];
             [tempDictionary removeAllObjects];
             tempDictionary=nil;
             
+            
+          
 //            [self SaveChildren:_childrenDictionary];
         }
 
-        NSLog(@"myDelegate.childDictionary %@\n",myDelegate.childDictionary);
+               NSLog(@"myDelegate.childDictionary %@\n",myDelegate.childDictionary);
         if (_isallRoomOn==YES) {
             _roomArray=_allRoomArray;
         }
