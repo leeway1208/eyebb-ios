@@ -12,6 +12,7 @@
 #import "ZBarSDK.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "ChildInformationMatchingViewController.h"
+#import "HttpRequest.h"
 
 #define SCANVIEW_EdgeTop 40.0
 #define SCANVIEW_EdgeLeft 50.0
@@ -120,9 +121,23 @@
     NSString *regex =@"http+:[^\\s]*";
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@",regex];
     
-    
-    UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@""message:symbolStr delegate:nil cancelButtonTitle:LOCALIZATION(@"btn_cancel") otherButtonTitles:nil];
-    [alertView show];
+    //XX:XX:XX:XX:XX:XX
+    if (symbolStr.length == 17) {
+//        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@""message:symbolStr delegate:nil cancelButtonTitle:LOCALIZATION(@"btn_cancel") otherButtonTitles:nil];
+//        [alertView show];
+        
+        //Loding progress bar
+        [HUD show:YES];
+        
+//        NSDictionary *macAddressAndChildID = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, RootViewController_KEY_childId,symbolStr ,RootViewController_KEY_macAddress,nil];
+//        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+//        
+//        [self postRequest:CHECK_BEACON RequestDictionary:macAddressAndChildID delegate:self];
+        
+
+        
+    }
+   
     
     //判断是否包含 头'ssid:'
     NSString *ssid =@"ssid+:[^\\s]*";

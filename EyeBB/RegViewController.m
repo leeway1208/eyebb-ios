@@ -55,7 +55,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
-
+    
     // Do any additional setup after loading the view.
     //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
     
@@ -77,7 +77,7 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
-
+    
 }
 
 // gesture to cancel swipe (use for ios 8)
@@ -210,11 +210,7 @@
     [_PopupSView addSubview:_popViewContainer];
     
     
-    //pop image view
-    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - CGRectGetWidth(_popViewContainer.frame)/4 - 20,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 60, 60)];
-    [_popUpImage setImage:[UIImage imageNamed:@"logo_en"]];
-    [_popUpImage setTag:105];
-    [_popViewContainer addSubview:_popUpImage];
+    
     
     //confirm button
     _confirmBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame) / 2 , 134 ,CGRectGetWidth(_popViewContainer.frame) / 2, 40)];
@@ -241,19 +237,27 @@
     //pop title label
     _popTitleLabel = [[UILabel alloc]init];
     _popTitleLabel.text = LOCALIZATION(@"text_tips");
-    UIFont *fnt = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
-    _popTitleLabel.font = fnt;
-    CGSize size = [ _popTitleLabel.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:fnt,NSFontAttributeName, nil]];
-    CGFloat nameW = size.width;
     
-    _popTitleLabel.frame = CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - nameW/2 ,12,Drive_Wdith,20);
+    
+    _popTitleLabel.frame = CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - getLableTextWidth(_popTitleLabel,14.0f)/2 ,12,Drive_Wdith,20);
     [_popViewContainer addSubview:_popTitleLabel];
     
     
     //pop centent label
-    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2  ,CGRectGetHeight(_popViewContainer.frame)/2 - 10 ,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popContentLabel = [[UILabel alloc]init];
     _popContentLabel.text = LOCALIZATION(@"text_binding_device");
+    
+    _popContentLabel.frame = CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - getLableTextWidth(_popContentLabel,20.0f)/2,CGRectGetHeight(_popViewContainer.frame)/2 - 20 ,CGRectGetWidth(_popViewContainer.frame),30);
+    
+    //_popContentLabel.font = [UIFont systemFontOfSize:18];
     [_popViewContainer addSubview:_popContentLabel];
+    
+    
+//    //pop image view
+//    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - CGRectGetHeight(_popContentLabel.frame) - 10,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 30, 30)];
+//    [_popUpImage setImage:[UIImage imageNamed:@"logo_en"]];
+//    [_popUpImage setTag:105];
+//    [_popViewContainer addSubview:_popUpImage];
     
     //pop view dividing top line
     UILabel * popTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 + 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
@@ -766,12 +770,12 @@
     for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
     {
         if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[WelcomeViewController class]]){
-          [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
         }
     }
     
     
-   
+    
 }
 
 -(void)goToChildInformationMatchingAction:(id)sender{

@@ -110,7 +110,7 @@ Boolean isMinor = false;
                     NSString * longToNsstring = [longNumber stringValue];
                     
                     //post broadcast
-                    [[NSNotificationCenter defaultCenter] postNotificationName:@"updateMessage" object:longToNsstring];
+                    [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME object:longToNsstring];
                     
                 }else{
                     //connect to the peripheral device
@@ -426,7 +426,7 @@ NSString * NSDataToHex(NSData *data) {
 }
 
 
--(void) writeMajorAndMinorMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{
+-(void) writeMajorAndMinorThenMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{
     //initial data
     isMajor = true;
     isMinor = true;

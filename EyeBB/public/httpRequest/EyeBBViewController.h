@@ -37,4 +37,6 @@
 +(void)setUserLanguge:(int)language;
 + (NSString *)getCurrentSystemLanguage;
 + (NSString *)getCurrentAppLanguage;
+
+CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 @end

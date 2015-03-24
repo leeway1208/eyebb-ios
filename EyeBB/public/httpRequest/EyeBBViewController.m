@@ -96,5 +96,19 @@ static NSBundle *bundle = nil;
     return appLanguage;
 }
 
-
+#pragma mark - get the label text width
+/**
+ *  get text width
+ *
+ *  @param label <#label description#>
+ *
+ *  @return <#return value description#>
+ */
+CGFloat getLableTextWidth(UILabel * label,CGFloat textSize) {
+    UIFont *fnt = [UIFont fontWithName:@"HelveticaNeue" size:textSize];
+    label.font = fnt;
+    CGSize size = [ label.text sizeWithAttributes:[NSDictionary dictionaryWithObjectsAndKeys:fnt,NSFontAttributeName, nil]];
+    CGFloat nameW = size.width;
+    return nameW;
+}
 @end

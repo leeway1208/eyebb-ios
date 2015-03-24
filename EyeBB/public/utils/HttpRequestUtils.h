@@ -219,6 +219,11 @@
 #define ChildInformationMatchingViewController_KEY_dateOfBirth @"dateOfBirth"
 #define ChildInformationMatchingViewController_KEY_kId @"kId"
 
+//RootViewController
+#define RootViewController_KEY_childId @"childId"
+#define RootViewController_KEY_macAddress @"macAddress"
+
+
 /*
  * json key
  */

@@ -527,7 +527,7 @@
         NSData *responseData = [request responseData];
         
         NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        
+         NSLog(@"CHILD_CHECKING ----> %@ ",responseString);
         if([responseString isEqualToString:@"[]"]){
             [HUD hide:YES afterDelay:0];
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
@@ -537,7 +537,7 @@
                               otherButtonTitles:nil] show];
         }else{
             _getChildInformationArray = [[responseData mutableObjectFromJSONData]  copy];
-//            NSLog(@"CHILD_CHECKING ----> %@ ",[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameSc"]);
+            NSLog(@"CHILD_CHECKING ----> %@ ",responseString);
             
             //[self popView];
             [self popView:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"name"] ChildIcon:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"]KindergartenName:[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameTc"]];
