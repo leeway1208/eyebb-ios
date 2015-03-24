@@ -19,6 +19,8 @@
 #import "UIViewController+EyeBBDB.h"
 //公用方法
 #import "ViewController+EyebbPublic.h"
+//bluetooth
+#import "UIViewController+EyebbBluetooth.h"
 
 @interface EyeBBViewController : UIViewController<MBProgressHUDDelegate>
 {

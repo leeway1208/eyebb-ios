@@ -543,7 +543,7 @@
                 _nicknameTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
                 _nicknameTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 
-                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"head_test"]];
                 _nicknameTxt.leftView=imgV;//设置输入框内左边的图标
                 _nicknameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _nicknameTxt.leftViewMode=UITextFieldViewModeAlways;
