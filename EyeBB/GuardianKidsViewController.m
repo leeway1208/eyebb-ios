@@ -366,31 +366,31 @@
     {
 
         
+        NSLog(@"_childrenArray is %@",[_childrenArray objectAtIndex:indexPath.row]);
+        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
         
-//        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
-//        
-//        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"childId"];
-//        
-//         [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
-//        
-//        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
-//        
-//        
-//        
-//        [self.SelectedchildrenArray addObject:[tempDictionary copy]];
-//        
-//        [_tableView reloadData];
+        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"childId"];
+        
+         [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+        
+        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+        
+        
+        
+        [self.SelectedchildrenArray addObject:[tempDictionary copy]];
+        
+        [_tableView reloadData];
        
-//        
-//        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
-//        
-//        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
         
-//        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
+        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+        
+        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
+        
+        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
         
         
-//        [tempDictionary removeAllObjects];
-//        tempDictionary=nil;
+        [tempDictionary removeAllObjects];
+        tempDictionary=nil;
         
  
     }

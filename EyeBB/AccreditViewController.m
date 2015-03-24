@@ -334,7 +334,7 @@ guardianBtn.backgroundColor=[UIColor whiteColor];
         [guardianBtn.layer setCornerRadius:4.0];
         //设置按钮响应事件
         [guardianBtn addTarget:self action:@selector(ShowGuardianBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
-        guardianBtn.tag=103+i;
+        guardianBtn.tag=105+i;
         [bindView addSubview:guardianBtn];
         
         UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 5, 40, 40)];

@@ -12,7 +12,7 @@
 
 {
     //记录搜索结果数组
-    NSArray*_resultArray;
+    NSMutableArray*_resultArray;
     UITableView*_tableView;
 }
 /**授权人搜索输入框*/
@@ -82,8 +82,8 @@
     
     self.searchBtn=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4 , 60 ,Drive_Wdith / 2, 40)];
     //设置按显示文字
-    [self.searchBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
-    [self.searchBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    [self.searchBtn setTitle:LOCALIZATION(@"btn_search_new_guest") forState:UIControlStateNormal];
+    [self.searchBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
     //设置按钮背景颜色
     [self.searchBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //设置按钮是否圆角
@@ -133,7 +133,11 @@
     
     //临时装置信息
     
-    NSArray *tempArray=[[NSArray alloc]init];
+    NSDictionary *tempDictionary=[NSDictionary dictionary];
+    if(_resultArray.count>0)
+    {
+    tempDictionary=[[_resultArray objectAtIndex:indexPath.row]copy];
+    }
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         
@@ -149,18 +153,18 @@
         [cell addSubview:gusetView];
         
         //授权人名字
-        UILabel * nameLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 0, self.view.frame.size.width, 20)];
-        [nameLbl setText:LOCALIZATION(@"text_authorized_to_others")];
+        UILabel * nameLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 0, CGRectGetWidth(cell.bounds)-150, 20)];
+        [nameLbl setText:[[tempDictionary objectForKey:@"name"]copy]];
         [nameLbl setFont:[UIFont systemFontOfSize: 15.0]];
         [nameLbl setTextColor:[UIColor whiteColor]];
         [nameLbl setTextAlignment:NSTextAlignmentLeft];
         nameLbl.tag=102;
         [gusetView addSubview:nameLbl];
         
-        //注册按钮
-        UIButton *phoneBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.bounds)-125, 10, 120, 36)];
+        //授权人电话按钮
+        UIButton *phoneBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.bounds)-145, 10, 120, 36)];
         //设置按显示文字
-        [phoneBtn setTitle:LOCALIZATION(@"btn_sign_up") forState:UIControlStateNormal];
+        [phoneBtn setTitle:[[tempDictionary objectForKey:@"phoneNumber"]copy] forState:UIControlStateNormal];
         [phoneBtn.titleLabel setFont:[UIFont fontWithName:@"sans-serif-light" size:15.0]];
         //设置按钮背景颜色
         [phoneBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
@@ -178,8 +182,8 @@
     UILabel * nameLbl =(UILabel *)[gusetView viewWithTag:102];
      UIButton * phoneBtn =(UIButton *)[gusetView viewWithTag:103];
     
-    [nameLbl setText:LOCALIZATION(@"text_authorized_to_others")];
-    [phoneBtn.titleLabel setFont:[UIFont fontWithName:@"sans-serif-light" size:15.0]];
+    [nameLbl setText:[[tempDictionary objectForKey:@"name"]copy]];
+    [phoneBtn setTitle:[[tempDictionary objectForKey:@"phoneNumber"]copy] forState:UIControlStateNormal];
     return cell;
 }
 
@@ -191,9 +195,37 @@
 }
 
 #pragma mark --
+#pragma mark --服务器返回信息
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
+{
+    NSString *responseString = [request responseString];
+    //请求房间列表
+    if ([tag isEqualToString:SEARCH_GUEST]) {
+        if (![responseString isEqualToString:@"[]"]) {
+            NSData *responseData = [request responseData];
+            if(_resultArray!=nil)
+            {
+                _resultArray=nil;
+                _resultArray=[NSMutableArray array];
+            }
+            _resultArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
+            
+            responseData=nil;
+            [_tableView reloadData];
+        }
+        
+    }
+}
+
+
+#pragma mark --
 #pragma mark --点击事件
 //查询
 -(void)searchAction:(id)sender
 {
+    NSMutableDictionary * tempDictionary=[NSMutableDictionary dictionary];
+    [tempDictionary setObject:self.gusetTxt.text forKey:@"guestName"];
+    [self getRequest:SEARCH_GUEST delegate:self RequestDictionary:[tempDictionary copy]];
+    tempDictionary=nil;
 }
 @end
