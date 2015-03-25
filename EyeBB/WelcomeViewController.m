@@ -251,7 +251,7 @@
 //    _reg.title = @"";
 //    
 
-    RegViewController *reg = [[RegViewController alloc] init];
+    ChildInformationMatchingViewController *reg = [[ChildInformationMatchingViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
     reg.title = @"";
     

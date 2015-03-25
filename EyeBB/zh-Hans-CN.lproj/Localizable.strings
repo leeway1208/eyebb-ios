@@ -179,6 +179,7 @@
 "text_qr_code"="二维码";
 "text_scan_qr_code_hint" = "将二维码对准方框，即可自动扫描";
 "text_turn_on_the_flash" = "开启闪光灯";
+"text_search_your_device" = "搜寻周围的宝宝安";
 
 //<!-- Button strings -->
 "btn_sign_up"="注册";

@@ -179,6 +179,7 @@
 "text_qr_code"="二維碼";
 "text_scan_qr_code_hint" = "二維碼對準方框，即可自動掃描";
 "text_turn_on_the_flash" = "開啟閃光燈";
+"text_search_your_device" = "搜尋周圍的寶寶安";
 
 //<!-- Button strings -->
 "btn_sign_up"="註冊";

@@ -65,6 +65,8 @@
 
 /** static child icon */
 @property (strong,nonatomic) NSString * childIcon;
+/**  child id  */
+@property (strong,nonatomic) NSString * childId;
 @end
 
 @implementation ChildInformationMatchingViewController
@@ -473,7 +475,7 @@
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
     }else{
-        [HUD show:YES];
+        //[HUD show:YES];
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:childName, ChildInformationMatchingViewController_KEY_childName, dateOfBirth,ChildInformationMatchingViewController_KEY_dateOfBirth,kId,ChildInformationMatchingViewController_KEY_kId,nil];
         
         
@@ -487,15 +489,13 @@
 
 
 - (void)kidsKindergartenAciton:(id)sender{
-    
+  
     if([self saveNSUserDefaults:[self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] dateOfBirth:[self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] kId:_kindergartenId]){
         KindergartenListViewController *klvc = [[KindergartenListViewController alloc] init];
         [self.navigationController pushViewController:klvc animated:YES];
         klvc.title = @"";
     }
-    
-    
-    
+
 }
 
 - (void)kidsKindergartenContainerConfirmAciton:(id)sender{
@@ -506,6 +506,7 @@
 
 -(void)goToScanQrCodeAction:(id)sender{
     RootViewController *rqAction = [[RootViewController alloc]init];
+    rqAction.childID = self.childId;
     [[self navigationController] pushViewController:rqAction animated:YES];
 }
 
@@ -527,9 +528,9 @@
         NSData *responseData = [request responseData];
         
         NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-         NSLog(@"CHILD_CHECKING ----> %@ ",responseString);
+         //NSLog(@"CHILD_CHECKING ----> %@ ",responseString);
         if([responseString isEqualToString:@"[]"]){
-            [HUD hide:YES afterDelay:0];
+            //[HUD hide:YES afterDelay:0];
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"text_child_not_exist")
                                        delegate:self
@@ -537,9 +538,12 @@
                               otherButtonTitles:nil] show];
         }else{
             _getChildInformationArray = [[responseData mutableObjectFromJSONData]  copy];
-            NSLog(@"CHILD_CHECKING ----> %@ ",responseString);
             
             //[self popView];
+            
+            self.childId = [[_getChildInformationArray objectAtIndex:0] objectForKey:@"childId"];
+            //NSLog(@"CHILD_CHECKING ----> %@ ", self.childId);
+
             [self popView:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"name"] ChildIcon:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"]KindergartenName:[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameTc"]];
             [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
             _childIcon = [[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"];
@@ -655,7 +659,7 @@
   
     
     //pop image view
-    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 20, 55, 55)];
+    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 55, 55)];
     [_popUpImage.layer setCornerRadius:CGRectGetHeight([_popUpImage bounds]) / 2];
     [_popUpImage.layer setMasksToBounds:YES];
     [_popUpImage.layer setBorderWidth:2];
@@ -696,13 +700,13 @@
     
     
     //pop centent kid name label
-    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2  - 15,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popContentLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2  - 25,CGRectGetWidth(_popViewContainer.frame),20)];
     _popContentLabel.text = childName;
     [_popViewContainer addSubview:_popContentLabel];
     
     
     //pop centent kindergarten name label
-    _popKindergartenNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2 + 10 ,CGRectGetWidth(_popViewContainer.frame),20)];
+    _popKindergartenNameLabel = [[UILabel alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - 55 ,CGRectGetHeight(_popViewContainer.frame)/2  ,CGRectGetWidth(_popViewContainer.frame),20)];
     [_popKindergartenNameLabel setFont:[UIFont systemFontOfSize:12]];
     _popKindergartenNameLabel.text = kidergartenName;
     [_popViewContainer addSubview:_popKindergartenNameLabel];
@@ -744,7 +748,7 @@
 #pragma mark - new a thread to update main image ui
 -(void)updateImage:(NSData *)imageData{
     
-    [HUD hide:YES afterDelay:0];
+    //[HUD hide:YES afterDelay:0];
     UIImage *image=[UIImage imageWithData:imageData];
     _popUpImage.image=image;
 }

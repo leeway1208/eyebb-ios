@@ -16,4 +16,5 @@
       NSTimer * timer;
 }
 @property (nonatomic, retain) UIImageView * line;
+@property (nonatomic, retain) NSString * childID;
 @end

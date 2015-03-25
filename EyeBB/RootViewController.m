@@ -13,6 +13,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "ChildInformationMatchingViewController.h"
 #import "HttpRequest.h"
+#import "ScanDeviceToBindingViewController.h"
 
 #define SCANVIEW_EdgeTop 40.0
 #define SCANVIEW_EdgeLeft 50.0
@@ -29,6 +30,10 @@
     UIView *_scanView;
     ZBarReaderView *_readerView;
 }
+/**  device major  */
+@property (strong,nonatomic) NSString * deviceMajor;
+/**  device minor  */
+@property (strong,nonatomic) NSString * deviceMinor;
 
 @end
 
@@ -50,21 +55,20 @@
 {
     [super viewDidLoad];
     
+    
+    
+
+    
+    
     //初始化扫描界面
     [self setScanView];
     
-    _readerView= [[ZBarReaderView alloc]init];
-    _readerView.frame =CGRectMake(0,0,Drive_Wdith, Drive_Height + 20);
-    _readerView.tracksSymbols=NO;
-    _readerView.readerDelegate =self;
-    [_readerView addSubview:_scanView];
-    //关闭闪光灯
-    _readerView.torchMode =0;
+
     
+  
     
     self.title = LOCALIZATION(@"text_qr_code");
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
+
     
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
     
@@ -73,16 +77,17 @@
 //    self.view.alpha = TINTCOLOR_ALPHA;
     
     
+
     
-    //can cancel swipe gesture
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
-    
-    
+    _readerView= [[ZBarReaderView alloc]init];
+    _readerView.frame =CGRectMake(0,0,Drive_Wdith, Drive_Height + 20);
+    _readerView.tracksSymbols=NO;
+    _readerView.readerDelegate =self;
+    [_readerView addSubview:_scanView];
+    //关闭闪光灯
+    _readerView.torchMode = 0;
     [self.view addSubview:_readerView];
-    
-    //扫描区域
-    //readerView.scanCrop =
+
     
     [_readerView start];
     
@@ -94,7 +99,10 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    //can cancel swipe gesture
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+
 }
 
 // gesture to cancel swipe (use for ios 8)
@@ -129,10 +137,10 @@
         //Loding progress bar
         [HUD show:YES];
         
-//        NSDictionary *macAddressAndChildID = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, RootViewController_KEY_childId,symbolStr ,RootViewController_KEY_macAddress,nil];
-//        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
-//        
-//        [self postRequest:CHECK_BEACON RequestDictionary:macAddressAndChildID delegate:self];
+        NSDictionary *macAddressAndChildID = [NSDictionary dictionaryWithObjectsAndKeys:self.childID, RootViewController_KEY_childId,symbolStr ,RootViewController_KEY_macAddress,nil];
+        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+        
+        [self postRequest:CHECK_BEACON RequestDictionary:macAddressAndChildID delegate:self];
         
 
         
@@ -169,7 +177,7 @@
 //二维码的扫描区域
 - (void)setScanView
 {
-    _scanView=[[UIView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith-SCANVIEW_EdgeLeft ,Drive_Wdith-SCANVIEW_EdgeLeft)];
+    _scanView=[[UIView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith ,Drive_Height)];
     _scanView.backgroundColor=[UIColor clearColor];
     
     //最上部view
@@ -224,29 +232,25 @@
     [downView addSubview:darkView];
     
     //用于开关灯操作的button
-    UIButton *openButton=[[UIButton alloc]initWithFrame:CGRectMake(10,20,300.0, 40.0)];
+    UIButton *openButton = [[UIButton alloc]initWithFrame:CGRectMake(10,Drive_Height -  130 ,Drive_Wdith - 20, 40.0)];
     [openButton setTitle:LOCALIZATION(@"text_turn_on_the_flash") forState:UIControlStateNormal];
     [openButton setTitleColor:[UIColor whiteColor]forState:UIControlStateNormal];
     openButton.titleLabel.textAlignment=NSTextAlignmentCenter;
     openButton.backgroundColor=[UIColor blackColor];
     openButton.titleLabel.font=[UIFont systemFontOfSize:22.0];
-    [openButton addTarget:self action:@selector(openLight)forControlEvents:UIControlEventTouchUpInside];
-    [darkView addSubview:openButton];
+   
+    [openButton addTarget:self action:@selector(openLight) forControlEvents:UIControlEventTouchUpInside];
+    [_scanView addSubview:openButton];
     
     //画中间的基准线
     _QrCodeline = [[UIView alloc]initWithFrame:CGRectMake(SCANVIEW_EdgeLeft,SCANVIEW_EdgeTop,Drive_Wdith-2*SCANVIEW_EdgeLeft,2)];
     _QrCodeline.backgroundColor = [UIColor blackColor];
     [_scanView addSubview:_QrCodeline];
 }
-- (void)openLight
-{
-    if (_readerView.torchMode ==0) {
-        _readerView.torchMode =1;
-    }else
-    {
-        _readerView.torchMode =0;
-    }
-}
+
+
+
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -259,6 +263,8 @@
     [_readerView stop];
     
 }
+
+
 //二维码的横线移动
 - (void)moveUpAndDownLine
 {
@@ -324,5 +330,108 @@
     
 }
 
+
+- (void)openLight
+{
+    
+    
+    if (_readerView.torchMode ==0) {
+        _readerView.torchMode =1;
+    }else
+    {
+        _readerView.torchMode =0;
+    }
+}
+
+#pragma mark - server return
+-(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    if ([tag isEqualToString:CHECK_BEACON]){
+        
+        [HUD hide:YES afterDelay:0];
+        NSData *responseData = [request responseData];
+        
+        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+
+        NSLog(@"CHECK_BEACON ----> %@ ",responseString);
+
+        if (responseString.length > 0) {
+            if ([responseString isEqualToString:SERVER_RETURN_NC]) {
+                return;
+            }else if([responseString isEqualToString:SERVER_RETURN_USED] || [responseString isEqualToString:SERVER_RETURN_WG]){
+                
+                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                            message:LOCALIZATION(@"text_device_already_binded")
+                                           delegate:self
+                                  cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                                  otherButtonTitles:nil] show];
+            }else if(responseString.length > 100){
+                return;
+            }else{
+                NSRange range = [responseString rangeOfString:@":"];
+                NSLog(@"CHECK_BEACON ----> %lu  ",(unsigned long)range.location);
+                self.deviceMajor = [responseString substringWithRange:NSMakeRange(0,range.location)];
+                self.deviceMinor = [responseString substringWithRange:NSMakeRange(range.location + 1,responseString.length - range.location - 1)];
+                NSLog(@"CHECK_BEACON ----> %@  --- %@ ",[self getMajor:self.deviceMajor],[self getMinor:self.deviceMinor]);
+
+                
+                //go to next view
+                ScanDeviceToBindingViewController *scan = [[ScanDeviceToBindingViewController alloc] init];
+                [self.navigationController pushViewController:scan animated:YES];
+                scan.title = @"";
+                scan = nil;
+            }
+        }
+        
+    }
+    
+    
+    
+}
+
+#pragma mark - initial major and minor
+
+-(NSString *)getMajor:(NSString *)major{
+    
+    
+    switch (major.length) {
+        case 1:
+            major = [NSString stringWithFormat:@"%@%@", major, @"000" ];
+            break;
+            
+        case 2:
+            major = [NSString stringWithFormat:@"%@%@", major, @"00" ];
+            break;
+            
+        case 3:
+            major = [NSString stringWithFormat:@"%@%@", major, @"0" ];
+            break;
+        default:
+            break;
+    }
+    
+    
+    
+    return major;
+}
+
+-(NSString *)getMinor:(NSString *)minor{
+    
+    switch (minor.length) {
+        case 1:
+            minor = [NSString stringWithFormat:@"%@%@", minor, @"000" ];
+            break;
+            
+        case 2:
+            minor = [NSString stringWithFormat:@"%@%@", minor, @"00" ];
+            break;
+            
+        case 3:
+            minor = [NSString stringWithFormat:@"%@%@", minor, @"0" ];
+            break;
+        default:
+            break;
+    }
+    return minor;
+}
 
 @end

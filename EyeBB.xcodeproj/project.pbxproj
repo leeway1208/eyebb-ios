@@ -122,6 +122,7 @@
 		927E413C1AB288A1001941E3 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 927E413B1AB288A1001941E3 /* AudioToolbox.framework */; };
 		9286934E1AC13114000D5B53 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9286934D1AC13114000D5B53 /* CoreBluetooth.framework */; };
 		928693521AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m in Sources */ = {isa = PBXBuildFile; fileRef = 928693511AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m */; };
+		928693551AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */; };
 		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
 		92FF92D41AA5592E00E04E0A /* CommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FF92D31AA5592E00E04E0A /* CommonUtils.m */; };
 /* End PBXBuildFile section */
@@ -366,6 +367,8 @@
 		9286934D1AC13114000D5B53 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		928693501AC136DA000D5B53 /* UIViewController+EyebbBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+EyebbBluetooth.h"; sourceTree = "<group>"; };
 		928693511AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+EyebbBluetooth.m"; sourceTree = "<group>"; };
+		928693531AC2AE66000D5B53 /* ScanDeviceToBindingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScanDeviceToBindingViewController.h; sourceTree = "<group>"; };
+		928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanDeviceToBindingViewController.m; sourceTree = "<group>"; };
 		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		92FF92D21AA5592E00E04E0A /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
@@ -502,6 +505,8 @@
 				209E6E9B1ABEBE4D005DB884 /* GuardianKidsViewController.m */,
 				209E6E9D1ABEF8E2005DB884 /* AddGuestViewController.h */,
 				209E6E9E1ABEF8E2005DB884 /* AddGuestViewController.m */,
+				928693531AC2AE66000D5B53 /* ScanDeviceToBindingViewController.h */,
+				928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -1159,6 +1164,7 @@
 				3209FFD01AA06C5300BC6C48 /* JSONKit.m in Sources */,
 				3209FFCF1AA06C5300BC6C48 /* JSONAutoSerializer.m in Sources */,
 				3264D9581A9D6B72009CB9C2 /* ASIS3Bucket.m in Sources */,
+				928693551AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m in Sources */,
 				3264D94C1A9D6B72009CB9C2 /* ASIFormDataRequest.m in Sources */,
 				2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */,
 				20C2058F1AB1D9C200901826 /* IIILocalizedIndex.m in Sources */,

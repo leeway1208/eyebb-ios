@@ -82,7 +82,8 @@
 - (void)viewDidDisappear:(BOOL)animated{
     [_kindergartenTable removeFromSuperview];
     [_cellLeftImg removeFromSuperview];
-    
+    _imgPath = nil;
+    _allLocationAreasInfoAr = nil;
     [self.view removeFromSuperview];
     [self setKindergartenTable:nil];
     [self setCellLeftImg:nil];

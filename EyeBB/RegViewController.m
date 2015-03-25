@@ -65,9 +65,7 @@
     
     self.title = LOCALIZATION(@"btn_sign_up");
     
-    //can cancel swipe gesture
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+
     
     [self iv];
     [self lc];
@@ -76,7 +74,9 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.navigationController.navigationBarHidden = NO;
+    //can cancel swipe gesture
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
 }
 
