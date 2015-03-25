@@ -69,7 +69,7 @@ typedef enum {
  * - If also the detailsLabelText property is set then another label is placed below the first label.
  */
 @interface MBProgressHUD : UIView {
-	
+	#define FINISH_THE_MBPROGRESSHUD_BROADCAST @"finish_hud"
 	MBProgressHUDMode mode;
     MBProgressHUDAnimation animationType;
 	

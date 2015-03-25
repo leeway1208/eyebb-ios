@@ -49,12 +49,25 @@
     
     
     [HUD show:YES];
+    //receive broadcast
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hudTimeOut:) name:FINISH_THE_MBPROGRESSHUD_BROADCAST object:nil ];
+    [HUD hide:YES afterDelay:5];
     [self requestServer];
     [self loadWidget];
     [self loadParameter];
 }
 
+- (void) hudTimeOut:(NSNotification *)notification{
+    if ([[notification name] isEqualToString:FINISH_THE_MBPROGRESSHUD_BROADCAST]) {
+        
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_network_error")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
 
+    }
+}
 
 -(void)viewWillAppear:(BOOL)animated
 {

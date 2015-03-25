@@ -180,6 +180,7 @@
 "text_scan_qr_code_hint" = "二維碼對準方框，即可自動掃描";
 "text_turn_on_the_flash" = "開啟閃光燈";
 "text_search_your_device" = "搜尋周圍的寶寶安";
+"text_press_the_button_on_the_device" = "請按寶寶安設備的按鈕超過3秒鐘,然後在屏幕上選擇你的寶寶安";
 
 //<!-- Button strings -->
 "btn_sign_up"="註冊";

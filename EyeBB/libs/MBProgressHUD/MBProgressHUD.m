@@ -493,12 +493,30 @@
 }
 
 - (void)hide:(BOOL)animated afterDelay:(NSTimeInterval)delay {
-	[self performSelector:@selector(hideDelayed:) withObject:[NSNumber numberWithBool:animated] afterDelay:delay];
+//    [self performSelector:@selector(hideDelayed:delay:) withObject:[NSNumber numberWithBool:animated]  afterDelay:delay];
+    NSString *delayStr = @"0";
+    if(delay > 0){
+        delayStr = @"1";
+    }
+    
+    [self performSelector:@selector(hideDelayed:) withObject: [NSArray arrayWithObjects:[NSNumber numberWithBool:animated], delayStr, nil]  afterDelay:delay];
+
+    
+   
+   
 }
 
-- (void)hideDelayed:(NSNumber *)animated {
-	[self hide:[animated boolValue]];
+- (void)hideDelayed:(NSArray *) inputArray{
+    [self hide:[ [inputArray objectAtIndex:0] boolValue]];
+    
+    //post broadcast
+    if ( [[inputArray objectAtIndex:1] isEqualToString:@"1"]) {
+          [[NSNotificationCenter defaultCenter] postNotificationName:FINISH_THE_MBPROGRESSHUD_BROADCAST object:nil];
+    }
+  
+    // NSLog(@"SSS");
 }
+
 
 - (void)handleGraceTimer:(NSTimer *)theTimer {
 	// Show the HUD only if the task is still running

@@ -10,6 +10,8 @@
 #import "RootViewController.h"
 
 @interface ScanDeviceToBindingViewController ()
+/**introdaction label*/
+@property (nonatomic,strong) UILabel* introLabel;
 
 @end
 
@@ -59,6 +61,11 @@
 
 -(void)loadWidget{
     
+    _introLabel = [[UILabel alloc]init];
+    _introLabel.frame = CGRectMake(10, 20, Drive_Wdith - 10, 30);
+    _introLabel.text = LOCALIZATION(@"text_press_the_button_on_the_device");
+    _introLabel.textAlignment = NSTextAlignmentCenter;
+    _introLabel.numberOfLines = 2;
 }
 
 
@@ -66,16 +73,18 @@
     
     
 }
-/*
-#pragma mark - Navigation
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+
+-(void)viewDidDisappear:(BOOL)animated
+{
+    [_introLabel removeFromSuperview];
+
+    [self.view removeFromSuperview];
+
+    [self setIntroLabel:nil];
+    [self setView:nil];
+    [super viewDidDisappear:animated];
 }
-*/
-
 
 #pragma mark - button aciton
 -(void)scanDeviceViewLeftAction:(id)sender
