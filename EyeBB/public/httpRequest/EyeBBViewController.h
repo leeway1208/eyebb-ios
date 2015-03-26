@@ -28,7 +28,7 @@
 }
 @property(nonatomic, retain)HttpRequest *httpRequest;
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag;
-- (void)requestFailed:(ASIHTTPRequest *)request;
+- (void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag;
 /**
  *  set user languages
  *

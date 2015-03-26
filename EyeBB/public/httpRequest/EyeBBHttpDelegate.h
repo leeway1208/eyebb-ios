@@ -10,5 +10,6 @@
 
 @protocol EyeBBHttpDelegate<NSObject>
 - (void)requestFinished:(ASIHTTPRequest *)request;
+- (void)requestFailed:(ASIHTTPRequest *)request;
 
 @end

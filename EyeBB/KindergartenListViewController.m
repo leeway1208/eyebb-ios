@@ -49,25 +49,12 @@
     
     
     [HUD show:YES];
-    //receive broadcast
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hudTimeOut:) name:FINISH_THE_MBPROGRESSHUD_BROADCAST object:nil ];
-    [HUD hide:YES afterDelay:5];
+
     [self requestServer];
     [self loadWidget];
     [self loadParameter];
 }
 
-- (void) hudTimeOut:(NSNotification *)notification{
-    if ([[notification name] isEqualToString:FINISH_THE_MBPROGRESSHUD_BROADCAST]) {
-        
-        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                    message:LOCALIZATION(@"text_network_error")
-                                   delegate:self
-                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
-                          otherButtonTitles:nil] show];
-
-    }
-}
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -138,7 +125,8 @@
 -(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
     if ([tag isEqualToString:GET_KINDERGARTEN_LIST]){
         NSData *responseData = [request responseData];
-        //                NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"GET_KINDERGARTEN_LIST  ---> %@",aString);
         //        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:KindergartenListViewController_json_key_size];
         
         
@@ -152,6 +140,32 @@
 }
 
 
+-(void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    
+    if ([tag isEqualToString:GET_KINDERGARTEN_LIST]){
+        NSString *message = NULL;
+        
+        NSError *error = [request error];
+        switch ([error code])
+        {
+            case ASIRequestTimedOutErrorType:
+                [HUD hide:YES afterDelay:0];
+                self.title = @"連接失敗";
+
+                break;
+            case ASIConnectionFailureErrorType:
+                  [HUD hide:YES afterDelay:0];
+                self.title = @"連接失敗";
+
+                break;
+                
+        }
+        
+        //NSLog(@"------> %@",message);
+    }
+
+    
+}
 
 
 #pragma mark - table view

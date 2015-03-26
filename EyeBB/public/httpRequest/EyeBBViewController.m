@@ -40,7 +40,7 @@ static NSBundle *bundle = nil;
 #pragma mark ---
 #pragma mark --- 网络数据处理
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{}
-- (void)requestFailed:(ASIHTTPRequest *)request{}
+- (void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag{}
 
 #pragma mark - set user language
 /**

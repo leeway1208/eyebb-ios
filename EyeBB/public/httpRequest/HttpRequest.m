@@ -48,7 +48,7 @@ static HttpRequest *instance;
 -(void)getRequest:(NSString *)requestStr delegate:(id)delegate RequestDictionary:(NSDictionary *)requestDictionary
 {
     self.methodStr=requestStr;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:SERVER_URL"%@",requestStr]];
     
     if (requestDictionary!=nil)
     {
@@ -73,10 +73,10 @@ static HttpRequest *instance;
     
     [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
     [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
-    
+    [request setTimeOutSeconds:10];
     [request setValidatesSecureCertificate:NO];
     [request setDelegate:self];
-    
+    //[request failWithError:ASIRequestTimedOutError];
     [request startAsynchronous];
     
 }
@@ -85,7 +85,7 @@ static HttpRequest *instance;
 -(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
 {
     self.methodStr=requestStr;
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://test.eyebb.com:8089/%@",requestStr]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:SERVER_URL"%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:@"0"];
     
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
@@ -99,7 +99,7 @@ static HttpRequest *instance;
         }
     }
     
-    
+    [request setTimeOutSeconds:10];
     [request setDelegate:self];
     [request startAsynchronous];
 }
@@ -112,7 +112,7 @@ static HttpRequest *instance;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
     NSString *responseString = [request responseString];
     EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
-    
+
     
     [clientDelegate requestFinished:request tag:self.methodStr];
     [[self clientDelegates] removeAllObjects];
@@ -132,9 +132,25 @@ static HttpRequest *instance;
 
 {
     
-    NSError *error = [request error];
-//    [HUD hide:YES afterDelay:0];
-    
+     EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
+
+     [clientDelegate requestFailed:request tag:self.methodStr];
+//    NSString *message = NULL;
+//    
+//    NSError *error = [request error];
+//    switch ([error code])
+//    {
+//        case ASIRequestTimedOutErrorType:
+//            message = @"AASDSADSADAS";
+//            break;
+//        case ASIConnectionFailureErrorType:
+//            message = @"AASDSADSADAddd ddS";
+//            break;
+//            
+//    }
+//    
+//    NSLog(@"------> %@",message);
+//    
 }
 
 @end

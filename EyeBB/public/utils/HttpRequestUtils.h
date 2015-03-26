@@ -28,6 +28,7 @@
  * 158.182.246.223 == srv.eyebb.com (Production)
  */
 #define SERVER_URL @"http://test.eyebb.com:8089/"
+//#define SERVER_URL @"http://www.eyebb.com/"
 // #define SERVER_URL @"http://158.182.220.206:8089/"
 // #define SERVER_URL @"http://158.182.246.223:8080/"
 // #define SERVER_URL @"http://158.182.220.203:8080/"
