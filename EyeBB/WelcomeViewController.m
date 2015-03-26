@@ -16,7 +16,7 @@
 #import "ChildInformationMatchingViewController.h"
 #import "QRCodeViewController.h"
 #import "RootViewController.h"
-
+#import "ScanDeviceToBindingViewController.h"
 
 @interface WelcomeViewController ()<UIGestureRecognizerDelegate>
 {
@@ -251,7 +251,7 @@
 //    _reg.title = @"";
 //    
 
-    ChildInformationMatchingViewController *reg = [[ChildInformationMatchingViewController alloc] init];
+    ScanDeviceToBindingViewController *reg = [[ScanDeviceToBindingViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
     reg.title = @"";
     

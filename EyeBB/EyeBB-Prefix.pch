@@ -36,6 +36,8 @@
 
 #define LOCALIZATION(text) [[Localisator sharedInstance] localizedStringForKey:(text)]
 
-
+// work execution time
+#define TICK   NSDate *startTime = [NSDate date]
+#define TOCK   NSLog(@"Time: %f", -[startTime timeIntervalSinceNow])
 
 

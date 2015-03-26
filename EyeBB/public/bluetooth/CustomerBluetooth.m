@@ -1,34 +1,41 @@
 //
-//  UIViewController+EyebbBluetooth.m
+//  CustomerBluetooth.m
 //  EyeBB
 //
-//  Created by liwei wang on 24/3/15.
+//  Created by liwei wang on 26/3/15.
 //  Copyright (c) 2015 EyeBB. All rights reserved.
 //
 
-#import "UIViewController+EyebbBluetooth.h"
+#import "CustomerBluetooth.h"
 
-@interface UIViewController(EyebbBluetooth)
+
+@interface CustomerBluetooth()
 @property (strong,nonatomic) CBCentralManager *central;
 @property (copy,nonatomic) NSString *targetPeripheral;
-@property (retain,nonatomic) NSMutableArray *discoveredPeripherals;
-@property (retain,nonatomic) NSMutableArray *checkDiscoveredPeripherals;
-@property (retain,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
-@property (retain,nonatomic) NSMutableArray *discoveredPeripheralsRssi;
-@property (retain,nonatomic) NSArray * noDuplicates;
+@property (strong,nonatomic) NSMutableArray *discoveredPeripherals;
+@property (strong,nonatomic) NSMutableArray *checkDiscoveredPeripherals;
+@property (strong,nonatomic) NSMutableArray *SOSDiscoveredPeripherals;
+@property (strong,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
+@property (strong,nonatomic) NSMutableArray *discoveredPeripheralsRssi;
+@property (strong,nonatomic) NSArray * noDuplicates;
 /* timer to refresh the table view */
 @property (strong,nonatomic) NSTimer *refreshTableTimer;
 @property (strong,nonatomic) CBPeripheral *connectedPeripheral;
 @property (strong,nonatomic) CBUUID *service2000;
 @property (strong,nonatomic) CBUUID *service1000;
-@property (retain,nonatomic) NSString *targetMajorAndMinorPeripheral;
-@property (retain,nonatomic) NSString *targetBatteryLifePeripheral;
-@property (retain,nonatomic) NSString *writeValue1;
-@property (retain,nonatomic) NSString *writeValue2;
+@property (strong,nonatomic) NSString *targetMajorAndMinorPeripheral;
+@property (strong,nonatomic) NSString *targetBatteryLifePeripheral;
+@property (strong,nonatomic) NSString *writeValue1;
+@property (strong,nonatomic) NSString *writeValue2;
+
+
+@property(strong,nonatomic) NSMutableDictionary *clientDelegates;
 @end
 
+@implementation CustomerBluetooth
 
-@implementation UIViewController(EyebbBluetooth)
+static CustomerBluetooth *instance;
+@synthesize  clientDelegates;
 
 double timerInterval = 5.0f;
 NSInteger *tableNumberConut;
@@ -37,6 +44,66 @@ Boolean isBeep = false;
 Boolean isReadBattery = false;
 Boolean isMajor = false;
 Boolean isMinor = false;
+Boolean isSOSDevice = false;
+Boolean startTimerOnce = true;
+
+#pragma mark --- 处理业务逻辑委托
+-(NSMutableDictionary *)clientDelegates{
+    
+    if(clientDelegates==nil){
+        clientDelegates = [[NSMutableDictionary alloc] init];
+    }
+    
+    return clientDelegates;
+}
+
+#pragma mark ---单例实现
++(CustomerBluetooth *)instance{
+    
+    static dispatch_once_t pred = 0;
+    dispatch_once(&pred, ^{
+        if(instance == nil){
+            instance = [[self alloc] init];
+        }
+        
+    });
+    return instance;
+}
+
+#pragma mark - timer methods
+
+- (NSTimer *) timer {
+    if (!_refreshTableTimer) {
+        _refreshTableTimer = [NSTimer timerWithTimeInterval:timerInterval target:self selector:@selector(timerRefreshTableSelector:) userInfo:nil repeats:YES];
+    }
+    return _refreshTableTimer;
+}
+
+-(void) startTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
+    NSLog(@"timer start...");
+}
+
+
+- (void) stopTimer{
+    if (self.refreshTableTimer != nil){
+        [self.refreshTableTimer invalidate];
+        self.refreshTableTimer = nil;
+        NSLog(@"timer stop...");
+    }
+}
+
+- (void)timerRefreshTableSelector:(NSTimer*)timer{
+    
+    if(isSOSDevice){
+        //post get sos device broadcast
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
+        NSLog(@"timerRefreshTableSelector --- > %lu",(unsigned long)self.SOSDiscoveredPeripherals.count);
+
+        
+    }
+  
+}
 
 
 #pragma mark - CBCentralManager Delegate methods
@@ -44,7 +111,7 @@ Boolean isMinor = false;
  * Invoked whenever the central manager's state is updated.
  */
 -(void) centralManagerDidUpdateState:(CBCentralManager *)central {
-    
+    // [[self clientDelegates] setObject:delegate forKey:@"0"];
     NSString * state = nil;
     
     switch (central.state) {
@@ -92,7 +159,30 @@ Boolean isMinor = false;
         if(toStringFromData.length > 0){
             NSString *getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
             NSLog(@"MAJOR AND MINOR ---> %@",toStringFromData);
-            if ([getMajorAndMinor isEqualToString:self.targetMajorAndMinorPeripheral]) {
+            
+            if (isSOSDevice) {
+                self.targetBatteryLifePeripheral = [toStringFromData substringWithRange:NSMakeRange(10,2)];
+                if(startTimerOnce){
+                    [self startTimer];
+                    startTimerOnce = false;
+                }
+               
+                //NSLog(@"BATTERY LIFE ---> %@",self.targetBatteryLifePeripheral);
+                if ([self.targetBatteryLifePeripheral isEqualToString:@"01"]) {
+                    //[self stopScan];
+                    //NSLog(@"BATTERY LIFE ---> %@",self.targetBatteryLifePeripheral);
+                    
+                    if(![self.SOSDiscoveredPeripherals containsObject:peripheral]) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.SOSDiscoveredPeripherals addObject:peripheral];
+                            
+                           
+                        });
+                    }
+                }
+                
+                
+            }else if([getMajorAndMinor isEqualToString:self.targetMajorAndMinorPeripheral]) {
                 
                 if (isReadBattery) {
                     //stop scan
@@ -109,7 +199,7 @@ Boolean isMinor = false;
                     NSNumber *longNumber = [NSNumber numberWithLong: strtol( [self.targetBatteryLifePeripheral UTF8String], NULL, 16) ];
                     NSString * longToNsstring = [longNumber stringValue];
                     
-                    //post broadcast
+                    //post battery life broadcast
                     [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME object:longToNsstring];
                     
                 }else{
@@ -422,7 +512,7 @@ NSString * NSDataToHex(NSData *data) {
     [self initData:major minor:minor];
     [self startScan];
     
-   
+    
 }
 
 
@@ -435,7 +525,17 @@ NSString * NSDataToHex(NSData *data) {
     
     
     [self initData:major minor:minor];
+    
+    [self startScan];
+    
+}
 
+-(void) findSOSDevice{
+    
+    isSOSDevice = true;
+    
+    [self initData:@"" minor:@""];
+    
     [self startScan];
     
 }
@@ -449,11 +549,10 @@ NSString * NSDataToHex(NSData *data) {
     self.discoveredPeripheralsRssi = [NSMutableArray new];
     self.discoveredPeripheralsDic = [NSMutableDictionary new];
     self.checkDiscoveredPeripherals = [NSMutableArray new];
-    
+    self.SOSDiscoveredPeripherals = [NSMutableArray new];
     
     self.service2000 = [CBUUID UUIDWithString:@"0x2000"];
     self.service1000 = [CBUUID UUIDWithString:@"0x1000"];
 }
-
 
 @end

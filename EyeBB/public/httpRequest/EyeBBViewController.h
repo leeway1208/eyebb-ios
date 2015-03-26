@@ -20,7 +20,9 @@
 //公用方法
 #import "ViewController+EyebbPublic.h"
 //bluetooth
+#import <CoreBluetooth/CoreBluetooth.h>
 #import "UIViewController+EyebbBluetooth.h"
+#import "CustomerBluetooth.h"
 
 @interface EyeBBViewController : UIViewController<MBProgressHUDDelegate>
 {
@@ -39,4 +41,16 @@
 + (NSString *)getCurrentAppLanguage;
 
 CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
+
+
+//bluetooth test
+#define BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME @"read_battery_life"
+@property(nonatomic, retain)CustomerBluetooth *CustomerBluetoothRequest;
+-(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue;
+-(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
+-(void) writeMajorAndMinorThenMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
+-(void) findSOSDevice;
+-(void) startScan;
+-(void) stopScan;
+
 @end

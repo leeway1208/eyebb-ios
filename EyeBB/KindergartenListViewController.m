@@ -143,19 +143,19 @@
 -(void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag{
     
     if ([tag isEqualToString:GET_KINDERGARTEN_LIST]){
-        NSString *message = NULL;
+        //NSString *message = NULL;
         
         NSError *error = [request error];
         switch ([error code])
         {
             case ASIRequestTimedOutErrorType:
                 [HUD hide:YES afterDelay:0];
-                self.title = @"連接失敗";
+                self.title = LOCALIZATION(@"text_connect_error");
 
                 break;
             case ASIConnectionFailureErrorType:
                   [HUD hide:YES afterDelay:0];
-                self.title = @"連接失敗";
+                self.title = LOCALIZATION(@"text_connect_error");
 
                 break;
                 

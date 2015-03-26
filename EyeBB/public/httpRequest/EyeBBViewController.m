@@ -10,10 +10,16 @@
 #import "UserDefaultsUtils.h"
 @interface EyeBBViewController ()
 
+
+
 @end
 
 @implementation EyeBBViewController
 @synthesize httpRequest;
+
+
+
+
 static NSBundle *bundle = nil;
 -(HttpRequest *)httpRequest{
     if(httpRequest==nil){
@@ -31,7 +37,7 @@ static NSBundle *bundle = nil;
     //定制加载信息
     HUD = [[MBProgressHUD alloc] initWithView:self.navigationController.view];
     [self.navigationController.view addSubview:HUD];
-    
+
     HUD.delegate = self;
     HUD.labelText = LOCALIZATION(@"text_loading");
 }
@@ -111,4 +117,8 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize) {
     CGFloat nameW = size.width;
     return nameW;
 }
+
+
+
+
 @end

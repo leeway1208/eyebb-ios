@@ -124,6 +124,7 @@
 		928693521AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m in Sources */ = {isa = PBXBuildFile; fileRef = 928693511AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m */; };
 		928693551AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */; };
 		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
+		92BBD88C1AC400CE00C760B4 /* CustomerBluetooth.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BBD88B1AC400CE00C760B4 /* CustomerBluetooth.m */; };
 		92FF92D41AA5592E00E04E0A /* CommonUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 92FF92D31AA5592E00E04E0A /* CommonUtils.m */; };
 /* End PBXBuildFile section */
 
@@ -371,6 +372,8 @@
 		928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScanDeviceToBindingViewController.m; sourceTree = "<group>"; };
 		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		92BBD88A1AC400CE00C760B4 /* CustomerBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerBluetooth.h; sourceTree = "<group>"; };
+		92BBD88B1AC400CE00C760B4 /* CustomerBluetooth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerBluetooth.m; sourceTree = "<group>"; };
 		92FF92D21AA5592E00E04E0A /* CommonUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CommonUtils.h; sourceTree = "<group>"; };
 		92FF92D31AA5592E00E04E0A /* CommonUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CommonUtils.m; sourceTree = "<group>"; };
 		92FF92D51AA559B300E04E0A /* HttpRequestUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HttpRequestUtils.h; sourceTree = "<group>"; };
@@ -959,6 +962,8 @@
 			children = (
 				928693501AC136DA000D5B53 /* UIViewController+EyebbBluetooth.h */,
 				928693511AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m */,
+				92BBD88A1AC400CE00C760B4 /* CustomerBluetooth.h */,
+				92BBD88B1AC400CE00C760B4 /* CustomerBluetooth.m */,
 			);
 			name = bluetooth;
 			path = EyeBB/public/bluetooth;
@@ -1147,6 +1152,7 @@
 				3264D9541A9D6B72009CB9C2 /* ASICloudFilesContainerXMLParserDelegate.m in Sources */,
 				3264D9531A9D6B72009CB9C2 /* ASICloudFilesContainerRequest.m in Sources */,
 				32FC01491AA83E3B001FB4D3 /* UIColor+RGBValues.m in Sources */,
+				92BBD88C1AC400CE00C760B4 /* CustomerBluetooth.m in Sources */,
 				3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */,
 				20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */,
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,

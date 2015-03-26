@@ -176,7 +176,8 @@
 "text_scan_qr_code_hint" = "Align QR code within frame to scan";
 "text_turn_on_the_flash" = "Turn on the flash";
 "text_search_your_device" = "Search your EYEBB device";
-"text_press_the_button_on_the_device" = "Press the button on the device for more than three seconds, and then select your device on the screen";
+"text_press_the_button_on_the_device" = "Press the button on the device for more than three seconds, and then select your device on the screen. (Please turn on the Bluetooth)";
+"text_connect_error" = "Connect Error";
 
 //<!-- Button strings -->
 "btn_sign_up"="Sign Up";

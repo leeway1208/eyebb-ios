@@ -180,7 +180,8 @@
 "text_scan_qr_code_hint" = "将二维码对准方框，即可自动扫描";
 "text_turn_on_the_flash" = "开启闪光灯";
 "text_search_your_device" = "搜寻周围的宝宝安";
-"text_press_the_button_on_the_device" = "请按宝宝安设备的按钮超过3秒鐘,然后在屏幕上选择你的宝宝安";
+"text_press_the_button_on_the_device" = "请按宝宝安设备的按钮超过3秒鐘,然后在屏幕上选择你的宝宝安.(请打开手机蓝牙)";
+"text_connect_error" = "连接失败";
 
 //<!-- Button strings -->
 "btn_sign_up"="注册";
