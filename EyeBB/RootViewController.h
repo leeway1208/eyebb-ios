@@ -17,4 +17,6 @@
 }
 @property (nonatomic, retain) UIImageView * line;
 @property (nonatomic, retain) NSString * childID;
+/* guardian Id  */
+@property (strong,nonatomic) NSString *guardianId;
 @end

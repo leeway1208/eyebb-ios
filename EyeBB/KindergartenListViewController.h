@@ -15,4 +15,6 @@
 @property (nonatomic,strong) NSData *data;
 /* image index */
 @property (nonatomic,assign) int index;
+/* guardian Id  */
+@property (strong,nonatomic) NSString *guardianId;
 @end

@@ -8,6 +8,7 @@
 
 #import "ScanDeviceToBindingViewController.h"
 #import "RootViewController.h"
+#import "WelcomeViewController.h"
 
 @interface ScanDeviceToBindingViewController ()
 /**introdaction label*/
@@ -20,6 +21,8 @@
 @property (nonatomic,strong) UILabel * tableTitleLabel;
 /* device  uuid */
 @property (nonatomic,strong) UILabel * tableCenterLabel;
+/* targetPeripheral  uuid */
+@property (nonatomic,strong) NSString * targetPeripheral;
 @end
 
 @implementation ScanDeviceToBindingViewController
@@ -43,8 +46,10 @@
     [self loadWidget];
     
     
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSosDevice:) name:nil object:nil ];
+    
     [self findSOSDevice];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSosDevice:) name:BLUETOOTH_GET_SOS_DEVICE_BROADCAST_NAME object:nil ];
 }
 
 
@@ -89,7 +94,7 @@
 
 
 -(void)loadParameter{
-   
+    
     _deviceTableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     _deviceTableView.frame = CGRectMake(0, 110, Drive_Wdith, Drive_Height);
     self.deviceTableView.tableFooterView = [[UIView alloc] init];
@@ -134,11 +139,89 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             
             [self.deviceTableView reloadData];
-     
+            
         });
+        
+    }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
+        
+        
+        NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
+       
+        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,self.devicMajor,self.devicMinor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId);
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,self.devicMajor,ScanDeviceToBindingViewController_KEY_majors,self.devicMinor,ScanDeviceToBindingViewController_KEY_minor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId,ScanDeviceToBindingViewController_KEY_guardianId,nil];
+        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+        
+        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,self.devicMajor,self.devicMinor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId);
+        [self postRequest:DEVICE_TO_CHILD RequestDictionary:tempDoct delegate:self];
+        
+    }else if ([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME]){
+        NSLog(@"BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME");
+         [HUD hide:YES afterDelay:0];
+        
+        
+        
         
     }
 }
+
+#pragma mark - server return
+
+-(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    if ([tag isEqualToString:DEVICE_TO_CHILD]){
+        NSData *responseData = [request responseData];
+        NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"DEVICE_TO_CHILD  ---> %@",aString);
+        //        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:KindergartenListViewController_json_key_size];
+        [HUD hide:YES afterDelay:0];
+        //[HUD hide:YES];
+        if ([aString isEqualToString:SERVER_RETURN_T]) {
+            //login to main
+            
+            WelcomeViewController *wvc= [[WelcomeViewController alloc]init];
+            wvc.autoLogin = YES;
+            [self.navigationController pushViewController:wvc animated:YES];
+
+            
+        }else{
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_update_server_data_fail")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+        }
+        
+    }
+}
+
+
+-(void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag{
+    
+    if ([tag isEqualToString:GET_KINDERGARTEN_LIST]){
+        //NSString *message = NULL;
+        
+        NSError *error = [request error];
+        switch ([error code])
+        {
+            case ASIRequestTimedOutErrorType:
+                [HUD hide:YES afterDelay:0];
+                self.title = LOCALIZATION(@"text_connect_error");
+                
+                break;
+            case ASIConnectionFailureErrorType:
+                [HUD hide:YES afterDelay:0];
+                self.title = LOCALIZATION(@"text_connect_error");
+                
+                break;
+                
+        }
+        
+        //NSLog(@"------> %@",message);
+    }
+    
+    
+}
+
+
 
 
 #pragma mark - button aciton
@@ -184,7 +267,7 @@
     static NSString *detailIndicated = @"tableCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     
-    CBPeripheral *peripheral=(CBPeripheral *)self.SOSDiscoveredPeripherals[indexPath.row];
+    CBPeripheral *peripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
@@ -194,23 +277,51 @@
         _tableTitleLabel.text = peripheral.name;
         [cell addSubview:_tableTitleLabel];
         //beacon id
-        _tableCenterLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 25, self.view.frame.size.width-30, 60)];
+        _tableCenterLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 25, self.view.frame.size.width-40, 60)];
         _tableCenterLabel.numberOfLines = 2;
         _tableCenterLabel.text = peripheral.identifier.UUIDString;
         [cell addSubview:_tableCenterLabel];
         
     }
     
+    if ([peripheral.identifier.UUIDString isEqualToString:self.targetPeripheral]) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        UIColor *color = [[UIColor alloc]initWithRed:0.353 green:0.357 blue:0.373 alpha:1];
+        //cell.selectedBackgroundView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"cellart.png"]] ;
+        cell.backgroundColor = color;
+//        cell.textLabel.highlightedTextColor = [UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
+//        [cell.textLabel setTextColor:[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f]];
+    }
+    else
+    {
+        cell.accessoryType = UITableViewCellAccessoryNone;
+        cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+        cell.backgroundColor = [UIColor colorWithRed:1.000 green:1.000 blue:1.000 alpha:1];
+    }
     
-    
-    
-    
+ 
     return cell;
 }
 
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    [self stopScan];
+    [HUD show:YES];
+    
+    CBPeripheral *targetPeripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
+    NSLog(@"write major:%@ and minor:%@ ",_devicMajor,_devicMinor);
+    
+    if (![self.targetPeripheral isEqualToString:targetPeripheral.identifier.UUIDString]) {
+        [self writeMajorAndMinorThenMajor:targetPeripheral.identifier.UUIDString writeMajor:_devicMajor writeMinor:_devicMinor];
+        self.targetPeripheral = targetPeripheral.identifier.UUIDString;
+        [tableView reloadData];
+        
+    }
+    
+    
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
 }
 

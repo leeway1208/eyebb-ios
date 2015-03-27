@@ -19,6 +19,7 @@
 #import "UIViewController+EyeBBDB.h"
 //公用方法
 #import "ViewController+EyebbPublic.h"
+#import "HttpRequestUtils.h"
 //bluetooth
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "UIViewController+EyebbBluetooth.h"
@@ -48,7 +49,7 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 @property(nonatomic, retain)CustomerBluetooth *CustomerBluetoothRequest;
 -(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue;
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
--(void) writeMajorAndMinorThenMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
+-(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
 -(void) findSOSDevice;
 -(void) startScan;
 -(void) stopScan;

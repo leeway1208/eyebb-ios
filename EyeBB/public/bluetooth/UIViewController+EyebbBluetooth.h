@@ -13,7 +13,7 @@
 
 -(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue;
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
--(void) writeMajorAndMinorThenMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
+-(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
 -(void) findSOSDevice;
 
 

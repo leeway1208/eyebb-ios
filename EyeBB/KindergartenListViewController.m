@@ -43,9 +43,7 @@
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(KindergartenListViewControllerLeftAction:)];
     
     self.navigationItem.leftBarButtonItem = newBackButton;
-    //can cancel swipe gesture
-    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
-    self.navigationController.interactivePopGestureRecognizer.delegate = self;
+   
     
     
     [HUD show:YES];
@@ -60,7 +58,9 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
-    self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    //can cancel swipe gesture
+    self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+    self.navigationController.interactivePopGestureRecognizer.delegate = self;
 }
 
 // gesture to cancel swipe (use for ios 8)
@@ -281,6 +281,7 @@
         ChildInformationMatchingViewController *cimmvc = [[ChildInformationMatchingViewController alloc] init];
         cimmvc.kindergartenName = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_nameTc];
         cimmvc.kindergartenId = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_areaId];
+        cimmvc.guardianId = self.guardianId;
         [self.navigationController pushViewController:cimmvc animated:YES];
         
     }

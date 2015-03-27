@@ -11,6 +11,8 @@
 @interface ChildInformationMatchingViewController : EyeBBViewController<UIActionSheetDelegate>
 /* kindergarten name from kindergarten view */
 @property (nonatomic,retain) NSString *kindergartenName;
+/* kindergarten Id  */
 @property (nonatomic,retain) NSString *kindergartenId;
-
+/* guardian Id  */
+@property (strong,nonatomic) NSString *guardianId;
 @end

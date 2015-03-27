@@ -25,7 +25,7 @@
 {
     UIView *_QrCodeline;
     NSTimer *_timer;
-    
+    NSString *symbolStr;
     //设置扫描画面
     UIView *_scanView;
     ZBarReaderView *_readerView;
@@ -123,7 +123,7 @@
     [self enabelVibrate];
     
     const zbar_symbol_t *symbol =zbar_symbol_set_first_symbol(symbols.zbarSymbolSet);
-    NSString *symbolStr = [NSString stringWithUTF8String:zbar_symbol_get_data(symbol)];
+    symbolStr = [NSString stringWithUTF8String:zbar_symbol_get_data(symbol)];
     
     //判断是否包含 头'http:'
     NSString *regex =@"http+:[^\\s]*";
@@ -376,6 +376,13 @@
                 
                 //go to next view
                 ScanDeviceToBindingViewController *scan = [[ScanDeviceToBindingViewController alloc] init];
+                //pass to ScanDeviceToBindingViewController view
+                scan.devicMajor = [self getMajor:self.deviceMajor];
+                scan.devicMinor = [self getMinor:self.deviceMinor];
+                scan.macAddress = symbolStr;
+                scan.childId = self.childID;
+                scan.guardianId = self.guardianId;
+                
                 [self.navigationController pushViewController:scan animated:YES];
                 scan.title = @"";
                 scan = nil;

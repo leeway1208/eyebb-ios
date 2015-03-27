@@ -7,9 +7,8 @@
 //
 
 #import "EyeBBViewController.h"
-
+#import "AppDelegate.h"
 @interface WelcomeViewController : EyeBBViewController
-
-
+@property AppDelegate *myDelegate;
+@property BOOL autoLogin;
 @end
-

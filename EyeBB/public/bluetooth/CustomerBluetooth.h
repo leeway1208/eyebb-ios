@@ -12,12 +12,14 @@
 @interface CustomerBluetooth : NSObject
 #define BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME @"read_battery_life"
 #define BLUETOOTH_GET_SOS_DEVICE_BROADCAST_NAME @"get_sos_device"
+#define BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME @"write_success"
+#define BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME @"write_fail"
 +(CustomerBluetooth *)instance;
 
 
 -(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue;
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
--(void) writeMajorAndMinorThenMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
+-(void) writeMajorAndMinorThenMajor:(NSString *)UUID  writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
 -(void) findSOSDevice;
 
 

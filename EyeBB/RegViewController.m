@@ -11,6 +11,7 @@
 #import "WelcomeViewController.h"
 #import "JSONKit.h"
 #import "ChildInformationMatchingViewController.h"
+#import "WelcomeViewController.h"
 
 @interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 {
@@ -46,6 +47,12 @@
 @property (strong,nonatomic) UILabel * popTitleLabel;
 /**pop view content*/
 @property (strong,nonatomic) UILabel * popContentLabel;
+/** guardian id */
+@property (strong,nonatomic) NSString * guardianId;
+/** user name */
+@property (strong,nonatomic) NSString *userName;
+/** user password */
+@property (strong,nonatomic) NSString *userPassword;
 @end
 
 @implementation RegViewController
@@ -74,6 +81,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
@@ -698,7 +706,7 @@
         //                NSString *aString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         NSString * resSignUp = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
-        //NSLog(@"sign up ----> %@ ",resSignUp);
+        NSLog(@"sign up ----> %@ ",resSignUp);
         
         //user name is already used
         if([resSignUp isEqualToString:SERVER_RETURN_F]){
@@ -711,17 +719,26 @@
         // network is error
         else if ([resSignUp length] > 20){
             
-            if([resSignUp isEqualToString:SERVER_RETURN_F]){
-                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                            message:LOCALIZATION(@"text_network_error")
-                                           delegate:self
-                                  cancelButtonTitle:LOCALIZATION(@"btn_confirm")
-                                  otherButtonTitles:nil] show];
-            }
-            //register is successful
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_network_error")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
             
         } else{
+            //register is successful
             
+            //save to NSUserDefaults
+            NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+            [loginStatus setObject:_userName forKey:LoginViewController_accName];
+            [loginStatus setObject:_userPassword  forKey:LoginViewController_hashPassword];
+            [loginStatus synchronize];
+            
+            //pass the guardian id to next view
+            _guardianId = resSignUp;
+            
+            
+            //show the pop view
             [_PopupSView setHidden:NO];
             
         }
@@ -756,6 +773,9 @@
         if(emailStr==nil)emailStr=@"";
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
         
+        //save username and password
+        _userName = phoneStr;
+        _userPassword = [CommonUtils getSha256String:pwdStr].uppercaseString;
         
         [self postRequest:REG_PARENTS RequestDictionary:tempDoct delegate:self];
         
@@ -780,6 +800,8 @@
 
 -(void)goToChildInformationMatchingAction:(id)sender{
     ChildInformationMatchingViewController *cimm = [[ChildInformationMatchingViewController alloc]init];
+    cimm.guardianId = _guardianId;
+    
     [self.navigationController pushViewController:cimm animated:YES];
     cimm.title = @"";
 }
@@ -787,6 +809,11 @@
 // cancel the button
 -(void)btnCancelAction:(id)sender{
     [_PopupSView setHidden:YES];
+    
+    WelcomeViewController *wvc= [[WelcomeViewController alloc]init];
+    wvc.autoLogin = YES;
+    [self.navigationController pushViewController:wvc animated:YES];
+    
 }
 
 @end

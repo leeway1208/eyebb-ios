@@ -492,6 +492,7 @@
   
     if([self saveNSUserDefaults:[self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] dateOfBirth:[self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] kId:_kindergartenId]){
         KindergartenListViewController *klvc = [[KindergartenListViewController alloc] init];
+        klvc.guardianId = self.guardianId;
         [self.navigationController pushViewController:klvc animated:YES];
         klvc.title = @"";
     }
@@ -507,6 +508,8 @@
 -(void)goToScanQrCodeAction:(id)sender{
     RootViewController *rqAction = [[RootViewController alloc]init];
     rqAction.childID = self.childId;
+    rqAction.guardianId = self.guardianId;
+    NSLog(@"rqAction.guardianId ----> %@",rqAction.guardianId);
     [[self navigationController] pushViewController:rqAction animated:YES];
 }
 

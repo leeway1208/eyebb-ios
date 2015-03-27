@@ -24,6 +24,7 @@
 @property (strong,nonatomic) CBUUID *service2000;
 @property (strong,nonatomic) CBUUID *service1000;
 @property (strong,nonatomic) NSString *targetMajorAndMinorPeripheral;
+@property (strong,nonatomic) NSString *targetUUIDPeripheral;
 @property (strong,nonatomic) NSString *targetBatteryLifePeripheral;
 @property (strong,nonatomic) NSString *writeValue1;
 @property (strong,nonatomic) NSString *writeValue2;
@@ -158,7 +159,7 @@ Boolean startTimerOnce = true;
         NSString *toStringFromData = NSDataToHex([ advertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
         if(toStringFromData.length > 0){
             NSString *getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
-            NSLog(@"MAJOR AND MINOR ---> %@",toStringFromData);
+            //NSLog(@"MAJOR AND MINOR ---> %@",toStringFromData);
             
             if (isSOSDevice) {
                 self.targetBatteryLifePeripheral = [toStringFromData substringWithRange:NSMakeRange(10,2)];
@@ -182,7 +183,7 @@ Boolean startTimerOnce = true;
                 }
                 
                 
-            }else if([getMajorAndMinor isEqualToString:self.targetMajorAndMinorPeripheral]) {
+            }else if([getMajorAndMinor isEqualToString:self.targetMajorAndMinorPeripheral] || [peripheral.identifier.UUIDString isEqualToString:_targetUUIDPeripheral] ) {
                 
                 if (isReadBattery) {
                     //stop scan
@@ -246,6 +247,9 @@ Boolean startTimerOnce = true;
 -(void) centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
     NSLog(@"Disconnected from peripheral");
     
+    if(isMajor){
+        [self.central connectPeripheral:_targetUUIDPeripheral options:nil];
+    }
     
     if ([self.targetPeripheral isEqualToString:peripheral.identifier.UUIDString]) {
         NSLog(@"Retrying");
@@ -379,6 +383,7 @@ Boolean startTimerOnce = true;
     if (error) {
         NSLog(@"Error writing characteristic value: %@",
               [error localizedDescription]);
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
     }
     NSLog(@"write successfully !!! ");
     
@@ -386,11 +391,15 @@ Boolean startTimerOnce = true;
     if (setPassword) {
         if (isBeep) {
             isBeep = false;
+            //post get sos device broadcast
+            [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
         }else if (isMajor){
             isMajor = false;
             [peripheral discoverServices:nil];
         }else if (isMinor){
             isMinor = false;
+            //post get sos device broadcast
+            [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
         }
         
     }else{
@@ -516,15 +525,16 @@ NSString * NSDataToHex(NSData *data) {
 }
 
 
--(void) writeMajorAndMinorThenMajor:(NSString *)major minor:(NSString *)minor writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{
+-(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{
     //initial data
     isMajor = true;
     isMinor = true;
+    isSOSDevice = false;
     self.writeValue1 = writeMajor;
     self.writeValue2 = writeMinor;
     
-    
-    [self initData:major minor:minor];
+    _targetUUIDPeripheral = UUID;
+    [self initData:@"" minor:@""];
     
     [self startScan];
     
@@ -533,7 +543,7 @@ NSString * NSDataToHex(NSData *data) {
 -(void) findSOSDevice{
     
     isSOSDevice = true;
-    
+
     [self initData:@"" minor:@""];
     
     [self startScan];

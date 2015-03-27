@@ -10,7 +10,7 @@
 #import "RegViewController.h"
 #import "LoginViewController.h"
 #import "MainViewController.h"
-#import "AppDelegate.h"
+
 //--test--
 #import "KidslistViewController.h"
 #import "ChildInformationMatchingViewController.h"
@@ -19,9 +19,9 @@
 #import "ScanDeviceToBindingViewController.h"
 
 @interface WelcomeViewController ()<UIGestureRecognizerDelegate>
-{
-     AppDelegate *myDelegate;
-}
+//{
+//     AppDelegate *myDelegate;
+//}
 //注册按钮
 @property (nonatomic,strong) UIButton * RegBtn;
 //登录按钮
@@ -99,7 +99,7 @@
 //页面显示后执行事件
 -(void)viewDidAppear:(BOOL)animated
 {
-    if(myDelegate.appIsFirstStart != YES)
+    if(_myDelegate.appIsFirstStart != YES || _autoLogin)
     {
         
         NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
@@ -181,7 +181,7 @@
   */
 -(void)iv
 {
-    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    _myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
 /**
@@ -251,7 +251,7 @@
 //    _reg.title = @"";
 //    
 
-    ScanDeviceToBindingViewController *reg = [[ScanDeviceToBindingViewController alloc] init];
+    RegViewController *reg = [[RegViewController alloc] init];
     [self.navigationController pushViewController:reg animated:YES];
     reg.title = @"";
     

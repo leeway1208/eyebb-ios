@@ -224,6 +224,12 @@
 #define RootViewController_KEY_childId @"childId"
 #define RootViewController_KEY_macAddress @"macAddress"
 
+//ScanDeviceToBindingViewController
+#define ScanDeviceToBindingViewController_KEY_childId @"childId"
+#define ScanDeviceToBindingViewController_KEY_macAddress @"macAddress"
+#define ScanDeviceToBindingViewController_KEY_majors @"major"
+#define ScanDeviceToBindingViewController_KEY_minor @"minor"
+#define ScanDeviceToBindingViewController_KEY_guardianId @"guardianId"
 
 /*
  * json key
