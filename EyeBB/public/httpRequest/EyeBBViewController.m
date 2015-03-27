@@ -7,7 +7,7 @@
 //
 
 #import "EyeBBViewController.h"
-#import "UserDefaultsUtils.h"
+
 @interface EyeBBViewController ()
 
 
@@ -118,6 +118,13 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize) {
     return nameW;
 }
 
+#pragma mark - bluetooth
+-(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue{}
+-(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor{}
+-(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{}
+-(void) findSOSDevice{}
+-(void) startScan{}
+-(void) stopScan{}
 
 
 

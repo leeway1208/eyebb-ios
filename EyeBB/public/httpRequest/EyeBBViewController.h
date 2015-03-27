@@ -24,6 +24,7 @@
 #import <CoreBluetooth/CoreBluetooth.h>
 #import "UIViewController+EyebbBluetooth.h"
 #import "CustomerBluetooth.h"
+#import "UserDefaultsUtils.h"
 
 @interface EyeBBViewController : UIViewController<MBProgressHUDDelegate>
 {
