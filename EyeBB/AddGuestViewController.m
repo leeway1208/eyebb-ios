@@ -7,12 +7,13 @@
 //
 
 #import "AddGuestViewController.h"
-
+#import "GuardianKidsViewController.h"//授权儿童列表
+#import <Social/Social.h>//share
 @interface AddGuestViewController ()<UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate>
 
 {
     //记录搜索结果数组
-    NSMutableArray*_resultArray;
+    NSArray*_resultArray;
     UITableView*_tableView;
 }
 /**授权人搜索输入框*/
@@ -21,6 +22,13 @@
 
 /**搜索按钮*/
 @property (strong,nonatomic) UIButton * searchBtn;
+
+///**邀请好友按钮*/
+//@property (strong,nonatomic) UIButton * shareBtn;
+
+@property (strong,nonatomic) GuardianKidsViewController *guardianKids;
+/**是否是查询*/
+@property BOOL isSearch;
 @end
 
 @implementation AddGuestViewController
@@ -39,7 +47,10 @@
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
-    
+    if (_guardianKids!=nil) {
+        _guardianKids=nil;
+        
+    }
 }
 
 - (void)didReceiveMemoryWarning {
@@ -57,6 +68,7 @@
 {
     //实例化数组
     _resultArray=[[NSArray alloc]init];
+    _isSearch=NO;
 }
 
 /**
@@ -95,18 +107,54 @@
     [self.view addSubview:self.searchBtn];
     
     
+//    self.shareBtn=[[UIButton alloc]initWithFrame:CGRectMake(0 , 120 ,Drive_Wdith, 46)];
+//    //设置按显示文字
+////    [self.shareBtn setTitle:[NSString stringWithFormat:@"%@ \n (%@%@)",LOCALIZATION(@"text_search_guest_null"),LOCALIZATION(@"text_click_to_share"),self.gusetTxt.text]  forState:UIControlStateNormal];
+//    [self.shareBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    //设置按钮背景颜色
+//    [self.shareBtn setBackgroundColor:[UIColor clearColor]];
+//    //设置按钮是否圆角
+//   
+//    //设置按钮响应事件
+//    [self.shareBtn addTarget:self action:@selector(shareAction:) forControlEvents:UIControlEventTouchUpInside];
+//    [self.view addSubview:self.shareBtn];
+    
     
     _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,105,Drive_Wdith,Drive_Height-141) style:UITableViewStylePlain];
     _tableView.dataSource=self;
     _tableView.delegate=self;
     _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
+    
+    _tableView.backgroundColor=[UIColor colorWithRed:0.941 green:0.941 blue:0.941 alpha:1];
     _tableView.sectionIndexColor = [UIColor blueColor];
+    //隐藏table自带的cell下划线
+    _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //    _tableView.sectionHeaderHeight=108.0f;
     [self.view addSubview:_tableView];
     
     
     
 }
+
+/**
+ *	@brief	设置隐藏键盘
+ *
+ */
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    if (theTextField == self.gusetTxt) {
+        [theTextField resignFirstResponder];
+    }
+    return YES;
+    
+}
+
+-(void)viewTapped:(UITapGestureRecognizer*)tapGr
+{
+    [self.gusetTxt resignFirstResponder];
+
+    
+}
+
 
 #pragma mark --
 #pragma mark - table view
@@ -121,8 +169,20 @@
 
 //set the number of cells in one section
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return 2;
+    int num=0;
+    if (_isSearch==YES&&_resultArray.count<1) {
+        _isSearch=NO;
+        num=1;
+    }
+    else if (_resultArray.count>0)
+    {
+        num=_resultArray.count;
+    }
+    else
+    {
+        num=0;
+    }
+    return num;
 }
 
 
@@ -142,7 +202,7 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         
         
-        UIView * gusetView=[[UIView alloc]initWithFrame:CGRectMake(5, 2, CGRectGetWidth(cell.frame)-10, 58)];
+        UIView * gusetView=[[UIView alloc]initWithFrame:CGRectMake(10, 4, CGRectGetWidth(cell.frame)-20, 52)];
         
         [gusetView setBackgroundColor:[UIColor whiteColor]];
         //设置按钮是否圆角bu
@@ -153,45 +213,106 @@
         [cell addSubview:gusetView];
         
         //授权人名字
-        UILabel * nameLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 0, CGRectGetWidth(cell.bounds)-150, 20)];
+        UILabel * nameLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 16, CGRectGetWidth(cell.bounds)-150, 20)];
         [nameLbl setText:[[tempDictionary objectForKey:@"name"]copy]];
-        [nameLbl setFont:[UIFont systemFontOfSize: 15.0]];
-        [nameLbl setTextColor:[UIColor whiteColor]];
+        [nameLbl setFont:[UIFont systemFontOfSize: 18.0]];
+        [nameLbl setTextColor:[UIColor blackColor]];
         [nameLbl setTextAlignment:NSTextAlignmentLeft];
         nameLbl.tag=102;
         [gusetView addSubview:nameLbl];
         
         //授权人电话按钮
-        UIButton *phoneBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.bounds)-145, 10, 120, 36)];
+        UIButton *phoneBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(cell.bounds)-145, 10, 120, 32)];
+        if(_resultArray.count>0)
+        {
         //设置按显示文字
         [phoneBtn setTitle:[[tempDictionary objectForKey:@"phoneNumber"]copy] forState:UIControlStateNormal];
+        }
         [phoneBtn.titleLabel setFont:[UIFont fontWithName:@"sans-serif-light" size:15.0]];
+        [phoneBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 34, 0, 0)];
         //设置按钮背景颜色
         [phoneBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
         //设置按钮响应事件
-        [phoneBtn addTarget:self action:@selector(regAction:) forControlEvents:UIControlEventTouchUpInside];
+//        [phoneBtn addTarget:self action:@selector(regAction:) forControlEvents:UIControlEventTouchUpInside];
         //设置按钮是否圆角
         [phoneBtn.layer setMasksToBounds:YES];
         //圆角像素化
         [phoneBtn.layer setCornerRadius:4.0];
         phoneBtn.tag=103;
         [gusetView addSubview:phoneBtn];
+        
+        UIImageView *phoneImg=[[UIImageView alloc]initWithFrame:CGRectMake(2, 2, 32, 32)];
+        if(_resultArray.count>0)
+        {
+        [phoneImg setImage:[UIImage imageNamed:@"login_phone"]];
+        }
+        [phoneBtn addSubview:phoneImg];
+        
+        //邀请朋友按钮底边线
+        UILabel *lineLbl=[[UILabel alloc]initWithFrame:CGRectMake(2, 58, CGRectGetWidth(cell.bounds), 1)];
+        lineLbl.backgroundColor=[UIColor colorWithRed:0.898 green:0.898 blue:0.898 alpha:1];
+        lineLbl.tag=104;
+        [cell addSubview:lineLbl];
     }
+    cell.backgroundColor=[UIColor clearColor];
     UIView * gusetView=(UIView *)[cell viewWithTag:101];
+     UILabel *lineLbl=(UILabel *)[cell viewWithTag:104];
+    //判断服务器是否有值，如果没有就是没有找到授权人，显示邀请信息
+    if(_resultArray.count>0)
+    {
+        gusetView.hidden=NO;
+    lineLbl.hidden=YES;
    
     UILabel * nameLbl =(UILabel *)[gusetView viewWithTag:102];
      UIButton * phoneBtn =(UIButton *)[gusetView viewWithTag:103];
     
     [nameLbl setText:[[tempDictionary objectForKey:@"name"]copy]];
     [phoneBtn setTitle:[[tempDictionary objectForKey:@"phoneNumber"]copy] forState:UIControlStateNormal];
+    tempDictionary=nil;
+    }
+    else
+    {
+        lineLbl.hidden=NO;
+        gusetView.hidden=YES;
+        cell.textLabel.numberOfLines=2;
+        cell.textLabel.text=[NSString stringWithFormat:@"%@ \n %@%@)",LOCALIZATION(@"text_search_guest_null"),LOCALIZATION(@"text_click_to_share"),self.gusetTxt.text];
+        cell.textLabel.textAlignment=NSTextAlignmentCenter;
+    }
+    //设置选中背景颜色为无色
+    cell.selectionStyle=UITableViewCellSelectionStyleNone;
     return cell;
+    
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    
-    
-    
-    
+    if(_resultArray.count<1)
+    {
+        NSArray *activityItems;
+        
+        //    if (self.sharingImage != nil) {
+        //        activityItems = @[self.sharingText, self.sharingImage];
+        //    } else {
+        activityItems = @[LOCALIZATION(@"text_search_guset_activity_share_msg")];
+        //    }
+        
+        UIActivityViewController *activityController =
+        [[UIActivityViewController alloc] initWithActivityItems:activityItems
+                                          applicationActivities:nil];
+        
+        [self presentViewController:activityController
+                           animated:YES completion:nil];
+    }
+    else
+    {
+    if (_guardianKids==nil) {
+        _guardianKids=[[GuardianKidsViewController alloc]init];
+        
+    }
+//        self.guardianKids.SelectedchildrenArray=[[_authorizedArray objectAtIndex:(guardianbtn.tag-105)] objectForKey:@"chilrenByGuardian"];
+        NSLog(@"_resultArray is %@",[_resultArray objectAtIndex:indexPath.row]);
+    _guardianKids.guestId=[[_resultArray objectAtIndex:indexPath.row] objectForKey:@"guardianId"];
+    [self.navigationController pushViewController:_guardianKids animated:YES];
+    }
 }
 
 #pragma mark --
@@ -201,20 +322,27 @@
     NSString *responseString = [request responseString];
     //请求房间列表
     if ([tag isEqualToString:SEARCH_GUEST]) {
-        if (![responseString isEqualToString:@"[]"]) {
+
             NSData *responseData = [request responseData];
             if(_resultArray!=nil)
             {
                 _resultArray=nil;
                 _resultArray=[NSMutableArray array];
             }
-            _resultArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
+
+        
+        _resultArray = [NSJSONSerialization JSONObjectWithData:[responseString dataUsingEncoding:NSUTF8StringEncoding]
+                                                              options:0 error:NULL];
+        
             
             responseData=nil;
+        _isSearch=YES;
+       
             [_tableView reloadData];
+        
         }
         
-    }
+    
 }
 
 
@@ -223,6 +351,7 @@
 //查询
 -(void)searchAction:(id)sender
 {
+    [self.gusetTxt resignFirstResponder];
     NSMutableDictionary * tempDictionary=[NSMutableDictionary dictionary];
     [tempDictionary setObject:self.gusetTxt.text forKey:@"guestName"];
     [self getRequest:SEARCH_GUEST delegate:self RequestDictionary:[tempDictionary copy]];

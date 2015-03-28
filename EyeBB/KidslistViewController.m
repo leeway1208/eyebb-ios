@@ -11,7 +11,7 @@
 
 #import "KidMessageViewController.h"
 
-//#import "AddGuardianViewController.h"//添加监护人
+
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 //-------------------视图控件--------------------
 /**兒童列表*/

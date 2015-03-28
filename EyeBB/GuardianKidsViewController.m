@@ -18,8 +18,9 @@
     //记录搜索结果数组
     NSArray*_resultArray;
     UITableView*_tableView;
-//    UISearchBar*_searchBar;
-    AppDelegate *myDelegate;
+    //    UISearchBar*_searchBar;
+     AppDelegate * myDelegate;
+
 }
 /**右按钮*/
 @property(nonatomic, retain) UIBarButtonItem *rightBtnItem;
@@ -28,14 +29,17 @@
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSArray *keys;
 /**数据源数组*/
-@property (nonatomic,strong) NSMutableArray*_childrenArray;
+@property (nonatomic,strong) NSArray*_childrenArray;
+/**已选中儿童ID列表*/
+@property (nonatomic,strong) NSMutableArray*SelectedchildrenIDArray;
+
 
 
 @end
 
 @implementation GuardianKidsViewController
 @synthesize  rightBtnItem;
-@synthesize _childrenArray,SelectedchildrenArray;
+@synthesize _childrenArray,guestId,SelectedchildrenArray;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -52,7 +56,7 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    
+  
     
 }
 - (void)didReceiveMemoryWarning {
@@ -67,15 +71,39 @@
  */
 -(void)iv
 {
-    //实例化数组
-    _resultArray=[[NSArray alloc]init];
-    //    _childrenArray=[[NSMutableArray alloc]init];
-    _dataArray=[[NSMutableArray alloc]init];
-    _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
+    //实例化数组
+    _resultArray=[[NSArray alloc]init];
+    _dataArray=[[NSMutableArray alloc]init];
+    _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 
-    _childrenArray= (NSMutableArray *)myDelegate.childrenBeanArray;
+    
+
+    self.SelectedchildrenIDArray=[NSMutableArray array];
+        _childrenArray= (NSMutableArray *)myDelegate.childrenBeanArray;
+//    _childrenArray=[NSMutableArray array];
+    
+    for (int j=0; j<_childrenArray.count; j++) {
+        NSLog(@"%@,%@",[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ],[NSNumber numberWithLong:(long)[self.guestId longLongValue]]);
+        for(int i=0; i<SelectedchildrenArray.count; i++)
+        {
+            if ([[[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]isEqualToNumber:[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]]) {
+                [self.SelectedchildrenIDArray addObject: [[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]] ;
+            }
+        }
+        
+    }
+    
+    for (int i=0; i<_childrenArray.count; i++) {
+        [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+        
+    }
+    _resultArray=(NSArray *)_dataArray;
+    self.data = [IIILocalizedIndex indexed:_dataArray];
+    self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
+    
 }
 
 /**
@@ -93,20 +121,14 @@
     
     
     //    _childrenArray=[self allChildren];
-    for (int i=0; i<_childrenArray.count; i++) {
-        [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
-        
-    }
-    _resultArray=(NSArray *)_dataArray;
-    self.data = [IIILocalizedIndex indexed:_dataArray];
-    self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
-
-//    //搜索框
-//    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
-//    _searchBar.delegate = self;
-//    _searchBar.placeholder = LOCALIZATION(@"btn_search");
-//    _searchBar.keyboardType =  UIKeyboardTypeDefault;
-//    [self.view addSubview:_searchBar];
+    
+    
+    //    //搜索框
+    //    _searchBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, 44)];
+    //    _searchBar.delegate = self;
+    //    _searchBar.placeholder = LOCALIZATION(@"btn_search");
+    //    _searchBar.keyboardType =  UIKeyboardTypeDefault;
+    //    [self.view addSubview:_searchBar];
 }
 
 /**自定义右按钮*/
@@ -147,7 +169,7 @@
 //        [_tableView reloadData];
 //        return;
 //    }
-//    
+//
 //    /**< 模糊查找*/
 //    //    NSPredicate *predicateString = [NSPredicate predicateWithFormat:@"%K BEGINSWITH %@",keyName, searchText];
 //    /**< 精确查找*/
@@ -155,7 +177,7 @@
 //    //    NSLog(@"predicateString:%@",predicateString);
 //    //    NSLog(@"_resultArray:%@",_resultArray);
 //    //    NSMutableArray  *filteredArray = (NSMutableArray *)[_resultArray filteredArrayUsingPredicate:predicateString];
-//    
+//
 //    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF contains [cd] %@", searchText];
 //    NSLog(@"predicate:%@",predicate);
 //    NSArray *results = [_resultArray filteredArrayUsingPredicate:predicate];
@@ -195,7 +217,7 @@
 {
     if(tableView!=_tableView)
     {
-
+        
         return [_resultArray count];
     }
     else
@@ -213,6 +235,20 @@
     static NSString*cellName=@"cell";
     NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
     UITableViewCell*cell=[tableView dequeueReusableCellWithIdentifier:cellName];
+    NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+    for (int i=0; i<_childrenArray.count; i++) {
+        if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[arr objectAtIndex:row]]) {
+            tempChildDictionary=[_childrenArray  objectAtIndex:i];
+            NSLog(@"tempChildDictionary is%@",tempChildDictionary);
+            NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
+            break;
+        }
+        
+//         [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+    }
+    
+    
+    
     if(cell==nil)
     {
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
@@ -226,7 +262,7 @@
         
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
-        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[_childrenArray objectAtIndex:row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
         
         
@@ -237,60 +273,15 @@
         
         KidsImgView.tag=101;
         [cell addSubview:KidsImgView];
-//        if(tableView!=_tableView){
-//            cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
-//        }else{
-        
-            
-            //儿童名称
-            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 20, CGRectGetWidth(cell.frame)-80, 20)];
-            
-            
-            if (arr.count>0) {
-                
-                [KidsLbl setText:[arr objectAtIndex:row]];
-            }
-            else
-            {
-                [KidsLbl setText:@"*****"];
-            }
-            [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
-            [KidsLbl setTextColor:[UIColor blackColor]];
-            [KidsLbl setTextAlignment:NSTextAlignmentLeft];
-            KidsLbl.tag=102;
-            [cell addSubview:KidsLbl];
-            
-//        }
+        //        if(tableView!=_tableView){
+        //            cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
+        //        }else{
         
         
-        //选中/取消图标
-        UIImageView *SelecteImgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith-42, 20, 20, 20)];
-        [SelecteImgView setImage:[UIImage imageNamed:@"selected_off"]];
-        SelecteImgView.tag=103;
-        [cell addSubview:SelecteImgView];
-        for (int i=0;i<SelectedchildrenArray.count;i++) {
-            if ([[[[[_childrenArray objectAtIndex:row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ] isEqualToNumber:[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]]) {
-                [SelecteImgView setImage:[UIImage imageNamed:@"selected"]];
-                break;
-            }
-        }
-        
-    }
-    EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
-    
-    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[_childrenArray objectAtIndex:row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
-    
-    KidsImgView.imageURL = [NSURL URLWithString:pathOne];
-    
-    pathOne=nil;
-    
-    
-//    if(tableView!=_tableView){
-//        cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
-//    }else{
-//        
         //儿童名称
-        UILabel * KidsLbl =(UILabel *)[cell viewWithTag:102];
+        UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 20, CGRectGetWidth(cell.frame)-80, 20)];
+        
+        
         if (arr.count>0) {
             
             [KidsLbl setText:[arr objectAtIndex:row]];
@@ -299,20 +290,100 @@
         {
             [KidsLbl setText:@"*****"];
         }
+        [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
+        [KidsLbl setTextColor:[UIColor blackColor]];
+        [KidsLbl setTextAlignment:NSTextAlignmentLeft];
+        KidsLbl.tag=102;
+        [cell addSubview:KidsLbl];
+        
+        //        }
+        
+        
+        //选中/取消图标
+        UIImageView *SelecteImgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith-42, 20, 20, 20)];
+        
+        SelecteImgView.tag=103;
+        [cell addSubview:SelecteImgView];
+        
+    
+                BOOL isExistence=NO;
+                for (int i=0; i<self.SelectedchildrenIDArray.count; i++) {
+                    if ([[[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"] copy] isEqualToNumber:[self.SelectedchildrenIDArray objectAtIndex:i]] ) {
+                        isExistence=YES;
+                        [SelecteImgView setImage:[UIImage imageNamed:@"selected"]];
+                        break;
+                    }
+                    else
+                    {
+                        isExistence=NO;
+                    }
+                }
+                if (isExistence==NO) {
+  
+                    [SelecteImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                }
+       
         
         
         
-//    }
+        
+        
+    }
+    EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
+    
+    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] copy]];
+    
+    KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+    
+    pathOne=nil;
+    
+    
+    //    if(tableView!=_tableView){
+    //        cell.textLabel.text=[_resultArray objectAtIndex:indexPath.row];
+    //    }else{
+    //
+    //儿童名称
+    UILabel * KidsLbl =(UILabel *)[cell viewWithTag:102];
+    if (arr.count>0) {
+        
+        [KidsLbl setText:[arr objectAtIndex:row]];
+    }
+    else
+    {
+        [KidsLbl setText:@"*****"];
+    }
+    
+    
+    
+    //    }
     
     UIImageView *SelecteImgView=(UIImageView *)[cell viewWithTag:103];
     [SelecteImgView setImage:[UIImage imageNamed:@"selected_off"]];
-
-    for (int i=0;i<SelectedchildrenArray.count;i++) {
-        if ([[[[[_childrenArray objectAtIndex:row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ] isEqualToNumber:[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]]) {
+    
+    //    if ([[[[_childrenArray objectAtIndex:row] objectForKey:@"parents"]objectForKey:@"guardianId" ] isEqualToNumber:[NSNumber numberWithLong:(long)[self.guestId longLongValue]]]) {
+    //        [SelecteImgView setImage:[UIImage imageNamed:@"selected"]];
+    //
+    //    }
+    BOOL isExistence=NO;
+    for (int i=0; i<self.SelectedchildrenIDArray.count; i++) {
+        if ([[[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy] isEqualToNumber:[self.SelectedchildrenIDArray objectAtIndex:i]] ) {
+            isExistence=YES;
+            NSLog(@"row=%D,%@,%@",row,[[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy],[self.SelectedchildrenIDArray objectAtIndex:i]);
             [SelecteImgView setImage:[UIImage imageNamed:@"selected"]];
             break;
         }
+        else
+        {
+            isExistence=NO;
+        }
     }
+    if (isExistence==NO) {
+        
+        [SelecteImgView setImage:[UIImage imageNamed:@"selected_off"]];
+    }
+    
+    tempChildDictionary=nil;
+    
     return cell;
 }
 //设置索引条
@@ -359,40 +430,48 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    int section = indexPath.section;
+    int row = indexPath.row;
     if(tableView!=_tableView){
         
     }
     else
     {
 
+        NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
+        NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+
+        for (int i=0; i<_childrenArray.count; i++) {
+            if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[arr objectAtIndex:row]]) {
+                tempChildDictionary=[_childrenArray  objectAtIndex:i];
+                break;
+            }
+        }
         
-        NSLog(@"_childrenArray is %@",[_childrenArray objectAtIndex:indexPath.row]);
-        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
         
-        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"childId"];
-        
-         [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
-        
-        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
-        
-        
-        
-        [self.SelectedchildrenArray addObject:[tempDictionary copy]];
-        
+        BOOL isExistence=NO;
+        for (int i=0; i<self.SelectedchildrenIDArray.count; i++) {
+            if ([[[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"
+                  ]copy] isEqualToNumber:[self.SelectedchildrenIDArray objectAtIndex:i]] ) {
+                isExistence=YES;
+                [self.SelectedchildrenIDArray removeObjectAtIndex:i];
+
+                break;
+                //                        self.SelectedchildrenArray
+                
+            }
+            else
+            {
+                isExistence=NO;
+            }
+            
+        }
+        if (isExistence==NO) {
+            [self.SelectedchildrenIDArray addObject: [[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy]] ;
+
+        }
         [_tableView reloadData];
-       
-        
-        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
-        
-        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
-        
-        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
-        
-        
-        [tempDictionary removeAllObjects];
-        tempDictionary=nil;
-        
- 
+        tempChildDictionary=nil;
     }
 }
 
@@ -413,11 +492,65 @@
     }
     
 }
+
+#pragma mark --
+#pragma mark --服务器返回信息
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
+{
+    NSString *responseString = [request responseString];
+    if ([tag isEqualToString:GRANT_GUESTS]) {
+        NSData *responseData = [request responseData];
+        //关闭加载
+        [HUD hide:YES afterDelay:0];
+//        if (_childrenArray.count>0) {
+//            _childrenArray =nil;
+//            _childrenArray=[NSArray array];
+//        }
+//        _childrenArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"] copy];
+////        tempDictionary=nil;
+//        responseData=nil;
+//        
+//        
+//        for (int j=0; j<_childrenArray.count; j++) {
+//            NSLog(@"%@,%@",[[[_childrenArray objectAtIndex:j] objectForKey:@"parents"]objectForKey:@"guardianId" ],[NSNumber numberWithLong:(long)[self.guestId longLongValue]]);
+//            if ([[[[_childrenArray objectAtIndex:j] objectForKey:@"parents"]objectForKey:@"guardianId" ] isEqualToNumber:[NSNumber numberWithLong:(long)[self.guestId longLongValue]]]) {
+//                    [self.SelectedchildrenIDArray addObject: [[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]] ;
+//        }
+//    }
+//        
+//        for (int i=0; i<_childrenArray.count; i++) {
+//            [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+//            
+//        }
+//        _resultArray=(NSArray *)_dataArray;
+//        self.data = [IIILocalizedIndex indexed:_dataArray];
+//        self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
+//        [_tableView reloadData];
+    }
+}
 #pragma mark --
 #pragma mark - 点击事件
 /**提交表单*/
 -(void)Ok
 {
+    //开启加载
+    [HUD show:YES];
+    NSMutableArray *tempArray=[NSMutableArray array];
+    for (int i=0; i<_childrenArray.count; i++) {
+        for(int j=0;j<_SelectedchildrenIDArray.count;j++)
+        {
+            if(![[_SelectedchildrenIDArray objectAtIndex:j] isEqualToNumber:[[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy]])
+            {
+                [tempArray addObject:[[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy]];
+                break;
+            }
+        }
+    }
+    NSString *_str = [_SelectedchildrenIDArray componentsJoinedByString:@","];
+    NSString *_str2 = [tempArray componentsJoinedByString:@","];
+      NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.guestId, @"guestId", _str,@"accessChildIds",_str2,@"noAccessChildIds",nil];
     
+    [self postRequest:GRANT_GUESTS RequestDictionary:[tempDoct copy] delegate:self];
+    tempDoct=nil;
 }
 @end

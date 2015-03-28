@@ -9,15 +9,21 @@
 #import "SettingsViewController.h"
 
 #import "ASIDownloadCache.h"
-#import "AccreditViewController.h"
+#import "AccreditViewController.h"//授权列表
+#import "KidslistViewController.h"//儿童列表
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 /** all items */
 @property (nonatomic,strong) UITableView * optionsTable;
 /**右按钮*/
 @property(nonatomic, strong) UIBarButtonItem *rightBtnItem;
 
+
+
+
 /**授权列表*/
 @property(nonatomic, strong) AccreditViewController * accred;
+//儿童列表
+@property(nonatomic, strong) KidslistViewController * kidslist;
 @end
 
 @implementation SettingsViewController
@@ -31,7 +37,7 @@
     // Do any additional setup after loading the view.
     
     self.navigationItem.rightBarButtonItem = self.rightBtnItem;
-   
+    
     self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(settingsSelectLeftAction:)];
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
@@ -47,6 +53,14 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+    
+    if (_accred!=nil) {
+        _accred=nil;
+    }
+    if (_kidslist!=nil) {
+        _kidslist=nil;
+    }
+    
 }
 
 
@@ -69,11 +83,11 @@
 
 - (void)viewDidDisappear:(BOOL)animated{
     [_optionsTable removeFromSuperview];
-
+    
     
     [self.view removeFromSuperview];
     [self setOptionsTable:nil];
-
+    
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
@@ -104,9 +118,9 @@
         [button.layer setCornerRadius:4.0];
         [button.layer setBorderColor:[UIColor whiteColor].CGColor];
         [button addTarget:self action:@selector(exitAction:) forControlEvents:UIControlEventTouchUpInside];
-
+        
         rightBtnItem = [[UIBarButtonItem alloc] initWithCustomView:button] ;
-
+        
     }
     return rightBtnItem;
 }
@@ -164,7 +178,7 @@
 // 设置cell的高度
 - (CGFloat)tableView:(UITableView *)atableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
+    
     return 60;
 }
 
@@ -187,24 +201,7 @@
     
 }
 
-/**
- *  set each items in tableview
- *
- *  @param textName <#textName description#>
- *
- *  @return <#return value description#>
- */
--(UILabel *) settingLable: (NSString *)textName{
-    
-    UILabel* label = [[UILabel alloc] initWithFrame:CGRectMake(17.0f,0, Drive_Wdith-34, 59)];
-    [label setBackgroundColor:[UIColor clearColor]];
-    label.font=[UIFont fontWithName:@"Helvetica-Bold" size:14];
-    label.textAlignment = NSTextAlignmentLeft;
-    label.textColor=[UIColor blackColor];
-    label.text = LOCALIZATION(textName);
-    
-    return label;
-}
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     static NSString *detailIndicated = @"tableCell";
@@ -213,74 +210,77 @@
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-        //        cell.tag = indexPath.row;
-        //section is 5.
-        if(indexPath.section == 0){
+        if (indexPath.section==0) {
             if(indexPath.row == 0){
-                
-                [cell addSubview:[self settingLable:@"text_auto_refresh"]];
-            }else if(indexPath.row == 1){
-                
-                [cell addSubview:[self settingLable:@"text_enableSound"]];
-            }else if(indexPath.row == 2){
-                
-                [cell addSubview:[self settingLable:@"text_enableVibration"]];
-            }
-        }else if(indexPath.section == 1){
-            if(indexPath.row == 0){
-                
-                [cell addSubview:[self settingLable:@"btn_children_list"]];
-                
-            }else if(indexPath.row == 1){
-                
-                [cell addSubview:[self settingLable:@"btn_auth_list"]];
-                
-            }
-        }else if(indexPath.section == 2){
-            if(indexPath.row == 0){
-                
-                [cell addSubview:[self settingLable:@"text_english"]];
-                
-            }else if(indexPath.row == 1){
-                
-                [cell addSubview:[self settingLable:@"text_chinese"]];
-                
-                
-            }else if(indexPath.row == 2){
-                
-                [cell addSubview:[self settingLable:@"text_simplified_chinese"]];
-                
-            }
-        }else if(indexPath.section == 3){
-            if(indexPath.row == 0){
-                
-                [cell addSubview:[self settingLable:@"text_update_password"]];
-                
-            }else if(indexPath.row == 1){
-                
-                [cell addSubview:[self settingLable:@"text_update_nickname"]];
-                
-            }
-        }else if(indexPath.section == 4){
-            if(indexPath.row == 0){
-                [cell addSubview:[self settingLable:@"text_about"]];
-                
-            }else if(indexPath.row == 1){
-                
-                [cell addSubview:[self settingLable:@"text_TermsOfService"]];
-                
-            }else if(indexPath.row == 2){
-                [cell addSubview:[self settingLable:@"text_privacyPolicy"]];
                 
             }
         }
-        
-        
     }
     
     
+    if(indexPath.section == 0){
+        if(indexPath.row == 0){
+            cell.textLabel.text=LOCALIZATION(@"text_auto_refresh");
+            //            [cell addSubview:[self settingLable:@"text_auto_refresh"]];
+        }else if(indexPath.row == 1){
+            cell.textLabel.text=LOCALIZATION(@"text_enableSound");
+            //            [cell addSubview:[self settingLable:@"text_enableSound"]];
+        }else if(indexPath.row == 2){
+            cell.textLabel.text=LOCALIZATION(@"text_enableVibration");
+            //            [cell addSubview:[self settingLable:@"text_enableVibration"]];
+        }
+    }else if(indexPath.section == 1){
+        if(indexPath.row == 0){
+            cell.textLabel.text=LOCALIZATION(@"btn_children_list");
+            //            [cell addSubview:[self settingLable:@"btn_children_list"]];
+            
+        }else if(indexPath.row == 1){
+            cell.textLabel.text=LOCALIZATION(@"btn_auth_list");
+            //            [cell addSubview:[self settingLable:@"btn_auth_list"]];
+            
+        }
+    }else if(indexPath.section == 2){
+        if(indexPath.row == 0){
+            cell.textLabel.text=LOCALIZATION(@"text_english");
+            //            [cell addSubview:[self settingLable:@"text_english"]];
+            
+        }else if(indexPath.row == 1){
+            cell.textLabel.text=LOCALIZATION(@"text_chinese");
+            //            [cell addSubview:[self settingLable:@"text_chinese"]];
+            
+            
+        }else if(indexPath.row == 2){
+            cell.textLabel.text=LOCALIZATION(@"text_simplified_chinese");
+            //            [cell addSubview:[self settingLable:@"text_simplified_chinese"]];
+            
+        }
+    }else if(indexPath.section == 3){
+        if(indexPath.row == 0){
+            cell.textLabel.text=LOCALIZATION(@"text_update_password");
+            //            [cell addSubview:[self settingLable:@"text_update_password"]];
+            
+        }else if(indexPath.row == 1){
+            cell.textLabel.text=LOCALIZATION(@"text_update_nickname");
+            //            [cell addSubview:[self settingLable:@"text_update_nickname"]];
+            
+        }
+    }else if(indexPath.section == 4){
+        if(indexPath.row == 0){
+            cell.textLabel.text=LOCALIZATION(@"text_about");
+            //            [cell addSubview:[self settingLable:@"text_about"]];
+            
+        }else if(indexPath.row == 1){
+            cell.textLabel.text=LOCALIZATION(@"text_TermsOfService");
+            //            [cell addSubview:[self settingLable:@"text_TermsOfService"]];
+            
+        }else if(indexPath.row == 2){
+            cell.textLabel.text=LOCALIZATION(@"text_privacyPolicy");
+            //            [cell addSubview:[self settingLable:@"text_privacyPolicy"]];
+            
+        }
+    }
     
-    
+    cell.textLabel.font=[UIFont fontWithName:@"Helvetica-Bold" size:14];
     
     return cell;
 }
@@ -288,14 +288,23 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (indexPath.section == 1){
-    if(indexPath.row==1)
-    {
-        if (_accred==nil) {
-            _accred= [[AccreditViewController alloc] init];
+        if(indexPath.row==0)
+        {
+            if (_kidslist==nil) {
+                _kidslist= [[KidslistViewController alloc] init];
+            }
+            [self.navigationController pushViewController:_kidslist animated:YES];
         }
-        [self.navigationController pushViewController:_accred animated:YES];
+        if(indexPath.row==1)
+        {
+            if (_accred==nil) {
+                _accred= [[AccreditViewController alloc] init];
+            }
+            [self.navigationController pushViewController:_accred animated:YES];
+        }
+        
     }
-    }
+    
 }
 
 

@@ -257,7 +257,7 @@
     _isloadNews=YES;
     self.avgDaysStr=@"5";
     self.organizationIndex=0;
-    NSFileManager *fileManager = [NSFileManager defaultManager];
+//    NSFileManager *fileManager = [NSFileManager defaultManager];
     // 创建目录
 //    [fileManager createDirectoryAtPath:@"localImg" withIntermediateDirectories:YES attributes:nil error:nil];
 //     _documentsDirectoryPath=[NSString stringWithFormat:@"%@/%@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0],@"localImg"];
@@ -2442,7 +2442,7 @@ CGPoint pt = [scrollView contentOffset];
         {
             for(int j=0;j<tempArray.count;j++)
             {
-                 NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
+
                 if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
                 {
                     [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
@@ -2472,8 +2472,8 @@ CGPoint pt = [scrollView contentOffset];
                 
                  myDelegate.childDictionary=[[NSDictionary alloc]init];
             }
-             NSLog(@"_childrenDictionary %@\n",[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]);
-             NSLog(@"_childrenDictionary %@\n",[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]);
+//             NSLog(@"_childrenDictionary %@\n",[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]);
+//             NSLog(@"_childrenDictionary %@\n",[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]);
             NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
             
             [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
@@ -2605,7 +2605,7 @@ CGPoint pt = [scrollView contentOffset];
     {
         for(int j=0;j<tempArray.count;j++)
         {
-            NSLog(@"locId %lld\n locationId %lld\n",[[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue],[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue]);
+
             if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
             {
                 [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
@@ -2940,6 +2940,9 @@ CGPoint pt = [scrollView contentOffset];
 - (void)closeAction
 {
     [_PopupSView setHidden:YES];
+    
+    
+   
 }
 
 

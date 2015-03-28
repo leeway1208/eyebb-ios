@@ -110,7 +110,6 @@
 		3264D97F1A9D6F2C009CB9C2 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3264D9791A9D6DA5009CB9C2 /* libxml2.dylib */; };
 		326A92491A9C480D00CAB4F3 /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 326A92481A9C480D00CAB4F3 /* MainViewController.m */; };
 		327D13BA1ABAAA74002E5F73 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 327D13B91ABAAA74002E5F73 /* Social.framework */; };
-		327D13BD1ABAAACE002E5F73 /* AddGuardianViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */; };
 		327D13C01ABABB71002E5F73 /* KidMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */; };
 		32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32D377DF1AB120C20055A8DE /* KidslistViewController.m */; };
 		32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 32FC01421AA83E3B001FB4D3 /* Images.xcassets */; };
@@ -346,8 +345,6 @@
 		326A92471A9C480D00CAB4F3 /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		326A92481A9C480D00CAB4F3 /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
 		327D13B91ABAAA74002E5F73 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
-		327D13BB1ABAAACE002E5F73 /* AddGuardianViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGuardianViewController.h; sourceTree = "<group>"; };
-		327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddGuardianViewController.m; sourceTree = "<group>"; };
 		327D13BE1ABABB71002E5F73 /* KidMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidMessageViewController.h; sourceTree = "<group>"; };
 		327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidMessageViewController.m; sourceTree = "<group>"; };
 		32D377DE1AB120C20055A8DE /* KidslistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidslistViewController.h; sourceTree = "<group>"; };
@@ -498,8 +495,6 @@
 				20B043491AB081AC0081738D /* ChildrenListViewController.m */,
 				3245EFDA1AB944AB001431E2 /* WebViewController.h */,
 				3245EFDB1AB944AB001431E2 /* WebViewController.m */,
-				327D13BB1ABAAACE002E5F73 /* AddGuardianViewController.h */,
-				327D13BC1ABAAACE002E5F73 /* AddGuardianViewController.m */,
 				327D13BE1ABABB71002E5F73 /* KidMessageViewController.h */,
 				327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */,
 				2051945D1ABB1C95002C49CD /* AccreditViewController.h */,
@@ -1104,7 +1099,6 @@
 				3264D9551A9D6B72009CB9C2 /* ASICloudFilesObject.m in Sources */,
 				3264D94E1A9D6B72009CB9C2 /* ASIInputStream.m in Sources */,
 				209E6E9F1ABEF8E2005DB884 /* AddGuestViewController.m in Sources */,
-				327D13BD1ABAAACE002E5F73 /* AddGuardianViewController.m in Sources */,
 				3251C5E81AB01A1D0080C508 /* EGOImageButton.m in Sources */,
 				3209FFD11AA06C5300BC6C48 /* SerializationComplexEntities.m in Sources */,
 				3264D95B1A9D6B72009CB9C2 /* ASIS3ObjectRequest.m in Sources */,

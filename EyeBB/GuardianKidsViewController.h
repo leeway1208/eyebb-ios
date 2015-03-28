@@ -14,5 +14,7 @@
 }
 /**已选中儿童列表*/
 @property (nonatomic,strong) NSMutableArray*SelectedchildrenArray;
+/**授权人ID*/
+@property (nonatomic,strong) NSString *guestId;
 
 @end
