@@ -79,6 +79,7 @@
     self.gusetTxt=[[UITextField alloc]initWithFrame:CGRectMake(5, 10, Drive_Wdith-10, 40)];
     self.gusetTxt.placeholder=LOCALIZATION(@"text_user_name");
     UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
+    imgV.frame=CGRectMake(0, 0, 19, 21) ;
     self.gusetTxt.leftView=imgV;//设置输入框内左边的图标
     self.gusetTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     self.gusetTxt.leftViewMode=UITextFieldViewModeAlways;

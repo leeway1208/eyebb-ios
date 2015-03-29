@@ -16,9 +16,14 @@
 @property (nonatomic,strong) UITableView * optionsTable;
 /**右按钮*/
 @property(nonatomic, strong) UIBarButtonItem *rightBtnItem;
-
-
-
+/**弹出层*/
+@property (nonatomic,strong) UIView * pushView;
+/**刷新时间设置显示*/
+@property (nonatomic,strong) UILabel * timeLbl;
+/**刷新时间设置*/
+@property (nonatomic,strong) UISlider *timeSlider;
+/**刷新时间设置确定*/
+@property (nonatomic,strong) UIButton *timeBtn;
 
 /**授权列表*/
 @property(nonatomic, strong) AccreditViewController * accred;
@@ -43,9 +48,9 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
-    //    self.navigationController.navigationBar.tintColor = [UIColor colorWithRed:236.0f/255.0f green:66.0f/255.0f  blue:53.0f/255.0f alpha:1.0f];
+    
     [self loadWidget];
-    // Do any additional setup after loading the view.
+    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -103,6 +108,50 @@
     //_optionsTable.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_optionsTable];
     
+    _pushView =[[UIView alloc]initWithFrame:self.view.bounds];
+    _pushView.backgroundColor=[UIColor colorWithRed:0.000 green:0.000 blue:0.000 alpha:0.3];
+
+    [self.view addSubview:_pushView];
+    
+    UIView * bgView=[[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(self.view.bounds)/2-47.5, CGRectGetWidth(self.view.bounds)-20, 95)];
+    //设置按钮是否圆角
+    [bgView.layer setMasksToBounds:YES];
+    //圆角像素化
+    [bgView.layer setCornerRadius:4.0];
+    [bgView setBackgroundColor:[UIColor whiteColor]];
+    [_pushView addSubview:bgView];
+    
+    _timeLbl=[[UILabel alloc]initWithFrame:CGRectMake(5, 0, CGRectGetWidth(bgView.bounds)-10, 20)];
+    _timeLbl.backgroundColor=[UIColor clearColor];
+    _timeLbl.font=[UIFont systemFontOfSize:16];
+    _timeLbl.text=@"5秒";
+    _timeLbl.textAlignment=NSTextAlignmentCenter;
+    [bgView addSubview:_timeLbl];
+    
+    _timeSlider= [[UISlider alloc]initWithFrame:CGRectMake(5, 20,CGRectGetWidth(bgView.bounds)-10 , 20)];
+    _timeSlider.minimumValue = 5;//下限
+    _timeSlider.maximumValue = 900;//上限
+    _timeSlider.value = 5;//默认值
+    
+    [_timeSlider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
+    _timeSlider.continuous = YES ;//滑动中也触发获取值
+    [bgView addSubview:_timeSlider];
+    
+    
+    _timeBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 55, CGRectGetWidth(bgView.bounds)-10, 32)];
+    [_timeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+    [_timeBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
+    [_timeBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [_timeBtn.layer setBorderWidth:1.0];
+    //设置按钮是否圆角
+    [_timeBtn.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_timeBtn.layer setCornerRadius:4.0];
+    [_timeBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [_timeBtn addTarget:self action:@selector(OKAction:) forControlEvents:UIControlEventTouchUpInside];
+    [bgView addSubview:_timeBtn];
+    _pushView.hidden=YES;
+    
 }
 /**自定义右按钮*/
 -(UIBarButtonItem *)rightBtnItem{
@@ -123,6 +172,21 @@
         
     }
     return rightBtnItem;
+}
+/**获取刷新时间间隔值显示*/
+- (void) sliderValueChanged:(id)sender{
+    UISlider* control = (UISlider*)sender;
+    if(control == _timeSlider){
+        int value = control.value;
+        if (value>60) {
+            _timeLbl.text=[NSString stringWithFormat:@"%d分%d秒",value/60,value%60];
+        }
+        else
+        {
+            _timeLbl.text=[NSString stringWithFormat:@"%d秒",value];
+        }
+        
+    }
 }
 
 #pragma mark - table view
@@ -287,6 +351,12 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
+    if (indexPath.section == 0){
+        if(indexPath.row==0)
+        {
+            _pushView.hidden=NO;
+        }
+    }
     if (indexPath.section == 1){
         if(indexPath.row==0)
         {
@@ -337,5 +407,12 @@
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 
+-(void)OKAction:(id)sender
+{
+    int value = _timeSlider.value;
+    NSUserDefaults *refresh = [NSUserDefaults standardUserDefaults];
+    [refresh setInteger:value forKey:@"refreshTime"];
+    _pushView.hidden=YES;
+}
 
 @end
