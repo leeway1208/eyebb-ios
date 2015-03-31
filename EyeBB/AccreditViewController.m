@@ -223,7 +223,7 @@
             gusetNumView.tag=103;
             [bindView addSubview:gusetNumView];
             
-            UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, 20, 20)];
+            UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 1.5, 16, 16)];
             [numImgView setImage:[UIImage imageNamed:@"actbar_profileOn"]];
             //            [numImgView setAlpha:0.5];
             [gusetNumView addSubview:numImgView];

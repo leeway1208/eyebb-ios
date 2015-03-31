@@ -28,13 +28,13 @@
 #endif
 
 
+#define LOCALIZATION(text) [[Localisator sharedInstance] localizedStringForKey:(text)]
 
 //屏幕宽度
 #define Drive_Wdith ([UIScreen mainScreen].applicationFrame.size.width)
 //屏幕除去状态栏高度
 #define Drive_Height ([UIScreen mainScreen].applicationFrame.size.height)
 
-#define LOCALIZATION(text) [[Localisator sharedInstance] localizedStringForKey:(text)]
 
 // work execution time
 #define TICK   NSDate *startTime = [NSDate date]

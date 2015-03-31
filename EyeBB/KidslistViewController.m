@@ -29,10 +29,13 @@
 @property (strong,nonatomic)  KidMessageViewController * km;
 //-------------------视图变量--------------------
 @property NSInteger cellHeight;
+
+/**图片本地存储地址*/
+@property (nonatomic,strong)NSString * documentsDirectoryPath;
 @end
 
 @implementation KidslistViewController
-@synthesize  _childrenArray;
+@synthesize  childrenArray;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -71,37 +74,39 @@
     
     self.grantedArray=[[NSMutableArray alloc]init];
     
-    for(int i=0;i<_childrenArray.count; i++)
+    for(int i=0;i<childrenArray.count; i++)
     {
         NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
         
-        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+        [tempDictionary setObject:[[[[childrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
 
-        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
         
-        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+        [tempDictionary setObject:[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
         
-        [tempDictionary setObject:[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+        [tempDictionary setObject:[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
         
-        [tempDictionary setObject:[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
+        [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
         
         
-        if (![[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-            [self.BindingArray addObject:tempDictionary];
+        if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+            [self.BindingArray addObject:[tempDictionary copy]];
         }
         
-        if ([[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-            [self.unBindingArray addObject:tempDictionary];
+        if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+            [self.unBindingArray addObject:[tempDictionary copy]];
         }
         
-        if (![[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
-            [self.grantedArray addObject:tempDictionary];
+        if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
+            [self.grantedArray addObject:[tempDictionary copy]];
         }
         
         [tempDictionary removeAllObjects];
         tempDictionary=nil;
     }
     _cellHeight=44;
+    
+     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
 /**
@@ -239,7 +244,43 @@
             [kindBtn.layer setBorderWidth:2];
             
             [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-            [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+            NSLog(@"tempArray si %@",tempArray);
+            if (tempArray.count>0&&![[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]] isEqualToString:@""]) {
+                NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
+                
+                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+                
+                
+                
+                if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+                    
+                    [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
+                }
+                else
+                {
+                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                    [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+                    //Get Image From URL
+                    UIImage * imageFromURL  = nil;
+                    imageFromURL=[UIImage imageWithData:data];
+                    //Save Image to Directory
+                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+                    
+                    
+                }
+                pathOne=nil;
+                array=nil;
+                array2=nil;
+                
+            }
+            else
+            {
+                [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
+            }
+
+//            [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
             //设置按钮响应事件
             [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
             kindBtn.tag=102+i;
@@ -326,7 +367,44 @@
                 [kindBtn.layer setBorderWidth:2];
                 
                 [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+        
+        if (tempArray.count>0&&![[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]] isEqualToString:@""]) {
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
+            
+            NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+            NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+            
+            
+            
+            if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+                
+                [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
+            }
+            else
+            {
+                NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+                //Get Image From URL
+                UIImage * imageFromURL  = nil;
+                imageFromURL=[UIImage imageWithData:data];
+                //Save Image to Directory
+                [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+                
+                
+            }
+            pathOne=nil;
+            array=nil;
+            array2=nil;
+            
+        }
+        else
+        {
+            [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
+        }
+
+        
+//                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
                 [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=102+i;

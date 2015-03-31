@@ -17,11 +17,12 @@
 #import "QRCodeViewController.h"
 #import "RootViewController.h"
 #import "ScanDeviceToBindingViewController.h"
+#import "AppDelegate.h"
 
 @interface WelcomeViewController ()<UIGestureRecognizerDelegate>
-//{
-//     AppDelegate *myDelegate;
-//}
+{
+     AppDelegate *myDelegate;
+}
 //注册按钮
 @property (nonatomic,strong) UIButton * RegBtn;
 //登录按钮
@@ -50,14 +51,29 @@
     
     NSLog(@"当前语言:%@", strLanguage);
     
-
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     // Do any additional setup after loading the view, typically from a nib.
     self.view.backgroundColor=[UIColor whiteColor];
     logoImgView=[[UIImageView alloc]initWithFrame:CGRectZero];
     logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
 //    [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
-    [logoImgView setImage:[UIImage imageNamed:@"test"]];
+    switch (myDelegate.applanguage) {
+        case 0:
+           [logoImgView setImage:[UIImage imageNamed:@"logo_cht"]];
+            break;
+        case 1:
+            [logoImgView setImage:[UIImage imageNamed:@"logo_cht"]];
+            break;
+        case 2:
+            [logoImgView setImage:[UIImage imageNamed:@"logo_en"]];
+            break;
+            
+        default:
+            break;
+    }
+
+    
     
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;

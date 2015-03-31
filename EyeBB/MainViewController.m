@@ -151,6 +151,8 @@
 @property (nonatomic,strong)NSString * documentsDirectoryPath;
 /***/
 @property (nonatomic,strong) NSString *avgDaysStr;
+/**刷新定时器*/
+@property (nonatomic,strong)NSTimer * refreshTimer;
 
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
@@ -216,6 +218,11 @@
         [self insertChildMessage];
        
     }
+    if(_isautoOn==YES&&huaHMSegmentedControl==0)
+    {
+        //开启定时器
+        [self.refreshTimer setFireDate:[NSDate distantPast]];
+    }
 }
 
 
@@ -266,6 +273,11 @@
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
 //    [fileManager removeItemAtPath:_documentsDirectoryPath error:nil];
+    
+     NSUserDefaults *refresh = [NSUserDefaults standardUserDefaults];
+    self.refreshTimer=[NSTimer scheduledTimerWithTimeInterval:[[refresh objectForKey:@"refreshTime"]doubleValue] target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
+    //关闭定时器
+    [self.refreshTimer setFireDate:[NSDate distantFuture]];
 }
 
 /**
@@ -383,13 +395,13 @@
     //室内定位titleView
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 1, Drive_Wdith, 44)];
     titleView.backgroundColor=[UIColor clearColor];
-    UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 44.0f)];
+    UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-64, 44.0f)];
     [labelTitle setBackgroundColor:[UIColor clearColor]];
     labelTitle.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
     labelTitle.textAlignment = NSTextAlignmentLeft;
     labelTitle.textColor=[UIColor blackColor];
     
-    labelTitle.text = @"室内定位";
+    labelTitle.text = LOCALIZATION(@"text_indoor_locator");
     
     [titleView addSubview:labelTitle];
     
@@ -424,7 +436,7 @@
     
     [_organizationShowBtn setContentEdgeInsets:UIEdgeInsetsMake(0,0, 0, 20)];
     
-    UIImageView * osBtnImgView=[[UIImageView alloc]initWithFrame:CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15)];
+    UIImageView * osBtnImgView=[[UIImageView alloc]initWithFrame:CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),15.5,20,13)];
     [osBtnImgView setImage:[UIImage imageNamed:@"arrow_down"]];
     osBtnImgView.tag=218;
     [_organizationShowBtn addSubview:osBtnImgView];
@@ -662,7 +674,7 @@
     _conditionLbl.text = str3;
     [_PerformanceTimeBtn addSubview:_conditionLbl];
 
-    _conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 14.0f, 15.0F, 15.0F)];
+    _conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 15.5,20,13)];
     [_conditionImgView setImage:[UIImage imageNamed:@"arrow_down"]];
      [_PerformanceTimeBtn addSubview:_conditionImgView];
     
@@ -1234,8 +1246,8 @@
             roomKindNumView.tag=204;
             [RoomBtn addSubview:roomKindNumView];
             
-            UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 0, 20, 20)];
-            [numImgView setImage:[UIImage imageNamed:@"actbar_profileOn"]];
+            UIImageView *numImgView=[[UIImageView alloc]initWithFrame:CGRectMake(5, 1, 16, 16)];
+            [numImgView setImage:[UIImage imageNamed:@"ppl_no"]];
             //            [numImgView setAlpha:0.5];
             [roomKindNumView addSubview:numImgView];
             
@@ -2051,7 +2063,7 @@
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
         
         UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
-        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15);
+        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),15.5,20,13);
         [_RoomTableView reloadData];
     }
     //活动
@@ -2260,6 +2272,11 @@
                         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
                         //开启加载
                         [HUD show:YES];
+                        if(_isautoOn==YES)
+                        {
+                            //开启定时器
+                            [self.refreshTimer setFireDate:[NSDate distantPast]];
+                        }
                     }
                     
                     break;
@@ -2276,7 +2293,8 @@
                     {
                         [self insertChildMessage];
                     }
-                    
+                    //关闭定时器
+                    [self.refreshTimer setFireDate:[NSDate distantFuture]];
                     break;
                 case 3:
                     _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 3.0f);
@@ -2289,17 +2307,21 @@
                     [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                     [_PersonageBtn setSelected:YES];
                     [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                    //关闭定时器
+                    [self.refreshTimer setFireDate:[NSDate distantFuture]];
                     if(_isreloadpersonal==YES)
                     {
                     [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
                         //开启加载
                         [HUD show:YES];
+                        
                     }
                     break;
-                    
-                default:
-                    break;
+                   
+            
             }
+        
+       
 //            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         }
         else
@@ -2350,7 +2372,7 @@ CGPoint pt = [scrollView contentOffset];
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-    NSString *responseString = [request responseString];
+//    NSString *responseString = [request responseString];
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
         NSData *responseData = [request responseData];
@@ -2425,7 +2447,7 @@ CGPoint pt = [scrollView contentOffset];
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
         
         UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
-        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),14.5,15,15);
+        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),15.5,20,13);
         
         CGRect  tempRect= _organizationTableView.frame;
         _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
@@ -2531,7 +2553,7 @@ CGPoint pt = [scrollView contentOffset];
     }
     //请求简报
     if ([tag isEqualToString:GET_REPORTS]) {
-        NSString *responseString = [request responseString];
+//        NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
        
         if(_activityInfosArray!=nil)
@@ -2676,6 +2698,11 @@ CGPoint pt = [scrollView contentOffset];
     [HUD show:YES];
 }
 
+-(void)timerFired:(id)sender
+{
+    [_RoomTableView reloadData];
+}
+
 #pragma mark --
 #pragma mark - Handle Gestures
 
@@ -2746,8 +2773,10 @@ CGPoint pt = [scrollView contentOffset];
     [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
     KidslistViewController * kindlist = [[KidslistViewController alloc] init];
-    kindlist._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+   
+    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
 
+     NSLog(@"---%@",kindlist.childrenArray);
     [self.navigationController pushViewController:kindlist animated:YES];
     kindlist.title = @"";
 }
@@ -2881,10 +2910,17 @@ CGPoint pt = [scrollView contentOffset];
         if(num==0)
         {
 //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+            if (self.isautoOn==YES) {
+                //开启定时器
+                [self.refreshTimer setFireDate:[NSDate distantPast]];
+            }
+           
         }
         if (num==2) {
             if(_isloadNews==YES)
             {
+                //关闭定时器
+                [self.refreshTimer setFireDate:[NSDate distantFuture]];
                 [self insertChildMessage];
                 
             }
@@ -2892,6 +2928,8 @@ CGPoint pt = [scrollView contentOffset];
         if (num==3) {
             if(_isreloadpersonal==YES)
             {
+                //关闭定时器
+                [self.refreshTimer setFireDate:[NSDate distantFuture]];
                 [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
                 //开启加载
                 [HUD show:YES];

@@ -27,6 +27,8 @@
         
         NSLog(@"第一次启动");
         self.appIsFirstStart = YES;
+        NSUserDefaults *refresh = [NSUserDefaults standardUserDefaults];
+        [refresh setInteger:5 forKey:@"refreshTime"];
     }
     else{
         self.appIsFirstStart = NO;

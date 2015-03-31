@@ -216,6 +216,17 @@
     static NSString*cellName=@"cell";
     NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
     UITableViewCell*cell=[tableView dequeueReusableCellWithIdentifier:cellName];
+    
+    NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+    for (int i=0; i<_childrenArray.count; i++) {
+        if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[arr objectAtIndex:row]]) {
+            tempChildDictionary=[_childrenArray  objectAtIndex:i];
+            NSLog(@"tempChildDictionary is%@",tempChildDictionary);
+            NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
+            break;
+        }
+    }
+    
     if(cell==nil)
     {
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
@@ -229,7 +240,7 @@
         
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
-        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[_childrenArray objectAtIndex:row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
         
         
@@ -267,7 +278,7 @@
     }
     EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
     
-    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[_childrenArray objectAtIndex:row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
 
     KidsImgView.imageURL = [NSURL URLWithString:pathOne];
 

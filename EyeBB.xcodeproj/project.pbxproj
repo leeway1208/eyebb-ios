@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2051945E1ABB1C95002C49CD /* AccreditViewController.m */; };
+		206134EE1ACA1F7C006AE0AA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20BD16EC1A99FC7700039A31 /* Info.plist */; };
 		209E6E9C1ABEBE4D005DB884 /* GuardianKidsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 209E6E9B1ABEBE4D005DB884 /* GuardianKidsViewController.m */; };
 		209E6E9F1ABEF8E2005DB884 /* AddGuestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 209E6E9E1ABEF8E2005DB884 /* AddGuestViewController.m */; };
 		20A6D8021ABAFC530028388B /* RMDisplayLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A6D7FF1ABAFC530028388B /* RMDisplayLabel.m */; };
@@ -1025,6 +1026,7 @@
 				TargetAttributes = {
 					20BD16E71A99FC7700039A31 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = 22255E57J4;
 					};
 					20BD17001A99FC7700039A31 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -1065,6 +1067,7 @@
 				20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */,
 				32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */,
 				20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */,
+				206134EE1ACA1F7C006AE0AA /* Info.plist in Resources */,
 				32FC01471AA83E3B001FB4D3 /* Images.xcassets in Resources */,
 				3251C67E1AB03DFF0080C508 /* zbar-helpicons.png in Resources */,
 				3240DAD81AA5591200661712 /* icon-40@3x.png in Resources */,
@@ -1291,6 +1294,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1311,6 +1316,7 @@
 					"$(PROJECT_DIR)/EyeBB/libs/QRCode/ZBarSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1319,6 +1325,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
@@ -1339,6 +1347,7 @@
 					"$(PROJECT_DIR)/EyeBB/libs/QRCode/ZBarSDK",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
