@@ -110,6 +110,15 @@
     RegBtn.hidden=YES;
     LoginBtn.hidden=YES;
     CopyrightLbl.hidden=YES;
+    
+    
+    if ([NSDate date]) {
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleModifyListNotification) name:@"modifyListNotification" object:nil];
+//        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeleteListNotification) name:@"deleteListNotification" object:nil];
+        //添加本地推送
+        [self scheduleLocalNotification];
+    }
+    NSLog(@"commit ok");
 }
 
 //页面显示后执行事件
@@ -343,6 +352,60 @@
     {
         [self lc];
     }
+}
+
+
+- (void)setupNotificationSetting{
+    UIUserNotificationType type = UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound;
+    
+    UIMutableUserNotificationAction *justInformAction = [[UIMutableUserNotificationAction alloc] init];
+    justInformAction.identifier = @"justInform";
+    justInformAction.title = @"YES,I got it.";
+    justInformAction.activationMode = UIUserNotificationActivationModeBackground;
+    justInformAction.destructive = NO;
+    justInformAction.authenticationRequired = NO;
+    
+    UIMutableUserNotificationAction *modifyListAction = [[UIMutableUserNotificationAction alloc] init];
+    modifyListAction.identifier = @"editList";
+    modifyListAction.title = @"Edit list";
+    modifyListAction.activationMode = UIUserNotificationActivationModeForeground;
+    modifyListAction.destructive = NO;
+    modifyListAction.authenticationRequired = YES;
+    
+    UIMutableUserNotificationAction *trashAction = [[UIMutableUserNotificationAction alloc] init];
+    trashAction.identifier = @"trashAction";
+    trashAction.title = @"Delete list";
+    trashAction.activationMode = UIUserNotificationActivationModeBackground;
+    trashAction.destructive = YES;
+    trashAction.authenticationRequired = YES;
+    
+    NSArray *actionArray = [NSArray arrayWithObjects:justInformAction,modifyListAction,trashAction, nil];
+    NSArray *actionArrayMinimal = [NSArray arrayWithObjects:modifyListAction,trashAction, nil];
+    
+    UIMutableUserNotificationCategory *shoppingListReminderCategory = [[UIMutableUserNotificationCategory alloc] init];
+    shoppingListReminderCategory.identifier = @"shoppingListReminderCategory";
+    [shoppingListReminderCategory setActions:actionArray forContext:UIUserNotificationActionContextDefault];
+    [shoppingListReminderCategory setActions:actionArrayMinimal forContext:UIUserNotificationActionContextMinimal];
+    
+    NSSet *categoriesForSettings = [[NSSet alloc] initWithObjects:shoppingListReminderCategory, nil];
+    UIUserNotificationSettings *newNotificationSettings = [UIUserNotificationSettings settingsForTypes:type categories:categoriesForSettings];
+    
+    UIUserNotificationSettings *notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:newNotificationSettings];
+    }
+    
+}
+
+- (void)scheduleLocalNotification{
+    [self setupNotificationSetting];
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:30];;
+    localNotification.alertBody = @"Hey, you must go shopping, remember?";
+    localNotification.alertAction = @"View List";
+    localNotification.category = @"shoppingListReminderCategory";
+    localNotification.applicationIconBadgeNumber++;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }
 
 @end

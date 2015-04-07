@@ -172,16 +172,7 @@
     //隐藏table自带的cell下划线
     _regTView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_regTView];
-    //    //版权信息
-    //    UILabel * CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
-    //    [CopyrightLbl setText:@"By Continuing, you agree to cur Terms and Privacy Policy."];
-    //    [CopyrightLbl setFont:[UIFont systemFontOfSize: 10.0]];
-    //    [CopyrightLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
-    //    [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];
-    //    [self.view addSubview:CopyrightLbl];
-    //
-    //
-    //
+
     //注册键盘弹起与收起通知
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(BasicRegkeyboardWillShow:)

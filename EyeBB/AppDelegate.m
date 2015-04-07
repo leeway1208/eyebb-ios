@@ -105,6 +105,9 @@
     }
     
     
+    
+    
+    
     return YES;
 }
 
@@ -128,6 +131,20 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void(^)())completionHandler{
+    if ([identifier isEqualToString:@"editList"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"modifyListNotification" object:nil];
+    } else if ([identifier isEqualToString:@"trashAction"]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"deleteListNotification" object:nil];
+    }
+    [UIApplication sharedApplication].applicationIconBadgeNumber--;
+    completionHandler();
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    [UIApplication sharedApplication].applicationIconBadgeNumber--;
 }
 
 @end
