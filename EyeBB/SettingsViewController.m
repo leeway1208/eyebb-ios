@@ -99,7 +99,7 @@
 
 -(void)loadWidget{
     NSLog(@"*** %f,---%F",self.view.bounds.size.height,Drive_Height);
-    _optionsTable=[[UITableView alloc] initWithFrame:self.view.bounds];
+    _optionsTable=[[UITableView alloc] initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height-44)];
     _optionsTable.dataSource = self;
     _optionsTable.delegate = self;
     //设置table是否可以滑动
@@ -258,7 +258,7 @@
     }else if(section == 3){
         return 2;
     }else if(section == 4){
-        return 4;
+        return 3;
     }
     
     return 0;
