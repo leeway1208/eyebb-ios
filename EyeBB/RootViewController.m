@@ -105,6 +105,18 @@
 
 }
 
+
+-(void)viewDidDisappear:(BOOL)animated{
+     [HUD hide:YES afterDelay:0];
+    
+    
+    [self.view removeFromSuperview];
+   
+    
+    [self setView:nil];
+    [super viewDidDisappear:animated];
+}
+
 // gesture to cancel swipe (use for ios 8)
 -(BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer{
     if([gestureRecognizer isEqual:self.navigationController.interactivePopGestureRecognizer]){
@@ -137,10 +149,17 @@
         //Loding progress bar
         [HUD show:YES];
         
-        NSDictionary *macAddressAndChildID = [NSDictionary dictionaryWithObjectsAndKeys:self.childID, RootViewController_KEY_childId,symbolStr ,RootViewController_KEY_macAddress,nil];
-        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+        //go to next view
+        ScanDeviceToBindingViewController *scan = [[ScanDeviceToBindingViewController alloc] init];
+        //pass to ScanDeviceToBindingViewController view
+        scan.macAddress = symbolStr;
+        scan.childId = self.childID;
+        scan.guardianId = self.guardianId;
         
-        [self postRequest:CHECK_BEACON RequestDictionary:macAddressAndChildID delegate:self];
+        [self.navigationController pushViewController:scan animated:YES];
+        scan.title = @"";
+        scan = nil;
+
         
 
         
@@ -343,57 +362,6 @@
     }
 }
 
-#pragma mark - server return
--(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
-    if ([tag isEqualToString:CHECK_BEACON]){
-        
-        [HUD hide:YES afterDelay:0];
-        NSData *responseData = [request responseData];
-        
-        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-
-        NSLog(@"CHECK_BEACON ----> %@ ",responseString);
-
-        if (responseString.length > 0) {
-            if ([responseString isEqualToString:SERVER_RETURN_NC]) {
-                return;
-            }else if([responseString isEqualToString:SERVER_RETURN_USED] || [responseString isEqualToString:SERVER_RETURN_WG]){
-                
-                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                            message:LOCALIZATION(@"text_device_already_binded")
-                                           delegate:self
-                                  cancelButtonTitle:LOCALIZATION(@"btn_confirm")
-                                  otherButtonTitles:nil] show];
-            }else if(responseString.length > 100){
-                return;
-            }else{
-                NSRange range = [responseString rangeOfString:@":"];
-                NSLog(@"CHECK_BEACON ----> %lu  ",(unsigned long)range.location);
-                self.deviceMajor = [responseString substringWithRange:NSMakeRange(0,range.location)];
-                self.deviceMinor = [responseString substringWithRange:NSMakeRange(range.location + 1,responseString.length - range.location - 1)];
-                NSLog(@"CHECK_BEACON ----> %@  --- %@ ",[self getMajor:self.deviceMajor],[self getMinor:self.deviceMinor]);
-
-                
-                //go to next view
-                ScanDeviceToBindingViewController *scan = [[ScanDeviceToBindingViewController alloc] init];
-                //pass to ScanDeviceToBindingViewController view
-                scan.devicMajor = [self getMajor:self.deviceMajor];
-                scan.devicMinor = [self getMinor:self.deviceMinor];
-                scan.macAddress = symbolStr;
-                scan.childId = self.childID;
-                scan.guardianId = self.guardianId;
-                
-                [self.navigationController pushViewController:scan animated:YES];
-                scan.title = @"";
-                scan = nil;
-            }
-        }
-        
-    }
-    
-    
-    
-}
 
 #pragma mark - initial major and minor
 

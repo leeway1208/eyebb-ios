@@ -251,7 +251,12 @@
 
     //版权信息
     CopyrightLbl =[[UILabel alloc]initWithFrame:CGRectMake(0, Drive_Height-50, self.view.frame.size.width, 20)];
-    [CopyrightLbl setText:LOCALIZATION(@"text_policy")];
+    //[CopyrightLbl setText:LOCALIZATION(@"text_policy")];
+  
+    NSMutableAttributedString *content = [[NSMutableAttributedString alloc] initWithString:LOCALIZATION(@"text_policy")];
+    NSRange contentRange = {0, [content length]};
+    [content addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInteger:NSUnderlineStyleSingle] range:contentRange];
+    CopyrightLbl.attributedText = content;
     [CopyrightLbl setFont:[UIFont systemFontOfSize: 10.0]];
     [CopyrightLbl setTextColor:[UIColor colorWithRed:0.831 green:0.831 blue:0.827 alpha:1]];
     [CopyrightLbl setTextAlignment:NSTextAlignmentCenter];

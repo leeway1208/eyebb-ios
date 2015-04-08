@@ -15,6 +15,7 @@
 @property (strong,nonatomic) NSMutableArray *discoveredPeripherals;
 @property (strong,nonatomic) NSMutableArray *checkDiscoveredPeripherals;
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredPeripherals;
+@property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
 @property (strong,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
 @property (strong,nonatomic) NSMutableArray *discoveredPeripheralsRssi;
 @property (strong,nonatomic) NSArray * noDuplicates;
@@ -98,7 +99,8 @@ Boolean startTimerOnce = true;
     
     if(isSOSDevice){
         //post get sos device broadcast
-        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:self.SOSDiscoveredAdvertisementData];
         NSLog(@"timerRefreshTableSelector --- > %lu",(unsigned long)self.SOSDiscoveredPeripherals.count);
 
         
@@ -176,7 +178,7 @@ Boolean startTimerOnce = true;
                     if(![self.SOSDiscoveredPeripherals containsObject:peripheral]) {
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.SOSDiscoveredPeripherals addObject:peripheral];
-                            
+                            [self.SOSDiscoveredAdvertisementData addObject:advertisementData];
                            
                         });
                     }
@@ -560,6 +562,8 @@ NSString * NSDataToHex(NSData *data) {
     self.discoveredPeripheralsDic = [NSMutableDictionary new];
     self.checkDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredPeripherals = [NSMutableArray new];
+    self.SOSDiscoveredAdvertisementData = [NSMutableArray new];
+
     
     self.service2000 = [CBUUID UUIDWithString:@"0x2000"];
     self.service1000 = [CBUUID UUIDWithString:@"0x1000"];

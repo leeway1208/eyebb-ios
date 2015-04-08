@@ -23,6 +23,16 @@
 @property (nonatomic,strong) UILabel * tableCenterLabel;
 /* targetPeripheral  uuid */
 @property (nonatomic,strong) NSString * targetPeripheral;
+/**  device major  */
+@property (strong,nonatomic) NSString * deviceMajor;
+/**  device minor  */
+@property (strong,nonatomic) NSString * deviceMinor;
+/**  select Target Peripheral */
+@property (strong,nonatomic) CBPeripheral *didSelectTargetPeripheral;
+/**  select Target advertisementData */
+@property (strong,nonatomic) NSDictionary *didSelectTargetAdvertisementData;
+/**  select Target AdvertisementData */
+@property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
 @end
 
 @implementation ScanDeviceToBindingViewController
@@ -111,7 +121,10 @@
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
     
     _SOSDiscoveredPeripherals = nil;
     [_introLabel removeFromSuperview];
@@ -130,7 +143,7 @@
 
 #pragma mark - broadcast
 - (void) getSosDevice:(NSNotification *)notification{
-    if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_BROADCAST_NAME]) {
+    if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME]) {
         
         
         _SOSDiscoveredPeripherals = [(NSMutableArray *)[notification object]copy];
@@ -142,16 +155,22 @@
             
         });
         
+    }else if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME]){
+        
+        _SOSDiscoveredAdvertisementData = [(NSDictionary *)[notification object]copy];
+        
+         NSLog(@"GET AD ad --- > %lu",(unsigned long)_SOSDiscoveredAdvertisementData.count);
+        
     }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
         
         
         NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
        
-        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,self.devicMajor,self.devicMinor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId);
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,self.devicMajor,ScanDeviceToBindingViewController_KEY_majors,self.devicMinor,ScanDeviceToBindingViewController_KEY_minor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId,ScanDeviceToBindingViewController_KEY_guardianId,nil];
+        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,_deviceMajor,_deviceMinor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId);
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,_deviceMajor,ScanDeviceToBindingViewController_KEY_majors,_deviceMinor,ScanDeviceToBindingViewController_KEY_minor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId,ScanDeviceToBindingViewController_KEY_guardianId,nil];
         // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         
-        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,self.devicMajor,self.devicMinor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId);
+  
         [self postRequest:DEVICE_TO_CHILD RequestDictionary:tempDoct delegate:self];
         
     }else if ([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME]){
@@ -189,6 +208,41 @@
                               cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                               otherButtonTitles:nil] show];
         }
+        
+    }else if ([tag isEqualToString:CHECK_BEACON]){
+    
+        NSData *responseData = [request responseData];
+        
+        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"CHECK_BEACON ----> %@ ",responseString);
+        [HUD hide:YES afterDelay:0];
+        
+        if (responseString.length > 0) {
+            if ([responseString isEqualToString:SERVER_RETURN_NC]) {
+                return;
+            }else if([responseString isEqualToString:SERVER_RETURN_USED] || [responseString isEqualToString:SERVER_RETURN_WG]){
+                
+                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                            message:LOCALIZATION(@"text_device_already_binded")
+                                           delegate:self
+                                  cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                                  otherButtonTitles:nil] show];
+            }else if(responseString.length > 100){
+                return;
+            }else{
+                NSRange range = [responseString rangeOfString:@":"];
+                NSLog(@"CHECK_BEACON ----> %lu  ",(unsigned long)range.location);
+                _deviceMajor = [responseString substringWithRange:NSMakeRange(0,range.location)];
+                _deviceMinor = [responseString substringWithRange:NSMakeRange(range.location + 1,responseString.length - range.location - 1)];
+                NSLog(@"CHECK_BEACON ----> %@  --- %@ ",[self getMajor:self.deviceMajor],[self getMinor:self.deviceMinor]);
+                
+                
+                [self writeMajorAndMinorThenMajor:_didSelectTargetPeripheral.identifier.UUIDString writeMajor:_deviceMajor writeMinor:_deviceMinor];
+                self.targetPeripheral = _didSelectTargetPeripheral.identifier.UUIDString;
+            }
+        }
+        
         
     }
 }
@@ -268,6 +322,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     
     CBPeripheral *peripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
+   _didSelectTargetAdvertisementData = (NSDictionary *)_SOSDiscoveredAdvertisementData[indexPath.row];
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
@@ -304,17 +359,30 @@
 }
 
 
+
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     [self stopScan];
     [HUD show:YES];
+    _didSelectTargetAdvertisementData = (NSDictionary *)_SOSDiscoveredAdvertisementData[indexPath.row];
+    _didSelectTargetPeripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
+    NSLog(@"DATA -- > %@",_didSelectTargetAdvertisementData);
+    NSString *toStringFromData = NSDataToHex([ _didSelectTargetAdvertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
+
+    NSString *getMajor = [toStringFromData substringWithRange:NSMakeRange(0,4)];
+    NSString *getMinor = [toStringFromData substringWithRange:NSMakeRange(4,4)];
     
-    CBPeripheral *targetPeripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
-    NSLog(@"write major:%@ and minor:%@ ",_devicMajor,_devicMinor);
+    NSLog(@"write major:%@ and minor:%@ ",getMajor,getMinor);
     
-    if (![self.targetPeripheral isEqualToString:targetPeripheral.identifier.UUIDString]) {
-        [self writeMajorAndMinorThenMajor:targetPeripheral.identifier.UUIDString writeMajor:_devicMajor writeMinor:_devicMinor];
-        self.targetPeripheral = targetPeripheral.identifier.UUIDString;
+    //if the device is right
+    if (![self.targetPeripheral isEqualToString:_didSelectTargetPeripheral.identifier.UUIDString]) {
+        
+         NSDictionary *checkBeaconDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,getMajor,ScanDeviceToBindingViewController_KEY_majors,getMinor,ScanDeviceToBindingViewController_KEY_minor,nil];
+        
+        [self postRequest:CHECK_BEACON RequestDictionary:checkBeaconDoct delegate:self];
+        
+       
         [tableView reloadData];
         
     }
@@ -324,5 +392,52 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
 }
+
+#pragma mark - initial major and minor
+
+-(NSString *)getMajor:(NSString *)major{
+    
+    
+    switch (major.length) {
+        case 1:
+            major = [NSString stringWithFormat:@"%@%@", major, @"000" ];
+            break;
+            
+        case 2:
+            major = [NSString stringWithFormat:@"%@%@", major, @"00" ];
+            break;
+            
+        case 3:
+            major = [NSString stringWithFormat:@"%@%@", major, @"0" ];
+            break;
+        default:
+            break;
+    }
+    
+    
+    
+    return major;
+}
+
+-(NSString *)getMinor:(NSString *)minor{
+    
+    switch (minor.length) {
+        case 1:
+            minor = [NSString stringWithFormat:@"%@%@", minor, @"000" ];
+            break;
+            
+        case 2:
+            minor = [NSString stringWithFormat:@"%@%@", minor, @"00" ];
+            break;
+            
+        case 3:
+            minor = [NSString stringWithFormat:@"%@%@", minor, @"0" ];
+            break;
+        default:
+            break;
+    }
+    return minor;
+}
+
 
 @end

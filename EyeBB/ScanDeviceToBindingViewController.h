@@ -10,10 +10,7 @@
 #import "EyeBBViewController.h"
 
 @interface ScanDeviceToBindingViewController : EyeBBViewController
-/* device major */
-@property (strong,nonatomic) NSString *devicMajor;
-/* device minor */
-@property (strong,nonatomic) NSString *devicMinor;
+
 /* child id */
 @property (strong,nonatomic) NSString *childId;
 /* mac address  */
