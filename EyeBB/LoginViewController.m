@@ -379,10 +379,12 @@
         }
         
     }
-    
-    
-    
-    
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag
+{
+    //关闭加载
+    [HUD hide:YES afterDelay:0];
 }
 #pragma mark - check the string
 /**

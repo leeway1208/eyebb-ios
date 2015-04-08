@@ -71,6 +71,8 @@
 @property (strong,nonatomic) UITableView * dateTableView;
 /**用户名称*/
 @property (strong,nonatomic) UILabel * UserNameLbl;
+/**活动告示*/
+@property(nonatomic,strong) UILabel * bulletinLbl;
 //单击空白处关闭遮盖层
 @property (nonatomic, strong) UITapGestureRecognizer *singleTap;
 /**查看表现条件提示*/
@@ -156,6 +158,8 @@
 
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
+
+
 @end
 
 @implementation MainViewController
@@ -656,8 +660,8 @@
     [_PerformanceTimeBtn addSubview:customizedColorLbl];
     //自定义
     NSString *str2=LOCALIZATION(@"text_customized");
-    UILabel *customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedColorLbl.bounds)+customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>3?str2.length*7.5f:str2.length*15), 16.0f)];
-    [customizedLbl setBackgroundColor:[UIColor yellowColor]];
+    UILabel *customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedColorLbl.bounds)+customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f)];
+    [customizedLbl setBackgroundColor:[UIColor clearColor]];
     customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
     customizedLbl.textAlignment = NSTextAlignmentLeft;
     customizedLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
@@ -698,6 +702,14 @@
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
       _ActivitiesTableView.hidden=YES;
+    
+    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 120, CGRectGetWidth(_MainInfoScrollView.frame)-20, 30)];
+    _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+    _bulletinLbl.textColor=[UIColor blackColor];
+    _bulletinLbl.font=[UIFont systemFontOfSize:16];
+    _bulletinLbl.textAlignment=NSTextAlignmentCenter;
+    [_MainInfoScrollView addSubview:_bulletinLbl];
+    _bulletinLbl.hidden=YES;
     
     //------------------------个人信息-------------------------------
     
@@ -1141,7 +1153,7 @@
         {
             tempChildArray=[_childrenByRoomDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
         }
-        NSString *str=[NSString stringWithFormat:@"%d",tempChildArray.count];
+        NSString *str=[NSString stringWithFormat:@"%zi",tempChildArray.count];
         //儿童数量位数
          NSInteger kindNum=str.length>3?3:str.length;
         //儿童图标行数
@@ -1710,7 +1722,8 @@
             //本日数据条
             LDProgressView *progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
             progressView.showText = @NO;
-
+            progressView.flat = @YES;
+            progressView.animate = @NO;
             progressView.borderRadius = @0;
             progressView.type = LDProgressSolid;
             progressView.color = [UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1];
@@ -1732,6 +1745,8 @@
             //自定义数据条
             progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
             progressView.showText = @NO;
+            progressView.flat = @YES;
+            progressView.animate = @NO;
             progressView.borderRadius = @0;
             progressView.type = LDProgressSolid;
             progressView.color = [UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1];
@@ -2034,7 +2049,7 @@
             [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
             tempDictionary=nil;
             //开启加载
-            [HUD show:YES];
+//            [HUD show:YES];
 //            [_PerformanceTableView reloadData];
         }
     }
@@ -2271,7 +2286,7 @@
                     {
                         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
                         //开启加载
-                        [HUD show:YES];
+//                        [HUD show:YES];
                         if(_isautoOn==YES)
                         {
                             //开启定时器
@@ -2313,7 +2328,7 @@
                     {
                     [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
                         //开启加载
-                        [HUD show:YES];
+//                        [HUD show:YES];
                         
                     }
                     break;
@@ -2354,7 +2369,7 @@ CGPoint pt = [scrollView contentOffset];
 //        [self simulateProgress];
         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
         //开启加载
-        [HUD show:YES];
+//        [HUD show:YES];
        }
     if(scrollView==_PersonageTableView&& pt.y < -68.500000)
     {
@@ -2365,7 +2380,7 @@ CGPoint pt = [scrollView contentOffset];
 //        [self simulateProgress];
          [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
         //开启加载
-        [HUD show:YES];
+//        [HUD show:YES];
     }
 }
 #pragma mark --
@@ -2600,7 +2615,7 @@ CGPoint pt = [scrollView contentOffset];
     
     [_progressView setHidden:YES];
     //关闭加载
-    [HUD hide:YES afterDelay:0];
+//    [HUD hide:YES afterDelay:0];
     
 }
 #pragma mark - 本地数据处理
@@ -2695,7 +2710,7 @@ CGPoint pt = [scrollView contentOffset];
     [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
     tempDictionary=nil;
     //开启加载
-    [HUD show:YES];
+//    [HUD show:YES];
 }
 
 -(void)timerFired:(id)sender
@@ -2842,7 +2857,7 @@ CGPoint pt = [scrollView contentOffset];
     _PerformanceTableView.hidden=NO;
     _PerformanceTimeBtn.hidden=NO;
     _ActivitiesTableView.hidden=YES;
-    
+    _bulletinLbl.hidden=YES;
 }
 
 /**显示活动*/
@@ -2857,6 +2872,17 @@ CGPoint pt = [scrollView contentOffset];
     _PerformanceTableView.hidden=YES;
     _PerformanceTimeBtn.hidden=YES;
     _ActivitiesTableView.hidden=NO;
+    
+    if (_activityInfosArray.count>0) {
+        _bulletinLbl.hidden=YES;
+        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    }
+    else
+    {
+        _bulletinLbl.hidden=NO;
+        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
+    
 }
 
 
@@ -2932,7 +2958,7 @@ CGPoint pt = [scrollView contentOffset];
                 [self.refreshTimer setFireDate:[NSDate distantFuture]];
                 [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
                 //开启加载
-                [HUD show:YES];
+//                [HUD show:YES];
             }
         }
     }
