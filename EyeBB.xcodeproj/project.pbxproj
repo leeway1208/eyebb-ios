@@ -1026,10 +1026,11 @@
 				TargetAttributes = {
 					20BD16E71A99FC7700039A31 = {
 						CreatedOnToolsVersion = 6.1.1;
-						DevelopmentTeam = 22255E57J4;
+						DevelopmentTeam = G4EV4PMZ75;
 					};
 					20BD17001A99FC7700039A31 = {
 						CreatedOnToolsVersion = 6.1.1;
+						DevelopmentTeam = G4EV4PMZ75;
 						TestTargetID = 20BD16E71A99FC7700039A31;
 					};
 				};

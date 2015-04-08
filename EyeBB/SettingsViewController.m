@@ -258,7 +258,7 @@
     }else if(section == 3){
         return 2;
     }else if(section == 4){
-        return 3;
+        return 4;
     }
     
     return 0;
@@ -274,11 +274,11 @@
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-        if (indexPath.section==0) {
-            if(indexPath.row == 0){
-                
-            }
-        }
+//        if (indexPath.section==0) {
+//            if(indexPath.row == 0){
+//                
+//            }
+//        }
     }
     
     
