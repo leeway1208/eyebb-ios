@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2051945E1ABB1C95002C49CD /* AccreditViewController.m */; };
 		206134EE1ACA1F7C006AE0AA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20BD16EC1A99FC7700039A31 /* Info.plist */; };
+		2062F40B1AD6AC6C0011470E /* UpdatePDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */; };
 		209E6E9C1ABEBE4D005DB884 /* GuardianKidsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 209E6E9B1ABEBE4D005DB884 /* GuardianKidsViewController.m */; };
 		209E6E9F1ABEF8E2005DB884 /* AddGuestViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 209E6E9E1ABEF8E2005DB884 /* AddGuestViewController.m */; };
 		20A6D8021ABAFC530028388B /* RMDisplayLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 20A6D7FF1ABAFC530028388B /* RMDisplayLabel.m */; };
@@ -142,6 +143,8 @@
 /* Begin PBXFileReference section */
 		2051945D1ABB1C95002C49CD /* AccreditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccreditViewController.h; sourceTree = "<group>"; };
 		2051945E1ABB1C95002C49CD /* AccreditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccreditViewController.m; sourceTree = "<group>"; };
+		2062F4091AD6AC6C0011470E /* UpdatePDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdatePDViewController.h; sourceTree = "<group>"; };
+		2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdatePDViewController.m; sourceTree = "<group>"; };
 		209E6E9A1ABEBE4D005DB884 /* GuardianKidsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GuardianKidsViewController.h; sourceTree = "<group>"; };
 		209E6E9B1ABEBE4D005DB884 /* GuardianKidsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GuardianKidsViewController.m; sourceTree = "<group>"; };
 		209E6E9D1ABEF8E2005DB884 /* AddGuestViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddGuestViewController.h; sourceTree = "<group>"; };
@@ -509,8 +512,13 @@
 				209E6E9E1ABEF8E2005DB884 /* AddGuestViewController.m */,
 				928693531AC2AE66000D5B53 /* ScanDeviceToBindingViewController.h */,
 				928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */,
+<<<<<<< Updated upstream
 				92D41F2D1AD670AA00B1A59E /* AboutViewController.h */,
 				92D41F2E1AD670AA00B1A59E /* AboutViewController.m */,
+=======
+				2062F4091AD6AC6C0011470E /* UpdatePDViewController.h */,
+				2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */,
+>>>>>>> Stashed changes
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -1115,6 +1123,7 @@
 				3251C5EA1AB01A1D0080C508 /* EGOImageLoader.m in Sources */,
 				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
 				20A6D8031ABAFC530028388B /* RMDownloadIndicator.m in Sources */,
+				2062F40B1AD6AC6C0011470E /* UpdatePDViewController.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
 				3264D94B1A9D6B72009CB9C2 /* ASIDownloadCache.m in Sources */,

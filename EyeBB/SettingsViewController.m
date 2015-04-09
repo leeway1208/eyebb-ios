@@ -11,10 +11,19 @@
 #import "ASIDownloadCache.h"
 #import "AccreditViewController.h"//授权列表
 #import "KidslistViewController.h"//儿童列表
+<<<<<<< Updated upstream
 #import "AboutViewController.h"
 
 
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+=======
+#import "UpdatePDViewController.h"//更新密码
+#import "AppDelegate.h"
+@interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
+{
+    AppDelegate * myDelegate;
+}
+>>>>>>> Stashed changes
 /** all items */
 @property (nonatomic,strong) UITableView * optionsTable;
 /**右按钮*/
@@ -28,12 +37,20 @@
 /**刷新时间设置确定*/
 @property (nonatomic,strong) UIButton *timeBtn;
 
+/**刷新时间设置显示*/
+@property (nonatomic,strong) UILabel * timeOnListLbl;
+
 /**授权列表*/
 @property(nonatomic, strong) AccreditViewController * accred;
 //儿童列表
 @property(nonatomic, strong) KidslistViewController * kidslist;
+<<<<<<< Updated upstream
 /** about view */
 @property(nonatomic, strong) AboutViewController * aboutView;
+=======
+//更新密码
+@property(nonatomic, strong) UpdatePDViewController * updatePD;
+>>>>>>> Stashed changes
 @end
 
 @implementation SettingsViewController
@@ -53,7 +70,7 @@
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
-    
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self loadWidget];
     
 }
@@ -70,10 +87,16 @@
     if (_kidslist!=nil) {
         _kidslist=nil;
     }
+<<<<<<< Updated upstream
     if(_aboutView!=nil){
         _aboutView = nil;
     }
     
+=======
+    if (_updatePD!=nil) {
+        _updatePD=nil;
+    }
+>>>>>>> Stashed changes
 }
 
 
@@ -193,7 +216,7 @@
         {
             _timeLbl.text=[NSString stringWithFormat:@"%d秒",value];
         }
-        
+        _timeOnListLbl.text=_timeLbl.text;
     }
 }
 
@@ -228,6 +251,7 @@
     }
     else if(section == 1){
         labelTitle.text = LOCALIZATION(@"text_device");
+        
         
     }else if(section == 2){
         labelTitle.text = LOCALIZATION(@"text_language");
@@ -287,66 +311,100 @@
 //                
 //            }
 //        }
+        UIImageView * imgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith-40, 15, 30, 30)];
+        imgView.tag=101;
+        [cell addSubview:imgView];
+        imgView.hidden=YES;
     }
     
+    UIImageView * imgView=(UIImageView *)[cell viewWithTag:101];
     
     if(indexPath.section == 0){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_auto_refresh");
+            
+            if ([cell viewWithTag:102]==nil) {
+                _timeOnListLbl=[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith-100, 0, 100, 20)];
+                _timeOnListLbl.backgroundColor=[UIColor clearColor];
+                _timeOnListLbl.font=[UIFont systemFontOfSize:16];
+                _timeOnListLbl.text=@"5秒";
+                _timeOnListLbl.textAlignment=NSTextAlignmentCenter;
+                _timeOnListLbl.tag=102;
+                [cell addSubview:_timeOnListLbl];
+            }
+            
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_auto_refresh"]];
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_enableSound");
+            imgView.image=[UIImage imageNamed:@"selected_off"];
+            imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_enableSound"]];
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_enableVibration");
+            imgView.image=[UIImage imageNamed:@"selected_off"];
+            imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_enableVibration"]];
         }
     }else if(indexPath.section == 1){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"btn_children_list");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"btn_children_list"]];
             
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"btn_auth_list");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"btn_auth_list"]];
             
         }
     }else if(indexPath.section == 2){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_english");
+            imgView.image=[UIImage imageNamed:@"selected_off"];
+            imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_english"]];
             
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_chinese");
+            imgView.image=[UIImage imageNamed:@"selected_off"];
+            imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_chinese"]];
             
             
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_simplified_chinese");
+            imgView.image=[UIImage imageNamed:@"selected"];
+            imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_simplified_chinese"]];
             
         }
     }else if(indexPath.section == 3){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_update_password");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_update_password"]];
             
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_update_nickname");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_update_nickname"]];
             
         }
     }else if(indexPath.section == 4){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_about");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_about"]];
             
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_TermsOfService");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_TermsOfService"]];
             
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_privacyPolicy");
+            imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_privacyPolicy"]];
             
         }
@@ -370,6 +428,7 @@
             if (_kidslist==nil) {
                 _kidslist= [[KidslistViewController alloc] init];
             }
+            _kidslist.childrenArray=(NSMutableArray *)myDelegate.childrenBeanArray;
             [self.navigationController pushViewController:_kidslist animated:YES];
         }
         if(indexPath.row==1)
@@ -394,8 +453,19 @@
         }
 
     }
+<<<<<<< Updated upstream
 
 
+=======
+     if (indexPath.section == 3){
+         if (_updatePD==nil) {
+             _updatePD= [[UpdatePDViewController alloc] init];
+         }
+         
+         [self.navigationController pushViewController:_updatePD animated:YES];
+     }
+    
+>>>>>>> Stashed changes
     
 }
 
