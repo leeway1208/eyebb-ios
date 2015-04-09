@@ -512,13 +512,13 @@
 				209E6E9E1ABEF8E2005DB884 /* AddGuestViewController.m */,
 				928693531AC2AE66000D5B53 /* ScanDeviceToBindingViewController.h */,
 				928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */,
-<<<<<<< Updated upstream
+
 				92D41F2D1AD670AA00B1A59E /* AboutViewController.h */,
 				92D41F2E1AD670AA00B1A59E /* AboutViewController.m */,
-=======
+
 				2062F4091AD6AC6C0011470E /* UpdatePDViewController.h */,
 				2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */,
->>>>>>> Stashed changes
+
 			);
 			path = EyeBB;
 			sourceTree = "<group>";

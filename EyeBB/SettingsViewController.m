@@ -11,19 +11,16 @@
 #import "ASIDownloadCache.h"
 #import "AccreditViewController.h"//授权列表
 #import "KidslistViewController.h"//儿童列表
-<<<<<<< Updated upstream
+
 #import "AboutViewController.h"
-
-
-@interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
-=======
 #import "UpdatePDViewController.h"//更新密码
 #import "AppDelegate.h"
+
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     AppDelegate * myDelegate;
 }
->>>>>>> Stashed changes
+
 /** all items */
 @property (nonatomic,strong) UITableView * optionsTable;
 /**右按钮*/
@@ -44,13 +41,13 @@
 @property(nonatomic, strong) AccreditViewController * accred;
 //儿童列表
 @property(nonatomic, strong) KidslistViewController * kidslist;
-<<<<<<< Updated upstream
+
 /** about view */
 @property(nonatomic, strong) AboutViewController * aboutView;
-=======
+
 //更新密码
 @property(nonatomic, strong) UpdatePDViewController * updatePD;
->>>>>>> Stashed changes
+
 @end
 
 @implementation SettingsViewController
@@ -87,16 +84,15 @@
     if (_kidslist!=nil) {
         _kidslist=nil;
     }
-<<<<<<< Updated upstream
+    
     if(_aboutView!=nil){
         _aboutView = nil;
     }
     
-=======
     if (_updatePD!=nil) {
         _updatePD=nil;
     }
->>>>>>> Stashed changes
+    
 }
 
 
@@ -141,7 +137,7 @@
     
     _pushView =[[UIView alloc]initWithFrame:self.view.bounds];
     _pushView.backgroundColor=[UIColor colorWithRed:0.000 green:0.000 blue:0.000 alpha:0.3];
-
+    
     [self.view addSubview:_pushView];
     
     UIView * bgView=[[UIView alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(self.view.bounds)/2-47.5, CGRectGetWidth(self.view.bounds)-20, 95)];
@@ -306,11 +302,11 @@
     
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-//        if (indexPath.section==0) {
-//            if(indexPath.row == 0){
-//                
-//            }
-//        }
+        //        if (indexPath.section==0) {
+        //            if(indexPath.row == 0){
+        //
+        //            }
+        //        }
         UIImageView * imgView=[[UIImageView alloc]initWithFrame:CGRectMake(Drive_Wdith-40, 15, 30, 30)];
         imgView.tag=101;
         [cell addSubview:imgView];
@@ -361,20 +357,42 @@
     }else if(indexPath.section == 2){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_english");
-            imgView.image=[UIImage imageNamed:@"selected_off"];
+            if(myDelegate.applanguage==0)
+            {
+                imgView.image=[UIImage imageNamed:@"selected"];
+            }
+            else
+            {
+                imgView.image=[UIImage imageNamed:@"selected_off"];
+            }
+            
             imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_english"]];
             
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_chinese");
-            imgView.image=[UIImage imageNamed:@"selected_off"];
+            if(myDelegate.applanguage==1)
+            {
+                imgView.image=[UIImage imageNamed:@"selected"];
+            }
+            else
+            {
+                imgView.image=[UIImage imageNamed:@"selected_off"];
+            }
             imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_chinese"]];
             
             
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_simplified_chinese");
-            imgView.image=[UIImage imageNamed:@"selected"];
+            if(myDelegate.applanguage==2)
+            {
+                imgView.image=[UIImage imageNamed:@"selected"];
+            }
+            else
+            {
+                imgView.image=[UIImage imageNamed:@"selected_off"];
+            }
             imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_simplified_chinese"]];
             
@@ -440,9 +458,15 @@
         }
         
     }else if (indexPath.section == 2) {
+        myDelegate.applanguage=indexPath.row;
+        [_optionsTable reloadData];
+    }
+    if (indexPath.section == 3){
+        if (_updatePD==nil) {
+            _updatePD= [[UpdatePDViewController alloc] init];
+        }
         
-    }else if (indexPath.section == 3) {
-        
+        [self.navigationController pushViewController:_updatePD animated:YES];
     }else if (indexPath.section == 4) {
         if(indexPath.row==0)
         {
@@ -451,21 +475,12 @@
             }
             [self.navigationController pushViewController:_aboutView animated:YES];
         }
-
+        
     }
-<<<<<<< Updated upstream
-
-
-=======
-     if (indexPath.section == 3){
-         if (_updatePD==nil) {
-             _updatePD= [[UpdatePDViewController alloc] init];
-         }
-         
-         [self.navigationController pushViewController:_updatePD animated:YES];
-     }
     
->>>>>>> Stashed changes
+    
+    
+    
     
 }
 
