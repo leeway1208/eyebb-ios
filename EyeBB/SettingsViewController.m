@@ -11,6 +11,9 @@
 #import "ASIDownloadCache.h"
 #import "AccreditViewController.h"//授权列表
 #import "KidslistViewController.h"//儿童列表
+#import "AboutViewController.h"
+
+
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
 /** all items */
 @property (nonatomic,strong) UITableView * optionsTable;
@@ -29,6 +32,8 @@
 @property(nonatomic, strong) AccreditViewController * accred;
 //儿童列表
 @property(nonatomic, strong) KidslistViewController * kidslist;
+/** about view */
+@property(nonatomic, strong) AboutViewController * aboutView;
 @end
 
 @implementation SettingsViewController
@@ -64,6 +69,9 @@
     }
     if (_kidslist!=nil) {
         _kidslist=nil;
+    }
+    if(_aboutView!=nil){
+        _aboutView = nil;
     }
     
 }
@@ -356,8 +364,7 @@
         {
             _pushView.hidden=NO;
         }
-    }
-    if (indexPath.section == 1){
+    }else if (indexPath.section == 1){
         if(indexPath.row==0)
         {
             if (_kidslist==nil) {
@@ -373,7 +380,22 @@
             [self.navigationController pushViewController:_accred animated:YES];
         }
         
+    }else if (indexPath.section == 2) {
+        
+    }else if (indexPath.section == 3) {
+        
+    }else if (indexPath.section == 4) {
+        if(indexPath.row==0)
+        {
+            if (_aboutView==nil) {
+                _aboutView= [[AboutViewController alloc] init];
+            }
+            [self.navigationController pushViewController:_aboutView animated:YES];
+        }
+
     }
+
+
     
 }
 

@@ -26,7 +26,7 @@
 #import "CustomerBluetooth.h"
 #import "UserDefaultsUtils.h"
 
-@interface EyeBBViewController : UIViewController<MBProgressHUDDelegate>
+@interface EyeBBViewController : UIViewController<MBProgressHUDDelegate,UIGestureRecognizerDelegate>
 {
     MBProgressHUD *HUD;
 }

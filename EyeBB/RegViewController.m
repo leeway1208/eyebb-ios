@@ -380,7 +380,7 @@
         //还原
         [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
         [UIView setAnimationDuration:0.3];
-        self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.frame = CGRectMake(0.0f, 64.0f, self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
     }
     
