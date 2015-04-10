@@ -47,6 +47,7 @@
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
+   
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -54,8 +55,7 @@
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
-    
-    
+
 }
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

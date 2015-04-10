@@ -10,4 +10,6 @@
 
 @interface KidMessageViewController : EyeBBViewController
 
+@property int major;
+@property int minor;
 @end

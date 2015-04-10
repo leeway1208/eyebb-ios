@@ -418,7 +418,10 @@
 
 -(void)ShowKidMessageAction:(id)sender
 {
+    int num = (int)[(UIButton *)sender tag];
     _km =[[KidMessageViewController alloc]init];
+    _km.major=[[[childrenArray objectAtIndex:num] objectForKey:@"major"] integerValue];
+    _km.minor=[[[childrenArray objectAtIndex:num] objectForKey:@"minor"] integerValue];
     [self.navigationController pushViewController:_km animated:YES];
     _km.title = @"";
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20353DB71AD80611008868DD /* KidViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20353DB61AD80611008868DD /* KidViewController.m */; };
 		2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2051945E1ABB1C95002C49CD /* AccreditViewController.m */; };
 		206134EE1ACA1F7C006AE0AA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20BD16EC1A99FC7700039A31 /* Info.plist */; };
 		2062F40B1AD6AC6C0011470E /* UpdatePDViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */; };
@@ -141,6 +142,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		20353DB51AD80611008868DD /* KidViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidViewController.h; sourceTree = "<group>"; };
+		20353DB61AD80611008868DD /* KidViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidViewController.m; sourceTree = "<group>"; };
 		2051945D1ABB1C95002C49CD /* AccreditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccreditViewController.h; sourceTree = "<group>"; };
 		2051945E1ABB1C95002C49CD /* AccreditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AccreditViewController.m; sourceTree = "<group>"; };
 		2062F4091AD6AC6C0011470E /* UpdatePDViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdatePDViewController.h; sourceTree = "<group>"; };
@@ -512,13 +515,12 @@
 				209E6E9E1ABEF8E2005DB884 /* AddGuestViewController.m */,
 				928693531AC2AE66000D5B53 /* ScanDeviceToBindingViewController.h */,
 				928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */,
-
 				92D41F2D1AD670AA00B1A59E /* AboutViewController.h */,
 				92D41F2E1AD670AA00B1A59E /* AboutViewController.m */,
-
 				2062F4091AD6AC6C0011470E /* UpdatePDViewController.h */,
 				2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */,
-
+				20353DB51AD80611008868DD /* KidViewController.h */,
+				20353DB61AD80611008868DD /* KidViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -1131,6 +1133,7 @@
 				3245EFE01AB94CA3001431E2 /* GradientProgressView.m in Sources */,
 				3251C5F31AB02FA60080C508 /* RootViewController.m in Sources */,
 				3251C6761AB03DFF0080C508 /* qrencode.c in Sources */,
+				20353DB71AD80611008868DD /* KidViewController.m in Sources */,
 				32FC01481AA83E3B001FB4D3 /* LDProgressView.m in Sources */,
 				3264D96E1A9D6B72009CB9C2 /* Reachability.m in Sources */,
 				20BD16EE1A99FC7700039A31 /* main.m in Sources */,

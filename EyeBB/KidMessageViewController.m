@@ -19,6 +19,8 @@
 @end
 
 @implementation KidMessageViewController
+@synthesize major;
+@synthesize minor;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
