@@ -10,6 +10,6 @@
 
 @interface KidMessageViewController : EyeBBViewController
 
-@property int major;
-@property int minor;
+@property (nonatomic,strong)NSString * major;
+@property (nonatomic,strong)NSString *  minor;
 @end

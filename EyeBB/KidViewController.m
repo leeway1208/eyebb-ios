@@ -15,7 +15,7 @@
     //数据源数组
     NSMutableArray*_dataArray;
     //数据源数组
-    NSMutableArray*_dataArray;
+//    NSMutableArray*_dataArray;
     //记录未搜索结果数组
     NSArray*_resultArray;
     UITableView*_tableView;
