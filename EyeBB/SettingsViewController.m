@@ -14,6 +14,7 @@
 
 #import "AboutViewController.h"
 #import "UpdatePDViewController.h"//更新密码
+#import "UpdateNameViewController.h"//更新昵称
 #import "AppDelegate.h"
 
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
@@ -47,6 +48,8 @@
 
 //更新密码
 @property(nonatomic, strong) UpdatePDViewController * updatePD;
+//更新昵称
+@property(nonatomic, strong) UpdateNameViewController * UpdateName;
 
 @end
 
@@ -92,7 +95,9 @@
     if (_updatePD!=nil) {
         _updatePD=nil;
     }
-    
+    if (_UpdateName!=nil) {
+        _UpdateName=nil;
+    }
 }
 
 
@@ -311,50 +316,56 @@
         imgView.tag=101;
         [cell addSubview:imgView];
         imgView.hidden=YES;
+        if ([cell viewWithTag:102]==nil) {
+            _timeOnListLbl=[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith-100, 20, 100, 20)];
+            _timeOnListLbl.backgroundColor=[UIColor clearColor];
+            _timeOnListLbl.font=[UIFont systemFontOfSize:16];
+            _timeOnListLbl.text=@"5秒";
+            _timeOnListLbl.textAlignment=NSTextAlignmentCenter;
+            _timeOnListLbl.tag=102;
+            [cell addSubview:_timeOnListLbl];
+        }
+        _timeOnListLbl.hidden=YES;
     }
     
     UIImageView * imgView=(UIImageView *)[cell viewWithTag:101];
-    
+    _timeOnListLbl=(UILabel *)[cell viewWithTag:102];;
     if(indexPath.section == 0){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_auto_refresh");
             
-            if ([cell viewWithTag:102]==nil) {
-                _timeOnListLbl=[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith-100, 0, 100, 20)];
-                _timeOnListLbl.backgroundColor=[UIColor clearColor];
-                _timeOnListLbl.font=[UIFont systemFontOfSize:16];
-                _timeOnListLbl.text=@"5秒";
-                _timeOnListLbl.textAlignment=NSTextAlignmentCenter;
-                _timeOnListLbl.tag=102;
-                [cell addSubview:_timeOnListLbl];
-            }
-            
+            _timeOnListLbl.hidden=NO;
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_auto_refresh"]];
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_enableSound");
             imgView.image=[UIImage imageNamed:@"selected_off"];
             imgView.hidden=NO;
+            _timeOnListLbl.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_enableSound"]];
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_enableVibration");
             imgView.image=[UIImage imageNamed:@"selected_off"];
             imgView.hidden=NO;
+            _timeOnListLbl.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_enableVibration"]];
         }
     }else if(indexPath.section == 1){
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"btn_children_list");
             imgView.hidden=YES;
+            _timeOnListLbl.hidden=YES;
             //            [cell addSubview:[self settingLable:@"btn_children_list"]];
             
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"btn_auth_list");
             imgView.hidden=YES;
+            _timeOnListLbl.hidden=YES;
             //            [cell addSubview:[self settingLable:@"btn_auth_list"]];
             
         }
     }else if(indexPath.section == 2){
+        
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_english");
             if(myDelegate.applanguage==0)
@@ -365,7 +376,7 @@
             {
                 imgView.image=[UIImage imageNamed:@"selected_off"];
             }
-            
+            _timeOnListLbl.hidden=YES;
             imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_english"]];
             
@@ -382,8 +393,9 @@
             imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_chinese"]];
             
-            
+            _timeOnListLbl.hidden=YES;
         }else if(indexPath.row == 2){
+            
             cell.textLabel.text=LOCALIZATION(@"text_simplified_chinese");
             if(myDelegate.applanguage==2)
             {
@@ -395,36 +407,38 @@
             }
             imgView.hidden=NO;
             //            [cell addSubview:[self settingLable:@"text_simplified_chinese"]];
-            
+            _timeOnListLbl.hidden=YES;
         }
     }else if(indexPath.section == 3){
+       
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_update_password");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_update_password"]];
-            
+             _timeOnListLbl.hidden=YES;
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_update_nickname");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_update_nickname"]];
-            
+             _timeOnListLbl.hidden=YES;
         }
     }else if(indexPath.section == 4){
+        
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_about");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_about"]];
-            
+            _timeOnListLbl.hidden=YES;
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_TermsOfService");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_TermsOfService"]];
-            
+            _timeOnListLbl.hidden=YES;
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_privacyPolicy");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_privacyPolicy"]];
-            
+            _timeOnListLbl.hidden=YES;
         }
     }
     
@@ -446,7 +460,7 @@
             if (_kidslist==nil) {
                 _kidslist= [[KidslistViewController alloc] init];
             }
-            _kidslist.childrenArray=(NSMutableArray *)myDelegate.childrenBeanArray;
+//            _kidslist.childrenArray=(NSMutableArray *)myDelegate.childrenBeanArray;
             [self.navigationController pushViewController:_kidslist animated:YES];
         }
         if(indexPath.row==1)
@@ -462,11 +476,23 @@
         [_optionsTable reloadData];
     }
     if (indexPath.section == 3){
+        if(indexPath.row==0)
+        {
         if (_updatePD==nil) {
             _updatePD= [[UpdatePDViewController alloc] init];
         }
         
         [self.navigationController pushViewController:_updatePD animated:YES];
+        }
+        if(indexPath.row==1)
+        {
+            if (_UpdateName==nil) {
+                _UpdateName= [[UpdateNameViewController alloc] init];
+            }
+            
+            [self.navigationController pushViewController:_UpdateName animated:YES];
+        }
+        
     }else if (indexPath.section == 4) {
         if(indexPath.row==0)
         {

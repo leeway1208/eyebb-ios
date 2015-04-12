@@ -8,7 +8,7 @@
 
 #import "MainViewController.h"
 #import "SettingsViewController.h"
-#import "KidslistViewController.h"//儿童列表
+//#import "KidslistViewController.h"//儿童列表
 #import "JSONKit.h"
 #import "MSCellAccessory.h"
 #import "LDProgressView.h"
@@ -21,7 +21,7 @@
 
 #import "WebViewController.h"
 
-
+#import "KidViewController.h"//查询简报儿童列表
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
@@ -882,7 +882,7 @@
     
     //设定title
     UILabel *listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
-    [listtitleLal setText:@"设定"];
+    [listtitleLal setText:LOCALIZATION(@"btn_options")];
     [listtitleLal setTextColor:[UIColor blackColor]];
     [listtitleLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20]];
     [listtitleLal setTextAlignment:NSTextAlignmentCenter];
@@ -901,7 +901,7 @@
     //提交按钮
     _listTypeChangeBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 134,CGRectGetWidth(_listTypeView.frame), 40)];
     //设置按显示文字
-    [_listTypeChangeBtn setTitle:@"确定" forState:UIControlStateNormal];
+    [_listTypeChangeBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
     [_listTypeChangeBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
     //设置按钮背景颜色
     [_listTypeChangeBtn setBackgroundColor:[UIColor clearColor]];
@@ -2787,13 +2787,22 @@ CGPoint pt = [scrollView contentOffset];
 {
     [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
-    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
-   
-    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-
-     NSLog(@"---%@",kindlist.childrenArray);
-    [self.navigationController pushViewController:kindlist animated:YES];
-    kindlist.title = @"";
+//    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
+//   
+//    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+//
+//     NSLog(@"---%@",kindlist.childrenArray);
+//    [self.navigationController pushViewController:kindlist animated:YES];
+//    kindlist.title = @"";
+    
+    KidViewController* kindlist = [[KidViewController alloc] init];
+    
+        kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+    kindlist.kidsRoomArray=_roomArray;
+         NSLog(@"---%@",kindlist.childrenArray);
+    NSLog(@"kindlist.kidsRoomArray%@",kindlist.kidsRoomArray);
+        [self.navigationController pushViewController:kindlist animated:YES];
+        kindlist.title = @"";
 }
 
 
@@ -2834,7 +2843,7 @@ CGPoint pt = [scrollView contentOffset];
             [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]]];
             break;
         case 2:
-            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"name"]]];
+            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"]]];
             break;
             
         default:

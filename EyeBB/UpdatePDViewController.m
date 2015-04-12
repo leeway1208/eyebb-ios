@@ -108,18 +108,18 @@
     
     if(oldPD.length <= 0)
     {
-        mag=LOCALIZATION(@"text_error_password");
+        mag=LOCALIZATION(@"text_fill_in_password");
         return mag;
     }
 
     if (pwd.length <= 0) {
         
-        mag=LOCALIZATION(@"text_error_password");
+        mag=LOCALIZATION(@"text_fill_in_new_password");
         return mag;
     }
     if(ver.length <= 0||![pwd isEqualToString:ver])
     {
-        mag=LOCALIZATION(@"text_pssword_not_the_same");
+        mag=LOCALIZATION(@"text_fill_in_repeat_new_password");
         return mag;
     }
 
@@ -379,15 +379,15 @@
         NSData *responseData = [request responseData];
         NSString * resUpdate =[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         if ([resUpdate isEqualToString:@"T"]) {
-            [[[UIAlertView alloc] initWithTitle:@""
-                                        message:LOCALIZATION(@"btn_finish")
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_update_password_successful")
                                        delegate:self
                               cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                               otherButtonTitles:nil] show];
         }
         else
         {
-            [[[UIAlertView alloc] initWithTitle:@""
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"text_update_server_data_fail")
                                        delegate:self
                               cancelButtonTitle:LOCALIZATION(@"btn_confirm")

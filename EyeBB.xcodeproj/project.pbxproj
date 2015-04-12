@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2031DCB21ADAB91A00B19BB4 /* UpdateNameViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2031DCB11ADAB91A00B19BB4 /* UpdateNameViewController.m */; };
 		20353DB71AD80611008868DD /* KidViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20353DB61AD80611008868DD /* KidViewController.m */; };
 		2051945F1ABB1C95002C49CD /* AccreditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2051945E1ABB1C95002C49CD /* AccreditViewController.m */; };
 		206134EE1ACA1F7C006AE0AA /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 20BD16EC1A99FC7700039A31 /* Info.plist */; };
@@ -142,6 +143,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2031DCB01ADAB91A00B19BB4 /* UpdateNameViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpdateNameViewController.h; sourceTree = "<group>"; };
+		2031DCB11ADAB91A00B19BB4 /* UpdateNameViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpdateNameViewController.m; sourceTree = "<group>"; };
 		20353DB51AD80611008868DD /* KidViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidViewController.h; sourceTree = "<group>"; };
 		20353DB61AD80611008868DD /* KidViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidViewController.m; sourceTree = "<group>"; };
 		2051945D1ABB1C95002C49CD /* AccreditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AccreditViewController.h; sourceTree = "<group>"; };
@@ -521,6 +524,8 @@
 				2062F40A1AD6AC6C0011470E /* UpdatePDViewController.m */,
 				20353DB51AD80611008868DD /* KidViewController.h */,
 				20353DB61AD80611008868DD /* KidViewController.m */,
+				2031DCB01ADAB91A00B19BB4 /* UpdateNameViewController.h */,
+				2031DCB11ADAB91A00B19BB4 /* UpdateNameViewController.m */,
 			);
 			path = EyeBB;
 			sourceTree = "<group>";
@@ -1170,6 +1175,7 @@
 				92BBD88C1AC400CE00C760B4 /* CustomerBluetooth.m in Sources */,
 				3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */,
 				20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */,
+				2031DCB21ADAB91A00B19BB4 /* UpdateNameViewController.m in Sources */,
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,
 				3251C5E61AB01A1D0080C508 /* EGOCache.m in Sources */,
 				3251C6751AB03DFF0080C508 /* QRCodeGenerator.m in Sources */,

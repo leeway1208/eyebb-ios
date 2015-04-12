@@ -12,7 +12,7 @@
 #import "MainViewController.h"
 
 //--test--
-#import "KidslistViewController.h"
+
 #import "ChildInformationMatchingViewController.h"
 #import "QRCodeViewController.h"
 #import "RootViewController.h"

@@ -25,6 +25,8 @@
 
 /**granted 已授权数据源*/
 @property (strong,nonatomic) NSMutableArray * grantedArray;
+/**数据源数组*/
+@property (nonatomic,strong) NSMutableArray*childrenArray;
 //@property (strong,nonatomic)  AddGuardianViewController *addGuardian;
 @property (strong,nonatomic)  KidMessageViewController * km;
 //-------------------视图变量--------------------
@@ -42,6 +44,8 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     // Do any additional setup after loading the view.
+     [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+    
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加" style:UIBarButtonItemStyleBordered target:self action:@selector(addAction)];
     [self iv];
     [self lc];
@@ -74,37 +78,7 @@
     
     self.grantedArray=[[NSMutableArray alloc]init];
     
-    for(int i=0;i<childrenArray.count; i++)
-    {
-        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
-        
-        [tempDictionary setObject:[[[[childrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
-
-        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
-        
-        [tempDictionary setObject:[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
-        
-        [tempDictionary setObject:[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
-        
-        [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
-        
-        
-        if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-            [self.BindingArray addObject:[tempDictionary copy]];
-        }
-        
-        if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-            [self.unBindingArray addObject:[tempDictionary copy]];
-        }
-        
-        if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
-            [self.grantedArray addObject:[tempDictionary copy]];
-        }
-        
-        [tempDictionary removeAllObjects];
-        tempDictionary=nil;
-    }
-    _cellHeight=44;
+        _cellHeight=44;
     
      _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
@@ -426,7 +400,53 @@
     _km.title = @"";
 
 }
+#pragma mark --
+#pragma mark --服务器返回信息
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
+{
+        NSString *responseString = [request responseString];
+    //请求房间列表
+    if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
+        NSData *responseData = [request responseData];
+        childrenArray=[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"];
+        for(int i=0;i<childrenArray.count; i++)
+        {
+            NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+            
+            [tempDictionary setObject:[[[[childrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+            
+            [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+            
+            [tempDictionary setObject:[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+            
+            [tempDictionary setObject:[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+            if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqual:[NSNull null]]) {
+                [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
+                
+                
+                if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                    [self.BindingArray addObject:[tempDictionary copy]];
+                }
+                
+                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                    [self.unBindingArray addObject:[tempDictionary copy]];
+                }
 
+            }
+            
+           
+            
+            if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
+                [self.grantedArray addObject:[tempDictionary copy]];
+            }
+            
+            [tempDictionary removeAllObjects];
+            tempDictionary=nil;
+        }
+
+    }
+    [_KindlistTView reloadData];
+}
 
 
 //-(void)addAction
