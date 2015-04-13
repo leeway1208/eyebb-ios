@@ -14,7 +14,7 @@
 #import "UserDefaultsUtils.h"
 
 
-@interface LoginViewController ()
+@interface LoginViewController ()<UITextFieldDelegate>
 {
     int textHeight;
     
@@ -23,6 +23,9 @@
 @property (nonatomic,strong) UITextField *loginUserAccount;
 /**user password*/
 @property (nonatomic,strong) UITextField *loginPassword;
+@property (nonatomic,strong) UITextField * nameTxt;
+@property (nonatomic,strong) UITextField * KidNameTxt;
+@property (nonatomic,strong) UITextField * BirthTxt;
 /**forget password label*/
 @property (nonatomic,strong) UIButton *forgetPasswordLabel;
 /**use to keep json information*/
@@ -34,6 +37,22 @@
 /**user password image*/
 @property (nonatomic,strong) UIImageView* passWordImg;
 
+
+
+/**弹出框*/
+@property (strong,nonatomic) UIScrollView * PopupSView;
+/**列表显示模式容器*/
+@property (strong,nonatomic) UIView * FindPDView;
+//单击空白处关闭遮盖层
+//@property (nonatomic, strong) UITapGestureRecognizer *singleTap;
+
+/**action sheet for kids birthady*/
+@property(retain,nonatomic)UIDatePicker *datePicker;
+
+/**date view container*/
+@property (strong,nonatomic) UIView * dateViewContainer;
+/**date view container confirm button*/
+@property (nonatomic,strong) UIButton *dateViewContainerConfirmBtn;
 @end
 
 @implementation LoginViewController
@@ -210,7 +229,7 @@
     [_forgetPasswordLabel setTitle:LOCALIZATION(@"text_forgot_password") forState:UIControlStateNormal];
     [_forgetPasswordLabel setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
     _forgetPasswordLabel.frame = CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 120+(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8);
-    
+    [_forgetPasswordLabel addTarget:self action:@selector(showFindPDAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view  addSubview:_forgetPasswordLabel];
     
     
@@ -228,8 +247,195 @@
     tapGr.cancelsTouchesInView = NO;
     [self.view addGestureRecognizer:tapGr];
     
+    
+    //------------------------遮盖层------------------------
+    
+    //弹出遮盖层
+    _PopupSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height)];
+    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
+    [self.view addSubview:_PopupSView];
+    [_PopupSView setHidden:YES];
+    
+    //单击空白处关闭遮盖层
+//    self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
+//    self.singleTap.delegate = self;
+    
+//    [_PopupSView addGestureRecognizer:self.singleTap];
+    
+    //找回密码
+    _FindPDView=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-138, Drive_Wdith-10, 236)];
+    [_FindPDView setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_FindPDView.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_FindPDView.layer setCornerRadius:4.0];
+    [_PopupSView addSubview:_FindPDView];
+    
+    //设定title
+    UILabel *listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 5, CGRectGetWidth(_FindPDView.frame), 30)];
+    [listtitleLal setText:LOCALIZATION(@"text_forgetPassword")];
+    [listtitleLal setTextColor:[UIColor redColor]];
+    [listtitleLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:16]];
+    [listtitleLal setTextAlignment:NSTextAlignmentCenter];
+    [listtitleLal setBackgroundColor:[UIColor clearColor]];
+    [_FindPDView addSubview:listtitleLal];
+    listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 25, CGRectGetWidth(_FindPDView.frame), 60)];
+    listtitleLal.numberOfLines=0;
+    [listtitleLal setText:LOCALIZATION(@"text_forgetPassword_details")];
+    [listtitleLal setTextColor:[UIColor blackColor]];
+    [listtitleLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:12]];
+    [listtitleLal setTextAlignment:NSTextAlignmentCenter];
+    [listtitleLal setBackgroundColor:[UIColor clearColor]];
+    [_FindPDView addSubview:listtitleLal];
+    
+    _nameTxt=[[UITextField alloc]initWithFrame:CGRectMake(10, 85, CGRectGetWidth(_FindPDView.frame)-20, 30)];
+    _nameTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    
+    _nameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+    _nameTxt.leftViewMode=UITextFieldViewModeAlways;
+    _nameTxt.placeholder=LOCALIZATION(@"text_forgetPassword_phone");//默认显示的字
+    _nameTxt.secureTextEntry=NO;//设置成密码格式
+    _nameTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+    _nameTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+    _nameTxt.delegate=self;//设置委托
+    [_nameTxt.layer setBorderWidth:2.0]; //边框宽度
+    [_nameTxt.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
+    //设置按钮是否圆角
+    [_nameTxt.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_nameTxt.layer setCornerRadius:4.0];
+    [_FindPDView addSubview:_nameTxt];
+    
+    _KidNameTxt=[[UITextField alloc]initWithFrame:CGRectMake(10, 120, CGRectGetWidth(_FindPDView.frame)-20, 30)];
+    _KidNameTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    
+    _KidNameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+    _KidNameTxt.leftViewMode=UITextFieldViewModeAlways;
+    _KidNameTxt.placeholder=LOCALIZATION(@"text_forgetPassword_child_name");//默认显示的字
+    _KidNameTxt.secureTextEntry=NO;//设置成密码格式
+    _KidNameTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+    _KidNameTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+    _KidNameTxt.delegate=self;//设置委托
+    [_KidNameTxt.layer setBorderWidth:2.0]; //边框宽度
+    [_KidNameTxt.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
+    //设置按钮是否圆角
+    [_KidNameTxt.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_KidNameTxt.layer setCornerRadius:4.0];
+    [_FindPDView addSubview:_KidNameTxt];
+    
+    _BirthTxt=[[UITextField alloc]initWithFrame:CGRectMake(10, 155, CGRectGetWidth(_FindPDView.frame)-20, 30)];
+    _BirthTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    
+    _BirthTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+    _BirthTxt.leftViewMode=UITextFieldViewModeAlways;
+    _BirthTxt.placeholder=LOCALIZATION(@"text_forgetPassword_child_birthday");//默认显示的字
+    _BirthTxt.secureTextEntry=NO;//设置成密码格式
+    _BirthTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+    _BirthTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+    _BirthTxt.delegate=self;//设置委托
+    [_BirthTxt.layer setBorderWidth:2.0]; //边框宽度
+    [_BirthTxt.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
+    //设置按钮是否圆角
+    [_BirthTxt.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_BirthTxt.layer setCornerRadius:4.0];
+    [_FindPDView addSubview:_BirthTxt];
+    
+    
+    //取消按钮
+    UIButton * cencelBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 194,CGRectGetWidth(_FindPDView.frame)/2, 40)];
+    //设置按显示文字
+    [cencelBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
+    [cencelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [cencelBtn setImage:[UIImage imageNamed:@"cross2"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [cencelBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [cencelBtn addTarget:self action:@selector(cencelAction) forControlEvents:UIControlEventTouchUpInside];
+    [cencelBtn.layer setBorderWidth:0.5]; //边框宽度
+    [cencelBtn.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
+    [_FindPDView addSubview:cencelBtn];
+    
+    //提交按钮
+    UIButton * ChangeBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_FindPDView.frame)/2, 194,CGRectGetWidth(_FindPDView.frame)/2, 40)];
+    //设置按显示文字
+    [ChangeBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
+    [ChangeBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [ChangeBtn setImage:[UIImage imageNamed:@"tick"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [ChangeBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [ChangeBtn addTarget:self action:@selector(SaveAction) forControlEvents:UIControlEventTouchUpInside];
+    [ChangeBtn.layer setBorderWidth:0.5]; //边框宽度
+    [ChangeBtn.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
+    [_FindPDView addSubview:ChangeBtn];
+    
+    
+    /* date view container  */
+    _dateViewContainer=[[UIView alloc]initWithFrame:CGRectMake(0, Drive_Height, Drive_Wdith-10, 220)];
+    [_dateViewContainer setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_dateViewContainer.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_dateViewContainer.layer setCornerRadius:4.0];
+    //[_PopupSView addSubview:_popViewContainer];
+    
+    
+    /** date view container confirm btn */
+    _dateViewContainerConfirmBtn=[[UIButton alloc] initWithFrame:self.view.bounds];
+    _dateViewContainerConfirmBtn.frame = CGRectMake(0, 175 ,self.view.frame.size.width , 40);
+    _dateViewContainerConfirmBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    [_dateViewContainerConfirmBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
+    [_dateViewContainerConfirmBtn setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    _dateViewContainerConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+    [_dateViewContainerConfirmBtn addTarget:self action:@selector(kidsKindergartenContainerConfirmAciton:) forControlEvents:UIControlEventTouchUpInside];
+    [_dateViewContainer addSubview:_dateViewContainerConfirmBtn];
+    
+    
+    /**Dividing line for container*/
+    UILabel * containerDivLb=[[UILabel alloc]initWithFrame:CGRectMake(0, 170 ,self.view.frame.size.width, 1)];
+    [containerDivLb.layer setBorderWidth:1.0]; //边框宽度
+    [containerDivLb.layer setBorderColor:[UIColor colorWithRed:0.682 green:0.682 blue:0.682 alpha:0.8].CGColor];
+    
+    [_dateViewContainer addSubview:containerDivLb];
+    
+    /** date picker */
+    self.datePicker = [[UIDatePicker alloc] init];
+    self.datePicker.frame =CGRectMake(0, 0, self.view.frame.size.width, 190);
+    //this mode just have yyyy-mm-dd
+    self.datePicker.datePickerMode = 1;
+    
+    //button action
+    [self.datePicker addTarget:self action:@selector(chooseDateValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [_BirthTxt addTarget:self action:@selector(chooseDateTouchDown:) forControlEvents:UIControlEventTouchDown];
+    
+    [_dateViewContainer addSubview:_datePicker];
+    _BirthTxt.inputView =  self.dateViewContainer;
+
+    
+}
+#pragma mark - method of UIDatePicker
+
+- (void)chooseDateValueChanged:(UIDatePicker *)sender {
+    NSDate *selectedDate = sender.date;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //formatter.dateFormat = @"YYYY-MM-dd";
+    formatter.dateFormat = @"dd/MM/YYYY";
+    
+    NSString *dateString = [formatter stringFromDate:selectedDate];
+    _BirthTxt.text = dateString;
 }
 
+- (void)chooseDateTouchDown:(UIDatePicker *)sender {
+    NSDate *selectedDate = self.datePicker.date;
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    //formatter.dateFormat = @"YYYY-MM-dd";
+    formatter.dateFormat = @"dd/MM/YYYY";
+    NSString *dateString = [formatter stringFromDate:selectedDate];
+    _BirthTxt.text = dateString;
+}
 #pragma mark - keyboard
 -(void)BasicRegkeyboardWillShow:(NSNotification *)note
 {
@@ -243,7 +449,7 @@
     {
         [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
         [UIView setAnimationDuration:0.3];
-        self.view.frame = CGRectMake(0.0f, -80.0, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.frame = CGRectMake(0.0f, -(textHeight-(Drive_Height-keyboardSize.height-48)), self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
     }
 }
@@ -258,7 +464,7 @@
         //还原
         [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
         [UIView setAnimationDuration:0.3];
-        self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        self.view.frame = CGRectMake(0.0f, 64.0f, self.view.frame.size.width, self.view.frame.size.height);
         [UIView commitAnimations];
     }
     
@@ -274,6 +480,16 @@
     if (theTextField == self.loginPassword) {
         [theTextField resignFirstResponder];
     }
+    if (theTextField == self.nameTxt) {
+        [theTextField resignFirstResponder];
+    }
+    if (theTextField == self.KidNameTxt) {
+        [theTextField resignFirstResponder];
+    }
+    if (theTextField == self.BirthTxt) {
+        [theTextField resignFirstResponder];
+    }
+
     return YES;
     
 }
@@ -287,7 +503,15 @@
     if (textField == self.loginPassword) {
         textHeight=145;
     }
-    
+    if (textField == self.nameTxt) {
+        textHeight=(Drive_Height+20)/2-138+115;
+    }
+    if (textField == self.KidNameTxt) {
+        textHeight=(Drive_Height+20)/2-138+150;
+    }
+    if (textField == self.BirthTxt) {
+        textHeight=(Drive_Height+20)/2-138+185;
+    }
 }
 
 
@@ -295,9 +519,16 @@
 {
     [self.loginUserAccount resignFirstResponder];
     [self.loginPassword resignFirstResponder];
+    [_nameTxt resignFirstResponder];
+    [_KidNameTxt resignFirstResponder];
+    [_BirthTxt resignFirstResponder];
 }
 
-
+- (void)kidsKindergartenContainerConfirmAciton:(id)sender{
+    
+    [_BirthTxt resignFirstResponder];
+    
+}
 #pragma mark - button action
 /**
  *  the left button of navigation bar
@@ -441,5 +672,17 @@
     
 }
 
+-(void)cencelAction
+{
+    [_PopupSView setHidden:YES];
+}
+-(void)showFindPDAction
+{
+    [_PopupSView setHidden:NO];
+}
 
+-(void)SaveAction
+{
+    
+}
 @end

@@ -438,12 +438,15 @@
                     [self.BindingArray addObject:[tempDictionary copy]];
                 }
                 
-                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-                    [self.unBindingArray addObject:[tempDictionary copy]];
-                }
+//                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+//                                    }
 
             }
-            
+            else
+            {
+                [self.unBindingArray addObject:[tempDictionary copy]];
+
+            }
            
             
             if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
@@ -458,7 +461,16 @@
     [_KindlistTView reloadData];
 }
 
-
+- (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
+{
+//    [_progressView setHidden:YES];
+    [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                message:LOCALIZATION(@" text_network_error")
+                               delegate:self
+                      cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                      otherButtonTitles:nil] show];
+    
+}
 -(void)addAction
 {
     if (_childView == nil) {

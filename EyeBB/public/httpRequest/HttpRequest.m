@@ -135,6 +135,7 @@ static HttpRequest *instance;
      EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
 
      [clientDelegate requestFailed:request tag:self.methodStr];
+    [[self clientDelegates] removeAllObjects];
 //    NSString *message = NULL;
 //    
 //    NSError *error = [request error];

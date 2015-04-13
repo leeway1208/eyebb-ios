@@ -21,7 +21,7 @@
 
 #import "WebViewController.h"
 
-#import "KidViewController.h"//查询简报儿童列表
+#import "KidViewController.h"//查询儿童列表
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
 {
@@ -2618,6 +2618,17 @@ CGPoint pt = [scrollView contentOffset];
     //关闭加载
 //    [HUD hide:YES afterDelay:0];
     
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
+{
+    [_progressView setHidden:YES];
+    [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                message:LOCALIZATION(@" text_network_error")
+                               delegate:self
+                      cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                      otherButtonTitles:nil] show];
+   
 }
 #pragma mark - 本地数据处理
 /**根据选择的机构加载房间和儿童信息*/

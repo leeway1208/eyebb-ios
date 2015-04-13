@@ -347,7 +347,17 @@
 }
 
 
-
+- (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
+{
+    //关闭加载
+    [HUD hide:YES afterDelay:0];
+    [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                message:LOCALIZATION(@" text_network_error")
+                               delegate:self
+                      cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                      otherButtonTitles:nil] show];
+    
+}
 
 #pragma mark - Notification methods
 
