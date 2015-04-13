@@ -88,6 +88,7 @@
     _SelectedTView=[[UITableView alloc] initWithFrame:CGRectMake(0, Drive_Height/6*2, Drive_Wdith, Drive_Height/6*4)];
     _SelectedTView.dataSource = self;
     _SelectedTView.delegate = self;
+    self.SelectedTView.tableFooterView = [[UIView alloc] init];
     //设置table是否可以滑动
     _SelectedTView.scrollEnabled = YES;
     //隐藏table自带的cell下划线
@@ -105,7 +106,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
 
-    return 5;
+    return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -131,17 +132,17 @@
             cell.textLabel.text=LOCALIZATION(@"text_battery_life");
             break;
         case 1:
-            cell.textLabel.text=LOCALIZATION(@"");
+            cell.textLabel.text=LOCALIZATION(@"text_beep");
             break;
         case 2:
-            cell.textLabel.text=LOCALIZATION(@"");
+            cell.textLabel.text=LOCALIZATION(@"text_get_the_eyebb_device_qr_code");
             break;
         case 3:
-            cell.textLabel.text=LOCALIZATION(@"");
-            break;
-        case 4:
             cell.textLabel.text=LOCALIZATION(@"btn_unbind");
             break;
+//        case 4:
+//            //cell.textLabel.text=LOCALIZATION(@"btn_unbind");
+//            break;
         default:
             break;
     }

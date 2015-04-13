@@ -119,8 +119,8 @@
 "text_new_password"="New Password";
 "text_repeat_new_password"="Repeat New Password";
 "text_two_password_different"="Sorry! The two new passwords do not match.";
-"text_update_password_successful"="Updaate password successfully! Thank you.";
-"text_update_nickname_successful"="Updaate nickname successfully! Thank you.";
+"text_update_password_successful"="Update password successfully! Thank you.";
+"text_update_nickname_successful"="Update nickname successfully! Thank you.";
 "text_tips"="Tips.";
 "text_old_password_incorrect"="The original password is not correct.";
 "text_user_do_not_exist"="Sorry. This user may not exist.";

@@ -378,6 +378,7 @@
     if ([tag isEqualToString:UPDATE_PASSWORD]){
         NSData *responseData = [request responseData];
         NSString * resUpdate =[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"resUpdate -- > %@",resUpdate);
         if ([resUpdate isEqualToString:@"T"]) {
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"text_update_password_successful")
@@ -403,6 +404,7 @@
     NSString *OldPDStr= [self.OldpDTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *pwdStr = [self.pDTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *varStr = [self.verifyTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+//    NSLog(@"OldPDStr -- > %@ pwdStr ---> %@",OldPDStr,[CommonUtils getSha256String:OldPDStr]);
     if([self verifyRequest:OldPDStr withpwd:pwdStr withver:varStr]!=nil)
     {
         
@@ -415,7 +417,7 @@
     else
     {
        
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:[CommonUtils getSha256String:OldPDStr], @"oldPassword", [CommonUtils getSha256String:pwdStr],@"newPassword",nil];
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:[CommonUtils getSha256String:OldPDStr].uppercaseString, @"oldPassword", [CommonUtils getSha256String:pwdStr].uppercaseString,@"newPassword",nil];
         
  
         

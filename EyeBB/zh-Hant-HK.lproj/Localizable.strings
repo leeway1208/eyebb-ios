@@ -35,7 +35,7 @@
 "text_today"="本日";
 "text_customized"="自定義:";
 "text_days"="天";
-"text_beep"="蜂鳴";
+"text_beep"="呼喚";
 "text_school_bus_tracking"="校車軌跡";
 "text_notifications"="通告";
 "text_settings"="設定";
@@ -167,8 +167,8 @@
 "text_search_kid"="查找孩子...;";
 "text_can_not_open_options"="請先關閉雷達追踪";
 "text_click_to_share"="(點擊邀請 ";
-"text_update_eyebb_device_firmware"="更新寶寶安設備固件";
-"text_get_the_eyebb_device_qr_code"="申請寶寶安設備二維碼";
+"text_update_eyebb_device_firmware"="更新設備固件";
+"text_get_the_eyebb_device_qr_code"="顯示設備二維碼";
 "text_get_the_lastest_eyebb_device_qr_code"="申請最近一次配對的寶寶安設備二維碼";
 "text_Apply_qr_code_fail"="申請設備二維碼失敗,請使用監護人賬號";
 "text_network_unavailable"="無法連接到服務器(點擊連接)";

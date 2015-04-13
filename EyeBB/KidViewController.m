@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
+
+// first page bottom button
 #import "KidViewController.h"
 #import "IIILocalizedIndex.h"
 #import "EGOImageView.h"
@@ -404,7 +406,8 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellName];
             //        cell.tag = indexPath.row;
         }
-        if (indexPath.row==0) {
+        
+               if (indexPath.row==0) {
             if([cell viewWithTag:104]==nil)
             {
                 UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(cell.frame)-60, 44)];
@@ -672,6 +675,8 @@ else if (tableView == _NametableView) {
 //    {
 //        
 //    }
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+
     return cell;
 }
 ////设置索引条

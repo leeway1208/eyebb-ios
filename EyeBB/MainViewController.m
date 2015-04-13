@@ -699,6 +699,7 @@
     _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
     _ActivitiesTableView.dataSource = self;
     _ActivitiesTableView.delegate = self;
+    self.ActivitiesTableView.tableFooterView = [[UIView alloc] init];
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
       _ActivitiesTableView.hidden=YES;

@@ -6,6 +6,8 @@
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
 
+
+// setting view children list
 #import "KidslistViewController.h"
 #import "ChildInformationMatchingViewController.h"
 
@@ -34,6 +36,11 @@
 
 /**图片本地存储地址*/
 @property (nonatomic,strong)NSString * documentsDirectoryPath;
+
+
+
+/* next view */
+@property (nonatomic,strong) ChildInformationMatchingViewController * childView;
 @end
 
 @implementation KidslistViewController
@@ -46,7 +53,7 @@
     // Do any additional setup after loading the view.
      [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加" style:UIBarButtonItemStyleBordered target:self action:@selector(addAction)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加" style:UIBarButtonItemStyleBordered target:self action:@selector(addAction:)];
     [self iv];
     [self lc];
 }
@@ -56,6 +63,9 @@
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
+    if (_childView != nil) {
+        _childView = nil;
+    }
     
 }
 
@@ -171,7 +181,7 @@
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         //        cell.tag = indexPath.row;
-        
+        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         UIView * bindView=[[UIView alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, _cellHeight-10)];
         
         [bindView setBackgroundColor:[UIColor colorWithRed:0.467 green:0.843 blue:0.639 alpha:1]];
@@ -449,13 +459,13 @@
 }
 
 
-//-(void)addAction
-//{
-//    _addGuardian =[[AddGuardianViewController alloc]init];
-//    [self.navigationController pushViewController:_addGuardian animated:YES];
-////    ChildInformationMatchingViewController *cfm=[[ChildInformationMatchingViewController alloc]init];
-////    [self.navigationController pushViewController:cfm animated:YES];
-////    [_KindlistTView reloadData];
-//}
+-(void)addAction
+{
+    if (_childView == nil) {
+        _childView = [[ChildInformationMatchingViewController alloc]init];
+    }
+    [self.navigationController pushViewController:_childView animated:YES];
+
+}
 
 @end
