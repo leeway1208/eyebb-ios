@@ -26,7 +26,7 @@
     for(int i = 0; i < CC_SHA256_DIGEST_LENGTH; i++) {
         [result appendFormat:@"%02x", digest[i]];
     }
-    return result;
+    return result.uppercaseString;
 }
 
 
