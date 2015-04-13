@@ -336,7 +336,7 @@
 #pragma mark - server return
 
 -(void) requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
-    if ([tag isEqualToString:UPDATE_PASSWORD]){
+    if ([tag isEqualToString:CHANGE_NICKNAME]){
         NSData *responseData = [request responseData];
         NSString * resUpdate =[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         if ([resUpdate isEqualToString:@"T"]) {
