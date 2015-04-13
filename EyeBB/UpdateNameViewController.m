@@ -339,6 +339,7 @@
     if ([tag isEqualToString:CHANGE_NICKNAME]){
         NSData *responseData = [request responseData];
         NSString * resUpdate =[[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"resUpdate---> %@",resUpdate);
         if ([resUpdate isEqualToString:@"T"]) {
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"text_update_nickname_successful")
@@ -375,7 +376,7 @@
     else
     {
         
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:NameStr, @"newNickname", [CommonUtils getSha256String:pwdStr],@"password",nil];
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:NameStr, @"newNickname", [CommonUtils getSha256String:pwdStr].uppercaseString,@"password",nil];
         
         
         
