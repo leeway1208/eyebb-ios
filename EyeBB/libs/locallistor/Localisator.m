@@ -115,6 +115,7 @@ static NSString * const kSaveLanguageDefaultKey = @"kSaveLanguageDefaultKey";
 
 -(BOOL)setLanguage:(NSString *)newLanguage
 {
+    
     if (newLanguage == nil || [newLanguage isEqualToString:self.currentLanguage] || ![self.availableLanguagesArray containsObject:newLanguage])
         return NO;
     

@@ -20,6 +20,7 @@
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     AppDelegate * myDelegate;
+    NSString * currentLanguge;
 }
 
 /** all items */
@@ -72,6 +73,17 @@
     
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     [self loadWidget];
+    
+    currentLanguge =  [self getCurrentAppLanguage];
+    NSLog(@"currentLanguge --- > %@",currentLanguge);
+
+    if ([currentLanguge isEqualToString:@"en"]) {
+        myDelegate.applanguage = 0;
+    }else if ([currentLanguge isEqualToString:@"zh-Hans-CN"]){
+        myDelegate.applanguage = 2;
+    }else if ([currentLanguge isEqualToString:@"zh-Hant-HK"]){
+        myDelegate.applanguage = 1;
+    }
     
 }
 
@@ -343,12 +355,24 @@
             imgView.hidden=NO;
             _timeOnListLbl.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_enableSound"]];
+            
+            if (myDelegate.appSound == 1) {
+                imgView.image=[UIImage imageNamed:@"selected"];
+                myDelegate.appSound = 0;
+            }
+            
         }else if(indexPath.row == 2){
             cell.textLabel.text=LOCALIZATION(@"text_enableVibration");
             imgView.image=[UIImage imageNamed:@"selected_off"];
             imgView.hidden=NO;
             _timeOnListLbl.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_enableVibration"]];
+            
+            if (myDelegate.appVibrate == 1) {
+                imgView.image=[UIImage imageNamed:@"selected"];
+                myDelegate.appVibrate = 0;
+            }
+            
         }
     }else if(indexPath.section == 1){
         if(indexPath.row == 0){
@@ -371,6 +395,7 @@
             if(myDelegate.applanguage==0)
             {
                 imgView.image=[UIImage imageNamed:@"selected"];
+                //[self setUserLanguge:0];
             }
             else
             {
@@ -385,6 +410,7 @@
             if(myDelegate.applanguage==1)
             {
                 imgView.image=[UIImage imageNamed:@"selected"];
+               // [self setUserLanguge:1];
             }
             else
             {
@@ -400,6 +426,7 @@
             if(myDelegate.applanguage==2)
             {
                 imgView.image=[UIImage imageNamed:@"selected"];
+                //[self setUserLanguge:2];
             }
             else
             {
@@ -453,7 +480,31 @@
         if(indexPath.row==0)
         {
             _pushView.hidden=NO;
+            
+            
+        }else if(indexPath.row==1){
+            
+            if (myDelegate.appSound == 0) {
+                myDelegate.appSound = 2;
+            }else{
+                 myDelegate.appSound = 1;
+            }
+           
+            
+            
+        }else if(indexPath.row==2){
+            if ( myDelegate.appVibrate == 0){
+                myDelegate.appVibrate = 2;
+            }else{
+                myDelegate.appVibrate = 1;
+            }
+
+       
+            
+            //[_optionsTable reloadData];
         }
+        [_optionsTable reloadData];
+      
     }else if (indexPath.section == 1){
         if(indexPath.row==0)
         {
@@ -472,7 +523,17 @@
         }
         
     }else if (indexPath.section == 2) {
+        
+        if (indexPath.row==0) {
+            [self setUserLanguge:0];
+        }else if (indexPath.row==1){
+            [self setUserLanguge:2];
+        }else if (indexPath.row==2){
+            [self setUserLanguge:1];
+        }
+        
         myDelegate.applanguage=indexPath.row;
+        
         [_optionsTable reloadData];
     }
     if (indexPath.section == 3){

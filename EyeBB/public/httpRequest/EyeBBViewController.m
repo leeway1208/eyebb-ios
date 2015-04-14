@@ -54,22 +54,26 @@ static NSBundle *bundle = nil;
  *
  *  @param language language (1 is Chinese, 2 is Cantonese, default is English)
  */
-+(void)setUserLanguge:(int)language {
+-(void)setUserLanguge:(int)language {
+    
+    NSArray * availableLanguagesArray = @[@"en", @"zh-Hans-CN", @"zh-Hant-HK"];
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     switch (language) {
         case 1:
             
             [def setObject:@"zh-Hans-CN" forKey:EyeBBViewController_userDefaults_userLanguage];
             [def synchronize];
-            
+            [[Localisator sharedInstance] setLanguage:availableLanguagesArray[1]];
             break;
         case 2:
             
             [def setObject:@"zh-Hant-HK" forKey:EyeBBViewController_userDefaults_userLanguage];
+            [[Localisator sharedInstance] setLanguage:availableLanguagesArray[2]];
             [def synchronize];
             break;
         default:
             [def setObject:@"en" forKey:EyeBBViewController_userDefaults_userLanguage];
+            [[Localisator sharedInstance] setLanguage:availableLanguagesArray[0]];
             [def synchronize];
             break;
     }
@@ -80,7 +84,7 @@ static NSBundle *bundle = nil;
  *
  *  @return current System language
  */
-+ (NSString *)getCurrentSystemLanguage
+- (NSString *)getCurrentSystemLanguage
 {
     NSArray *languages = [NSLocale preferredLanguages];
     NSString *currentLanguage = [languages objectAtIndex:0];
@@ -93,7 +97,7 @@ static NSBundle *bundle = nil;
  *
  *  @return current App language
  */
-+ (NSString *)getCurrentAppLanguage
+- (NSString *)getCurrentAppLanguage
 {
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     

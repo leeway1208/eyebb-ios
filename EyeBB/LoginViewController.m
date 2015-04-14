@@ -73,7 +73,7 @@
 //
 //    [self.navigationItem setLeftBarButtonItem:[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonItemStyleBordered  target:self action:@selector(loginSelectLeftAction:)]];
     
-    //[EyeBBViewController setUserLanguge:1];
+    //[self setUserLanguge:1];
     
     [self loadParameter];
     [self loadWidget];

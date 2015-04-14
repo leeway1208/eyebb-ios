@@ -13,6 +13,13 @@
 @interface KidMessageViewController ()<UITableViewDataSource,UITableViewDelegate>
 //蓝牙设备电量显示
 @property (weak, nonatomic) RMDownloadIndicator *closedIndicator;
+@property (nonatomic,strong) UILabel *batteryLifeLb;
+
+/** child image */
+
+/** child name */
+@property (nonatomic,strong) UILabel *childNameLbl;
+
 
 /**选项列表*/
 @property (strong,nonatomic) UITableView * SelectedTView;
@@ -32,7 +39,7 @@
     [self iv];
     [self lc];
     
-    NSLog(@"major(%@) minor(%@)",self.major,self.minor);
+    NSLog(@"childrenDictionary(%@)",self.childrenDictionary);
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -76,7 +83,7 @@
     _closedIndicator = nil;
 
     RMDownloadIndicator *closedIndicator = [[RMDownloadIndicator alloc]initWithFrame:CGRectMake(Drive_Wdith /3, 10, Drive_Wdith /3, Drive_Wdith /3) type:kRMClosedIndicator];
-    [closedIndicator setBackgroundColor:[UIColor whiteColor]];
+    [closedIndicator setBackgroundColor:[UIColor clearColor]];
     [closedIndicator setFillColor:[UIColor colorWithRed:16./255 green:119./255 blue:234./255 alpha:1.0f]];
     [closedIndicator setStrokeColor:[UIColor colorWithRed:16./255 green:119./255 blue:234./255 alpha:1.0f]];
     closedIndicator.radiusPercent = 0.45;

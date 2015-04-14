@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 EyeBB. All rights reserved.
 //
 
-
-@interface SettingsViewController : UIViewController
+#import "EyeBBViewController.h"
+@interface SettingsViewController : EyeBBViewController
 
 @end

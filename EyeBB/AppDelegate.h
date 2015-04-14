@@ -21,6 +21,11 @@
 /**存储当前app的语言环境(0为中文简体,1为中文繁体,2为英语)*/
 @property int applanguage;
 
+/* enable sound */
+@property int appSound;
+/* enable vibrate*/
+@property int appVibrate;
+
 /**儿童列表*/
 @property (strong, nonatomic) NSDictionary * childrenBeanArray;
 @end
