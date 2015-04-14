@@ -402,10 +402,11 @@
 
 -(void)ShowKidMessageAction:(id)sender
 {
-    int num = (int)[(UIButton *)sender tag];
+    int num = ((int)[(UIButton *)sender tag]-102);
     _km =[[KidMessageViewController alloc]init];
-    _km.major=[[childrenArray objectAtIndex:num] objectForKey:@"major"];
-    _km.minor=[[childrenArray objectAtIndex:num] objectForKey:@"minor"];
+    _km.childrenDictionary=[childrenArray objectAtIndex:num];
+//    _km.major=[[childrenArray objectAtIndex:num] objectForKey:@"major"];
+//    _km.minor=[[childrenArray objectAtIndex:num] objectForKey:@"minor"];
     [self.navigationController pushViewController:_km animated:YES];
     _km.title = @"";
 
