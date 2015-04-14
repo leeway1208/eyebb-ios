@@ -208,6 +208,14 @@
 #define LOGIN_TO_CHECK_KEY_j_password @"j_password"
 #define LOGIN_TO_CHECK_KEY_appVersion @"appVersion"
 
+
+
+//LoginViewController_forgetPassword
+#define LOGIN_TO_CHECK_KEY_accName @"j_username"
+#define LOGIN_TO_CHECK_KEY_childName @"j_password"
+#define LOGIN_TO_CHECK_KEY_dob @"appVersion"
+
+
 //RegViewController
 #define REG_PARENTS_KEY_ACCNAME @"accName"
 #define REG_PARENTS_KEY_NAME @"name"

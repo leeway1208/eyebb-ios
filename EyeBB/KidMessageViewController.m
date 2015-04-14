@@ -31,6 +31,8 @@
     
     [self iv];
     [self lc];
+    
+    NSLog(@"major(%@) minor(%@)",self.major,self.minor);
 }
 
 -(void)viewWillAppear:(BOOL)animated

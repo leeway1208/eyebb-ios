@@ -299,6 +299,11 @@
     _nameTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
     _nameTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
     _nameTxt.delegate=self;//设置委托
+    CGRect frame = [_nameTxt frame];  //为你定义的UITextField
+    frame.size.width = 5;
+    UIView *leftview = [[UIView alloc] initWithFrame:frame];
+  
+    _nameTxt.leftView = leftview;
     [_nameTxt.layer setBorderWidth:2.0]; //边框宽度
     [_nameTxt.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
     //设置按钮是否圆角
@@ -309,7 +314,11 @@
     
     _KidNameTxt=[[UITextField alloc]initWithFrame:CGRectMake(10, 120, CGRectGetWidth(_FindPDView.frame)-20, 30)];
     _KidNameTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    CGRect KidNameTxtframe = [_KidNameTxt frame];  //为你定义的UITextField
+    KidNameTxtframe.size.width = 5;
+    UIView *KidNameTxtframeleftview = [[UIView alloc] initWithFrame:KidNameTxtframe];
     
+    _KidNameTxt.leftView = KidNameTxtframeleftview;
     _KidNameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _KidNameTxt.leftViewMode=UITextFieldViewModeAlways;
     _KidNameTxt.placeholder=LOCALIZATION(@"text_forgetPassword_child_name");//默认显示的字
@@ -327,7 +336,7 @@
     
     _BirthTxt=[[UITextField alloc]initWithFrame:CGRectMake(10, 155, CGRectGetWidth(_FindPDView.frame)-20, 30)];
     _BirthTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
-    
+    //_BirthTxt.leftView = leftview;
     _BirthTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _BirthTxt.leftViewMode=UITextFieldViewModeAlways;
     _BirthTxt.placeholder=LOCALIZATION(@"text_forgetPassword_child_birthday");//默认显示的字
@@ -337,6 +346,11 @@
     _BirthTxt.delegate=self;//设置委托
     [_BirthTxt.layer setBorderWidth:2.0]; //边框宽度
     [_BirthTxt.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
+    CGRect BirthTxtframe = [_BirthTxt frame];  //为你定义的UITextField
+    BirthTxtframe.size.width = 5;
+    UIView *BirthTxtleftview = [[UIView alloc] initWithFrame:BirthTxtframe];
+    
+    _BirthTxt.leftView = BirthTxtleftview;
     //设置按钮是否圆角
     [_BirthTxt.layer setMasksToBounds:YES];
     //圆角像素化
@@ -436,6 +450,7 @@
     NSString *dateString = [formatter stringFromDate:selectedDate];
     _BirthTxt.text = dateString;
 }
+
 #pragma mark - keyboard
 -(void)BasicRegkeyboardWillShow:(NSNotification *)note
 {
@@ -566,10 +581,18 @@
         //Loding progress bar
         [HUD show:YES];
         
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password,@"1.0",LOGIN_TO_CHECK_KEY_appVersion,nil];
+        
+        NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
+        ;
+        NSString * version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+        
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password,version,LOGIN_TO_CHECK_KEY_appVersion,nil];
         // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         
         [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
+        
+        infoDictionary = nil;
+        version = nil;
         
         
     }
@@ -609,13 +632,57 @@
                               otherButtonTitles:nil] show];
         }
         
+    }else if ([tag isEqualToString:RESET_PASSWORD]){
+        
+        NSData *responseData = [request responseData];
+        NSString * resRESET_PASSWORD= [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"resRESET_PASSWORD ---> %@",resRESET_PASSWORD);
+        
+        
+        
+        if ([resRESET_PASSWORD isEqualToString:SERVER_RETURN_T]) {
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_feed_back_successful")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+            
+        }else if ([resRESET_PASSWORD isEqualToString:SERVER_RETURN_F]){
+            
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_user_do_not_exist")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+            
+        }else if ([resRESET_PASSWORD isEqualToString:SERVER_RETURN_NC]){
+            
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_account_user_do_not_have_this_child")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+
+            
+        }
+        
+        
     }
+    
+    
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
     //关闭加载
     [HUD hide:YES afterDelay:0];
+    
+    [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                message:LOCALIZATION(@"text_network_error")
+                               delegate:self
+                      cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                      otherButtonTitles:nil] show];
 }
 #pragma mark - check the string
 /**
@@ -645,6 +712,29 @@
     return mag;
 }
 
+
+- (NSString *)verifyForgetPasswordRequest:(NSString *)userName childName:(NSString *)childName childBirthday:(NSString *)childBirthday
+{
+    NSString * mag=nil;//返回变量值
+    
+    if(userName.length <= 0)
+    {
+        mag=LOCALIZATION(@"text_fill_in_something");
+        return mag;
+    }
+    if (childName.length <= 0) {
+        
+        mag=LOCALIZATION(@"text_fill_in_something");
+        return mag;
+    }
+    if (childBirthday.length <= 0) {
+        
+        mag=LOCALIZATION(@"text_fill_in_something");
+        return mag;
+    }
+    
+    return mag;
+}
 #pragma mark- save the login status (userDefault)
 /**
  * save the login status
@@ -669,7 +759,6 @@
     
     return [loginStatus synchronize];
     
-    
 }
 
 -(void)cencelAction
@@ -683,6 +772,37 @@
 
 -(void)SaveAction
 {
+    
+    NSString *userName = [_nameTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *childName= [_KidNameTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *childBirthday= [_BirthTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    
+    NSLog(@"userName (%@) childName (%@) childBirthday(%@) ",userName,childName,childBirthday);
+    
+    if([self verifyForgetPasswordRequest:userName childName:childName childBirthday:childBirthday] != nil)
+    {
+        
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:[self verifyForgetPasswordRequest:userName childName:childName childBirthday:childBirthday]
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
+    }
+    else
+    {
+        
+        
+        //Loding progress bar
+        [HUD show:YES];
+        
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userName, LOGIN_TO_CHECK_KEY_accName, childBirthday ,LOGIN_TO_CHECK_KEY_childName,childBirthday,LOGIN_TO_CHECK_KEY_dob,nil];
+        // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+        
+        [self postRequest:RESET_PASSWORD RequestDictionary:tempDoct delegate:self];
+        
+        
+    }
+
     
 }
 @end
