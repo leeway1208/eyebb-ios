@@ -1,12 +1,12 @@
-/* 
-  Localizable.strings
-  EyeBB
-
-  Created by Evan on 15/2/23.
-  Copyright (c) 2015年 EyeBB. All rights reserved.
-*/
+/*
+ Localizable.strings
+ EyeBB
+ 
+ Created by Evan on 15/2/23.
+ Copyright (c) 2015年 EyeBB. All rights reserved.
+ */
 //CFBundleDisplayName ="宝宝安";
-//"btn_sign_up"="注册";
+//"reg"="注册";
 //"tel"="Tel";
 
 
@@ -16,12 +16,12 @@
 "50_days"="50 days";
 "app_name"="宝宝安";
 "text_policy"="By Continuing, you agree to our Terms and Privacy Policy.";
+"text_pssword_not_the_same" = "两次密码不一样!";
 "text_user_name"="用户名";
 "text_email"="电邮 (可选)";
 "text_phone_number"="电话 (用户名)";
 "text_password"="密码";
 "text_verify"="验证密码";
-"text_pssword_not_the_same" = "两次密码不一样!";
 "text_login_account"="用户名";
 "text_select_kid_kindergarten"="选择幼稚园";
 "text_forgot_password"="忘记密码 ?";
@@ -35,7 +35,7 @@
 "text_today"="本日";
 "text_customized"="自定义:";
 "text_days"="天";
-"text_beep"="蜂鸣";
+"text_beep"="呼唤";
 "text_school_bus_tracking"="校车轨迹";
 "text_notifications"="通告";
 "text_settings"="设定";
@@ -160,15 +160,15 @@
 "text_fill_in_new_password"="请填入新密码!";
 "text_fill_in_repeat_new_password"="请重複填入新密码!";
 "text_choose_your_feedback_type"="请选择你的回馈类型!";
-"text_check_battery_life"="点击查询";ƒ
+"text_check_battery_life"="点击查询";
 "text_sort_by"="排序为";
 "text_name"="姓名";
 "text_location"="区域";
 "text_search_kid"="查找孩子...;";
 "text_can_not_open_options"="请先关闭雷达追踪";
 "text_click_to_share"="(点击邀请 ";
-"text_update_eyebb_device_firmware"="更新宝宝安设备固件";
-"text_get_the_eyebb_device_qr_code"="申请宝宝安设备二维码";
+"text_update_eyebb_device_firmware"="更新设备固件";
+"text_get_the_eyebb_device_qr_code"="显示设备二维码";
 "text_get_the_lastest_eyebb_device_qr_code"="申请最近一次配对的宝宝安设备二维码";
 "text_Apply_qr_code_fail"="申请设备二维码失败,请使用监护人账号";
 "text_network_unavailable"="无法连接到服务器(点击连接)";
@@ -177,12 +177,11 @@
 "text_no_new_firmware"="抱歉,您的eyebb固件是最新的.";
 "text_is_this_kid"="是这个宝宝吗?";
 "text_qr_code"="二维码";
-"text_scan_qr_code_hint" = "将二维码对准方框，即可自动扫描";
+"text_scan_qr_code_hint" = "二维码对准方框，即可自动扫描";
 "text_turn_on_the_flash" = "开启闪光灯";
 "text_search_your_device" = "搜寻周围的宝宝安";
-"text_press_the_button_on_the_device" = "请按宝宝安设备的按钮超过3秒鐘,然后在屏幕上选择你的宝宝安.(请打开手机蓝牙)";
+"text_press_the_button_on_the_device" = "请按宝宝安设备的按钮超过3秒钟,然后在屏幕上选择你的宝宝安.(请打开手机蓝牙)";
 "text_connect_error" = "连接失败";
-
 //<!-- Button strings -->
 "btn_sign_up"="注册";
 "btn_login"="登录";
@@ -236,5 +235,4 @@
 "dialog_error_no_ble"="Bluetooth Low Energy technology is not supported on your device.";
 "dialog_error_no_bluetooth"="Bluetooth is not supported on your device.";
 "dialog_enable_bluetooth"="Please turn on Bluetooth to scan for SensorTag devices around you.";
-
 

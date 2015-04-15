@@ -21,6 +21,7 @@
 @property (strong,nonatomic) NSArray * noDuplicates;
 /* timer to refresh the table view */
 @property (strong,nonatomic) NSTimer *refreshTableTimer;
+@property (strong,nonatomic) NSTimer *otherTimer;
 @property (strong,nonatomic) CBPeripheral *connectedPeripheral;
 @property (strong,nonatomic) CBUUID *service2000;
 @property (strong,nonatomic) CBUUID *service1000;
@@ -40,6 +41,7 @@ static CustomerBluetooth *instance;
 @synthesize  clientDelegates;
 
 double timerInterval = 5.0f;
+double otherTimerInterval = 20.0f;
 NSInteger *tableNumberConut;
 Boolean setPassword = false;
 Boolean isBeep = false;
@@ -81,17 +83,37 @@ Boolean startTimerOnce = true;
     return _refreshTableTimer;
 }
 
+
+- (NSTimer *) otherTimer {
+    if (!_otherTimer) {
+        _otherTimer = [NSTimer timerWithTimeInterval:otherTimerInterval target:self selector:@selector(otherSelector:) userInfo:nil repeats:YES];
+    }
+    return _otherTimer;
+}
+
 -(void) startTimer{
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     NSLog(@"timer start...");
 }
 
+-(void) startOtherTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.otherTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"other timer start...");
+}
 
 - (void) stopTimer{
     if (self.refreshTableTimer != nil){
         [self.refreshTableTimer invalidate];
         self.refreshTableTimer = nil;
         NSLog(@"timer stop...");
+    }
+}
+
+- (void) stopOtherTimer{
+    if (_otherTimer != nil){
+        [_otherTimer invalidate];
+        _otherTimer = nil;
+        NSLog(@"other timer stop...");
     }
 }
 
@@ -105,9 +127,32 @@ Boolean startTimerOnce = true;
 
         
     }
-  
 }
 
+- (void)otherSelector:(NSTimer*)timer{
+
+    if (isBeep){
+        NSLog(@"BEEP ONCE ...");
+
+         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_BEEP_TIME_OUT object:nil];
+        isBeep = false;
+        
+        [self stopScan];
+        [self stopOtherTimer];
+    }else if (isReadBattery){
+        
+        NSLog(@"READ BATTERY ONCE ...");
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_READ_BATTERY_TIME_OUT object:nil];
+        isReadBattery = false;
+        
+        [self stopScan];
+        [self stopOtherTimer];
+        
+    }
+
+    
+}
 
 #pragma mark - CBCentralManager Delegate methods
 /*
@@ -505,6 +550,10 @@ NSString * NSDataToHex(NSData *data) {
 -(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue {
     //initial data
     isBeep = true;
+    [self startOtherTimer];
+    
+    //otherTimerInterval = otherTimerInterval;
+    
     self.writeValue1 = writeValue;
     
     [self initData:major minor:minor];
@@ -520,6 +569,9 @@ NSString * NSDataToHex(NSData *data) {
     NSLog(@"NAME --- > %@" , [notification name] );
     
     isReadBattery = true;
+     [self startOtherTimer];
+    
+    
     [self initData:major minor:minor];
     [self startScan];
     

@@ -239,6 +239,11 @@
 #define ScanDeviceToBindingViewController_KEY_minor @"minor"
 #define ScanDeviceToBindingViewController_KEY_guardianId @"guardianId"
 
+
+//KidMessageViewController
+#define KidMessageViewController_KEY_childId @"childId"
+
+
 /*
  * json key
  */

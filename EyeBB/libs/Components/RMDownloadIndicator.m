@@ -86,7 +86,7 @@
         _fillColor = [UIColor clearColor];
         _strokeColor = [UIColor whiteColor];
         _closedIndicatorBackgroundStrokeColor = [UIColor grayColor];
-        _coverWidth = 2.0;
+        _coverWidth = 4.0;
         
         //[self addDisplayLabel];
     }

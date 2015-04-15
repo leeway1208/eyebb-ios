@@ -56,7 +56,7 @@
     [self loadWidget];
     
     
-    
+     //reg broad cast
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getSosDevice:) name:nil object:nil ];
     
     [self findSOSDevice];

@@ -72,18 +72,13 @@
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
     
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    
+    [self loadPara];
     [self loadWidget];
     
-    currentLanguge =  [self getCurrentAppLanguage];
-    NSLog(@"currentLanguge --- > %@",currentLanguge);
-
-    if ([currentLanguge isEqualToString:@"en"]) {
-        myDelegate.applanguage = 0;
-    }else if ([currentLanguge isEqualToString:@"zh-Hans-CN"]){
-        myDelegate.applanguage = 2;
-    }else if ([currentLanguge isEqualToString:@"zh-Hant-HK"]){
-        myDelegate.applanguage = 1;
-    }
+    
+    
+    
     
 }
 
@@ -139,6 +134,27 @@
     
     [self setView:nil];
     [super viewDidDisappear:animated];
+}
+
+
+-(void)loadPara{
+    
+    self.title = LOCALIZATION(@"btn_options");
+    
+    
+    myDelegate.appSound = 0;
+    myDelegate.appVibrate = 0;
+    
+    currentLanguge =  [self getCurrentAppLanguage];
+    NSLog(@"currentLanguge --- > %@",currentLanguge);
+    
+    if ([currentLanguge isEqualToString:@"en"]) {
+        myDelegate.applanguage = 0;
+    }else if ([currentLanguge isEqualToString:@"zh-Hans-CN"]){
+        myDelegate.applanguage = 2;
+    }else if ([currentLanguge isEqualToString:@"zh-Hant-HK"]){
+        myDelegate.applanguage = 1;
+    }
 }
 
 -(void)loadWidget{
@@ -350,29 +366,41 @@
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_auto_refresh"]];
         }else if(indexPath.row == 1){
-            cell.textLabel.text=LOCALIZATION(@"text_enableSound");
-            imgView.image=[UIImage imageNamed:@"selected_off"];
-            imgView.hidden=NO;
-            _timeOnListLbl.hidden=YES;
-            //            [cell addSubview:[self settingLable:@"text_enableSound"]];
-            
-            if (myDelegate.appSound == 1) {
-                imgView.image=[UIImage imageNamed:@"selected"];
-                myDelegate.appSound = 0;
+            if (myDelegate.appSound == 1 || myDelegate.appSound == 0) {
+                cell.textLabel.text=LOCALIZATION(@"text_enableSound");
+                
+              
+                //            [cell addSubview:[self settingLable:@"text_enableSound"]];
+                
+                if (myDelegate.appSound == 1) {
+                    imgView.image=[UIImage imageNamed:@"selected"];
+                   //myDelegate.appSound = 0;
+                }else if(myDelegate.appSound == 0){
+                    
+                    imgView.image=[UIImage imageNamed:@"selected_off"];
+                }
+                imgView.hidden=NO;
+                _timeOnListLbl.hidden=YES;
             }
             
         }else if(indexPath.row == 2){
-            cell.textLabel.text=LOCALIZATION(@"text_enableVibration");
-            imgView.image=[UIImage imageNamed:@"selected_off"];
-            imgView.hidden=NO;
-            _timeOnListLbl.hidden=YES;
-            //            [cell addSubview:[self settingLable:@"text_enableVibration"]];
-            
-            if (myDelegate.appVibrate == 1) {
-                imgView.image=[UIImage imageNamed:@"selected"];
-                myDelegate.appVibrate = 0;
+            if (myDelegate.appVibrate == 1 || myDelegate.appVibrate == 0) {
+                cell.textLabel.text=LOCALIZATION(@"text_enableVibration");
+                
+                //            [cell addSubview:[self settingLable:@"text_enableVibration"]];
+                
+                if (myDelegate.appVibrate == 1) {
+                    imgView.image=[UIImage imageNamed:@"selected"];
+                    //myDelegate.appVibrate = 0;
+                }else if (myDelegate.appVibrate == 0){
+                    imgView.image=[UIImage imageNamed:@"selected_off"];
+                }
+                
+                
+                
+                imgView.hidden=NO;
+                _timeOnListLbl.hidden=YES;
             }
-            
         }
     }else if(indexPath.section == 1){
         if(indexPath.row == 0){
@@ -410,7 +438,7 @@
             if(myDelegate.applanguage==1)
             {
                 imgView.image=[UIImage imageNamed:@"selected"];
-               // [self setUserLanguge:1];
+                // [self setUserLanguge:1];
             }
             else
             {
@@ -437,17 +465,17 @@
             _timeOnListLbl.hidden=YES;
         }
     }else if(indexPath.section == 3){
-       
+        
         if(indexPath.row == 0){
             cell.textLabel.text=LOCALIZATION(@"text_update_password");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_update_password"]];
-             _timeOnListLbl.hidden=YES;
+            _timeOnListLbl.hidden=YES;
         }else if(indexPath.row == 1){
             cell.textLabel.text=LOCALIZATION(@"text_update_nickname");
             imgView.hidden=YES;
             //            [cell addSubview:[self settingLable:@"text_update_nickname"]];
-             _timeOnListLbl.hidden=YES;
+            _timeOnListLbl.hidden=YES;
         }
     }else if(indexPath.section == 4){
         
@@ -485,33 +513,33 @@
         }else if(indexPath.row==1){
             
             if (myDelegate.appSound == 0) {
-                myDelegate.appSound = 2;
+                myDelegate.appSound = 1;
             }else{
-                 myDelegate.appSound = 1;
+                myDelegate.appSound = 0;
             }
-           
+            
             
             
         }else if(indexPath.row==2){
             if ( myDelegate.appVibrate == 0){
-                myDelegate.appVibrate = 2;
-            }else{
                 myDelegate.appVibrate = 1;
+            }else{
+                myDelegate.appVibrate = 0;
             }
-
-       
+            
+            
             
             //[_optionsTable reloadData];
         }
         [_optionsTable reloadData];
-      
+        
     }else if (indexPath.section == 1){
         if(indexPath.row==0)
         {
             if (_kidslist==nil) {
                 _kidslist= [[KidslistViewController alloc] init];
             }
-//            _kidslist.childrenArray=(NSMutableArray *)myDelegate.childrenBeanArray;
+            //            _kidslist.childrenArray=(NSMutableArray *)myDelegate.childrenBeanArray;
             [self.navigationController pushViewController:_kidslist animated:YES];
         }
         if(indexPath.row==1)
@@ -539,11 +567,11 @@
     if (indexPath.section == 3){
         if(indexPath.row==0)
         {
-        if (_updatePD==nil) {
-            _updatePD= [[UpdatePDViewController alloc] init];
-        }
-        
-        [self.navigationController pushViewController:_updatePD animated:YES];
+            if (_updatePD==nil) {
+                _updatePD= [[UpdatePDViewController alloc] init];
+            }
+            
+            [self.navigationController pushViewController:_updatePD animated:YES];
         }
         if(indexPath.row==1)
         {
