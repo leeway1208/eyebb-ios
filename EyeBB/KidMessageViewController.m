@@ -225,6 +225,7 @@
     
     [kidBgView addSubview:closedIndicator];
     [closedIndicator loadIndicator];
+
     _closedIndicator = closedIndicator;
     //设置downloadedBytes就可以了，这个为电量的百分比
     [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];

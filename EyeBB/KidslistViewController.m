@@ -15,6 +15,9 @@
 
 
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
+{
+    int index;
+}
 //-------------------视图控件--------------------
 /**兒童列表*/
 @property (strong,nonatomic) UITableView * KindlistTView;
@@ -29,6 +32,9 @@
 @property (strong,nonatomic) NSMutableArray * grantedArray;
 /**数据源数组*/
 @property (nonatomic,strong) NSMutableArray*childrenArray;
+
+/**重排后的儿童*/
+@property (nonatomic,strong) NSMutableDictionary * SelectChildrenDictionary;
 //@property (strong,nonatomic)  AddGuardianViewController *addGuardian;
 @property (strong,nonatomic)  KidMessageViewController * km;
 //-------------------视图变量--------------------
@@ -87,10 +93,11 @@
     self.unBindingArray=[[NSMutableArray alloc]init];
     
     self.grantedArray=[[NSMutableArray alloc]init];
-    
+   _SelectChildrenDictionary=[NSMutableDictionary dictionary];
         _cellHeight=44;
     
      _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    index=0;
 }
 
 /**
@@ -199,16 +206,19 @@
         [bindLbl setTextColor:[UIColor whiteColor]];
         [bindLbl setTextAlignment:NSTextAlignmentLeft];
         [bindView addSubview:bindLbl];
-       
+      
         switch (indexPath.row) {
             case 0:
                 tempArray=[_BindingArray copy];
+                
                 break;
             case 1:
                  tempArray=[_unBindingArray copy];
+       
                 break;
             case 2:
                  tempArray=[_grantedArray copy];
+          
                 break;
                 
             default:
@@ -391,7 +401,10 @@
 //                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
                 [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
-                kindBtn.tag=102+i;
+        
+        [_SelectChildrenDictionary setObject:[tempArray objectAtIndex:i] forKey:[NSString stringWithFormat:@"%d",102+index]];
+        kindBtn.tag=102+index;
+        index++;
                 [bindView addSubview:kindBtn];
                 
             }
@@ -402,9 +415,20 @@
 
 -(void)ShowKidMessageAction:(id)sender
 {
-    int num = ((int)[(UIButton *)sender tag]-102);
+   
+    int num = (int)[(UIButton *)sender tag];
     _km =[[KidMessageViewController alloc]init];
-    _km.childrenDictionary=[childrenArray objectAtIndex:num];
+    NSLog(@"childrenArray is %@",childrenArray);
+//    _km.childrenDictionary=[_SelectChildrenDictionary objectForKey:[NSString stringWithFormat:@"%d",num]];
+
+    NSDictionary *tempDictionary=[_SelectChildrenDictionary objectForKey:[NSString stringWithFormat:@"%d",num]];
+    for (int i=0; childrenArray.count; i++) {
+        if ([[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[tempDictionary objectForKey:@"name"]]) {
+            _km.childrenDictionary=[childrenArray objectAtIndex:i];
+            break;
+        }
+    }
+    tempDictionary=nil;
 //    _km.major=[[childrenArray objectAtIndex:num] objectForKey:@"major"];
 //    _km.minor=[[childrenArray objectAtIndex:num] objectForKey:@"minor"];
     [self.navigationController pushViewController:_km animated:YES];
