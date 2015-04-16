@@ -13,9 +13,10 @@
 #import "MSCellAccessory.h"
 #import "LDProgressView.h"
 #import "UserDefaultsUtils.h"
-#import "EGOImageView.h"
+//#import "DBImageView.h"
 #import "AppDelegate.h"
 #import "ChildrenListViewController.h"//查询简报儿童列表
+#import "DBImageView.h"//图片加载
 //彩色进度条
 #import "GradientProgressView.h"
 
@@ -28,7 +29,6 @@
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
     
-   EGOImageView* eimageView;
     AppDelegate * myDelegate;
     
 }
@@ -1200,8 +1200,10 @@
             //房间图标
            
             
-            EGOImageView * RoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-            RoomImgView.frame=CGRectMake(10, 15, 60, 60);
+            DBImageView * RoomImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+
+
             [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
             [RoomImgView.layer setMasksToBounds:YES];
             [RoomImgView.layer setBorderWidth:2];
@@ -1209,8 +1211,7 @@
             [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-                RoomImgView.imageURL = [NSURL URLWithString:pathOne];
-
+            [RoomImgView setImageWithPath:[pathOne copy]];
              pathOne=nil;
 
             RoomImgView.tag=202;
@@ -1282,69 +1283,82 @@
             int sNum=0;
             for (int i=0; i<tempChildArray.count; i++) {
                 
-                //儿童图标
-                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+               
                 if (i>0&&i%4==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4);
-                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
-                [kindBtn.layer setMasksToBounds:YES];
-                [kindBtn.layer setBorderWidth:2];
-                if (tempChildArray.count>0)
+                
+                DBImageView * kindImgView=[[DBImageView alloc] initWithFrame:CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4)];
+                [kindImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+                
+                
+                [kindImgView.layer setCornerRadius:CGRectGetHeight([kindImgView bounds]) / 2];
+                [kindImgView.layer setMasksToBounds:YES];
+                [kindImgView.layer setBorderWidth:2];
+                
+                [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                
+                
+               pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+                [kindImgView setImageWithPath:[pathOne copy]];
                 {
-                //结束时间
-//                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
-                NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
-
-                
-//                NSDate *endDate = [dateFormatter stringFromDate:date];
-                               //得到相差秒数
-                NSTimeInterval time=[endDate timeIntervalSinceDate:senderDate];
-                int minute = ((int)time>0?(int)time:-((int)time))/60;
-                
-                
-                if (minute>10) {
-                    [kindBtn setAlpha:0.5];
-                }
-                }
-                
-                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
-                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                    NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
+                    //得到相差秒数
+                    NSTimeInterval time=[endDate timeIntervalSinceDate:senderDate];
+                    int minute = ((int)time>0?(int)time:-((int)time))/60;
                     
-                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-
-
                     
-                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-                        
-                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
+                    if (minute>10) {
+                        [kindImgView setAlpha:0.5];
                     }
-                    else
-                    {
-                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
-                        //Get Image From URL
-                        UIImage * imageFromURL  = nil;
-                        imageFromURL=[UIImage imageWithData:data];
-                        //Save Image to Directory
-                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-                        
-                        
-                    }
-                    pathOne=nil;
-                    array=nil;
-                    array2=nil;
-
                 }
-                else
-                {
-                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
-                }
-
+                 [RoomBtn addSubview:kindImgView];
+                
+                //儿童图标
+                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+                kindBtn.frame=kindImgView.frame;
+      
+//                [kindBtn.layer setMasksToBounds:YES];
+//                [kindBtn.layer setBorderWidth:2];
+                [kindBtn setBackgroundColor:[UIColor clearColor]];
+                
+//                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+//                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
+//                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+//                    
+//                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+//                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+//
+//
+//                    
+//                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+//                        
+//                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
+//                    }
+//                    else
+//                    {
+//                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+//                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+//                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+//                        //Get Image From URL
+//                        UIImage * imageFromURL  = nil;
+//                        imageFromURL=[UIImage imageWithData:data];
+//                        //Save Image to Directory
+//                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+//                        
+//                        
+//                    }
+//                    pathOne=nil;
+//                    array=nil;
+//                    array2=nil;
+//
+//                }
+//                else
+//                {
+//                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
+//                }
+//
                 
                 
                 
@@ -1368,26 +1382,12 @@
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
 
-            
-//             EGOImageView * EGORoomImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-//            EGORoomImgView.frame=CGRectMake(10, 15, 60, 60);
-            EGOImageView * RoomImgView=(EGOImageView *)[RoomBtn viewWithTag:202];
-
+            DBImageView * RoomImgView=(DBImageView *)[RoomBtn viewWithTag:202];
+ [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-//            NSLog(@"%zi 加载前 %@  --%@ --%@",indexPath.row, RoomImgView.imageURL,[NSURL URLWithString:pathOne],RoomImgView.placeholderImage);
-//            if (![[NSString stringWithFormat: @"%@",EGORoomImgView.imageURL] isEqualToString:pathOne]) {
-                 RoomImgView.imageURL = [NSURL URLWithString:pathOne];
-                
-//            }
-//            if (EGORoomImgView.image!=RoomImgView.image) {
-//                RoomImgView.image=EGORoomImgView.image;
-//            }
-//             RoomImgView.placeholderImage=RoomImgView.image;
-//            NSLog(@"%zi 加载后 %@",indexPath.row, RoomImgView.imageURL);
 
-           
-//             NSLog(@"RoomImgView.placeholderImage.class 加载后 %@",RoomImgView.placeholderImage.);
-            
+                [RoomImgView setImageWithPath:[pathOne copy]];
+
             pathOne=nil;
             
             UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
@@ -1433,68 +1433,85 @@
             int sNum=0;
             for (int i=0; i<tempChildArray.count; i++) {
                 
-                //房间图标
+                //儿童图标
                 UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
                 if (i>0&&i%4==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4);
-                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
-                [kindBtn.layer setMasksToBounds:YES];
-                [kindBtn.layer setBorderWidth:2];
-                if (tempChildArray.count>0)
+                
+                DBImageView * kindImgView=[[DBImageView alloc] initWithFrame:CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4)];
+                [kindImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+                
+                
+                [kindImgView.layer setCornerRadius:CGRectGetHeight([kindImgView bounds]) / 2];
+                [kindImgView.layer setMasksToBounds:YES];
+                [kindImgView.layer setBorderWidth:2];
+                
+                [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+                NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                
+                
+                pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+                [kindImgView setImageWithPath:[pathOne copy]];
                 {
-//                    //结束时间
-//                    NSLog(@"结束时间 %f",[[[tempChildArray objectAtIndex:i]  objectForKey:@"lastAppearTime"]doubleValue]);
                     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
-                    
-                    
-                    //                NSDate *endDate = [dateFormatter stringFromDate:date];
                     //得到相差秒数
                     NSTimeInterval time=[endDate timeIntervalSinceDate:senderDate];
                     int minute = ((int)time>0?(int)time:-((int)time))/60;
                     
                     
                     if (minute>10) {
-                        [kindBtn setAlpha:0.5];
+                        [kindImgView setAlpha:0.5];
                     }
                 }
-                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
-                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
-                    
-                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-                    
-
-                    
-                    if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
-                        
-                        [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
-                    }
-                    else
-                    {
-                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
-                        //Get Image From URL
-                        UIImage * imageFromURL  = nil;
-                        imageFromURL=[UIImage imageWithData:data];
-                        //Save Image to Directory
-                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-                        
-                        
-                    }
-                    pathOne=nil;
-                    array=nil;
-                    array2=nil;
-
-                }
-                else
-                {
-                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
-                }
-
+                [RoomBtn addSubview:kindImgView];
+                
+//                kindBtn.frame=CGRectMake(72+((CGRectGetWidth(RoomBtn.frame)-130)/4+10)*(i%4),45+((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*sNum , (CGRectGetWidth(RoomBtn.frame)-130)/4, (CGRectGetWidth(RoomBtn.frame)-130)/4);
+                 kindBtn.frame=kindImgView.frame;
+//                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
+                //                [kindBtn.layer setMasksToBounds:YES];
+                //                [kindBtn.layer setBorderWidth:2];
+                [kindBtn setBackgroundColor:[UIColor clearColor]];
+                
+                //                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+                //                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
+                //                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                //
+                //                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
+                //                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+                //
+                //
+                //
+                //                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+                //
+                //                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
+                //                    }
+                //                    else
+                //                    {
+                //                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                //                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                //                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
+                //                        //Get Image From URL
+                //                        UIImage * imageFromURL  = nil;
+                //                        imageFromURL=[UIImage imageWithData:data];
+                //                        //Save Image to Directory
+                //                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+                //
+                //
+                //                    }
+                //                    pathOne=nil;
+                //                    array=nil;
+                //                    array2=nil;
+                //
+                //                }
+                //                else
+                //                {
+                //                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
+                //                }
+                //
+                
+                
+                
                 //设置按钮响应事件
                 [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
@@ -1876,8 +1893,8 @@
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //活动图标
-            EGOImageView * messageImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-            messageImgView.frame=CGRectMake(10, 15, 60, 60);
+            DBImageView * messageImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+[messageImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             
 //            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             //设置按钮为圆形
@@ -1911,11 +1928,9 @@
         }
         if([cell viewWithTag:211]!=nil)
         {
-            EGOImageView * messageImgView=(EGOImageView *)[cell viewWithTag:211];
+            DBImageView * messageImgView=(DBImageView *)[cell viewWithTag:211];
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-  
-            messageImgView.imageURL = [NSURL URLWithString:pathOne];
-
+[messageImgView setImageWithPath:[pathOne copy]];
             
         }
         
@@ -2470,10 +2485,11 @@ CGPoint pt = [scrollView contentOffset];
         [_organizationTableView reloadData];
         
         NSArray *tempArray;
-        if (_childrenByAreaArray.count>0) {
+
+
             tempArray =[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-        }
-//        NSLog(@"_childrenArray %@\n",_childrenArray);
+        
+
    
        _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
          NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
@@ -2490,13 +2506,17 @@ CGPoint pt = [scrollView contentOffset];
                     
                 }
             }
+            if(tempChindrenArray.count>0)
+            {
             [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
             if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
             {
                 [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
                 [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
             }
+            
             [tempChindrenArray removeAllObjects];
+                }
         }
 //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
         if (_childrenDictionary.count>0) {
@@ -2514,25 +2534,28 @@ CGPoint pt = [scrollView contentOffset];
             }
 //             NSLog(@"_childrenDictionary %@\n",[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]);
 //             NSLog(@"_childrenDictionary %@\n",[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]);
+            if(_childrenDictionary.count>0)
+            {
+                NSArray *keyArray=[_childrenDictionary allKeys];
             NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
             
-            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
             
            
             
             
-            [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+            [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
             
-            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
             
-            [tempDictionary setObject:[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+            [tempDictionary setObject:[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
             
-            [tempDictionary setObject:[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0] objectForKey:@"macAddress"] forKey:@"mac_address"];
+            [tempDictionary setObject:[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"macAddress"] forKey:@"mac_address"];
             
             myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
             [tempDictionary removeAllObjects];
             tempDictionary=nil;
-            
+            }
             
           
 //            [self SaveChildren:_childrenDictionary];

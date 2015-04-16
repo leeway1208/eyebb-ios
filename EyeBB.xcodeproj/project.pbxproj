@@ -29,6 +29,10 @@
 		20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */ = {isa = PBXBuildFile; fileRef = 20C14CA51A9B69910097C891 /* 20150207105906.png */; };
 		20C2058F1AB1D9C200901826 /* IIILocalizedIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 20C2058E1AB1D9C200901826 /* IIILocalizedIndex.m */; };
 		20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */ = {isa = PBXBuildFile; fileRef = 20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */; };
+		20F769621ADEBB9E00A27479 /* DBImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F7695B1ADEBB9E00A27479 /* DBImage.m */; };
+		20F769631ADEBB9E00A27479 /* DBImageRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F7695D1ADEBB9E00A27479 /* DBImageRequest.m */; };
+		20F769641ADEBB9E00A27479 /* DBImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F7695F1ADEBB9E00A27479 /* DBImageView.m */; };
+		20F769651ADEBB9E00A27479 /* DBImageViewCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 20F769611ADEBB9E00A27479 /* DBImageViewCache.m */; };
 		3209FFBE1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFBD1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m */; };
 		3209FFCC1AA06C5300BC6C48 /* CJSONDataSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFC11AA06C5300BC6C48 /* CJSONDataSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		3209FFCD1AA06C5300BC6C48 /* CJSONSerializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3209FFC31AA06C5300BC6C48 /* CJSONSerializer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -184,6 +188,14 @@
 		20C2058E1AB1D9C200901826 /* IIILocalizedIndex.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IIILocalizedIndex.m; sourceTree = "<group>"; };
 		20E2CC771AAC929B0027A7A8 /* ViewController+EyebbPublic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "ViewController+EyebbPublic.h"; path = "EyeBB/public/ViewController+EyebbPublic.h"; sourceTree = "<group>"; };
 		20E2CC781AAC929B0027A7A8 /* ViewController+EyebbPublic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "ViewController+EyebbPublic.m"; path = "EyeBB/public/ViewController+EyebbPublic.m"; sourceTree = "<group>"; };
+		20F7695A1ADEBB9E00A27479 /* DBImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBImage.h; sourceTree = "<group>"; };
+		20F7695B1ADEBB9E00A27479 /* DBImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBImage.m; sourceTree = "<group>"; };
+		20F7695C1ADEBB9E00A27479 /* DBImageRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBImageRequest.h; sourceTree = "<group>"; };
+		20F7695D1ADEBB9E00A27479 /* DBImageRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBImageRequest.m; sourceTree = "<group>"; };
+		20F7695E1ADEBB9E00A27479 /* DBImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBImageView.h; sourceTree = "<group>"; };
+		20F7695F1ADEBB9E00A27479 /* DBImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBImageView.m; sourceTree = "<group>"; };
+		20F769601ADEBB9E00A27479 /* DBImageViewCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBImageViewCache.h; sourceTree = "<group>"; };
+		20F769611ADEBB9E00A27479 /* DBImageViewCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBImageViewCache.m; sourceTree = "<group>"; };
 		3209FFBC1AA04B6500BC6C48 /* UIViewController+EyeBBServie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIViewController+EyeBBServie.h"; path = "EyeBB/public/httpRequest/UIViewController+EyeBBServie.h"; sourceTree = "<group>"; };
 		3209FFBD1AA04B6500BC6C48 /* UIViewController+EyeBBServie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+EyeBBServie.m"; path = "EyeBB/public/httpRequest/UIViewController+EyeBBServie.m"; sourceTree = "<group>"; };
 		3209FFC01AA06C5300BC6C48 /* CJSONDataSerializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CJSONDataSerializer.h; sourceTree = "<group>"; };
@@ -595,6 +607,21 @@
 			name = public;
 			sourceTree = "<group>";
 		};
+		20F769591ADEBB9E00A27479 /* DBImageView */ = {
+			isa = PBXGroup;
+			children = (
+				20F7695A1ADEBB9E00A27479 /* DBImage.h */,
+				20F7695B1ADEBB9E00A27479 /* DBImage.m */,
+				20F7695C1ADEBB9E00A27479 /* DBImageRequest.h */,
+				20F7695D1ADEBB9E00A27479 /* DBImageRequest.m */,
+				20F7695E1ADEBB9E00A27479 /* DBImageView.h */,
+				20F7695F1ADEBB9E00A27479 /* DBImageView.m */,
+				20F769601ADEBB9E00A27479 /* DBImageViewCache.h */,
+				20F769611ADEBB9E00A27479 /* DBImageViewCache.m */,
+			);
+			path = DBImageView;
+			sourceTree = "<group>";
+		};
 		3209FFBF1AA06C5300BC6C48 /* json */ = {
 			isa = PBXGroup;
 			children = (
@@ -945,6 +972,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				20F769591ADEBB9E00A27479 /* DBImageView */,
 				20A6D7FD1ABAFC530028388B /* Components */,
 				3245EFDD1AB94CA3001431E2 /* GradientProgress */,
 				20C2058C1AB1D9C200901826 /* IIILocalizedIndex */,
@@ -1129,7 +1157,9 @@
 				3240DACC1AA4151700661712 /* WelcomeViewController.m in Sources */,
 				3251C5EA1AB01A1D0080C508 /* EGOImageLoader.m in Sources */,
 				3251C5D51AB00FB50080C508 /* MBProgressHUD.m in Sources */,
+				20F769641ADEBB9E00A27479 /* DBImageView.m in Sources */,
 				20A6D8031ABAFC530028388B /* RMDownloadIndicator.m in Sources */,
+				20F769621ADEBB9E00A27479 /* DBImage.m in Sources */,
 				2062F40B1AD6AC6C0011470E /* UpdatePDViewController.m in Sources */,
 				20BD16F11A99FC7700039A31 /* AppDelegate.m in Sources */,
 				3209FFD41AA1515700BC6C48 /* UIViewController+EyeBBDB.m in Sources */,
@@ -1146,6 +1176,7 @@
 				3251C6791AB03DFF0080C508 /* rscode.c in Sources */,
 				3264D94D1A9D6B72009CB9C2 /* ASIHTTPRequest.m in Sources */,
 				927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */,
+				20F769631ADEBB9E00A27479 /* DBImageRequest.m in Sources */,
 				3251C5E71AB01A1D0080C508 /* README.mdown in Sources */,
 				32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */,
 				3264D9571A9D6B72009CB9C2 /* ASICloudFilesRequest.m in Sources */,
@@ -1200,6 +1231,7 @@
 				3264D9591A9D6B72009CB9C2 /* ASIS3BucketObject.m in Sources */,
 				3251C6741AB03DFF0080C508 /* mask.c in Sources */,
 				92FF92D41AA5592E00E04E0A /* CommonUtils.m in Sources */,
+				20F769651ADEBB9E00A27479 /* DBImageViewCache.m in Sources */,
 				3245EFDC1AB944AB001431E2 /* WebViewController.m in Sources */,
 				20C14C9B1A9B09A60097C891 /* RegViewController.m in Sources */,
 			);
