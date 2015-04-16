@@ -8,7 +8,7 @@
 
 #import "GuardianKidsViewController.h"
 #import "IIILocalizedIndex.h"
-#import "EGOImageView.h"
+#import "DBImageView.h"
 #import "AppDelegate.h"
 
 @interface GuardianKidsViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
@@ -252,8 +252,8 @@
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
         
         //儿童图标
-        EGOImageView * KidsImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-        KidsImgView.frame=CGRectMake(10, 2.5, 55, 55);
+        DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 2.5, 55, 55)];
+         [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
         [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
         [KidsImgView.layer setMasksToBounds:YES];
         [KidsImgView.layer setBorderWidth:2];
@@ -265,7 +265,7 @@
         
         
         
-        KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+        [KidsImgView setImageWithPath:[pathOne copy]];
         
         pathOne=nil;
         
@@ -327,11 +327,11 @@
         
         
     }
-    EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
+    DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:101];
     
     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] copy]];
     
-    KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+    [KidsImgView setImageWithPath:[pathOne copy]];
     
     pathOne=nil;
     

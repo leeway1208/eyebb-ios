@@ -8,7 +8,7 @@
 
 #import "ChildrenListViewController.h"
 #import "IIILocalizedIndex.h"
-#import "EGOImageView.h"
+#import "DBImageView.h"//图片加载
 #import "AppDelegate.h"
 
 @interface ChildrenListViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
@@ -24,8 +24,6 @@
      AppDelegate *myDelegate;
     
 }
-/**图片本地存储地址*/
-@property (nonatomic,strong)NSString * documentsDirectoryPath;
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSArray *keys;
 @end
@@ -73,7 +71,7 @@
     _resultArray=[[NSArray alloc]init];
 //    _childrenArray=[[NSMutableArray alloc]init];
     _dataArray=[[NSMutableArray alloc]init];
-    _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 
@@ -232,8 +230,8 @@
         cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
         
         //儿童图标
-        EGOImageView * KidsImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-        KidsImgView.frame=CGRectMake(10, 2.5, 55, 55);
+        DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 2.5, 55, 55)];
+        [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
         [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
         [KidsImgView.layer setMasksToBounds:YES];
         [KidsImgView.layer setBorderWidth:2];
@@ -241,14 +239,9 @@
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
-        
-        
-        
-        
-        KidsImgView.imageURL = [NSURL URLWithString:pathOne];
-        
+        [KidsImgView setImageWithPath:[pathOne copy]];
         pathOne=nil;
-        
+
         KidsImgView.tag=101;
         [cell addSubview:KidsImgView];
         if(tableView!=_tableView){
@@ -276,11 +269,11 @@
 
         }
     }
-    EGOImageView * KidsImgView=(EGOImageView *)[cell viewWithTag:101];
+    DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:101];
     
     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
 
-    KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+   [KidsImgView setImageWithPath:[pathOne copy]];
 
     pathOne=nil;
     

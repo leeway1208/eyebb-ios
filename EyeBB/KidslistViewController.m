@@ -12,7 +12,7 @@
 #import "ChildInformationMatchingViewController.h"
 
 #import "KidMessageViewController.h"
-
+#import "DBImageView.h"//图片加载
 
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -39,9 +39,9 @@
 @property (strong,nonatomic)  KidMessageViewController * km;
 //-------------------视图变量--------------------
 @property NSInteger cellHeight;
-
-/**图片本地存储地址*/
-@property (nonatomic,strong)NSString * documentsDirectoryPath;
+//
+///**图片本地存储地址*/
+//@property (nonatomic,strong)NSString * documentsDirectoryPath;
 
 
 
@@ -98,7 +98,7 @@
    _SelectChildrenDictionary=[NSMutableDictionary dictionary];
         _cellHeight=44;
     
-     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     index=0;
 }
 
@@ -229,54 +229,29 @@
       
         for (int i=0; i<tempArray.count; i++) {
             
-            //儿童图标
-            UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+
             if (i>0&&i%5==0) {
                 sNum++;
             }
-            kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
-            [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
-            [kindBtn.layer setMasksToBounds:YES];
-            [kindBtn.layer setBorderWidth:2];
+            DBImageView * kindImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5)];
+            [kindImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             
-            [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-            NSLog(@"tempArray si %@",tempArray);
-            if (tempArray.count>0&&![[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]] isEqualToString:@""]) {
-                NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
-                
-                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-                
-                
-                
-                if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-                    
-                    [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
-                }
-                else
-                {
-                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                    [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
-                    //Get Image From URL
-                    UIImage * imageFromURL  = nil;
-                    imageFromURL=[UIImage imageWithData:data];
-                    //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-                    
-                    
-                }
-                pathOne=nil;
-                array=nil;
-                array2=nil;
-                
-            }
-            else
-            {
-                [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
-            }
+            
+            [kindImgView.layer setCornerRadius:CGRectGetHeight([kindImgView bounds]) / 2];
+            [kindImgView.layer setMasksToBounds:YES];
+            [kindImgView.layer setBorderWidth:2];
+            
+            [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
+            [kindImgView setImageWithPath:[pathOne copy]];
+            [bindView addSubview:kindImgView];
+            
+            //儿童图标
+            UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+            kindBtn.frame=kindImgView.frame;
+            kindBtn.backgroundColor=[UIColor clearColor];
 
-//            [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+
             //设置按钮响应事件
             [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
             kindBtn.tag=102+i;
@@ -352,53 +327,28 @@
     }
     
     for (int i=0; i<tempArray.count; i++) {
-                UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+        
                 
                 if (i>0&&i%5==0) {
                     sNum++;
                 }
-                kindBtn.frame=CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5);
-                [kindBtn.layer setCornerRadius:CGRectGetHeight([kindBtn bounds]) / 2];
-                [kindBtn.layer setMasksToBounds:YES];
-                [kindBtn.layer setBorderWidth:2];
-                
-                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
+        DBImageView * kindImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5)];
+        [kindImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
         
-        if (tempArray.count>0&&![[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]] isEqualToString:@""]) {
-            NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
-            
-            NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-            NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-            
-            
-            
-            if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-                
-                [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
-            }
-            else
-            {
-                NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
-                //Get Image From URL
-                UIImage * imageFromURL  = nil;
-                imageFromURL=[UIImage imageWithData:data];
-                //Save Image to Directory
-                [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-                
-                
-            }
-            pathOne=nil;
-            array=nil;
-            array2=nil;
-            
-        }
-        else
-        {
-            [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
-        }
-
+        
+        [kindImgView.layer setCornerRadius:CGRectGetHeight([kindImgView bounds]) / 2];
+        [kindImgView.layer setMasksToBounds:YES];
+        [kindImgView.layer setBorderWidth:2];
+        
+        [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
+        [kindImgView setImageWithPath:[pathOne copy]];
+        [bindView addSubview:kindImgView];
+        
+        //儿童图标
+        UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
+        kindBtn.frame=kindImgView.frame;
+        kindBtn.backgroundColor=[UIColor clearColor];
         
 //                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
                 //设置按钮响应事件
@@ -441,7 +391,7 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-        NSString *responseString = [request responseString];
+//        NSString *responseString = [request responseString];
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
         NSData *responseData = [request responseData];

@@ -101,7 +101,7 @@
 @property (strong,nonatomic) UILabel *divisionFourLbl;
 
 //简报儿童头像
-@property (strong,nonatomic) UIImageView * kidImgView;
+@property (strong,nonatomic) DBImageView * kidImgView;
 
 //彩色进度条
 @property (strong,nonatomic) GradientProgressView *progressView;
@@ -524,7 +524,7 @@
     
     [_MainInfoScrollView addSubview:NewsView];
     //kids头像
-    kidImgView=[[UIImageView alloc] initWithFrame:CGRectMake(0, 7, 30, 30)];
+    kidImgView=[[DBImageView alloc] initWithFrame:CGRectMake(0, 7, 30, 30)];
     [kidImgView.layer setCornerRadius:CGRectGetHeight([kidImgView bounds]) / 2];
     [kidImgView.layer setMasksToBounds:YES];
     [kidImgView.layer setBorderWidth:2];
@@ -1299,8 +1299,7 @@
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
                  NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                 
-                
-               pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+
                 [kindImgView setImageWithPath:[pathOne copy]];
                 {
                     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
@@ -1449,9 +1448,7 @@
                 
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
-                
-                
-                pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+
                 [kindImgView setImageWithPath:[pathOne copy]];
                 {
                     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
@@ -1535,53 +1532,20 @@
         }
         
         
-        
+
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //房间图标
-            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            DBImageView * messageImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            [messageImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             //设置按钮为圆形
             [messageImgView.layer setCornerRadius:CGRectGetHeight([messageImgView bounds]) / 2];
             [messageImgView.layer setMasksToBounds:YES];
             [messageImgView.layer setBorderWidth:2];
             
             [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+             [messageImgView setImageWithPath:[pathOne copy]];
             
-            
-            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]&&indexPath.row>0) {
-               
-                
-                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
-                
-                
-                
-                if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
-                    [messageImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
-                   
-                }
-                else
-                {
-                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                    [messageImgView setImage:[UIImage imageWithData:data]];
-                    //Get Image From URL
-                    UIImage * imageFromURL  = nil;
-                    imageFromURL=[UIImage imageWithData:data];
-                    //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-                    
-                    
-                }
-                pathOne=nil;
-                array=nil;
-                array2=nil;
-            }
-            else
-            {
-
-                [messageImgView setImage:[UIImage imageNamed:@"logo_en"]];
-            }
             
             
             messageImgView.tag=206;
@@ -2715,33 +2679,9 @@ CGPoint pt = [scrollView contentOffset];
 {
     NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
     
-    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
+      [kidImgView setImageWithPath:[pathOne copy]];
     
-    
-    
-    
-    
-    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-        NSLog(@"_documentsDirectoryPath is%@",_documentsDirectoryPath);
-        [kidImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] ];
-    }
-    else
-    {
-        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-        [kidImgView setImage:[UIImage imageWithData:data]];
-        //Get Image From URL
-        UIImage * imageFromURL  = nil;
-        imageFromURL=[UIImage imageWithData:data];
-        //Save Image to Directory
-        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-        
-        
-    }
-    pathOne=nil;
-    array=nil;
-    array2=nil;
+
     
     NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
     [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];

@@ -10,7 +10,7 @@
 // first page bottom button
 #import "KidViewController.h"
 #import "IIILocalizedIndex.h"
-#import "EGOImageView.h"
+#import "DBImageView.h"
 #import "AppDelegate.h"
 @interface KidViewController ()<UITableViewDelegate,UITableViewDataSource,UISearchDisplayDelegate,UISearchBarDelegate>
 {
@@ -571,8 +571,8 @@ else if (tableView == _NametableView) {
             [cell addSubview:bgView];
             
             //儿童图标
-            EGOImageView * KidsImgView=[[EGOImageView alloc] initWithPlaceholderImage:[UIImage imageNamed:@"logo_en"]];
-            KidsImgView.frame=CGRectMake(10, 15, 70, 70);
+            DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 70, 70)];
+            [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
             [KidsImgView.layer setMasksToBounds:YES];
             [KidsImgView.layer setBorderWidth:2];
@@ -581,11 +581,7 @@ else if (tableView == _NametableView) {
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             
-            
-            
-            
-            KidsImgView.imageURL = [NSURL URLWithString:pathOne];
-            
+            [KidsImgView setImageWithPath:[pathOne copy]];
             pathOne=nil;
             
             KidsImgView.tag=102;
@@ -635,13 +631,13 @@ else if (tableView == _NametableView) {
             }
         }
         UIView *bgView=(UIView *)[cell viewWithTag:101];
-        EGOImageView * KidsImgView=(EGOImageView *)[bgView viewWithTag:102];
+        DBImageView * KidsImgView=(DBImageView *)[bgView viewWithTag:102];
         UILabel * kidNameLbl =(UILabel *)[bgView viewWithTag:103];
         UILabel * roomNameLbl =(UILabel *)[bgView viewWithTag:104];
          [roomNameLbl setText:[NSString stringWithFormat:@"%@ %@",RoomNameStr,[_dateFormatter stringFromDate:lastAppearTime]]];
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
-        KidsImgView.imageURL = [NSURL URLWithString:pathOne];
+        [KidsImgView setImageWithPath:[pathOne copy]];
         
         pathOne=nil;
         
