@@ -343,7 +343,7 @@ guardianBtn.backgroundColor=[UIColor whiteColor];
         [bindView addSubview:guardianBtn];
         
         UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 5, 40, 40)];
-        [logoImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+        [logoImgView setImage:[UIImage imageNamed:@"actbar_profile"]];
         [guardianBtn addSubview:logoImgView];
         
         UILabel * nameLbl =[[UILabel alloc]initWithFrame:CGRectMake(40, 0, CGRectGetWidth(guardianBtn.frame)-55, 24.5)];
@@ -364,7 +364,7 @@ guardianBtn.backgroundColor=[UIColor whiteColor];
         
     }
     sNum=0;
-    
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
     return cell;
 }
 

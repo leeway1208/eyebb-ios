@@ -59,9 +59,11 @@
     // Do any additional setup after loading the view.
      [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加" style:UIBarButtonItemStyleBordered target:self action:@selector(addAction:)];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"添加" style:UIBarButtonItemStyleBordered target:self action:@selector(addAction)];
     [self iv];
     [self lc];
+    
+    
 }
 -(void)viewWillAppear:(BOOL)animated
 {

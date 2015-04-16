@@ -2469,8 +2469,10 @@ CGPoint pt = [scrollView contentOffset];
         _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
         [_organizationTableView reloadData];
         
-        NSArray *tempArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-        
+        NSArray *tempArray;
+        if (_childrenByAreaArray.count>0) {
+            tempArray =[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        }
 //        NSLog(@"_childrenArray %@\n",_childrenArray);
    
        _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];

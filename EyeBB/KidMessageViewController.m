@@ -21,6 +21,7 @@
     NSString *minor;
     
     int batteryLife;
+    Boolean reReadBatteryLife;
 }
 //蓝牙设备电量显示
 @property (weak, nonatomic) RMDownloadIndicator *closedIndicator;
@@ -53,6 +54,8 @@
 @property (strong,nonatomic) UIImageView * QRImgView;
 /* battery life label */
 @property (nonatomic,strong) UILabel* batteryLifeLbl;
+//头像背景容器
+@property (nonatomic,strong) UIView *kidBgView;
 @end
 
 @implementation KidMessageViewController
@@ -147,6 +150,8 @@
 {
     
     batteryLife = 0;
+    reReadBatteryLife = FALSE;
+    
     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
 }
 
@@ -157,10 +162,10 @@
 {
     
     //头像背景容器
-    UIView *kidBgView=[[UIView alloc]initWithFrame:CGRectZero];
-    kidBgView.frame=CGRectMake(0, 0, Drive_Wdith, Drive_Height/6*2);
-    kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
-    [self.view addSubview:kidBgView];
+    _kidBgView=[[UIView alloc]initWithFrame:CGRectZero];
+    _kidBgView.frame=CGRectMake(0, 0, Drive_Wdith, Drive_Height/6*2);
+    _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    [self.view addSubview:_kidBgView];
     
     
     //child image
@@ -223,9 +228,9 @@
     [closedIndicator setStrokeColor:[UIColor colorWithRed:16./255 green:119./255 blue:234./255 alpha:1.0f]];
     closedIndicator.radiusPercent = 0.45;
     
-    [kidBgView addSubview:closedIndicator];
+    [_kidBgView addSubview:closedIndicator];
     [closedIndicator loadIndicator];
-
+    
     _closedIndicator = closedIndicator;
     //设置downloadedBytes就可以了，这个为电量的百分比
     [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
@@ -385,7 +390,8 @@
     }
     switch (indexPath.row) {
         case 0:
-            
+            //read battery
+            //[self readBattery:nil major:major minor:minor];
             
             break;
         case 1:
@@ -410,12 +416,23 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
     if (indexPath.section == 0){
-        
-        if (indexPath.row == 1) {
+        if (indexPath.row == 0) {
+            if (reReadBatteryLife) {
+                //read battery
+                [self readBattery:nil major:major minor:minor];
+                _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+                reReadBatteryLife = FALSE;
+            }
+            
+            
+        }else if (indexPath.row == 1) {
             
             [self writeBeepMajor:major minor:minor writeValue:@"01"];
-            
             [HUD show:YES];
+            
+            
+            
+            
         }else if (indexPath.row == 2){
             
             
@@ -480,6 +497,9 @@
         
         batteryLife = 0;
         _batteryLifeLbl.text = [NSString stringWithFormat:@"%d",batteryLife];
+        _kidBgView.backgroundColor=[UIColor colorWithRed:0.910 green:0.910 blue:0.910 alpha:1];
+        reReadBatteryLife = TRUE;
+        
     }else if ([[notification name] isEqualToString:BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME]){
         
         
@@ -487,6 +507,8 @@
         _batteryLifeLbl.text = [NSString stringWithFormat:@"%d",batteryLife];
         
         [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
+        
+        reReadBatteryLife = TRUE;
     }
     
     
@@ -662,15 +684,30 @@
         }
         
     }else if([tag isEqualToString:REQUIRE_OR_GET_QR_CODE]){
-        [_PopupQRSView setHidden:NO];
+        
         NSData *responseData = [request responseData];
         
         NSString * resREQUIRE_OR_GET_QR_CODE = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        NSLog(@"REQUIRE_OR_GET_QR_CODE --> %@ ",resREQUIRE_OR_GET_QR_CODE);
-        UIImage *image = [QRCodeGenerator qrImageForString:resREQUIRE_OR_GET_QR_CODE imageSize:200];
         
+        if(resREQUIRE_OR_GET_QR_CODE.length > 4 && resREQUIRE_OR_GET_QR_CODE.length < 25){
+            [_PopupQRSView setHidden:NO];
+            
+            NSLog(@"REQUIRE_OR_GET_QR_CODE --> %@ ",resREQUIRE_OR_GET_QR_CODE);
+            UIImage *image = [QRCodeGenerator qrImageForString:resREQUIRE_OR_GET_QR_CODE imageSize:200];
+            
+            
+            [_QRImgView setImage:image ];
+        }else{
+            
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_Apply_qr_code_fail")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+            
+            
+        }
         
-        [_QRImgView setImage:image ];
         
     }
     
