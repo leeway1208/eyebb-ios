@@ -587,6 +587,9 @@ NSString * NSDataToHex(NSData *data) {
     self.writeValue1 = writeMajor;
     self.writeValue2 = writeMinor;
     
+    
+    NSLog(@"self.writeValue (%@)   self.writeValue2  (%@)"   ,self.writeValue1 ,self.writeValue2  );
+    
     _targetUUIDPeripheral = UUID;
     [self initData:@"" minor:@""];
     

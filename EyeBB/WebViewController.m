@@ -28,6 +28,10 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)viewDidDisappear:(BOOL)animated{
+    [HUD hide:YES afterDelay:0];
+}
+
 #pragma mark --
 #pragma mark - 初始化页面元素
 
@@ -129,6 +133,9 @@ self.navigationController.interactivePopGestureRecognizer.enabled = NO;
 #pragma mark --点击事件
 -(void)backAction
 {
+    
+     [HUD hide:YES afterDelay:0];
     [self.navigationController popViewControllerAnimated:YES];
+   
 }
 @end

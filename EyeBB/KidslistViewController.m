@@ -453,6 +453,7 @@
     if (_childView == nil) {
         _childView = [[ChildInformationMatchingViewController alloc]init];
     }
+    _childView.comeFrom = @"logined";
     [self.navigationController pushViewController:_childView animated:YES];
 
 }

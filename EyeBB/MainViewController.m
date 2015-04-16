@@ -1382,7 +1382,7 @@
             }
 
             DBImageView * RoomImgView=(DBImageView *)[RoomBtn viewWithTag:202];
- [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
 
                 [RoomImgView setImageWithPath:[pathOne copy]];
@@ -2454,35 +2454,37 @@ CGPoint pt = [scrollView contentOffset];
             tempArray =[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         
 
-   
+        
        _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
          NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
-        
-        for(int i=0;i<_allRoomArray.count;i++)
-        {
-            for(int j=0;j<tempArray.count;j++)
+        if(tempArray){
+            for(int i=0;i<_allRoomArray.count;i++)
             {
-
-                if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
+                for(int j=0;j<tempArray.count;j++)
                 {
-                    [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
                     
+                    if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
+                    {
+                        [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
+                        
+                        
+                    }
+                }
+                if(tempChindrenArray.count>0)
+                {
+                    [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
+                    if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
+                    {
+                        [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
+                        [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
+                    }
                     
+                    [tempChindrenArray removeAllObjects];
                 }
             }
-            if(tempChindrenArray.count>0)
-            {
-            [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
-            if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
-            {
-                [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
-                [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
-            }
-            
-            [tempChindrenArray removeAllObjects];
-                }
+
         }
-//        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+        //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
         if (_childrenDictionary.count>0) {
             if(myDelegate.childDictionary !=nil)
             {

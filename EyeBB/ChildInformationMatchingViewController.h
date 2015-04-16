@@ -15,4 +15,8 @@
 @property (nonatomic,retain) NSString *kindergartenId;
 /* guardian Id  */
 @property (strong,nonatomic) NSString *guardianId;
+
+/* this view comes from  */
+@property (strong,nonatomic) NSString *comeFrom;
+
 @end

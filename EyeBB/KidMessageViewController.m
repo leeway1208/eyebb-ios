@@ -11,7 +11,7 @@
 
 #import "MSCellAccessory.h"//自定义cell右边提示箭头
 #import "QRCodeGenerator.h"
-
+#import "RootViewController.h"
 
 @interface KidMessageViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -22,6 +22,8 @@
     
     int batteryLife;
     Boolean reReadBatteryLife;
+    
+    NSString *macAddress;
 }
 //蓝牙设备电量显示
 @property (weak, nonatomic) RMDownloadIndicator *closedIndicator;
@@ -56,6 +58,10 @@
 @property (nonatomic,strong) UILabel* batteryLifeLbl;
 //头像背景容器
 @property (nonatomic,strong) UIView *kidBgView;
+
+
+/**  next view */
+@property (nonatomic,strong) RootViewController *scanDeviceView;
 @end
 
 @implementation KidMessageViewController
@@ -80,9 +86,12 @@
     NSLog(@"minor (%@)",[self getMinor:minor]);
     NSLog(@"icon (%@)",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"icon"]);
     NSLog(@"childId (%@)",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]);
-    
+    // macAddress = @"null";
+    macAddress = [NSString stringWithFormat:@"%@",[self.childrenDictionary objectForKey:@"macAddress" ]];
+    NSLog(@"macAddress (%@)",[self.childrenDictionary objectForKey:@"macAddress" ]);
     //read battery
-    [self readBattery:nil major:major minor:minor];
+    
+    
     //reg broad cast
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beepTimeout:) name:nil object:nil ];
 }
@@ -132,6 +141,9 @@
     [self setView:nil];
     [super viewDidDisappear:animated];
     
+    if (_scanDeviceView != nil) {
+        _scanDeviceView = nil;
+    }
     
 }
 
@@ -164,7 +176,14 @@
     //头像背景容器
     _kidBgView=[[UIView alloc]initWithFrame:CGRectZero];
     _kidBgView.frame=CGRectMake(0, 0, Drive_Wdith, Drive_Height/6*2);
-    _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    if (macAddress.length > 0) {
+        [self readBattery:nil major:major minor:minor];
+        _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    }else{
+        _kidBgView.backgroundColor= [UIColor colorWithRed:0.910 green:0.910 blue:0.910 alpha:1];
+        
+    }
+    
     [self.view addSubview:_kidBgView];
     
     
@@ -401,7 +420,14 @@
             cell.textLabel.text=LOCALIZATION(@"text_get_the_eyebb_device_qr_code");
             break;
         case 3:
-            cell.textLabel.text=LOCALIZATION(@"btn_unbind");
+            
+            if(macAddress.length > 0){
+                cell.textLabel.text=LOCALIZATION(@"btn_binding");
+            }else{
+                cell.textLabel.text=LOCALIZATION(@"btn_unbind");
+            }
+            
+            
             break;
             //        case 4:
             //            //cell.textLabel.text=LOCALIZATION(@"btn_unbind");
@@ -471,7 +497,21 @@
             
         }else if(indexPath.row == 3)
         {
-            [_PopupSView setHidden:NO];
+            
+            if(macAddress.length > 0){
+                if (_scanDeviceView == nil) {
+                    _scanDeviceView =  [[RootViewController alloc]init];
+                }
+                
+                _scanDeviceView.childID = [[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"];
+                _scanDeviceView.guardianId = @"1L";
+                
+                [[self navigationController] pushViewController:_scanDeviceView animated:YES];
+                
+            }else{
+                [_PopupSView setHidden:NO];
+            }
+            
             
         }
     }

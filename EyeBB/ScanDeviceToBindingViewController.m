@@ -9,7 +9,7 @@
 #import "ScanDeviceToBindingViewController.h"
 #import "RootViewController.h"
 #import "WelcomeViewController.h"
-
+#import "ChildInformationMatchingViewController.h"
 @interface ScanDeviceToBindingViewController ()
 /**introdaction label*/
 @property (nonatomic,strong) UILabel* introLabel;
@@ -172,7 +172,7 @@
         
   
         [self postRequest:DEVICE_TO_CHILD RequestDictionary:tempDoct delegate:self];
-        
+        tempDoct = nil;
     }else if ([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME]){
         NSLog(@"BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME");
          [HUD hide:YES afterDelay:0];
@@ -202,11 +202,21 @@
 
             
         }else{
+            [HUD hide:YES afterDelay:0];
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"text_update_server_data_fail")
                                        delegate:self
                               cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                               otherButtonTitles:nil] show];
+            
+
+            for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+            {
+                if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
+                    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+                }
+            }
+
         }
         
     }else if ([tag isEqualToString:CHECK_BEACON]){
@@ -216,13 +226,15 @@
         NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
         NSLog(@"CHECK_BEACON ----> %@ ",responseString);
-        [HUD hide:YES afterDelay:0];
+        
         
         if (responseString.length > 0) {
+        
             if ([responseString isEqualToString:SERVER_RETURN_NC]) {
+                [HUD hide:YES afterDelay:0];
                 return;
             }else if([responseString isEqualToString:SERVER_RETURN_USED] || [responseString isEqualToString:SERVER_RETURN_WG]){
-                
+                [HUD hide:YES afterDelay:0];
                 [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                             message:LOCALIZATION(@"text_device_already_binded")
                                            delegate:self
@@ -238,7 +250,7 @@
                 NSLog(@"CHECK_BEACON ----> %@  --- %@ ",[self getMajor:self.deviceMajor],[self getMinor:self.deviceMinor]);
                 
                 
-                [self writeMajorAndMinorThenMajor:_didSelectTargetPeripheral.identifier.UUIDString writeMajor:_deviceMajor writeMinor:_deviceMinor];
+                [self writeMajorAndMinorThenMajor:_didSelectTargetPeripheral.identifier.UUIDString writeMajor:[self getMajor:_deviceMajor] writeMinor:[self getMinor:_deviceMinor]];
                 self.targetPeripheral = _didSelectTargetPeripheral.identifier.UUIDString;
             }
         }

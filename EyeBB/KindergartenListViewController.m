@@ -35,19 +35,19 @@
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     
     // Do any additional setup after loading the view.
-
+    
     self.title = LOCALIZATION(@"text_select_kid_kindergarten");
-//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
+    //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
     
     
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(KindergartenListViewControllerLeftAction:)];
     
     self.navigationItem.leftBarButtonItem = newBackButton;
-   
+    
     
     
     [HUD show:YES];
-
+    
     [self requestServer];
     [self loadWidget];
     [self loadParameter];
@@ -151,19 +151,19 @@
             case ASIRequestTimedOutErrorType:
                 [HUD hide:YES afterDelay:0];
                 self.title = LOCALIZATION(@"text_connect_error");
-
+                
                 break;
             case ASIConnectionFailureErrorType:
-                  [HUD hide:YES afterDelay:0];
+                [HUD hide:YES afterDelay:0];
                 self.title = LOCALIZATION(@"text_connect_error");
-
+                
                 break;
                 
         }
         
         //NSLog(@"------> %@",message);
     }
-
+    
     
 }
 
@@ -249,23 +249,25 @@
             [cell addSubview:_cellLeftImg];
             
             
-            
-            
-            // fill in the image
-            if ([self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil){
-                [HUD hide:YES afterDelay:0];
-                [_cellLeftImg setImage:[self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]];
-            }else{
+             NSLog(@"arrayForImage.count----%lu",(unsigned long)arrayForImage.count);
+            if(arrayForImage.count > 1){
+                // fill in the image
+                if ([self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil){
+                    [HUD hide:YES afterDelay:0];
+                    [_cellLeftImg setImage:[self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]];
+                }else{
+                    
+                    //[_cellLeftImg setImage:[UIImage imageWithData:data]];
+                    
+                    NSURL* urlOne = [NSURL URLWithString:[_imgPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+                    //Get Image From URL
+                    UIImage * imageFromURL  = nil;
+                    imageFromURL=[UIImage imageWithData:data];
+                    //Save Image to Directory
+                    [self saveImage:imageFromURL withFileName:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath];
+                }
                 
-                //[_cellLeftImg setImage:[UIImage imageWithData:data]];
-                
-                NSURL* urlOne = [NSURL URLWithString:[_imgPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                //Get Image From URL
-                UIImage * imageFromURL  = nil;
-                imageFromURL=[UIImage imageWithData:data];
-                //Save Image to Directory
-                [self saveImage:imageFromURL withFileName:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath];
             }
         }
     }
@@ -311,7 +313,7 @@
 #pragma mark - button action
 -(void)KindergartenListViewControllerLeftAction:(id) sender{
     
-//<<<<<<< Updated upstream
+    //<<<<<<< Updated upstream
     for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
     {
         if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
@@ -319,13 +321,13 @@
         }
     }
     
-//=======
-//    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
-//    [[self navigationController] pushViewController:cimvc animated:YES];
+    //=======
+    //    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
+    //    [[self navigationController] pushViewController:cimvc animated:YES];
     /*用法：[self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: ([self.navigationController.viewControllers count] -层次)] animated:YES];*/
-//    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: 1] animated:YES];
-//>>>>>>> Stashed changes
-
+    //    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: 1] animated:YES];
+    //>>>>>>> Stashed changes
+    
 }
 
 

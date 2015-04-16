@@ -11,7 +11,7 @@
 #import "UserDefaultsUtils.h"
 #import "RootViewController.h"
 #import "RegViewController.h"
-
+#import "KidslistViewController.h"
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
 @property (nonatomic,strong) UITextField *kidsNameTf;
@@ -447,12 +447,25 @@
 #pragma mark - button action
 
 - (void)childInformationSelectLeftAction:(id)sender{
-    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
-    {
-        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[RegViewController class]]){
-            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+    
+    if ([_comeFrom isEqualToString:@"logined"]) {
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[KidslistViewController class]]){
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
+        }
+    }else{
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[RegViewController class]]){
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
         }
     }
+  
+    
+    
     
 }
 
