@@ -534,7 +534,7 @@
 //    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
     //    kindImgView.tag=206;
     [NewsBtn addSubview:kidImgView];
-    
+    kidImgView.hidden=YES;
     
     
     
@@ -2408,7 +2408,8 @@ CGPoint pt = [scrollView contentOffset];
         }
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
-        
+        if(_organizationArray.count>0&&_childrenByAreaArray.count>0)
+        {
         if (myDelegate.childrenBeanArray==nil) {
             myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
         }
@@ -2417,10 +2418,12 @@ CGPoint pt = [scrollView contentOffset];
             myDelegate.childrenBeanArray=nil;
             myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
         }
+        if(_childrenByAreaArray.count>0)
+        {
         myDelegate.childrenBeanArray=(NSDictionary *)[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"] ;
-
-        [self delLodChild];
         
+        [self delLodChild];
+        }
         
         responseData=nil;
         //机构名称列表选择-----------------------------
@@ -2540,7 +2543,10 @@ CGPoint pt = [scrollView contentOffset];
         tempChindrenArray=nil;
         tempArray=nil;
         _isreloadRoomList=NO;
-        
+            
+           
+        }
+
     }
     
     //请求个人信息
@@ -2679,6 +2685,7 @@ CGPoint pt = [scrollView contentOffset];
 
 -(void)insertChildMessage
 {
+     kidImgView.hidden=NO;
     NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
     
       [kidImgView setImageWithPath:[pathOne copy]];
@@ -2722,11 +2729,22 @@ CGPoint pt = [scrollView contentOffset];
 /**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
-    _isloadNews=YES;
-    ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
-    tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-    [self.navigationController pushViewController:tt animated:YES];
-    self.settingVc .title = @"";
+    if (_childrenByAreaArray.count>0) {
+        _isloadNews=YES;
+        ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
+        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        [self.navigationController pushViewController:tt animated:YES];
+        tt .title = @"";
+    }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:@"请先录入儿童信息"
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
+    }
+   
 }
 
 -(void)goToSettingAction:(id)sender
@@ -2764,6 +2782,7 @@ CGPoint pt = [scrollView contentOffset];
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
 {
+    if (_childrenByAreaArray.count>0) {
     [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
 //    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
@@ -2782,6 +2801,15 @@ CGPoint pt = [scrollView contentOffset];
     NSLog(@"kindlist.kidsRoomArray%@",kindlist.kidsRoomArray);
         [self.navigationController pushViewController:kindlist animated:YES];
         kindlist.title = @"";
+    }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:@"请先录入儿童信息"
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
+    }
 }
 
 
