@@ -12,6 +12,7 @@
 #import "RootViewController.h"
 #import "RegViewController.h"
 #import "KidslistViewController.h"
+#import "DBImageView.h"
 @interface ChildInformationMatchingViewController ()
 /**kids name*/
 @property (nonatomic,strong) UITextField *kidsNameTf;
@@ -43,7 +44,7 @@
 /**pop view*/
 @property (strong,nonatomic) UIScrollView * PopupSView;
 /**image view of pop view*/
-@property (strong,nonatomic) UIImageView * popUpImage;
+@property (strong,nonatomic) DBImageView * popUpImage;
 /**pop view container*/
 @property (strong,nonatomic) UIView * popViewContainer;
 
@@ -171,6 +172,8 @@
     [self setMyProgressView:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
+    
+    _childIcon = nil;
 }
 
 -(void)loadWidget{
@@ -561,8 +564,14 @@
             //NSLog(@"CHILD_CHECKING ----> %@ ", self.childId);
 
             [self popView:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"name"] ChildIcon:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"]KindergartenName:[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameTc"]];
-            [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
+//            [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
+//            aa
             _childIcon = [[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"];
+            NSLog(@"_childIcon --- > %@",_childIcon);
+            [_popUpImage setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            
+            //
+            [_popUpImage setImageWithPath:[_childIcon copy]];
         }
         
         
@@ -675,7 +684,7 @@
   
     
     //pop image view
-    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 55, 55)];
+    _popUpImage=[[DBImageView alloc]initWithFrame:CGRectMake(20,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 55, 55)];
     [_popUpImage.layer setCornerRadius:CGRectGetHeight([_popUpImage bounds]) / 2];
     [_popUpImage.layer setMasksToBounds:YES];
     [_popUpImage.layer setBorderWidth:2];
@@ -749,25 +758,25 @@
 }
 
 
-#pragma mark - get the image path from server
-- (void)loadImage
-{
-    NSString* pathOne = _childIcon;
-    
-    [_popUpImage.layer setBorderColor:[UIColor whiteColor].CGColor];
-    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-    [self performSelectorOnMainThread:@selector(updateImage:) withObject:data waitUntilDone:YES];
-  
-}
-
-#pragma mark - new a thread to update main image ui
--(void)updateImage:(NSData *)imageData{
-    
-    //[HUD hide:YES afterDelay:0];
-    UIImage *image=[UIImage imageWithData:imageData];
-    _popUpImage.image=image;
-}
+//#pragma mark - get the image path from server
+//- (void)loadImage
+//{
+//    NSString* pathOne = _childIcon;
+//    
+//    [_popUpImage.layer setBorderColor:[UIColor whiteColor].CGColor];
+//    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+//    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+//    [self performSelectorOnMainThread:@selector(updateImage:) withObject:data waitUntilDone:YES];
+//  
+//}
+//
+//#pragma mark - new a thread to update main image ui
+//-(void)updateImage:(NSData *)imageData{
+//    
+//    //[HUD hide:YES afterDelay:0];
+//    UIImage *image=[UIImage imageWithData:imageData];
+//    _popUpImage.image=image;
+//}
 
 @end
 

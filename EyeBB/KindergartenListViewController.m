@@ -8,7 +8,7 @@
 
 #import "KindergartenListViewController.h"
 #import "JSONKit.h"
-
+#import "DBImageView.h"//图片加载
 #import "ChildInformationMatchingViewController.h"
 
 @interface KindergartenListViewController ()<UITableViewDataSource,UITableViewDelegate>
@@ -18,7 +18,7 @@
 /** use to keep json information */
 @property (nonatomic,strong) NSArray * allLocationAreasInfoAr;
 /** use to keep json information */
-@property (nonatomic,strong) UIImageView * cellLeftImg;
+@property (nonatomic,strong) DBImageView * cellLeftImg;
 /** get image path */
 @property (nonatomic,strong) NSString * imgPath;
 @end
@@ -237,38 +237,30 @@
             
             NSArray  * arrayForImage = [[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."];
             
-            NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+//            NSString * documentsDirectoryPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
             
             //ui image on the left
-            _cellLeftImg =[[UIImageView alloc] initWithFrame:CGRectMake(10, 5, 60, 60)];
+            _cellLeftImg =[[DBImageView alloc] initWithFrame:CGRectMake(10, 5, 60, 60)];
             [_cellLeftImg.layer setCornerRadius:CGRectGetHeight([_cellLeftImg bounds]) / 2];
             [_cellLeftImg.layer setMasksToBounds:YES];
             [_cellLeftImg.layer setBorderWidth:2];
             
             [_cellLeftImg.layer setBorderColor:[UIColor whiteColor].CGColor];
-            [cell addSubview:_cellLeftImg];
-            
+           
             
              NSLog(@"arrayForImage.count----%lu",(unsigned long)arrayForImage.count);
-            if(arrayForImage.count > 1){
-                // fill in the image
-                if ([self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]!=nil){
-                    [HUD hide:YES afterDelay:0];
-                    [_cellLeftImg setImage:[self loadImage:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath]];
-                }else{
-                    
-                    //[_cellLeftImg setImage:[UIImage imageWithData:data]];
-                    
-                    NSURL* urlOne = [NSURL URLWithString:[_imgPath stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                    //Get Image From URL
-                    UIImage * imageFromURL  = nil;
-                    imageFromURL=[UIImage imageWithData:data];
-                    //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[arrayForImage objectAtIndex:0] ofType:[arrayForImage objectAtIndex:1] inDirectory:documentsDirectoryPath];
-                }
-                
-            }
+            
+            
+           // DBImageView * RoomImgView=(DBImageView *)[RoomBtn viewWithTag:202];
+            [_cellLeftImg setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+
+//            
+            [_cellLeftImg setImageWithPath:[pathOne copy]];
+            [cell addSubview:_cellLeftImg];
+            
+            pathOne=nil;
+            
+
         }
     }
     
