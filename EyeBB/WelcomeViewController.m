@@ -313,7 +313,7 @@
 
 #pragma mark - server request
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
-    
+    NSString *responseString = [request responseString];
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
         

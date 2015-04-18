@@ -131,7 +131,7 @@ static HttpRequest *instance;
 - (void)requestFailed:(ASIHTTPRequest *)request
 
 {
-    
+    NSString *responseString = [request responseString];
      EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
 
      [clientDelegate requestFailed:request tag:self.methodStr];

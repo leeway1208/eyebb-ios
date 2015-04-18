@@ -456,6 +456,7 @@
     //    [listSetBtn.layer setCornerRadius:4.0];
     _organizationShowBtn.tag=103;
     [organizationShowBtnShowView addSubview:_organizationShowBtn];
+    _organizationShowBtn.hidden=YES;
     [_MainInfoScrollView addSubview:organizationShowBtnShowView];
     
     //室内定位显示选择
@@ -704,12 +705,13 @@
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
       _ActivitiesTableView.hidden=YES;
     
-    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 120, CGRectGetWidth(_MainInfoScrollView.frame)-20, 30)];
+    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 140, Drive_Wdith-20, 30)];
     _bulletinLbl.text=LOCALIZATION(@"text_no_content");
     _bulletinLbl.textColor=[UIColor blackColor];
     _bulletinLbl.font=[UIFont systemFontOfSize:16];
     _bulletinLbl.textAlignment=NSTextAlignmentCenter;
-    [_MainInfoScrollView addSubview:_bulletinLbl];
+//    [_MainInfoScrollView addSubview:_bulletinLbl];
+    [self.view addSubview:_bulletinLbl];
     _bulletinLbl.hidden=YES;
     
     //------------------------个人信息-------------------------------
@@ -2421,8 +2423,14 @@ CGPoint pt = [scrollView contentOffset];
         if(_childrenByAreaArray.count>0)
         {
         myDelegate.childrenBeanArray=(NSDictionary *)[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"] ;
-        
+        _organizationShowBtn.hidden=NO;
         [self delLodChild];
+            
+        }
+        else
+        {
+            _organizationShowBtn.hidden=YES;
+            
         }
         
         responseData=nil;
@@ -2546,7 +2554,11 @@ CGPoint pt = [scrollView contentOffset];
             
            
         }
-
+else
+{
+    _bulletinLbl.frame=CGRectMake(10, 140, Drive_Wdith-20, 30);
+    _bulletinLbl.hidden=NO;
+}
     }
     
     //请求个人信息
@@ -2619,6 +2631,7 @@ CGPoint pt = [scrollView contentOffset];
 
 - (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
 {
+    NSString *responseString = [request responseString];
     [_progressView setHidden:YES];
     [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                 message:LOCALIZATION(@" text_network_error")
@@ -2685,6 +2698,7 @@ CGPoint pt = [scrollView contentOffset];
 
 -(void)insertChildMessage
 {
+    if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
      kidImgView.hidden=NO;
     NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
     
@@ -2695,6 +2709,7 @@ CGPoint pt = [scrollView contentOffset];
     NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
     [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
     tempDictionary=nil;
+    }
     //开启加载
 //    [HUD show:YES];
 }
@@ -2719,17 +2734,28 @@ CGPoint pt = [scrollView contentOffset];
 /**弹出房间列表显示设置*/
 -(void)changeAction:(id)sender
 {
+    if(![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0)
+    {
     [_PopupSView setHidden:NO];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
     [_listTypeView setHidden:NO];
     [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:YES];
     [_kidsMassageView setHidden:YES];
+    }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:@"请先录入儿童信息"
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
+    }
 }
 /**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
-    if (_childrenByAreaArray.count>0) {
+    if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
         _isloadNews=YES;
         ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
         tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
@@ -2782,7 +2808,7 @@ CGPoint pt = [scrollView contentOffset];
 /**显示儿童列表*/
 -(void)childrenListAction:(id)sender
 {
-    if (_childrenByAreaArray.count>0) {
+    if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
     [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
     
 //    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
@@ -2873,6 +2899,17 @@ CGPoint pt = [scrollView contentOffset];
     _PerformanceTableView.hidden=NO;
     _PerformanceTimeBtn.hidden=NO;
     _ActivitiesTableView.hidden=YES;
+    if (_dailyAvgFigureArray.count>0) {
+        _bulletinLbl.hidden=YES;
+//        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    }
+    else
+    {
+        _bulletinLbl.frame=_bulletinLbl.frame=CGRectMake(10, 190, Drive_Wdith-20, 30);
+        _bulletinLbl.hidden=NO;
+        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+//        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    }
     _bulletinLbl.hidden=YES;
 }
 
@@ -2895,7 +2932,9 @@ CGPoint pt = [scrollView contentOffset];
     }
     else
     {
+        _bulletinLbl.frame=_bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
         _bulletinLbl.hidden=NO;
+        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
         _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     }
     
