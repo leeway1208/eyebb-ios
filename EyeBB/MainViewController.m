@@ -705,7 +705,7 @@
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
       _ActivitiesTableView.hidden=YES;
     
-    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 140, Drive_Wdith-20, 30)];
+    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 120, Drive_Wdith-20, 30)];
     _bulletinLbl.text=LOCALIZATION(@"text_no_content");
     _bulletinLbl.textColor=[UIColor blackColor];
     _bulletinLbl.font=[UIFont systemFontOfSize:16];
@@ -2253,6 +2253,10 @@
             huaHMSegmentedControl = (int)page;
             switch (huaHMSegmentedControl) {
                 case 0:
+                    if ([_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count<1) {
+                        _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+                        _bulletinLbl.hidden=NO;
+                    }
                     _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
                     [_HomeBtn setSelected:YES];
@@ -2278,6 +2282,23 @@
                     
                     break;
                 case 2:
+                    if(_ActivitiesTableView.hidden==YES)
+                    {
+                        _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
+                        _bulletinLbl.hidden=NO;
+                        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                        //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//                        [self.view bringSubviewToFront:_bulletinLbl];
+                    }
+                    else
+                    {
+                        _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
+                        _bulletinLbl.hidden=NO;
+                        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//                        [self.view bringSubviewToFront:_bulletinLbl];
+
+                    }
                     [_HomeBtn setSelected:NO];
                     [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
                     [_RadarBtn setSelected:NO];
@@ -2294,6 +2315,7 @@
                     [self.refreshTimer setFireDate:[NSDate distantFuture]];
                     break;
                 case 3:
+                    _bulletinLbl.hidden=YES;
                     _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
                     [_HomeBtn setSelected:NO];
@@ -2556,7 +2578,7 @@ CGPoint pt = [scrollView contentOffset];
         }
 else
 {
-    _bulletinLbl.frame=CGRectMake(10, 140, Drive_Wdith-20, 30);
+    _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
     _bulletinLbl.hidden=NO;
 }
     }
@@ -2596,23 +2618,13 @@ else
         if ((NSNull *)activityInfoStr != [NSNull null]) {
              _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
         }
-        
-        
-        
-//        if (_activityInfosArray==nil) {
-//        
-//         _activityInfosArray=[[NSMutableArray alloc]init];
-//        }
+
         NSString *dailyAvgStr=[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"];
         if ((NSNull *)dailyAvgStr != [NSNull null]) {
              _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
         }
        
-//        _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
-//        if (_dailyAvgFigureArray==nil) {
-//            _dailyAvgFigureArray=[[NSMutableArray alloc]init];
-//        }
-        
+
        
 
         responseData=nil;
@@ -2621,6 +2633,36 @@ else
          [_PerformanceTableView reloadData];
         [_ActivitiesTableView reloadData];
         _isloadNews=NO;
+        
+        if(_ActivitiesTableView.hidden==YES)
+        {
+            if (![_dailyAvgFigureArray isEqual:[NSNull null]]&&_dailyAvgFigureArray.count>0) {
+                _bulletinLbl.hidden=YES;
+            }
+            else
+            {
+            _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
+            _bulletinLbl.hidden=NO;
+            _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+            //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//            [self.view bringSubviewToFront:_bulletinLbl];
+                }
+        }
+        else
+        {
+            if (![_activityInfosArray isEqual:[NSNull null]]&&_activityInfosArray.count>0) {
+                _bulletinLbl.hidden=YES;
+            }
+            else
+            {
+            _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
+            _bulletinLbl.hidden=NO;
+            _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+            _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//            [self.view bringSubviewToFront:_bulletinLbl];
+            }
+            
+        }
     }
     
     [_progressView setHidden:YES];
@@ -2905,12 +2947,13 @@ else
     }
     else
     {
-        _bulletinLbl.frame=_bulletinLbl.frame=CGRectMake(10, 190, Drive_Wdith-20, 30);
+        _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
         _bulletinLbl.hidden=NO;
         _bulletinLbl.text=LOCALIZATION(@"text_no_content");
 //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        [self.view bringSubviewToFront:_bulletinLbl];
     }
-    _bulletinLbl.hidden=YES;
+//    _bulletinLbl.hidden=YES;
 }
 
 /**显示活动*/
@@ -2932,10 +2975,11 @@ else
     }
     else
     {
-        _bulletinLbl.frame=_bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
+        _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
         _bulletinLbl.hidden=NO;
         _bulletinLbl.text=LOCALIZATION(@"text_no_content");
         _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//        [self.view bringSubviewToFront:_bulletinLbl];
     }
     
 }
@@ -2949,6 +2993,17 @@ else
     {
         switch (tempBtn.tag) {
             case 214:
+                if ([_childrenByAreaArray isEqual:[NSNull null]]) {
+                    _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+                    _bulletinLbl.hidden=NO;
+                }
+                else
+                {
+                    if (_childrenByAreaArray.count<1) {
+                        _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+                        _bulletinLbl.hidden=NO;
+                    }
+                }
                 _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
                 _progressView.hidden=YES;
                 [_HomeBtn setSelected:YES];
@@ -2969,8 +3024,27 @@ else
                 [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                 [_PersonageBtn setSelected:NO];
                 [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                if(_ActivitiesTableView.hidden==YES)
+                {
+                    _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
+                    _bulletinLbl.hidden=NO;
+                    _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                    //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//                    [self.view bringSubviewToFront:_bulletinLbl];
+                }
+                else
+                {
+                    _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
+                    _bulletinLbl.hidden=NO;
+                    _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                    _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+//                    [self.view bringSubviewToFront:_bulletinLbl];
+                    
+                }
+                
                 break;
             case 217:
+                _bulletinLbl.hidden=YES;
                 _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 1.0f);
                 _progressView.hidden=YES;
                 [_HomeBtn setSelected:NO];
@@ -3007,6 +3081,7 @@ else
             }
         }
         if (num==3) {
+            
             if(_isreloadpersonal==YES)
             {
                 //关闭定时器
