@@ -2398,20 +2398,20 @@ CGPoint pt = [scrollView contentOffset];
         if(_organizationArray!=nil&&_organizationArray.count>0)
         {
             _organizationArray=nil;
-            _organizationArray=[NSMutableArray array];
+            _organizationArray=[[NSMutableArray alloc]init];
 //            [_organizationArray removeAllObjects];
             
         }
         if(_childrenByAreaArray!=nil&&_childrenByAreaArray.count>0)
         {
             _childrenByAreaArray=nil;
-            _childrenByAreaArray=[NSMutableArray array];
+            _childrenByAreaArray=[[NSMutableArray alloc]init];
             
         }
         if(_allRoomArray!=nil&&_allRoomArray.count>0)
         {
             _allRoomArray=nil;
-            _allRoomArray=[NSMutableArray array];
+            _allRoomArray=[[NSMutableArray alloc]init];
             
         }
         if(_childrenDictionary!=nil&&_childrenDictionary.count>0)
@@ -2422,7 +2422,7 @@ CGPoint pt = [scrollView contentOffset];
         if(_kidsRoomArray!=nil&&_kidsRoomArray.count>0)
         {
             _kidsRoomArray=nil;
-            _kidsRoomArray=[NSMutableArray array];
+            _kidsRoomArray=[[NSMutableArray alloc]init];
             
         }
         if(_childrenByRoomDictionary!=nil&&_childrenByRoomDictionary.count>0)
@@ -2432,6 +2432,14 @@ CGPoint pt = [scrollView contentOffset];
         }
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
+
+        if ([_organizationArray isEqual:[NSNull null]]) {
+            _organizationArray=nil;
+        }
+        if ([_childrenByAreaArray isEqual:[NSNull null]]) {
+            _childrenByAreaArray=nil;
+        }
+
         if(_organizationArray.count>0&&_childrenByAreaArray.count>0)
         {
         if (myDelegate.childrenBeanArray==nil) {
@@ -2576,11 +2584,13 @@ CGPoint pt = [scrollView contentOffset];
             
            
         }
+            
 else
 {
     _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
     _bulletinLbl.hidden=NO;
 }
+        
     }
     
     //请求个人信息
