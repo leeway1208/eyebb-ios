@@ -2101,7 +2101,7 @@
         }
         else
         {
- NSString *urlStr;
+            NSString *urlStr;
             switch (myDelegate.applanguage) {
                 case 0:
                     urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"noticeSc"];
@@ -2801,7 +2801,7 @@ else
     else
     {
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                    message:@"请先录入儿童信息"
+                                    message:LOCALIZATION(@"text_no_data")
                                    delegate:self
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
@@ -2820,7 +2820,7 @@ else
     else
     {
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                    message:@"请先录入儿童信息"
+                                    message:LOCALIZATION(@"text_no_data")
                                    delegate:self
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
