@@ -24,13 +24,14 @@
 
 #import "KidViewController.h"//查询儿童列表
 
-@interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate>
+@interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate>
 {
     /**滑动HMSegmentedControl*/
     int huaHMSegmentedControl;
     
     AppDelegate * myDelegate;
-    
+    int textHeight;
+    int selected;
 }
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
@@ -144,6 +145,8 @@
 @property (nonatomic) BOOL isreloadpersonal;
 /**是否加载简报信息*/
 @property (nonatomic) BOOL isloadNews;
+/**是否加载意见反馈*/
+@property (nonatomic) BOOL isloadFeekBack;
 /**机构下标*/
 @property (nonatomic) int organizationIndex;
 
@@ -155,6 +158,10 @@
 @property (nonatomic,strong) NSString *avgDaysStr;
 /**刷新定时器*/
 @property (nonatomic,strong)NSTimer * refreshTimer;
+/**意见反馈*/
+@property (nonatomic,strong)UIView *FeekBackView;
+/**意见输入框*/
+@property (nonatomic,strong)UITextField *FeekBackTxt;
 
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
@@ -268,6 +275,7 @@
     _isloadNews=YES;
     self.avgDaysStr=@"5";
     self.organizationIndex=0;
+    _isloadFeekBack=YES;
 //    NSFileManager *fileManager = [NSFileManager defaultManager];
     // 创建目录
 //    [fileManager createDirectoryAtPath:@"localImg" withIntermediateDirectories:YES attributes:nil error:nil];
@@ -292,7 +300,7 @@
 
     
     //室内定位选择按钮
-    _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
+    _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/3, 44)];
     //设置按显示图片
     [_HomeBtn setImage:[UIImage imageNamed:@"actbar_home"] forState:UIControlStateNormal];
     [_HomeBtn setImage:[UIImage imageNamed:@"actbar_homeOn"] forState:UIControlStateSelected];
@@ -310,24 +318,24 @@
     
     
     
-    //雷达选择按钮
-    _RadarBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
-    //设置按显示图片
-    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
-    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_trackingOn"] forState:UIControlStateSelected];
-    //设置按钮背景颜色
-    [_RadarBtn setBackgroundColor:[UIColor clearColor]];
-    //设置按钮响应事件
-    [_RadarBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
-    //设置按钮是否圆角
-    [_RadarBtn.layer setMasksToBounds:NO];
-    //圆角像素化
-    //    [listSetBtn.layer setCornerRadius:4.0];
-        _RadarBtn.tag=215;
-    [self.view addSubview:_RadarBtn];
+//    //雷达选择按钮
+//    _RadarBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
+//    //设置按显示图片
+//    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
+//    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_trackingOn"] forState:UIControlStateSelected];
+//    //设置按钮背景颜色
+//    [_RadarBtn setBackgroundColor:[UIColor clearColor]];
+//    //设置按钮响应事件
+//    [_RadarBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+//    //设置按钮是否圆角
+//    [_RadarBtn.layer setMasksToBounds:NO];
+//    //圆角像素化
+//    //    [listSetBtn.layer setCornerRadius:4.0];
+//        _RadarBtn.tag=215;
+//    [self.view addSubview:_RadarBtn];
     
     //简报选择按钮
-    _NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*2, 20, Drive_Wdith/4, 44)];
+    _NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/3, 20, Drive_Wdith/3, 44)];
     //设置按显示图片
     [_NewsBtn setImage:[UIImage imageNamed:@"actbar_report"] forState:UIControlStateNormal];
     [_NewsBtn setImage:[UIImage imageNamed:@"actbar_reportOn"] forState:UIControlStateSelected];
@@ -339,11 +347,11 @@
     [_NewsBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _NewsBtn.tag=216;
+        _NewsBtn.tag=215;
     [self.view addSubview:_NewsBtn];
     
     //个人信息选择按钮
-    _PersonageBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*3, 20, Drive_Wdith/4, 44)];
+    _PersonageBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/3*2, 20, Drive_Wdith/3, 44)];
     //设置按显示图片
     [_PersonageBtn setImage:[UIImage imageNamed:@"actbar_profile"] forState:UIControlStateNormal];
     [_PersonageBtn setImage:[UIImage imageNamed:@"actbar_profileOn"] forState:UIControlStateSelected];
@@ -355,31 +363,31 @@
     [_PersonageBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _PersonageBtn.tag=217;
+        _PersonageBtn.tag=216;
     [self.view addSubview:_PersonageBtn];
     
     NSLog(@"CGRectGetm(_RadarBtn.bounds) is %f",CGRectGetMinX(_RadarBtn.bounds));
     //间隔线
-    UILabel *divisionHomeLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4-1, 24.0f, 2, 34)];
+    UILabel *divisionHomeLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/3-1, 24.0f, 2, 34)];
     [divisionHomeLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [self.view addSubview:divisionHomeLbl];
     
     //间隔线
-    UILabel *divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*2-1, 24.0f, 2, 34)];
+    UILabel *divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/3*2-1, 24.0f, 2, 34)];
     [divisionRadarLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [self.view addSubview:divisionRadarLbl];
     
-    //间隔线
-    UILabel *divisionNewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*3-1, 24.0f, 2, 34)];
-    [divisionNewsLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
-    [self.view addSubview:divisionNewsLbl];
+//    //间隔线
+//    UILabel *divisionNewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*3-1, 24.0f, 2, 34)];
+//    [divisionNewsLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+//    [self.view addSubview:divisionNewsLbl];
     
     
     //设置scrollView
     _MainInfoScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, Drive_Wdith, Drive_Height-44)];
     [_MainInfoScrollView setBackgroundColor:[UIColor colorWithRed:0.941 green:0.941 blue:0.941 alpha:1]];
     [_MainInfoScrollView setDelegate:self];
-    _MainInfoScrollView.contentSize = CGSizeMake(Drive_Wdith*4, CGRectGetHeight(_MainInfoScrollView.frame));
+    _MainInfoScrollView.contentSize = CGSizeMake(Drive_Wdith*3, CGRectGetHeight(_MainInfoScrollView.frame));
     [_MainInfoScrollView setTag:101];
     // 滚动时,是否显示水平滚动条
     _MainInfoScrollView.showsHorizontalScrollIndicator = NO;
@@ -485,20 +493,20 @@
     [_MainInfoScrollView addSubview:_RoomTableView];
     
     //------------------------雷达-------------------------------
-    //初始化雷达
-    _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
-    
-    _RadarTableView.dataSource = self;
-    _RadarTableView.delegate = self;
-    //    [self.positionDetailsTableView setBounces:NO];
-    [_MainInfoScrollView addSubview:_RadarTableView];
+//    //初始化雷达
+//    _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
+//    
+//    _RadarTableView.dataSource = self;
+//    _RadarTableView.delegate = self;
+//    //    [self.positionDetailsTableView setBounces:NO];
+//    [_MainInfoScrollView addSubview:_RadarTableView];
     
     
     
     //------------------------简报-------------------------------
 
     //简报名称
-    UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 0, Drive_Wdith, 54)];
+    UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, Drive_Wdith, 54)];
     NewsView.backgroundColor=[UIColor clearColor];
     
     UILabel *NewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
@@ -565,7 +573,7 @@
     
     
     //通告标题
-    UIView *changeView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 54, Drive_Wdith-20, 44)];
+    UIView *changeView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 54, Drive_Wdith-20, 44)];
     changeView.backgroundColor=[UIColor clearColor];
     [_MainInfoScrollView addSubview:changeView];
     
@@ -627,7 +635,7 @@
     
 
     //选择显示范围
-    _PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 40)];
+    _PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 40)];
     //设置按钮背景颜色
     [_PerformanceTimeBtn setBackgroundColor:[UIColor whiteColor]];
     
@@ -688,7 +696,7 @@
     
     
     //初始化表现列表
-    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 138, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-138)];
+    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 138, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-138)];
     _PerformanceTableView.dataSource = self;
     _PerformanceTableView.delegate = self;
     //隐藏table自带的cell下划线
@@ -700,7 +708,7 @@
 
     
     //初始化活动列表
-    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
+    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
     _ActivitiesTableView.dataSource = self;
     _ActivitiesTableView.delegate = self;
     self.ActivitiesTableView.tableFooterView = [[UIView alloc] init];
@@ -721,7 +729,7 @@
     
     
     //用户名
-    UIView *PersonageView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 0, Drive_Wdith, 54)];
+    UIView *PersonageView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 0, Drive_Wdith, 54)];
     PersonageView.backgroundColor=[UIColor clearColor];
     
     _UserNameLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
@@ -753,7 +761,7 @@
     [_MainInfoScrollView addSubview:PersonageView];
     
     //通告标题
-    UIView *PersonageTitleView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 54, Drive_Wdith, 30)];
+    UIView *PersonageTitleView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 54, Drive_Wdith, 30)];
     PersonageTitleView.backgroundColor=[UIColor whiteColor];
     
     UILabel * PersonageLbl = [[UILabel alloc] initWithFrame:CGRectMake(-1.0f, -1.0f, Drive_Wdith+2, 31.0f)];
@@ -769,7 +777,7 @@
     [_MainInfoScrollView addSubview:PersonageTitleView];
     
     //初始化个人信息
-    _PersonageTableView= [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 84, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
+    _PersonageTableView= [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 84, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
     _PersonageTableView.dataSource = self;
     _PersonageTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
@@ -915,8 +923,31 @@
     [_listTypeChangeBtn addTarget:self action:@selector(SaveAction:) forControlEvents:UIControlEventTouchUpInside];
     [_listTypeView addSubview:_listTypeChangeBtn];
     
+    _FeekBackView =[[UIView alloc]initWithFrame:CGRectMake(5, 50, Drive_Wdith-10, 267)];
+    _FeekBackView.backgroundColor=[UIColor whiteColor];
+    //设置按钮是否圆角
+    [_FeekBackView.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_FeekBackView.layer setCornerRadius:4.0];
+    _FeekBackView.center=self.view.center;
+    [_PopupSView addSubview:_FeekBackView];
+    _FeekBackView.hidden=YES;
     
     
+    //注册键盘弹起与收起通知
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(BasicRegkeyboardWillShow:)
+                                                 name:UIKeyboardWillShowNotification
+                                               object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(BasicRegkeyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+    //隐藏键盘
+    UITapGestureRecognizer *tapGr = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(viewTapped:)];
+    tapGr.cancelsTouchesInView = NO;
+    [self.view addGestureRecognizer:tapGr];
     
 }
 
@@ -2097,7 +2128,99 @@
     else if (tableView==self.PersonageTableView)
     {
         if (indexPath.row==0) {
-            
+            if(_isloadFeekBack==YES)
+            {
+                _isloadFeekBack=NO;
+                UILabel *titleLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 5, Drive_Wdith-30, 40)];
+                titleLbl.text=LOCALIZATION(@"text_feed_back");
+                [titleLbl setFont:[UIFont systemFontOfSize:20]];
+                [titleLbl setTextColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                titleLbl.textAlignment=NSTextAlignmentLeft;
+                [_FeekBackView addSubview:titleLbl];
+                UILabel *lineLbl=[[UILabel alloc]initWithFrame:CGRectMake(0, 43, CGRectGetWidth(_FeekBackView.frame), 4)];
+                lineLbl.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+                [_FeekBackView addSubview:lineLbl];
+                
+                titleLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 47, Drive_Wdith-30, 60)];
+                titleLbl.text=LOCALIZATION(@"text_feed_back_content");
+                titleLbl.numberOfLines=0;
+                [titleLbl setFont:[UIFont systemFontOfSize:15]];
+                [titleLbl setTextColor:[UIColor blackColor]];
+                titleLbl.textAlignment=NSTextAlignmentLeft;
+                [_FeekBackView addSubview:titleLbl];
+                _FeekBackTxt=[[UITextField alloc]initWithFrame:CGRectMake(15, 107, Drive_Wdith-40, 35)];
+                _FeekBackTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+                
+                UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_email"]];
+                _FeekBackTxt.leftView=imgV;//设置输入框内左边的图标
+                _FeekBackTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+                _FeekBackTxt.leftViewMode=UITextFieldViewModeAlways;
+                _FeekBackTxt.placeholder=LOCALIZATION(@"text_your_comments");//默认显示的字
+                _FeekBackTxt.secureTextEntry=NO;//设置成密码格式
+                _FeekBackTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+                _FeekBackTxt.returnKeyType=UIReturnKeyDefault;//返回键的类型
+                _FeekBackTxt.delegate=self;//设置委托
+                [_FeekBackView addSubview:_FeekBackTxt];
+                
+                lineLbl=[[UILabel alloc]initWithFrame:CGRectMake(5, 139, CGRectGetWidth(_FeekBackView.frame)-10, 2)];
+                lineLbl.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+                [_FeekBackView addSubview:lineLbl];
+                
+                 NSArray *segmentedArray = [[NSArray alloc]initWithObjects:LOCALIZATION(@"text_feedback_idea"),LOCALIZATION(@"text_feedback_question"),nil];
+                //初始化UISegmentedControl
+                UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
+                segmentedControl.frame = CGRectMake(CGRectGetWidth(_FeekBackView.frame)-190, 180, 150.0, 30.0);
+                segmentedControl.selectedSegmentIndex = 0;//设置默认选择项索引
+                segmentedControl.tintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+//                [segmentedControl setBackgroundImage:[UIImage imageNamed:@"zyyy_choose_middle.png"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+//                [segmentedControl setBackgroundImage:[UIImage imageNamed:@"zyyy_choose_middle_touch.png"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+                segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;//设置样式
+                [segmentedControl addTarget:self action:@selector(segmentAction:)forControlEvents:UIControlEventValueChanged];  //添加委托方法
+                [_FeekBackView addSubview:segmentedControl];
+                
+                //取消按钮
+                UIButton * CencelBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 230, CGRectGetWidth(_FeekBackView.frame)/2, 38)];
+                //设置按显示文字
+                [CencelBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
+                [CencelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [CencelBtn setImage:[UIImage imageNamed:@"cross2"] forState:UIControlStateNormal];
+                //设置按钮背景颜色
+                [CencelBtn setBackgroundColor:[UIColor clearColor]];
+                //设置按钮响应事件
+                [CencelBtn addTarget:self action:@selector(CencelAction:) forControlEvents:UIControlEventTouchUpInside];
+//                //CencelBtn按钮是否圆角
+//                [CencelBtn.layer setMasksToBounds:YES];
+//                //圆角像素化
+//                [CencelBtn.layer setCornerRadius:4.0];
+                [CencelBtn.layer setBorderWidth:0.5]; //边框宽度
+                [CencelBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
+
+                [_FeekBackView addSubview:CencelBtn];
+                
+                //确定按钮
+                UIButton * OkBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_FeekBackView.frame)/2, 230, CGRectGetWidth(_FeekBackView.frame)/2, 38)];
+                //设置按显示文字
+                [OkBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
+                [OkBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+                [OkBtn setImage:[UIImage imageNamed:@"tick"] forState:UIControlStateNormal];
+                //设置按钮背景颜色
+                [OkBtn setBackgroundColor:[UIColor clearColor]];
+                //设置按钮响应事件
+                [OkBtn addTarget:self action:@selector(OkAction:) forControlEvents:UIControlEventTouchUpInside];
+                //                //CencelBtn按钮是否圆角
+                //                [CencelBtn.layer setMasksToBounds:YES];
+                //                //圆角像素化
+                //                [CencelBtn.layer setCornerRadius:4.0];
+                [OkBtn.layer setBorderWidth:0.5]; //边框宽度
+                [OkBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
+                
+                [_FeekBackView addSubview:OkBtn];
+
+                
+            }
+            _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.5];
+            _PopupSView.hidden=NO;
+            _FeekBackView.hidden=NO;
         }
         else
         {
@@ -2251,8 +2374,8 @@
     if (scrollView.tag == 101) {
         CGFloat pageWidth = CGRectGetWidth(scrollView.frame);
         NSInteger page = scrollView.contentOffset.x / pageWidth;
-        if (scrollView.contentOffset.x!=320.000000) {
-            
+//        if (scrollView.contentOffset.x!=320.000000) {
+        
             huaHMSegmentedControl = (int)page;
             switch (huaHMSegmentedControl) {
                 case 0:
@@ -2284,7 +2407,7 @@
                     }
                     
                     break;
-                case 2:
+                case 1:
                     if(_ActivitiesTableView.hidden==YES)
                     {
                         _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
@@ -2317,9 +2440,9 @@
                     //关闭定时器
                     [self.refreshTimer setFireDate:[NSDate distantFuture]];
                     break;
-                case 3:
+                case 2:
                     _bulletinLbl.hidden=YES;
-                    _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 3.0f);
+                    _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
                     [_HomeBtn setSelected:NO];
                     [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
@@ -2345,22 +2468,22 @@
         
        
 //            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-        }
-        else
-        {
-            [[[UIAlertView alloc] initWithTitle:@"系统提示"
-                                        message:@"IOS暂时不支持此功能，敬请期待"
-                                       delegate:self
-                              cancelButtonTitle:@"确定"
-                              otherButtonTitles:nil] show];
-            if (huaHMSegmentedControl==0) {
-                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
-            }
-            else if (huaHMSegmentedControl==2)
-            {
-                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
-            }
-        }
+//        }
+//        else
+//        {
+//            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+//                                        message:@"IOS暂时不支持此功能，敬请期待"
+//                                       delegate:self
+//                              cancelButtonTitle:@"确定"
+//                              otherButtonTitles:nil] show];
+//            if (huaHMSegmentedControl==0) {
+//                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
+//            }
+//            else if (huaHMSegmentedControl==2)
+//            {
+//                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
+//            }
+//        }
     }
 }
 
@@ -2678,6 +2801,14 @@ else
         }
     }
     
+    //请求个人信息
+    if ([tag isEqualToString:FEED_BACK]) {
+        
+        NSData *responseData = [request responseData];
+        int result=[[responseData mutableObjectFromJSONData] integerValue];
+        
+    }
+    
     [_progressView setHidden:YES];
     //关闭加载
 //    [HUD hide:YES afterDelay:0];
@@ -2774,12 +2905,78 @@ else
     [_RoomTableView reloadData];
 }
 
+/**
+ *  获取输入框的Y坐标
+ *
+ *  @param textField <#textField description#>
+ */
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    
+    if (textField == self.FeekBackTxt) {
+        textHeight=_FeekBackView.frame.origin.y+142;
+    }
+}
+-(void)BasicRegkeyboardWillShow:(NSNotification *)note
+{
+    NSDictionary *info = [note userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    
+    //自适应代码（输入法改变也可随之改变）
+    if((Drive_Height-keyboardSize.height-48)<textHeight)
+    {
+        [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
+        [UIView setAnimationDuration:0.3];
+        self.view.frame = CGRectMake(0.0f, -(textHeight-(Drive_Height-keyboardSize.height-48)), self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+    }
+}
+-(void)BasicRegkeyboardWillHide:(NSNotification *)note
+{
+    
+    NSDictionary *info = [note userInfo];
+    CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
+    
+    if((Drive_Height-keyboardSize.height-48)<textHeight)
+    {
+        //还原
+        [UIView beginAnimations:nil context:NULL];//此处添加动画，使之变化平滑一点
+        [UIView setAnimationDuration:0.3];
+        self.view.frame = CGRectMake(0.0f, 0.0f, self.view.frame.size.width, self.view.frame.size.height);
+        [UIView commitAnimations];
+    }
+    
+}
+/**
+ *	@brief	设置隐藏键盘
+ *
+ */
+- (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+    if (theTextField == self.FeekBackTxt) {
+        [theTextField resignFirstResponder];
+    }
+
+    
+    return YES;
+    
+}
+
+-(void)viewTapped:(UITapGestureRecognizer*)tapGr
+{
+    [self.FeekBackTxt resignFirstResponder];
+
+    
+}
+
+
 #pragma mark --
 #pragma mark - Handle Gestures
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)theSingleTap
 {
     [_PopupSView setHidden:YES];
+    [self.FeekBackTxt resignFirstResponder];
 }
 
 
@@ -3002,8 +3199,8 @@ else
 {
     UIButton *tempBtn=(UIButton *)sender;
     int num=tempBtn.tag-214;
-    if(num !=1)
-    {
+//    if(num !=1)
+//    {
         switch (tempBtn.tag) {
             case 214:
                 if ([_childrenByAreaArray isEqual:[NSNull null]]) {
@@ -3021,18 +3218,18 @@ else
                 _progressView.hidden=YES;
                 [_HomeBtn setSelected:YES];
                 [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                [_RadarBtn setSelected:NO];
-                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+//                [_RadarBtn setSelected:NO];
+//                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
                 [_NewsBtn setSelected:NO];
                 [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                 [_PersonageBtn setSelected:NO];
                 [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
                 break;
-            case 216:
+            case 215:
                 [_HomeBtn setSelected:NO];
                 [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                [_RadarBtn setSelected:NO];
-                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+//                [_RadarBtn setSelected:NO];
+//                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
                 [_NewsBtn setSelected:YES];
                 [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                 [_PersonageBtn setSelected:NO];
@@ -3056,14 +3253,14 @@ else
                 }
                 
                 break;
-            case 217:
+            case 216:
                 _bulletinLbl.hidden=YES;
-                _progressView.frame=CGRectMake(Drive_Wdith*3, 0.0f, Drive_Wdith, 1.0f);
+                _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 1.0f);
                 _progressView.hidden=YES;
                 [_HomeBtn setSelected:NO];
                 [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                [_RadarBtn setSelected:NO];
-                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+//                [_RadarBtn setSelected:NO];
+//                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
                 [_NewsBtn setSelected:NO];
                 [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                 [_PersonageBtn setSelected:YES];
@@ -3104,17 +3301,17 @@ else
 //                [HUD show:YES];
             }
         }
-    }
-    else
-    {
-        
-        [[[UIAlertView alloc] initWithTitle:@"系统提示"
-                                    message:@"IOS暂时不支持此功能，敬请期待"
-                                   delegate:self
-                          cancelButtonTitle:@"确定"
-                          otherButtonTitles:nil] show];
-        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-    }
+//    }
+//    else
+//    {
+//        
+//        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+//                                    message:@"IOS暂时不支持此功能，敬请期待"
+//                                   delegate:self
+//                          cancelButtonTitle:@"确定"
+//                          otherButtonTitles:nil] show];
+//        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+//    }
 //    UISegmentedControl *segmentedControl=(UISegmentedControl *)sender;
 //    if([sender selectedSegmentIndex] !=1)
 //    {
@@ -3152,8 +3349,43 @@ else
    
 }
 
+-(void)CencelAction:(id)sender
+{
+     [_PopupSView setHidden:YES];
+}
+-(void)OkAction:(id)sender
+{
+   if([_FeekBackTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0)
+   {
 
+    NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.FeekBackTxt.text, @"content", @"b",@"type",nil];
+    [self postRequest:FEED_BACK RequestDictionary:[tempDoct copy] delegate:self];
+    tempDoct=nil;
+     [_PopupSView setHidden:YES];
+   }
+    else
+    {
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_feed_back_content")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
 
+    }
+}
+
+-(void)segmentAction:(UISegmentedControl *)Seg{
+    
+    selected = Seg.selectedSegmentIndex;
+    
+//    NSLog(@"Index %i", Index);
+//    
+//    switch (Index) {
+//            
+//        case 0:
+//            break;
+//    }
+}
 
 @end
 
