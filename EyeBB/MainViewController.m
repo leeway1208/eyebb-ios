@@ -493,6 +493,8 @@
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_RadarTableView];
     
+    
+    
     //------------------------简报-------------------------------
 
     //简报名称
@@ -501,7 +503,8 @@
     
     UILabel *NewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
     [NewsLbl setBackgroundColor:[UIColor clearColor]];
-    NewsLbl.font=[UIFont fontWithName:@"Helvetica" size:20];
+    NewsLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+
     NewsLbl.textAlignment = NSTextAlignmentLeft;
     NewsLbl.textColor=[UIColor blackColor];
     
@@ -2873,7 +2876,7 @@ else
     
     KidViewController* kindlist = [[KidViewController alloc] init];
     
-        kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
     kindlist.kidsRoomArray=_roomArray;
          NSLog(@"---%@",kindlist.childrenArray);
     NSLog(@"kindlist.kidsRoomArray%@",kindlist.kidsRoomArray);
@@ -2883,7 +2886,7 @@ else
     else
     {
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                    message:@"请先录入儿童信息"
+                                    message:LOCALIZATION(@"text_no_data")
                                    delegate:self
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];

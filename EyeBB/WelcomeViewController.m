@@ -116,7 +116,7 @@
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleModifyListNotification) name:@"modifyListNotification" object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeleteListNotification) name:@"deleteListNotification" object:nil];
         //添加本地推送
-        [self scheduleLocalNotification];
+        //[self scheduleLocalNotification];
     }
     NSLog(@"commit ok");
 }

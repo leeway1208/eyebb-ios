@@ -396,6 +396,10 @@
     if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
         NSData *responseData = [request responseData];
         childrenArray=[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"];
+        if ([childrenArray isKindOfClass:[NSNull class]]) {
+            childrenArray = nil;
+        }
+        
         for(int i=0;i<childrenArray.count; i++)
         {
             NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
