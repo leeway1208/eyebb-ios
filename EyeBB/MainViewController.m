@@ -2038,6 +2038,9 @@
             
         }
     }
+    
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+    
     return cell;
 }
 

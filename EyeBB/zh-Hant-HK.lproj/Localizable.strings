@@ -182,6 +182,7 @@
 "text_search_your_device" = "搜尋周圍的寶寶安";
 "text_press_the_button_on_the_device" = "請按寶寶安設備的按鈕超過3秒鐘,然後在屏幕上選擇你的寶寶安.(請打開手機藍牙)";
 "text_connect_error" = "連接失敗";
+"text_scan_qr_error" = "二維碼錯誤";
 //<!-- Button strings -->
 "btn_sign_up"="註冊";
 "btn_login"="登錄";

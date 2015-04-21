@@ -178,6 +178,7 @@
 "text_search_your_device" = "Search your EYEBB device";
 "text_press_the_button_on_the_device" = "Press the button on the device for more than three seconds, and then select your device on the screen. (Please turn on the Bluetooth)";
 "text_connect_error" = "Connect Error";
+"text_scan_qr_error" = "QR code error";
 
 //<!-- Button strings -->
 "btn_sign_up"="Sign Up";
