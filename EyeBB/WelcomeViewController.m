@@ -349,6 +349,11 @@
 
 - (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
 {
+    logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
+    RegBtn.hidden=NO;
+    LoginBtn.hidden=NO;
+    CopyrightLbl.hidden=NO;
+
     //关闭加载
     [HUD hide:YES afterDelay:0];
     [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
