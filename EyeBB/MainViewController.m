@@ -224,7 +224,7 @@
     if (self.web!=nil) {
         self.web =nil;
     }
-    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2&&self.isloadNews==YES) {
+    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==1&&self.isloadNews==YES) {
         
         [self insertChildMessage];
        
@@ -2975,7 +2975,7 @@ else
     
       [kidImgView setImageWithPath:[pathOne copy]];
     
-
+        NSLog(@"!!!!!%@",myDelegate.childDictionary);
     
     NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
     [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];

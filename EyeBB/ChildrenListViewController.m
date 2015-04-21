@@ -365,26 +365,40 @@
             
             myDelegate.childDictionary=[[NSDictionary alloc]init];
         }
-       
+        
+        
+        NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:indexPath.section]];
+ 
+        
         NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
-        
-        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
-        
-        
-        
-        
-        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
-        
-        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
-        
-        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
-        
-        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
-        
-        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
-        [tempDictionary removeAllObjects];
-        tempDictionary=nil;
+        for (int i=0; i<_childrenArray.count; i++) {
+            if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[arr objectAtIndex:indexPath.row]]) {
+                [tempDictionary setObject:[[[[_childrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+                
+                
+                
+                
+                [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+                
+                [tempDictionary setObject:[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+                
+                [tempDictionary setObject:[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+                
+                [tempDictionary setObject:[[_childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
+                
+                myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
+                [tempDictionary removeAllObjects];
+                tempDictionary=nil;
 
+               
+                break;
+            }
+        }
+
+       
+        
+        
+       
         [self.navigationController popViewControllerAnimated:YES];
     }
 }

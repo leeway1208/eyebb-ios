@@ -118,10 +118,12 @@
     }
     for (int i=0; i<_kidsRoomArray.count; i++) {
         for (int j=0; j<_childrenArray.count; j++) {
+            if(![[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationId"] isEqual:[NSNull null]]&&![[[_childrenArray objectAtIndex:j] objectForKey:@"locId"] isEqual:[NSNull null]])
+            {
             if ([[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationId"]longLongValue]==[[[_childrenArray objectAtIndex:j] objectForKey:@"locId"]longLongValue]) {
                 [_SortingArray addObject:[[[[_childrenArray  objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
             }
-            
+            }
             
         }
     }
