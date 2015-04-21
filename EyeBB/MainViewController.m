@@ -2469,10 +2469,27 @@
        
 //            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
 
+//        }
+//        else
+//        {
+//            
+////            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+////                                        message:@"IOS暂时不支持此功能，敬请期待"
+////                                       delegate:self
+////                              cancelButtonTitle:@"确定"
+////                              otherButtonTitles:nil] show];
+//            if (huaHMSegmentedControl==0) {
+//                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
+//            }
+//            else if (huaHMSegmentedControl==2)
+//            {
+//                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
+//            }
+//        }
+
         }
         else
         {
-            
             [[[UIAlertView alloc] initWithTitle:@"系统提示"
                                         message:@"IOS暂时不支持此功能，敬请期待"
                                        delegate:self
@@ -2486,23 +2503,6 @@
                 [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
             }
         }
-
-//        }
-//        else
-//        {
-//            [[[UIAlertView alloc] initWithTitle:@"系统提示"
-//                                        message:@"IOS暂时不支持此功能，敬请期待"
-//                                       delegate:self
-//                              cancelButtonTitle:@"确定"
-//                              otherButtonTitles:nil] show];
-//            if (huaHMSegmentedControl==0) {
-//                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
-//            }
-//            else if (huaHMSegmentedControl==2)
-//            {
-//                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
-//            }
-//        }
 
     
 }
