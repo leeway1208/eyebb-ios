@@ -106,7 +106,22 @@
     
     
     
-    
+    NSLog(@"Registering for push notifications...");
+    //if is for ios 8 else if for ios 7 or blow
+    if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)]) {
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
+                                                                                             |UIRemoteNotificationTypeSound
+                                                                                             |UIRemoteNotificationTypeAlert)
+                                                                                 categories:nil];
+        [application registerUserNotificationSettings:settings];
+        [application registerForRemoteNotifications];
+        
+        
+    } else {
+        [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge
+                                                         |UIRemoteNotificationTypeSound
+                                                         |UIRemoteNotificationTypeAlert)];
+    }
     
     return YES;
 }
@@ -146,5 +161,20 @@
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
     [UIApplication sharedApplication].applicationIconBadgeNumber--;
 }
+
+
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];
+    NSLog(@"%@", str);
+}
+
+- (void)application:(UIApplication *)app didFailToRegisterForRemoteNotificationsWithError:(NSError *)err {
+    NSString *str = [NSString stringWithFormat: @"Error: %@", err];
+    NSLog(@"%@",str);
+}
+
+
+
+
 
 @end
