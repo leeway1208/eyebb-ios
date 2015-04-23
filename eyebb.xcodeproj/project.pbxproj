@@ -165,19 +165,19 @@
 		20A6D8011ABAFC530028388B /* RMDownloadIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RMDownloadIndicator.m; sourceTree = "<group>"; };
 		20B043481AB081AC0081738D /* ChildrenListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChildrenListViewController.h; sourceTree = "<group>"; };
 		20B043491AB081AC0081738D /* ChildrenListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChildrenListViewController.m; sourceTree = "<group>"; };
-		20BD16E81A99FC7700039A31 /* EyeBB.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = EyeBB.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		20BD16E81A99FC7700039A31 /* eyebb.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = eyebb.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20BD16EC1A99FC7700039A31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20BD16ED1A99FC7700039A31 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20BD16EF1A99FC7700039A31 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		20BD16F01A99FC7700039A31 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		20BD16F81A99FC7700039A31 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		20BD17011A99FC7700039A31 /* EyeBBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EyeBBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		20BD17011A99FC7700039A31 /* eyebbTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = eyebbTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20BD17061A99FC7700039A31 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20BD17071A99FC7700039A31 /* EyeBBTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EyeBBTests.m; sourceTree = "<group>"; };
 		20BD17141A9A21C600039A31 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		20BD17151A9A21C600039A31 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		20BD17161A9A21C600039A31 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		20BD171A1A9A220A00039A31 /* EyeBB-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "EyeBB-Prefix.pch"; sourceTree = "<group>"; };
+		20BD171A1A9A220A00039A31 /* eyebb-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "eyebb-Prefix.pch"; sourceTree = "<group>"; };
 		20C14C991A9B09A60097C891 /* RegViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegViewController.h; sourceTree = "<group>"; };
 		20C14C9A1A9B09A60097C891 /* RegViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegViewController.m; sourceTree = "<group>"; };
 		20C14C9F1A9B4D0C0097C891 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -474,7 +474,7 @@
 				3264D96F1A9D6B95009CB9C2 /* CFNetwork.framework */,
 				326A924A1A9C4AD300CAB4F3 /* libs */,
 				20C14CA41A9B69790097C891 /* img */,
-				20BD16EA1A99FC7700039A31 /* EyeBB */,
+				20BD16EA1A99FC7700039A31 /* eyebb */,
 				20BD17041A99FC7700039A31 /* EyeBBTests */,
 				20BD16E91A99FC7700039A31 /* Products */,
 			);
@@ -483,13 +483,13 @@
 		20BD16E91A99FC7700039A31 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				20BD16E81A99FC7700039A31 /* EyeBB.app */,
-				20BD17011A99FC7700039A31 /* EyeBBTests.xctest */,
+				20BD16E81A99FC7700039A31 /* eyebb.app */,
+				20BD17011A99FC7700039A31 /* eyebbTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		20BD16EA1A99FC7700039A31 /* EyeBB */ = {
+		20BD16EA1A99FC7700039A31 /* eyebb */ = {
 			isa = PBXGroup;
 			children = (
 				32D377DE1AB120C20055A8DE /* KidslistViewController.h */,
@@ -539,6 +539,7 @@
 				2031DCB01ADAB91A00B19BB4 /* UpdateNameViewController.h */,
 				2031DCB11ADAB91A00B19BB4 /* UpdateNameViewController.m */,
 			);
+			name = eyebb;
 			path = EyeBB;
 			sourceTree = "<group>";
 		};
@@ -550,7 +551,7 @@
 				20BD17161A9A21C600039A31 /* Default@2x.png */,
 				20BD16EC1A99FC7700039A31 /* Info.plist */,
 				20BD16ED1A99FC7700039A31 /* main.m */,
-				20BD171A1A9A220A00039A31 /* EyeBB-Prefix.pch */,
+				20BD171A1A9A220A00039A31 /* eyebb-Prefix.pch */,
 				20C14CA01A9B4D0C0097C891 /* Localizable.strings */,
 			);
 			name = "Supporting Files";
@@ -1028,9 +1029,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		20BD16E71A99FC7700039A31 /* EyeBB */ = {
+		20BD16E71A99FC7700039A31 /* eyebb */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 20BD170B1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "EyeBB" */;
+			buildConfigurationList = 20BD170B1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "eyebb" */;
 			buildPhases = (
 				20BD16E41A99FC7700039A31 /* Sources */,
 				20BD16E51A99FC7700039A31 /* Frameworks */,
@@ -1040,14 +1041,14 @@
 			);
 			dependencies = (
 			);
-			name = EyeBB;
+			name = eyebb;
 			productName = EyeBB;
-			productReference = 20BD16E81A99FC7700039A31 /* EyeBB.app */;
+			productReference = 20BD16E81A99FC7700039A31 /* eyebb.app */;
 			productType = "com.apple.product-type.application";
 		};
-		20BD17001A99FC7700039A31 /* EyeBBTests */ = {
+		20BD17001A99FC7700039A31 /* eyebbTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 20BD170E1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "EyeBBTests" */;
+			buildConfigurationList = 20BD170E1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "eyebbTests" */;
 			buildPhases = (
 				20BD16FD1A99FC7700039A31 /* Sources */,
 				20BD16FE1A99FC7700039A31 /* Frameworks */,
@@ -1058,9 +1059,9 @@
 			dependencies = (
 				20BD17031A99FC7700039A31 /* PBXTargetDependency */,
 			);
-			name = EyeBBTests;
+			name = eyebbTests;
 			productName = EyeBBTests;
-			productReference = 20BD17011A99FC7700039A31 /* EyeBBTests.xctest */;
+			productReference = 20BD17011A99FC7700039A31 /* eyebbTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -1070,7 +1071,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0610;
-				ORGANIZATIONNAME = EyeBB;
+				ORGANIZATIONNAME = eyebb;
 				TargetAttributes = {
 					20BD16E71A99FC7700039A31 = {
 						CreatedOnToolsVersion = 6.1.1;
@@ -1083,7 +1084,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 20BD16E31A99FC7700039A31 /* Build configuration list for PBXProject "EyeBB" */;
+			buildConfigurationList = 20BD16E31A99FC7700039A31 /* Build configuration list for PBXProject "eyebb" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -1097,8 +1098,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				20BD16E71A99FC7700039A31 /* EyeBB */,
-				20BD17001A99FC7700039A31 /* EyeBBTests */,
+				20BD16E71A99FC7700039A31 /* eyebb */,
+				20BD17001A99FC7700039A31 /* eyebbTests */,
 			);
 		};
 /* End PBXProject section */
@@ -1250,7 +1251,7 @@
 /* Begin PBXTargetDependency section */
 		20BD17031A99FC7700039A31 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 20BD16E71A99FC7700039A31 /* EyeBB */;
+			target = 20BD16E71A99FC7700039A31 /* eyebb */;
 			targetProxy = 20BD17021A99FC7700039A31 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1357,7 +1358,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PREFIX_HEADER = "EyeBB/EyeBB-Prefix.pch";
+				GCC_PREFIX_HEADER = "EyeBB/eyebb-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1372,7 +1373,7 @@
 					"$(PROJECT_DIR)/EyeBB/libs/QRcode/ZBarSDK",
 					"$(PROJECT_DIR)/EyeBB/libs/QRCode/ZBarSDK",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = eyebb;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1388,7 +1389,7 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 				);
-				GCC_PREFIX_HEADER = "EyeBB/EyeBB-Prefix.pch";
+				GCC_PREFIX_HEADER = "EyeBB/eyebb-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -1403,7 +1404,7 @@
 					"$(PROJECT_DIR)/EyeBB/libs/QRcode/ZBarSDK",
 					"$(PROJECT_DIR)/EyeBB/libs/QRCode/ZBarSDK",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = eyebb;
 				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -1423,7 +1424,7 @@
 				);
 				INFOPLIST_FILE = EyeBBTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = eyebbTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EyeBB.app/EyeBB";
 			};
 			name = Debug;
@@ -1438,7 +1439,7 @@
 				);
 				INFOPLIST_FILE = EyeBBTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = eyebbTests;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/EyeBB.app/EyeBB";
 			};
 			name = Release;
@@ -1446,7 +1447,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		20BD16E31A99FC7700039A31 /* Build configuration list for PBXProject "EyeBB" */ = {
+		20BD16E31A99FC7700039A31 /* Build configuration list for PBXProject "eyebb" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				20BD17091A99FC7700039A31 /* Debug */,
@@ -1455,7 +1456,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		20BD170B1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "EyeBB" */ = {
+		20BD170B1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "eyebb" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				20BD170C1A99FC7700039A31 /* Debug */,
@@ -1464,7 +1465,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		20BD170E1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "EyeBBTests" */ = {
+		20BD170E1A99FC7700039A31 /* Build configuration list for PBXNativeTarget "eyebbTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				20BD170F1A99FC7700039A31 /* Debug */,
