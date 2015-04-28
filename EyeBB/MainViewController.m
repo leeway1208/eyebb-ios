@@ -199,7 +199,7 @@
     // Do any additional setup after loading the view.
     [self iv];
     
-    [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+
 //    [self getRequest:@"kindergartenList" delegate:self];
     [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
  
@@ -2631,8 +2631,15 @@
                     [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
                     _bulletinLbl.hidden=YES;
                     
+                    if (_disconectKidsAy.count == 0) {
+                        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+                    }
+                    
                     break;
                 case 2:
+//                    if (_disconectKidsAy.count == 0) {
+//                        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+//                    }
                     if(_ActivitiesTableView.hidden==YES)
                     {
                         if (_dailyAvgFigureArray.count<1) {
@@ -2681,6 +2688,7 @@
                     [self.refreshTimer setFireDate:[NSDate distantFuture]];
                     break;
                 case 3:
+                    
                     _bulletinLbl.hidden=YES;
                     _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
@@ -3067,8 +3075,17 @@ else
     if ([tag isEqualToString:FEED_BACK]) {
         
         NSData *responseData = [request responseData];
-        int result=[[responseData mutableObjectFromJSONData] integerValue];
-        
+             NSString * resFEED_BACK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"FEED_BACK %@",resFEED_BACK);
+        if ([resFEED_BACK isEqualToString:@"true"]) {
+            
+        }else{
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@"text_network_error")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+        }
     }
     
     if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
@@ -3078,6 +3095,7 @@ else
             childrenArray = nil;
         }
         
+       // NSLog(@"childrenInfo = %@" , childrenArray);
         for(int i=0;i<childrenArray.count; i++)
         {
             NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
@@ -3086,7 +3104,7 @@ else
                 
                 
                 if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-                    [_disconectKidsAy addObject:[tempDictionary copy]];
+                    [_disconectKidsAy addObject:[childrenArray objectAtIndex:i]];
                 }
                 
                 //                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
@@ -3095,6 +3113,9 @@ else
             }
 
         }
+        
+        
+        NSLog(@"_disconectKidsAy (%@)",_disconectKidsAy);
     }
     
     [_progressView setHidden:YES];
@@ -3304,7 +3325,8 @@ else
 //        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         
         tt._childrenArray = _disconectKidsAy;
-        NSLog(@" tt._childrenArray  (%lu)", (unsigned long)tt._childrenArray.count);
+        
+        //NSLog(@" tt._childrenArray  (%@)", tt._childrenArray);
         [self.navigationController pushViewController:tt animated:YES];
         tt .title = @"";
     }
@@ -3626,13 +3648,22 @@ else
         if(num==1){
             //[self.refreshTimer setFireDate:[NSDate distantPast]];
             [self.refreshTimer setFireDate:[NSDate distantFuture]];
+            if (_disconectKidsAy.count == 0) {
+                [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+            }
+
         }
         if (num==2) {
+//            if (_disconectKidsAy.count == 0) {
+//                [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+//            }
+
             if(_isloadNews==YES)
             {
                 //关闭定时器
                 [self.refreshTimer setFireDate:[NSDate distantFuture]];
                 [self insertChildMessage];
+               
                 
             }
         }

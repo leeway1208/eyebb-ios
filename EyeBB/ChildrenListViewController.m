@@ -34,8 +34,15 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     
+    
+    
     [self iv];
     [self lc];
+    
+    if (_childrenArray.count == 0) {
+        _childrenArray = [[NSMutableArray alloc]init];
+        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+    }
 //    初始化背景图
 //    [self initBackGroundView];
 }
@@ -423,6 +430,59 @@
 
 
 
+#pragma mark --服务器返回信息
+- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
+{
+    if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
+        NSData *responseData = [request responseData];
+        NSMutableArray* childrenArray=[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"];
+        if ([childrenArray isKindOfClass:[NSNull class]]) {
+            childrenArray = nil;
+        }
+        
+        // NSLog(@"childrenInfo = %@" , childrenArray);
+        for(int i=0;i<childrenArray.count; i++)
+        {
+            NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+            if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqual:[NSNull null]]) {
+                [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
+                
+                
+                if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                    [_childrenArray addObject:[childrenArray objectAtIndex:i]];
+                }
 
+            }
+            
+        }
+        
+        
+        NSLog(@"_childrenArray (%@)",_childrenArray);
+        
+        for (int i=0; i<_childrenArray.count; i++) {
+            [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+            
+        }
+        _resultArray=(NSArray *)_dataArray;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_tableView reloadData];
+        });
+
+        
+    }
+}
+
+- (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
+{
+    NSString *responseString = [request responseString];
+
+    [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                message:LOCALIZATION(@" text_network_error")
+                               delegate:self
+                      cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                      otherButtonTitles:nil] show];
+    
+}
 
 @end
