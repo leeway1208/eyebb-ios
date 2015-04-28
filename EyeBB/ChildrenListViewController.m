@@ -464,7 +464,8 @@
             
         }
         _resultArray=(NSArray *)_dataArray;
-        
+        self.data = [IIILocalizedIndex indexed:_dataArray];
+        self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
         dispatch_async(dispatch_get_main_queue(), ^{
             [_tableView reloadData];
         });

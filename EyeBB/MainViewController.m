@@ -3319,10 +3319,15 @@ else
 /**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
+//    if (_disconectKidsAy.count == 0) {
+//        _disconectKidsAy = [[NSMutableArray alloc]init];
+//        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+//    }
     if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
         _isloadNews=YES;
         ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
 //        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        
         
         tt._childrenArray = _disconectKidsAy;
         
