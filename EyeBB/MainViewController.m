@@ -44,7 +44,11 @@
 /**房间信息*/
 @property (strong, nonatomic) UITableView *RoomTableView;
 /**雷达*/
-@property (strong, nonatomic) UITableView *RadarTableView;
+@property (strong, nonatomic) UITableView *RadarConnectTableView;
+/**雷达*/
+@property (strong, nonatomic) UITableView *RadarDisconnectTableView;
+/**雷达*/
+@property (strong, nonatomic) UIScrollView *RadarScrollView;
 /**表现*/
 @property (strong, nonatomic) UITableView *PerformanceTableView;
 /**活动*/
@@ -199,12 +203,12 @@
     // Do any additional setup after loading the view.
     [self iv];
     
-
-//    [self getRequest:@"kindergartenList" delegate:self];
+    
+    //    [self getRequest:@"kindergartenList" delegate:self];
     [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
- 
-   
-   
+    
+    
+    
     
     [self lc];
 }
@@ -231,7 +235,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-     [_progressView startAnimating];
+    [_progressView startAnimating];
     
     [self simulateProgress];
     self.navigationController.navigationBarHidden = YES;
@@ -250,7 +254,7 @@
     if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2&&self.isloadNews==YES) {
         
         [self insertChildMessage];
-       
+        
     }
     if(_isautoOn==YES&&huaHMSegmentedControl==0)
     {
@@ -260,7 +264,7 @@
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
-   
+    
     
 }
 
@@ -308,17 +312,17 @@
     self.avgDaysStr=@"5";
     self.organizationIndex=0;
     _isloadFeekBack=YES;
-//    NSFileManager *fileManager = [NSFileManager defaultManager];
+    //    NSFileManager *fileManager = [NSFileManager defaultManager];
     // 创建目录
-//    [fileManager createDirectoryAtPath:@"localImg" withIntermediateDirectories:YES attributes:nil error:nil];
-//     _documentsDirectoryPath=[NSString stringWithFormat:@"%@/%@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0],@"localImg"];
+    //    [fileManager createDirectoryAtPath:@"localImg" withIntermediateDirectories:YES attributes:nil error:nil];
+    //     _documentsDirectoryPath=[NSString stringWithFormat:@"%@/%@", [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0],@"localImg"];
     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     NSLog(@"_documentsDirectoryPath is%@",_documentsDirectoryPath);
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
-//    [fileManager removeItemAtPath:_documentsDirectoryPath error:nil];
+    //    [fileManager removeItemAtPath:_documentsDirectoryPath error:nil];
     
-     NSUserDefaults *refresh = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *refresh = [NSUserDefaults standardUserDefaults];
     self.refreshTimer=[NSTimer scheduledTimerWithTimeInterval:[[refresh objectForKey:@"refreshTime"]doubleValue] target:self selector:@selector(timerFired:) userInfo:nil repeats:YES];
     //关闭定时器
     [self.refreshTimer setFireDate:[NSDate distantFuture]];
@@ -329,7 +333,7 @@
  */
 -(void)lc
 {
-
+    
     
     //室内定位选择按钮
     _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
@@ -363,7 +367,7 @@
     [_RadarBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _RadarBtn.tag=215;
+    _RadarBtn.tag=215;
     [self.view addSubview:_RadarBtn];
     
     //简报选择按钮
@@ -379,7 +383,7 @@
     [_NewsBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _NewsBtn.tag=216;
+    _NewsBtn.tag=216;
     [self.view addSubview:_NewsBtn];
     
     //个人信息选择按钮
@@ -395,7 +399,7 @@
     [_PersonageBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _PersonageBtn.tag=217;
+    _PersonageBtn.tag=217;
     [self.view addSubview:_PersonageBtn];
     
     NSLog(@"CGRectGetm(_RadarBtn.bounds) is %f",CGRectGetMinX(_RadarBtn.bounds));
@@ -511,7 +515,7 @@
     [childrenListBtn addTarget:self action:@selector(childrenListAction:) forControlEvents:UIControlEventTouchUpInside];
     [_MainInfoScrollView addSubview:childrenListBtn];
     
-   
+    
     
     //初始化房间信息
     _RoomTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 89, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame)-129)];
@@ -560,7 +564,7 @@
     _radarViewSegmentedControl.frame = CGRectMake(Drive_Wdith / 2 -125, 45.0, 250.0, 25.0);
     _radarViewSegmentedControl.selectedSegmentIndex = 0;//设置默认选择项索引
     _radarViewSegmentedControl.tintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
-  
+    
     //style
     _radarViewSegmentedControl.segmentedControlStyle = UISegmentedControlStylePlain;
     
@@ -573,13 +577,16 @@
     //-----------------------------Radar dish-----------------------------
     
     // 1.创建UIScrollView
-    UIScrollView *scrollView = [[UIScrollView alloc] init];
-    scrollView.frame = CGRectMake(Drive_Wdith + 5 , 80, Drive_Wdith - 10, Drive_Height +  _connectKidsAy.count * 45);
+    _RadarScrollView = [[UIScrollView alloc] init];
+    _RadarScrollView.frame = CGRectMake(Drive_Wdith + 5 , 80, Drive_Wdith - 10, Drive_Height - 35);
     // frame中的size指UIScrollView的可视范围
-    scrollView.showsHorizontalScrollIndicator = NO;
-    scrollView.showsVerticalScrollIndicator = NO;
-    scrollView.backgroundColor = [UIColor clearColor];
-    [_MainInfoScrollView addSubview:scrollView];
+    _RadarScrollView.showsHorizontalScrollIndicator = NO;
+    _RadarScrollView.showsVerticalScrollIndicator = NO;
+    _RadarScrollView.backgroundColor = [UIColor clearColor];
+    _RadarScrollView.delegate = self;
+    CGSize newSize = CGSizeMake(0, self.view.frame.size.height+1);
+    [_RadarScrollView setContentSize:newSize];
+    [_MainInfoScrollView addSubview:_RadarScrollView];
     
     //bg_radar_circle
     UIView *radarDishView=[[UIView alloc]initWithFrame:CGRectMake(0 , 0, Drive_Wdith - 10, 200)];
@@ -600,17 +607,17 @@
     [self rotate360DegreeWithImageView:bgRadarRotate];
     
     [radarDishView addSubview:bgRadarRotate];
-
     
     
-    [scrollView addSubview:radarDishView];
+    
+    [_RadarScrollView addSubview:radarDishView];
     
     //------------------------------Radar table---------------------------
     
     //radar foot view
     UIView *radarConnectView =[[UIView alloc]initWithFrame:CGRectMake(0, 205, Drive_Wdith-10, 44)];
     radarConnectView.backgroundColor=[UIColor clearColor];
-    [scrollView addSubview:radarConnectView];
+    [_RadarScrollView addSubview:radarConnectView];
     
     //connect table
     _connectBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(radarConnectView.bounds)/2, 48)];
@@ -628,10 +635,10 @@
         tickImageView.image = [UIImage imageNamed:@"tick"];
         [_connectBtn addSubview:tickImageView];
     }
-
-
+    
+    
     //font size
-   //_connectBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
+    //_connectBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
     
     //设置按钮背景颜色
     [_connectBtn setBackgroundColor:[UIColor whiteColor]];
@@ -664,11 +671,11 @@
         crossImageView.image = [UIImage imageNamed:@"cross2"];
         [_disconnectBtn addSubview:crossImageView];
     }
-
-   
-   
+    
+    
+    
     //_disconnectBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
-
+    
     //设置按钮背景颜色
     [_disconnectBtn setBackgroundColor:[UIColor whiteColor]];
     //设置按钮是否圆角
@@ -686,24 +693,26 @@
     [radarDivisionLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [radarConnectView addSubview:radarDivisionLbl];
     
-
+    
     //间隔线4
     _radarDivisionFourLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_disconnectBtn.bounds)-5, CGRectGetWidth(_disconnectBtn.bounds), 1)];
     [_radarDivisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [_disconnectBtn addSubview:_radarDivisionFourLbl];
     
     // table ----------------------------
-    _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  _connectKidsAy.count * 45)];
-    _RadarTableView.userInteractionEnabled = NO;
-    _RadarTableView.dataSource = self;
-    _RadarTableView.delegate = self;
-    //    [self.positionDetailsTableView setBounces:NO];
-    _RadarTableView.tableFooterView = [[UIView alloc] init];
-    [scrollView addSubview:_RadarTableView];
-
+//    _RadarConnectTableView = [[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  Drive_Height)];
+//    _RadarConnectTableView.userInteractionEnabled = NO;
+//    _RadarConnectTableView.scrollEnabled = NO;
+//    _RadarConnectTableView.dataSource = self;
+//    _RadarConnectTableView.delegate = self;
+//    //    [self.positionDetailsTableView setBounces:NO];
+//    _RadarConnectTableView.tableFooterView = [[UIView alloc] init];
+//    _RadarConnectTableView.tag = 900;
+//    [scrollView addSubview:_RadarConnectTableView];
+    
     
     //------------------------简报-------------------------------
-
+    
     //简报名称
     UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2, 0, Drive_Wdith, 54)];
     NewsView.backgroundColor=[UIColor clearColor];
@@ -711,7 +720,7 @@
     UILabel *NewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
     [NewsLbl setBackgroundColor:[UIColor clearColor]];
     NewsLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
-
+    
     NewsLbl.textAlignment = NSTextAlignmentLeft;
     NewsLbl.textColor=[UIColor blackColor];
     
@@ -721,15 +730,15 @@
     
     //选择要查看的儿童
     UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 92, 5, 72, 44)];
-
+    
     //设置按钮背景颜色
     [NewsBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-
-//    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
-
+    
+    //    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
+    
     [NewsBtn addTarget:self action:@selector(showChildrenList) forControlEvents:UIControlEventTouchUpInside];
-
+    
     
     [NewsView addSubview:NewsBtn];
     
@@ -742,7 +751,7 @@
     
     [kidImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
     
-//    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+    //    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
     //    kindImgView.tag=206;
     [NewsBtn addSubview:kidImgView];
     kidImgView.hidden=YES;
@@ -760,9 +769,9 @@
     [NewsBtn addSubview:revampLbl];
     if(revampLbl.text.length>2)
     {
-       
+        
         NewsBtn.frame=CGRectMake(Drive_Wdith  -((revampLbl.text.length*9)+55), 5, (revampLbl.text.length*9)+45, 44);
-         revampLbl.frame=CGRectMake(32.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
+        revampLbl.frame=CGRectMake(32.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
     }
     
     UIImageView * ImgView=[[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(NewsBtn.bounds)-12, 14, 12, 16)];
@@ -777,7 +786,7 @@
     [_MainInfoScrollView addSubview:changeView];
     
     //表现
-     _performanceBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
+    _performanceBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(changeView.bounds)/2, 48)];
     //设置按显示图片
     [_performanceBtn setTitle:LOCALIZATION(@"btn_performance") forState:UIControlStateNormal];
     [_performanceBtn setTitleColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1] forState:UIControlStateNormal];
@@ -796,7 +805,7 @@
     //间隔线2
     _divisionTwoLbl = [[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetHeight(_performanceBtn.bounds)-7, CGRectGetWidth(_performanceBtn.bounds), 3)];
     [_divisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
-
+    
     [_performanceBtn addSubview:_divisionTwoLbl];
     
     //活动
@@ -812,19 +821,19 @@
     [_activitiesBtn.layer setMasksToBounds:YES];
     //圆角像素化
     [_activitiesBtn.layer setCornerRadius:4.0];
-
+    
     //设置按钮响应事件
     [_activitiesBtn addTarget:self action:@selector(showaActivitiesAction:) forControlEvents:UIControlEventTouchUpInside];
     
     [changeView addSubview:_activitiesBtn];
-
+    
     //间隔线
     UILabel *divisionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(changeView.bounds)/2, 0.0f, 1, 48)];
     [divisionLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [changeView addSubview:divisionLbl];
     
     
-   
+    
     
     //间隔线4
     _divisionFourLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_activitiesBtn.bounds)-5, CGRectGetWidth(_activitiesBtn.bounds), 1)];
@@ -832,7 +841,7 @@
     [_activitiesBtn addSubview:_divisionFourLbl];
     
     
-
+    
     //选择显示范围
     _PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith * 2 +10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 40)];
     //设置按钮背景颜色
@@ -864,7 +873,7 @@
     todayLbl.text = str;
     [_PerformanceTimeBtn addSubview:todayLbl];
     
-
+    
     //自定义色块 todayLbl.bounds
     UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(todayLbl.bounds)+todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f)];
     [customizedColorLbl setBackgroundColor:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]];
@@ -878,8 +887,8 @@
     customizedLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
     customizedLbl.text = str2;
     [_PerformanceTimeBtn addSubview:customizedLbl];
-
-     NSString *str3=LOCALIZATION(@"this_Week");
+    
+    NSString *str3=LOCALIZATION(@"this_Week");
     //查询条件
     _conditionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedLbl.bounds)+customizedLbl.frame.origin.x, 14.0f, (str3.length>2?str3.length*8.0f:str3.length*15), 16.0f)];
     [_conditionLbl setBackgroundColor:[UIColor clearColor]];
@@ -888,10 +897,10 @@
     _conditionLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
     _conditionLbl.text = str3;
     [_PerformanceTimeBtn addSubview:_conditionLbl];
-
+    
     _conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 15.5,20,13)];
     [_conditionImgView setImage:[UIImage imageNamed:@"arrow_down"]];
-     [_PerformanceTimeBtn addSubview:_conditionImgView];
+    [_PerformanceTimeBtn addSubview:_conditionImgView];
     
     
     //初始化表现列表
@@ -902,9 +911,9 @@
     _PerformanceTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_PerformanceTableView];
-//    _PerformanceTableView.hidden=YES;
+    //    _PerformanceTableView.hidden=YES;
     
-
+    
     
     //初始化活动列表
     _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2 +10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
@@ -913,14 +922,14 @@
     self.ActivitiesTableView.tableFooterView = [[UIView alloc] init];
     //    [self.positionDetailsTableView setBounces:NO];
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
-      _ActivitiesTableView.hidden=YES;
+    _ActivitiesTableView.hidden=YES;
     
     _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 120, Drive_Wdith -20, 30)];
     _bulletinLbl.text=LOCALIZATION(@"text_no_content");
     _bulletinLbl.textColor=[UIColor blackColor];
     _bulletinLbl.font=[UIFont systemFontOfSize:16];
     _bulletinLbl.textAlignment=NSTextAlignmentCenter;
-//    [_MainInfoScrollView addSubview:_bulletinLbl];
+    //    [_MainInfoScrollView addSubview:_bulletinLbl];
     [self.view addSubview:_bulletinLbl];
     _bulletinLbl.hidden=YES;
     
@@ -953,9 +962,9 @@
     [SettingBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
     [SettingBtn addTarget:self action:@selector(goToSettingAction:) forControlEvents:UIControlEventTouchUpInside];
-
+    
     [PersonageView addSubview:SettingBtn];
-
+    
     
     [_MainInfoScrollView addSubview:PersonageView];
     
@@ -1025,7 +1034,7 @@
     [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
     
     
-            [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+    [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
     
     KidsImgView.tag=219;
     [_kidsMassageView addSubview:KidsImgView];
@@ -1064,9 +1073,9 @@
     //设置按钮响应事件
     [closeBtn addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
     [_kidsMassageView addSubview:closeBtn];
-
     
-  
+    
+    
     
     
     
@@ -1171,7 +1180,7 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     //房间列表
     if(tableView == self.RoomTableView){
-//                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        //                UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
         if([cell viewWithTag:201]!=nil)
         {
@@ -1188,7 +1197,7 @@
             if (tempChildArray.count>0) {
                 kindRow =tempChildArray.count%4>0?tempChildArray.count/4:tempChildArray.count/4-1;
             }
-           
+            
             
             UIButton * RoomBtn=(UIButton *)[cell viewWithTag:201];
             return (110+(((CGRectGetWidth(RoomBtn.frame)-130)/4+8)*kindRow));
@@ -1200,7 +1209,7 @@
         }
     }
     
-    if(tableView == self.RadarTableView){
+    if(tableView == self.RadarConnectTableView){
         
         return 45;
     }
@@ -1233,13 +1242,13 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     //房间列表
     if(tableView == self.RoomTableView){
-
-            return _roomArray.count;
-
+        
+        return _roomArray.count;
+        
         
     }
-    else if(tableView == self.RadarTableView){
-        return _connectKidsAy.count;
+    else if(tableView == self.RadarConnectTableView){
+        return _disconectKidsAy.count;
     }
     else if(tableView == self.ActivitiesTableView){
         return _activityInfosArray.count;
@@ -1273,6 +1282,72 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //房间列表显示/刷新设置
+    if (tableView == self.RadarConnectTableView) {
+        
+        int row = indexPath.row;
+        
+        NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+        // for (int i=0; i<_disconectKidsAy.count; i++) {
+        
+        tempChildDictionary=[_disconectKidsAy  objectAtIndex:row];
+        //NSLog(@"tempChildDictionary is%@",tempChildDictionary);
+        NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
+        
+        
+        //}
+        
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            
+            
+            //儿童图标
+            DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 2.5, 40, 40)];
+            [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
+            [KidsImgView.layer setMasksToBounds:YES];
+            [KidsImgView.layer setBorderWidth:2];
+            
+            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+            [KidsImgView setImageWithPath:[pathOne copy]];
+            pathOne=nil;
+            
+            KidsImgView.tag=901;
+            [cell addSubview:KidsImgView];
+            
+            
+            
+            //儿童名称
+            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 10, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [KidsLbl setTextColor:[UIColor blackColor]];
+            [KidsLbl setTextAlignment:NSTextAlignmentLeft];
+            KidsLbl.tag=902;
+            [cell addSubview:KidsLbl];
+
+            
+        }
+        
+        //kid image
+        DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:901];
+        
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+        
+        [KidsImgView setImageWithPath:[pathOne copy]];
+        //儿童名称
+        UILabel * KidsLbl =(UILabel *)[cell viewWithTag:902];
+        [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
+
+        
+        
+    }
+    
+    
+    
+    
     if(tableView == self.listTypeTableView)
     {
         if (cell == nil) {
@@ -1392,26 +1467,26 @@
         }
         NSString *str=[NSString stringWithFormat:@"%zi",tempChildArray.count];
         //儿童数量位数
-         NSInteger kindNum=str.length>3?3:str.length;
+        NSInteger kindNum=str.length>3?3:str.length;
         //儿童图标行数
         int kindRow =0;
         if (tempChildArray.count>0) {
             kindRow =tempChildArray.count%4>0?tempChildArray.count/4:tempChildArray.count/4-1;
         }
-
+        
         if(_dateFormatter==nil)
         {
             _dateFormatter=[[NSDateFormatter alloc] init];
         }
         [_dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-
+        
         //当前时间
         NSDate *senderDate = [_dateFormatter dateFromString:[_dateFormatter stringFromDate:[NSDate date]]];
         
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //        cell.tag = indexPath.row;
-//            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
+            //            NSLog(@"cell.frame.size.height is %f",cell.frame.size.height);
             UIButton * RoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, 100+((CGRectGetWidth(cell.frame)-10-130)/4+8)*kindRow)];
             
             //设置按钮背景颜色
@@ -1423,7 +1498,7 @@
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
-
+            
             //设置按钮响应事件
             [RoomBtn addTarget:self action:@selector(ShowRoomAction:) forControlEvents:UIControlEventTouchUpInside];
             //设置按钮是否圆角
@@ -1434,22 +1509,22 @@
             [cell addSubview:RoomBtn];
             
             //房间图标
-           
+            
             
             DBImageView * RoomImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
-
-
+            
+            
             [RoomImgView.layer setCornerRadius:CGRectGetHeight([RoomImgView bounds]) / 2];
             [RoomImgView.layer setMasksToBounds:YES];
             [RoomImgView.layer setBorderWidth:2];
             
             [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
-                NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
             [RoomImgView setImageWithPath:[pathOne copy]];
-             pathOne=nil;
-
+            pathOne=nil;
+            
             RoomImgView.tag=202;
             [RoomBtn addSubview:RoomImgView];
             
@@ -1458,7 +1533,7 @@
             
             
             if (_roomArray.count>0) {
-
+                
                 switch (myDelegate.applanguage) {
                     case 0:
                         [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
@@ -1473,8 +1548,8 @@
                     default:
                         break;
                 }
-
-               
+                
+                
             }
             else
             {
@@ -1485,7 +1560,7 @@
             [RoomLbl setTextAlignment:NSTextAlignmentLeft];
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
-
+            
             //当前房间人数
             UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20)];
             //设置按钮是否圆角
@@ -1514,12 +1589,12 @@
             
             
             
-           
+            
             //儿童图标行数
             int sNum=0;
             for (int i=0; i<tempChildArray.count; i++) {
                 
-               
+                
                 if (i>0&&i%4==0) {
                     sNum++;
                 }
@@ -1533,9 +1608,9 @@
                 [kindImgView.layer setBorderWidth:2];
                 
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                 
-
+                
                 [kindImgView setImageWithPath:[pathOne copy]];
                 {
                     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
@@ -1548,14 +1623,14 @@
                         [kindImgView setAlpha:0.5];
                     }
                 }
-                 [RoomBtn addSubview:kindImgView];
+                [RoomBtn addSubview:kindImgView];
                 
                 //儿童图标
                 UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
                 kindBtn.frame=kindImgView.frame;
-
+                
                 [kindBtn setBackgroundColor:[UIColor clearColor]];
-
+                
                 
                 
                 
@@ -1582,7 +1657,7 @@
             {
                 [RoomBtn setBackgroundColor:[_colorArray objectAtIndex:indexPath.row]];
             }
-
+            
             for (UIView *view in [RoomBtn subviews])
             {
                 //                NSLog(@"view.tag is%d",view.tag);
@@ -1591,45 +1666,45 @@
                 {
                     [view removeFromSuperview];
                 }
-
-//            DBImageView * RoomImgView=(DBImageView *)[RoomBtn viewWithTag:202];
-//            [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
-//            NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-//
-//                [RoomImgView setImageWithPath:[pathOne copy]];
-//
-//            pathOne=nil;
-//            
-//            UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
-//            if (_roomArray.count>0) {
-//                
-//                switch (myDelegate.applanguage) {
-//                    case 0:
-//                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
-//                        break;
-//                    case 1:
-//                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]];
-//                        break;
-//                    case 2:
-//                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"namec"]];
-//                        break;
-//                        
-//                    default:
-//                        break;
-//                }
-//            }
-//            else
-//            {
-//                [RoomLbl setText:@"*****"];
-//            }            //            [LoginBtn setAlpha:0.4];
-//            
-                        }
-
-//            UIView * roomKindNumView=(UIView *)[RoomBtn viewWithTag:204];
-//            roomKindNumView.frame=CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20);
-//            UILabel * KindNumLbl=(UILabel *)[RoomBtn viewWithTag:205];
-//            KindNumLbl.frame=CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20);
-//            [KindNumLbl setText:str];
+                
+                //            DBImageView * RoomImgView=(DBImageView *)[RoomBtn viewWithTag:202];
+                //            [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+                //            NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
+                //
+                //                [RoomImgView setImageWithPath:[pathOne copy]];
+                //
+                //            pathOne=nil;
+                //
+                //            UILabel * RoomLbl=(UILabel *)[RoomBtn viewWithTag:203];
+                //            if (_roomArray.count>0) {
+                //
+                //                switch (myDelegate.applanguage) {
+                //                    case 0:
+                //                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                //                        break;
+                //                    case 1:
+                //                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]];
+                //                        break;
+                //                    case 2:
+                //                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"namec"]];
+                //                        break;
+                //
+                //                    default:
+                //                        break;
+                //                }
+                //            }
+                //            else
+                //            {
+                //                [RoomLbl setText:@"*****"];
+                //            }            //            [LoginBtn setAlpha:0.4];
+                //
+            }
+            
+            //            UIView * roomKindNumView=(UIView *)[RoomBtn viewWithTag:204];
+            //            roomKindNumView.frame=CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20);
+            //            UILabel * KindNumLbl=(UILabel *)[RoomBtn viewWithTag:205];
+            //            KindNumLbl.frame=CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20);
+            //            [KindNumLbl setText:str];
             
             
             //房间图标
@@ -1684,7 +1759,7 @@
             [RoomLbl setTextAlignment:NSTextAlignmentLeft];
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
-
+            
             //当前房间人数
             UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20)];
             //设置按钮是否圆角
@@ -1731,7 +1806,7 @@
                 
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
-
+                
                 [kindImgView setImageWithPath:[pathOne copy]];
                 {
                     NSDate *endDate = [NSDate dateWithTimeIntervalSince1970:([[[tempChildArray objectAtIndex:i] objectForKey:@"lastAppearTime"]doubleValue] / 1000)];
@@ -1745,11 +1820,11 @@
                     }
                 }
                 [RoomBtn addSubview:kindImgView];
-                 kindBtn.frame=kindImgView.frame;
-
+                kindBtn.frame=kindImgView.frame;
+                
                 [kindBtn setBackgroundColor:[UIColor clearColor]];
                 
-             
+                
                 
                 //设置按钮响应事件
                 [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
@@ -1774,7 +1849,7 @@
         }
         
         
-
+        
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //房间图标
@@ -1786,7 +1861,7 @@
             [messageImgView.layer setBorderWidth:2];
             
             [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-             [messageImgView setImageWithPath:[pathOne copy]];
+            [messageImgView setImageWithPath:[pathOne copy]];
             
             
             
@@ -1809,15 +1884,15 @@
                     default:
                         break;
                 }
-
+                
             }
             else
             {
-
+                
                 [messageLbl setText:LOCALIZATION(@"text_feed_back")];
             }
-
-//            [messageLbl setAlpha:0.6];
+            
+            //            [messageLbl setAlpha:0.6];
             [messageLbl setFont:[UIFont systemFontOfSize: 15.0]];
             [messageLbl setTextColor:[UIColor blackColor]];
             [messageLbl setTextAlignment:NSTextAlignmentLeft];
@@ -1826,7 +1901,7 @@
             
             UILabel * timeLbl =[[UILabel alloc]initWithFrame:CGRectMake(75, 47, CGRectGetWidth(cell.frame)-100, 20)];
             if (indexPath.row>0) {
-            [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
+                [timeLbl setText:[tempDictionary objectForKey:@"validUntil"]];
             }
             else
             {
@@ -1877,7 +1952,7 @@
                 
                 [messageImgView setImage:[UIImage imageNamed:@"logo_en"]];
             }
-
+            
             
         }
         
@@ -1923,7 +1998,7 @@
         }
         
         
-       cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR color:[UIColor colorWithRed:208/255.0 green:44/255.0 blue:55/255.0 alpha:1.0]];
+        cell.accessoryView = [MSCellAccessory accessoryWithType:FLAT_DISCLOSURE_INDICATOR color:[UIColor colorWithRed:208/255.0 green:44/255.0 blue:55/255.0 alpha:1.0]];
     }
     //表现
     else if (tableView==self.PerformanceTableView)
@@ -1932,7 +2007,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             
             UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(20, 0, Drive_Wdith-60, 30)];
-//            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
+            //            [roomNameLbl setText:[NSString stringWithFormat:@"%zi",indexPath.row]];
             [roomNameLbl setTextColor:[UIColor blackColor]];
             [roomNameLbl setFont:[UIFont systemFontOfSize: 18.0]];
             [roomNameLbl setTag:209];
@@ -1956,7 +2031,7 @@
             
             //本日数据
             UILabel *progressLbl =[[UILabel alloc]initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
-
+            
             
             [progressLbl setTextColor:[UIColor colorWithRed:0.808 green:0.808 blue:0.776 alpha:1]];
             [progressLbl setFont:[UIFont systemFontOfSize: 18.0]];
@@ -1965,7 +2040,7 @@
             [cell addSubview:progressLbl];
             
             
-    
+            
             //自定义数据条
             progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
             progressView.showText = @NO;
@@ -1976,12 +2051,12 @@
             progressView.color = [UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1];
             progressView.tag=223;
             [cell addSubview:progressView];
-         
-           
+            
+            
             //自定义数据
-             UILabel * progressLbl2 =[[UILabel alloc]initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
-
-
+            UILabel * progressLbl2 =[[UILabel alloc]initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
+            
+            
             [progressLbl2 setTextColor:[UIColor colorWithRed:0.808 green:0.808 blue:0.776 alpha:1]];
             [progressLbl2 setFont:[UIFont systemFontOfSize: 18.0]];
             [progressLbl2 setTextAlignment:NSTextAlignmentRight];
@@ -2010,7 +2085,7 @@
                 }
                 
                 
-               
+                
                 roomNameLbl.hidden=NO;
             }
             else
@@ -2027,17 +2102,17 @@
             }
             else
             {
-
+                
                 compareView.hidden=YES;
             }
         }
         if([cell viewWithTag:210]!=nil)
         {
-
-             LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:210];
+            
+            LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:210];
             if (_dailyAvgFigureArray.count>0) {
                 if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"daily"] integerValue]>0) {
-                  
+                    
                     UILabel *progressLbl =(UILabel *)[cell viewWithTag:224];
                     
                     int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"daily"]doubleValue];
@@ -2053,9 +2128,9 @@
             {
                 progressView.progress = 0.00;
                 
-               
+                
             }
-
+            
             
         }
         
@@ -2068,7 +2143,7 @@
                     
                     
                     
-//                    progressView.progress = 0.50;
+                    //                    progressView.progress = 0.50;
                     
                     int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"average"]doubleValue];
                     progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
@@ -2085,12 +2160,12 @@
             else
             {
                 progressView.progress = 0.00;
-               
-            
+                
+                
             }
-
+            
         }
-
+        
     }
     //活动
     else if (tableView==self.ActivitiesTableView)
@@ -2100,16 +2175,16 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
             //活动图标
             DBImageView * messageImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
-[messageImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            [messageImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             
-//            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
+            //            UIImageView * messageImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             //设置按钮为圆形
             [messageImgView.layer setCornerRadius:CGRectGetHeight([messageImgView bounds]) / 2];
             [messageImgView.layer setMasksToBounds:YES];
             [messageImgView.layer setBorderWidth:2];
             
             [messageImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-//            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
+            //            [messageImgView setImage:[UIImage imageNamed:@"20150207105906"]];
             messageImgView.tag=211;
             [cell addSubview:messageImgView];
             
@@ -2136,23 +2211,23 @@
         {
             DBImageView * messageImgView=(DBImageView *)[cell viewWithTag:211];
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-[messageImgView setImageWithPath:[pathOne copy]];
+            [messageImgView setImageWithPath:[pathOne copy]];
             
         }
         
         if([cell viewWithTag:212]!=nil)
         {
             UILabel * messageLbl =(UILabel *)[cell viewWithTag:212];
-          
+            
             switch (myDelegate.applanguage) {
                 case 0:
-                      [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleSc"]];
+                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleSc"]];
                     break;
                 case 1:
-                      [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleTc"]];
+                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleTc"]];
                     break;
                 case 2:
-                      [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
+                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
                     break;
                     
                 default:
@@ -2175,7 +2250,7 @@
         
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
-           
+            
         }
         if (indexPath.row==0) {
             cell.textLabel.text=LOCALIZATION(@"this_Week");
@@ -2214,12 +2289,12 @@
         if (indexPath.row==0) {
             if (
                 _isautoOn==YES) {
-                 [_refreshImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                [_refreshImgView setImage:[UIImage imageNamed:@"selected_off"]];
                 _isautoOn=NO;
             }
             else
             {
-                 [_refreshImgView setImage:[UIImage imageNamed:@"selected"]];
+                [_refreshImgView setImage:[UIImage imageNamed:@"selected"]];
                 _isautoOn=YES;
             }
         }
@@ -2227,7 +2302,7 @@
             if (_isallRoomOn==YES) {
                 _isallRoomOn=NO;
                 [_ShowALLRoomImgView setImage:[UIImage imageNamed:@"selected_off"]];
-                 _roomArray=_kidsRoomArray;
+                _roomArray=_kidsRoomArray;
                 
             }
             else
@@ -2243,7 +2318,7 @@
     //个人表现时间段查询
     else if(tableView ==self.dateTableView)
     {
-
+        
         CGRect temp=self.conditionLbl.frame ;
         NSString *str3;
         if (indexPath.row==0) {
@@ -2262,7 +2337,7 @@
         {
             str3=LOCALIZATION(@"50_days");
             [_conditionLbl setText:str3];
-             self.avgDaysStr=@"50";
+            self.avgDaysStr=@"50";
         }
         //查询条件
         _conditionLbl.frame = CGRectMake(temp.origin.x, temp.origin.y, (str3.length>2?str3.length*8.0f:str3.length*15), temp.size.height);
@@ -2274,8 +2349,8 @@
             [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
             tempDictionary=nil;
             //开启加载
-//            [HUD show:YES];
-//            [_PerformanceTableView reloadData];
+            //            [HUD show:YES];
+            //            [_PerformanceTableView reloadData];
         }
     }
     //个人表现时间段查询
@@ -2299,7 +2374,7 @@
             default:
                 break;
         }
-
+        
         [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
         
         UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
@@ -2313,10 +2388,10 @@
         
         switch (myDelegate.applanguage) {
             case 0:
-               urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activitySc"];
+                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activitySc"];
                 break;
             case 1:
-                 urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activityTc"];
+                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activityTc"];
                 break;
             case 2:
                 urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activity"];
@@ -2328,11 +2403,11 @@
         if (self.web==nil) {
             self.web =[[WebViewController alloc]init];
         }
-       //为web页面赋值
+        //为web页面赋值
         self.web.urlStr=urlStr;
         [self.navigationController pushViewController:self.web animated:YES];
     }
-   
+    
     //个人设置
     else if (tableView==self.PersonageTableView)
     {
@@ -2375,14 +2450,14 @@
                 lineLbl.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
                 [_FeekBackView addSubview:lineLbl];
                 
-                 NSArray *segmentedArray = [[NSArray alloc]initWithObjects:LOCALIZATION(@"text_feedback_idea"),LOCALIZATION(@"text_feedback_question"),nil];
+                NSArray *segmentedArray = [[NSArray alloc]initWithObjects:LOCALIZATION(@"text_feedback_idea"),LOCALIZATION(@"text_feedback_question"),nil];
                 //初始化UISegmentedControl
                 UISegmentedControl *segmentedControl = [[UISegmentedControl alloc]initWithItems:segmentedArray];
                 segmentedControl.frame = CGRectMake(CGRectGetWidth(_FeekBackView.frame)-190, 180, 150.0, 30.0);
                 segmentedControl.selectedSegmentIndex = 0;//设置默认选择项索引
                 segmentedControl.tintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
-//                [segmentedControl setBackgroundImage:[UIImage imageNamed:@"zyyy_choose_middle.png"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-//                [segmentedControl setBackgroundImage:[UIImage imageNamed:@"zyyy_choose_middle_touch.png"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
+                //                [segmentedControl setBackgroundImage:[UIImage imageNamed:@"zyyy_choose_middle.png"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+                //                [segmentedControl setBackgroundImage:[UIImage imageNamed:@"zyyy_choose_middle_touch.png"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
                 segmentedControl.segmentedControlStyle = UISegmentedControlStyleBar;//设置样式
                 [segmentedControl addTarget:self action:@selector(segmentAction:)forControlEvents:UIControlEventValueChanged];  //添加委托方法
                 [_FeekBackView addSubview:segmentedControl];
@@ -2397,13 +2472,13 @@
                 [CencelBtn setBackgroundColor:[UIColor clearColor]];
                 //设置按钮响应事件
                 [CencelBtn addTarget:self action:@selector(CencelAction:) forControlEvents:UIControlEventTouchUpInside];
-//                //CencelBtn按钮是否圆角
-//                [CencelBtn.layer setMasksToBounds:YES];
-//                //圆角像素化
-//                [CencelBtn.layer setCornerRadius:4.0];
+                //                //CencelBtn按钮是否圆角
+                //                [CencelBtn.layer setMasksToBounds:YES];
+                //                //圆角像素化
+                //                [CencelBtn.layer setCornerRadius:4.0];
                 [CencelBtn.layer setBorderWidth:0.5]; //边框宽度
                 [CencelBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
-
+                
                 [_FeekBackView addSubview:CencelBtn];
                 
                 //确定按钮
@@ -2424,7 +2499,7 @@
                 [OkBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
                 
                 [_FeekBackView addSubview:OkBtn];
-
+                
                 
             }
             _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.5];
@@ -2485,28 +2560,28 @@
 ////    NSLog(@"%@",scrollView.class);
 ////    if (scrollView==_MainInfoScrollView) {
 ////        if(huaHMSegmentedControl==0){
-////            
+////
 ////            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
-////            
+////
 ////        }
 ////        else if(huaHMSegmentedControl==2){
-////            
+////
 ////            //        myDelegate.headStr = nil;
 ////            //        myDelegate.footStr = nil;
-////            //        [self.RadarTableView tableViewDidScroll:scrollView];
+////            //        [self.RadarConnectTableView tableViewDidScroll:scrollView];
 ////        }
 ////        else if(huaHMSegmentedControl==3){
-////            
+////
 ////            [self getRequest:@"reportService/api/notices" delegate:self];
 ////        }
 ////    }
-//   
+//
 //
 //}
 
 //- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
 //    if (scrollView==_MainInfoScrollView) {
-//        
+//
 //        if(huaHMSegmentedControl !=1)
 //        {
 //            switch (huaHMSegmentedControl) {
@@ -2542,16 +2617,16 @@
 //                    [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
 //                     [self getRequest:@"reportService/api/notices" delegate:self];
 //                    break;
-//                    
+//
 //                default:
 //                    break;
 //            }
 //            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-//   
+//
 //        }
 //        else
 //        {
-//            
+//
 //            [[[UIAlertView alloc] initWithTitle:@"系统提示"
 //                                        message:@"IOS暂时不支持此功能，敬请期待"
 //                                       delegate:self
@@ -2560,18 +2635,18 @@
 //            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
 //        }
 ////        if(huaHMSegmentedControl==0){
-////            
+////
 ////            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
-////            
+////
 ////        }
 ////        else if(huaHMSegmentedControl==2){
-////            
+////
 ////            //        myDelegate.headStr = nil;
 ////            //        myDelegate.footStr = nil;
-////            //        [self.RadarTableView tableViewDidScroll:scrollView];
+////            //        [self.RadarConnectTableView tableViewDidScroll:scrollView];
 ////        }
 ////        else if(huaHMSegmentedControl==3){
-////            
+////
 ////            [self getRequest:@"reportService/api/notices" delegate:self];
 ////        }
 //    }
@@ -2583,210 +2658,210 @@
     if (scrollView.tag == 101) {
         CGFloat pageWidth = CGRectGetWidth(scrollView.frame);
         NSInteger page = scrollView.contentOffset.x / pageWidth;
-//        if (scrollView.contentOffset.x!=320.000000) {
+        //        if (scrollView.contentOffset.x!=320.000000) {
         
-            huaHMSegmentedControl = (int)page;
-            switch (huaHMSegmentedControl) {
-                case 0:
-                    if ([_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count<1) {
-                        _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+        huaHMSegmentedControl = (int)page;
+        switch (huaHMSegmentedControl) {
+            case 0:
+                if ([_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count<1) {
+                    _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+                    _bulletinLbl.hidden=NO;
+                }
+                else
+                {
+                    _bulletinLbl.hidden=YES;
+                }
+                _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 3.0f);
+                _progressView.hidden=YES;
+                [_HomeBtn setSelected:YES];
+                [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_NewsBtn setSelected:NO];
+                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                [_PersonageBtn setSelected:NO];
+                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                
+                if(_isreloadRoomList==YES)
+                {
+                    [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
+                    //开启加载
+                    //                        [HUD show:YES];
+                    if(_isautoOn==YES)
+                    {
+                        //开启定时器
+                        [self.refreshTimer setFireDate:[NSDate distantPast]];
+                    }
+                }
+                
+                break;
+                
+            case 1:
+                [_HomeBtn setSelected:NO];
+                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:YES];
+                [_RadarBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                [_NewsBtn setSelected:NO];
+                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                [_PersonageBtn setSelected:NO];
+                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                _bulletinLbl.hidden=YES;
+                
+                if (_disconectKidsAy.count == 0) {
+                    [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+                }
+                
+                break;
+            case 2:
+                //                    if (_disconectKidsAy.count == 0) {
+                //                        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+                //                    }
+                if(_ActivitiesTableView.hidden==YES)
+                {
+                    if (_dailyAvgFigureArray.count<1) {
+                        _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
                         _bulletinLbl.hidden=NO;
+                        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                        
                     }
                     else
                     {
                         _bulletinLbl.hidden=YES;
                     }
-                    _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 3.0f);
-                    _progressView.hidden=YES;
-                    [_HomeBtn setSelected:YES];
-                    [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                    [_RadarBtn setSelected:NO];
-                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_NewsBtn setSelected:NO];
-                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_PersonageBtn setSelected:NO];
-                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-
-                    if(_isreloadRoomList==YES)
-                    {
-                        [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
-                        //开启加载
-//                        [HUD show:YES];
-                        if(_isautoOn==YES)
-                        {
-                            //开启定时器
-                            [self.refreshTimer setFireDate:[NSDate distantPast]];
-                        }
-                    }
                     
-                    break;
-                    
-                case 1:
-                    [_HomeBtn setSelected:NO];
-                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_RadarBtn setSelected:YES];
-                    [_RadarBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                    [_NewsBtn setSelected:NO];
-                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_PersonageBtn setSelected:NO];
-                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                    _bulletinLbl.hidden=YES;
-                    
-                    if (_disconectKidsAy.count == 0) {
-                        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-                    }
-                    
-                    break;
-                case 2:
-//                    if (_disconectKidsAy.count == 0) {
-//                        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-//                    }
-                    if(_ActivitiesTableView.hidden==YES)
-                    {
-                        if (_dailyAvgFigureArray.count<1) {
-                            _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
-                            _bulletinLbl.hidden=NO;
-                            _bulletinLbl.text=LOCALIZATION(@"text_no_content");
-
-                        }
-                        else
-                        {
-                            _bulletinLbl.hidden=YES;
-                        }
-                        
-                        //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//                        [self.view bringSubviewToFront:_bulletinLbl];
-                    }
-                    else
-                    {
-                        if (_activityInfosArray.count<1) {
+                    //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                    //                        [self.view bringSubviewToFront:_bulletinLbl];
+                }
+                else
+                {
+                    if (_activityInfosArray.count<1) {
                         _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
                         _bulletinLbl.hidden=NO;
                         _bulletinLbl.text=LOCALIZATION(@"text_no_content");
                         _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//                        [self.view bringSubviewToFront:_bulletinLbl];
-                        }
-                        else
-                        {
-                            _bulletinLbl.hidden=YES;
-                        }
-
-
+                        //                        [self.view bringSubviewToFront:_bulletinLbl];
                     }
-                    [_HomeBtn setSelected:NO];
-                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_RadarBtn setSelected:NO];
-                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_NewsBtn setSelected:YES];
-                    [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                    [_PersonageBtn setSelected:NO];
-                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                    if(_isloadNews==YES)
+                    else
                     {
-                        [self insertChildMessage];
+                        _bulletinLbl.hidden=YES;
                     }
-                    //关闭定时器
-                    [self.refreshTimer setFireDate:[NSDate distantFuture]];
-                    break;
-                case 3:
                     
-                    _bulletinLbl.hidden=YES;
-                    _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 3.0f);
-                    _progressView.hidden=YES;
-                    [_HomeBtn setSelected:NO];
-                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_RadarBtn setSelected:NO];
-                    [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_NewsBtn setSelected:NO];
-                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
-                    [_PersonageBtn setSelected:YES];
-                    [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                    //关闭定时器
-                    [self.refreshTimer setFireDate:[NSDate distantFuture]];
-                    if(_isreloadpersonal==YES)
-                    {
+                    
+                }
+                [_HomeBtn setSelected:NO];
+                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_NewsBtn setSelected:YES];
+                [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                [_PersonageBtn setSelected:NO];
+                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                if(_isloadNews==YES)
+                {
+                    [self insertChildMessage];
+                }
+                //关闭定时器
+                [self.refreshTimer setFireDate:[NSDate distantFuture]];
+                break;
+            case 3:
+                
+                _bulletinLbl.hidden=YES;
+                _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 3.0f);
+                _progressView.hidden=YES;
+                [_HomeBtn setSelected:NO];
+                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_NewsBtn setSelected:NO];
+                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                [_PersonageBtn setSelected:YES];
+                [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                //关闭定时器
+                [self.refreshTimer setFireDate:[NSDate distantFuture]];
+                if(_isreloadpersonal==YES)
+                {
                     [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
-                        //开启加载
-//                        [HUD show:YES];
-                        
-                    }
-                    break;
-                   
-            
-            }
-        
-       
-//            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-
-//        }
-//        else
-//        {
-//            
-////            [[[UIAlertView alloc] initWithTitle:@"系统提示"
-////                                        message:@"IOS暂时不支持此功能，敬请期待"
-////                                       delegate:self
-////                              cancelButtonTitle:@"确定"
-////                              otherButtonTitles:nil] show];
-//            if (huaHMSegmentedControl==0) {
-//                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
-//            }
-//            else if (huaHMSegmentedControl==2)
-//            {
-//                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
-//            }
-//        }
-
+                    //开启加载
+                    //                        [HUD show:YES];
+                    
+                }
+                break;
+                
+                
         }
-//        else
-//        {
-//            [[[UIAlertView alloc] initWithTitle:@"系统提示"
-//                                        message:@"IOS暂时不支持此功能，敬请期待"
-//                                       delegate:self
-//                              cancelButtonTitle:@"确定"
-//                              otherButtonTitles:nil] show];
-//            if (huaHMSegmentedControl==0) {
-//                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
-//            }
-//            else if (huaHMSegmentedControl==2)
-//            {
-//                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
-//            }
-//        }
-
+        
+        
+        //            [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+        
+        //        }
+        //        else
+        //        {
+        //
+        ////            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+        ////                                        message:@"IOS暂时不支持此功能，敬请期待"
+        ////                                       delegate:self
+        ////                              cancelButtonTitle:@"确定"
+        ////                              otherButtonTitles:nil] show];
+        //            if (huaHMSegmentedControl==0) {
+        //                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
+        //            }
+        //            else if (huaHMSegmentedControl==2)
+        //            {
+        //                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
+        //            }
+        //        }
+        
+    }
+    //        else
+    //        {
+    //            [[[UIAlertView alloc] initWithTitle:@"系统提示"
+    //                                        message:@"IOS暂时不支持此功能，敬请期待"
+    //                                       delegate:self
+    //                              cancelButtonTitle:@"确定"
+    //                              otherButtonTitles:nil] show];
+    //            if (huaHMSegmentedControl==0) {
+    //                [scrollView setContentOffset:CGPointMake(0,0) animated:YES];
+    //            }
+    //            else if (huaHMSegmentedControl==2)
+    //            {
+    //                [scrollView setContentOffset:CGPointMake(640,0) animated:YES];
+    //            }
+    //        }
+    
     
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate{
     NSLog(@"scrollView is %@",scrollView.class);
-CGPoint pt = [scrollView contentOffset];
+    CGPoint pt = [scrollView contentOffset];
     if (scrollView==_RoomTableView&& pt.y < -68.500000) {
         
-               _progressView.hidden=NO;
-//        [_progressView setProgress:0.0];
+        _progressView.hidden=NO;
+        //        [_progressView setProgress:0.0];
         
         
-//        [self simulateProgress];
+        //        [self simulateProgress];
         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
         //开启加载
-//        [HUD show:YES];
-       }
+        //        [HUD show:YES];
+    }
     if(scrollView==_PersonageTableView&& pt.y < -68.500000)
     {
         _progressView.hidden=NO;
-//        [_progressView setProgress:0.0];
+        //        [_progressView setProgress:0.0];
         
         
-//        [self simulateProgress];
-         [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
+        //        [self simulateProgress];
+        [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
         //开启加载
-//        [HUD show:YES];
+        //        [HUD show:YES];
     }
 }
 #pragma mark --
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-//    NSString *responseString = [request responseString];
+    //    NSString *responseString = [request responseString];
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
         NSData *responseData = [request responseData];
@@ -2794,7 +2869,7 @@ CGPoint pt = [scrollView contentOffset];
         {
             _organizationArray=nil;
             _organizationArray=[[NSMutableArray alloc]init];
-//            [_organizationArray removeAllObjects];
+            //            [_organizationArray removeAllObjects];
             
         }
         if(_childrenByAreaArray!=nil&&_childrenByAreaArray.count>0)
@@ -2827,179 +2902,179 @@ CGPoint pt = [scrollView contentOffset];
         }
         _organizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"allLocations"] copy];
         _childrenByAreaArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenByArea"] copy];
-
+        
         if ([_organizationArray isEqual:[NSNull null]]) {
             _organizationArray=nil;
         }
         if ([_childrenByAreaArray isEqual:[NSNull null]]) {
             _childrenByAreaArray=nil;
         }
-
+        
         if(_organizationArray.count>0&&_childrenByAreaArray.count>0)
         {
-        if (myDelegate.childrenBeanArray==nil) {
-            myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
-        }
-        else
-        {
-            myDelegate.childrenBeanArray=nil;
-            myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
-        }
-        if(_childrenByAreaArray.count>0)
-        {
-        myDelegate.childrenBeanArray=(NSDictionary *)[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"] ;
-        _organizationShowBtn.hidden=NO;
-        [self delLodChild];
-            
-        }
-        else
-        {
-            _organizationShowBtn.hidden=YES;
-            
-        }
-        
-        responseData=nil;
-        //机构名称列表选择-----------------------------
-        NSString *organizationStr;
-        switch (myDelegate.applanguage) {
-            case 0:
-                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
-                break;
-            case 1:
-                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
-                break;
-            case 2:
-                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
-                break;
-                
-            default:
-                break;
-        }
-        [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
-        
-        UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
-        osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),15.5,20,13);
-        
-        CGRect  tempRect= _organizationTableView.frame;
-        _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
-        [_organizationTableView reloadData];
-        
-        NSArray *tempArray;
-
-
-            tempArray =[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-        
-            NSLog(@"tempArray is %@",tempArray);
-        
-       _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
-         NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
-        if(tempArray){
-            for(int i=0;i<_allRoomArray.count;i++)
+            if (myDelegate.childrenBeanArray==nil) {
+                myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
+            }
+            else
             {
-                for(int j=0;j<tempArray.count;j++)
-                {
-                    if(![[[tempArray objectAtIndex:j] objectForKey:@"locId"] isEqual:[NSNull null]])
-                    {
-                    if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
-                    {
-                        [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
-                        
-                        
-                    }
-                    }
-                }
-                if(tempChindrenArray.count>0)
-                {
-                    [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
-                    if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
-                    {
-                        [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
-                        [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
-                    }
+                myDelegate.childrenBeanArray=nil;
+                myDelegate.childrenBeanArray=[[NSDictionary alloc]init];
+            }
+            if(_childrenByAreaArray.count>0)
+            {
+                myDelegate.childrenBeanArray=(NSDictionary *)[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"] ;
+                _organizationShowBtn.hidden=NO;
+                [self delLodChild];
+                
+            }
+            else
+            {
+                _organizationShowBtn.hidden=YES;
+                
+            }
+            
+            responseData=nil;
+            //机构名称列表选择-----------------------------
+            NSString *organizationStr;
+            switch (myDelegate.applanguage) {
+                case 0:
+                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+                    break;
+                case 1:
+                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
+                    break;
+                case 2:
+                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+                    break;
                     
-                    [tempChindrenArray removeAllObjects];
+                default:
+                    break;
+            }
+            [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
+            
+            UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
+            osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),15.5,20,13);
+            
+            CGRect  tempRect= _organizationTableView.frame;
+            _organizationTableView.frame=CGRectMake(tempRect.origin.x,tempRect.origin.y,tempRect.size.width,(44*_organizationArray.count));
+            [_organizationTableView reloadData];
+            
+            NSArray *tempArray;
+            
+            
+            tempArray =[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+            
+            NSLog(@"tempArray is %@",tempArray);
+            
+            _allRoomArray=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"locations"] copy];
+            NSMutableArray *tempChindrenArray=[[NSMutableArray alloc]init];
+            if(tempArray){
+                for(int i=0;i<_allRoomArray.count;i++)
+                {
+                    for(int j=0;j<tempArray.count;j++)
+                    {
+                        if(![[[tempArray objectAtIndex:j] objectForKey:@"locId"] isEqual:[NSNull null]])
+                        {
+                            if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
+                            {
+                                [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
+                                
+                                
+                            }
+                        }
+                    }
+                    if(tempChindrenArray.count>0)
+                    {
+                        [_childrenDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%d",i]];
+                        if([tempChindrenArray copy]!=nil&&tempChindrenArray.count>0)
+                        {
+                            [_kidsRoomArray addObject:[[_allRoomArray objectAtIndex:i] copy] ];
+                            [_childrenByRoomDictionary setObject:[tempChindrenArray copy] forKey:[NSString stringWithFormat:@"%zi",(_kidsRoomArray.count-1)]];
+                        }
+                        
+                        [tempChindrenArray removeAllObjects];
+                    }
                 }
-            }
-
-        }
-        //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
-        if (_childrenDictionary.count>0) {
-            if(myDelegate.childDictionary !=nil)
-            {
-                myDelegate.childDictionary=nil;
                 
-                myDelegate.childDictionary=[[NSDictionary alloc]init];
             }
-            if(myDelegate.childDictionary ==nil)
-            {
+            //        NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+            if (_childrenDictionary.count>0) {
+                if(myDelegate.childDictionary !=nil)
+                {
+                    myDelegate.childDictionary=nil;
+                    
+                    myDelegate.childDictionary=[[NSDictionary alloc]init];
+                }
+                if(myDelegate.childDictionary ==nil)
+                {
+                    
+                    
+                    myDelegate.childDictionary=[[NSDictionary alloc]init];
+                }
+                //             NSLog(@"_childrenDictionary %@\n",[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]);
+                //             NSLog(@"_childrenDictionary %@\n",[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]);
+                if(_childrenDictionary.count>0)
+                {
+                    NSArray *keyArray=[_childrenDictionary allKeys];
+                    NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+                    
+                    [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+                    
+                    
+                    
+                    
+                    [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+                    
+                    [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+                    
+                    [tempDictionary setObject:[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+                    
+                    [tempDictionary setObject:[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"macAddress"] forKey:@"mac_address"];
+                    
+                    myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
+                    [tempDictionary removeAllObjects];
+                    tempDictionary=nil;
+                }
                 
                 
-                 myDelegate.childDictionary=[[NSDictionary alloc]init];
+                //            [self SaveChildren:_childrenDictionary];
             }
-//             NSLog(@"_childrenDictionary %@\n",[[[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]);
-//             NSLog(@"_childrenDictionary %@\n",[[_childrenDictionary objectForKey:@"0"] objectAtIndex:0]);
-            if(_childrenDictionary.count>0)
+            
+            NSLog(@"myDelegate.childDictionary %@\n",myDelegate.childDictionary);
+            if (_isallRoomOn==YES) {
+                _roomArray=_allRoomArray;
+            }
+            else
             {
-                NSArray *keyArray=[_childrenDictionary allKeys];
-            NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
-            
-            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
-            
-           
-            
-            
-            [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
-            
-            [tempDictionary setObject:[[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
-            
-            [tempDictionary setObject:[[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
-            
-            [tempDictionary setObject:[[[_childrenDictionary objectForKey:[keyArray objectAtIndex:0]] objectAtIndex:0] objectForKey:@"macAddress"] forKey:@"mac_address"];
-            
-            myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
-            [tempDictionary removeAllObjects];
-            tempDictionary=nil;
+                _roomArray=_kidsRoomArray;
             }
+            [_RoomTableView reloadData];
+            [tempChindrenArray removeAllObjects];
+            tempChindrenArray=nil;
+            tempArray=nil;
+            _isreloadRoomList=NO;
             
-          
-//            [self SaveChildren:_childrenDictionary];
+            
         }
-
-               NSLog(@"myDelegate.childDictionary %@\n",myDelegate.childDictionary);
-        if (_isallRoomOn==YES) {
-            _roomArray=_allRoomArray;
-        }
+        
         else
         {
-            _roomArray=_kidsRoomArray;
+            _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+            _bulletinLbl.hidden=NO;
         }
-        [_RoomTableView reloadData];
-        [tempChindrenArray removeAllObjects];
-        tempChindrenArray=nil;
-        tempArray=nil;
-        _isreloadRoomList=NO;
-            
-           
-        }
-            
-else
-{
-    _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
-    _bulletinLbl.hidden=NO;
-}
         
     }
     
     //请求个人信息
     if ([tag isEqualToString:GET_NOTICES]) {
-
+        
         NSData *responseData = [request responseData];
         if(_personalDetailsArray!=nil)
         {
             _personalDetailsArray=nil;
             _personalDetailsArray=[NSMutableArray array];
         }
-       _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
+        _personalDetailsArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"notices"] copy];
         responseData=nil;
         [_PersonageTableView reloadData];
         _isreloadpersonal=NO;
@@ -3007,11 +3082,11 @@ else
     }
     //请求简报
     if ([tag isEqualToString:GET_REPORTS]) {
-//        NSString *responseString = [request responseString];
+        //        NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
         NSString * resFEED_BACK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         NSLog(@"FEED_BACK %@",resFEED_BACK);
-      
+        
         if(_activityInfosArray!=nil)
         {
             _activityInfosArray=nil;
@@ -3022,24 +3097,24 @@ else
             _dailyAvgFigureArray=nil;
             _dailyAvgFigureArray=[NSMutableArray array];
         }
-
+        
         NSString *activityInfoStr=[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"];
         if ((NSNull *)activityInfoStr != [NSNull null]) {
-             _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
+            _activityInfosArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"activityInfos"] copy];
         }
-
+        
         NSString *dailyAvgStr=[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"];
         if ((NSNull *)dailyAvgStr != [NSNull null]) {
-             _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
+            _dailyAvgFigureArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"dailyAvgFigure"] copy];
         }
-       
-
-       
-
-        responseData=nil;
-
         
-         [_PerformanceTableView reloadData];
+        
+        
+        
+        responseData=nil;
+        
+        
+        [_PerformanceTableView reloadData];
         [_ActivitiesTableView reloadData];
         _isloadNews=NO;
         
@@ -3050,12 +3125,12 @@ else
             }
             else
             {
-            _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
-            _bulletinLbl.hidden=NO;
-            _bulletinLbl.text=LOCALIZATION(@"text_no_content");
-            //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//            [self.view bringSubviewToFront:_bulletinLbl];
-                }
+                _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
+                _bulletinLbl.hidden=NO;
+                _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                //            [self.view bringSubviewToFront:_bulletinLbl];
+            }
         }
         else
         {
@@ -3064,11 +3139,11 @@ else
             }
             else
             {
-            _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
-            _bulletinLbl.hidden=NO;
-            _bulletinLbl.text=LOCALIZATION(@"text_no_content");
-            _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//            [self.view bringSubviewToFront:_bulletinLbl];
+                _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
+                _bulletinLbl.hidden=NO;
+                _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                //            [self.view bringSubviewToFront:_bulletinLbl];
             }
             
         }
@@ -3098,7 +3173,7 @@ else
             childrenArray = nil;
         }
         
-       // NSLog(@"childrenInfo = %@" , childrenArray);
+        // NSLog(@"childrenInfo = %@" , childrenArray);
         for(int i=0;i<childrenArray.count; i++)
         {
             NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
@@ -3114,7 +3189,7 @@ else
                 //                                    }
                 
             }
-
+            
         }
         
         
@@ -3123,7 +3198,7 @@ else
     
     [_progressView setHidden:YES];
     //关闭加载
-//    [HUD hide:YES afterDelay:0];
+    //    [HUD hide:YES afterDelay:0];
     
     
     
@@ -3139,7 +3214,7 @@ else
                                delegate:self
                       cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                       otherButtonTitles:nil] show];
-   
+    
 }
 #pragma mark - 本地数据处理
 /**根据选择的机构加载房间和儿童信息*/
@@ -3165,7 +3240,7 @@ else
     {
         for(int j=0;j<tempArray.count;j++)
         {
-
+            
             if([[[tempArray objectAtIndex:j] objectForKey:@"locId"] longLongValue] ==[[[_allRoomArray objectAtIndex:i] objectForKey:@"locationId"] longLongValue])
             {
                 [tempChindrenArray addObject:[[tempArray objectAtIndex:j]copy]];
@@ -3181,7 +3256,7 @@ else
         }
         [tempChindrenArray removeAllObjects];
     }
-//            NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
+    //            NSLog(@"_childrenDictionary %@\n",_childrenDictionary);
     if (_isallRoomOn==YES) {
         _roomArray=_allRoomArray;
     }
@@ -3194,25 +3269,25 @@ else
     tempChindrenArray=nil;
     tempArray=nil;
     _isreloadRoomList=NO;
-
+    
 }
 
 -(void)insertChildMessage
 {
     if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
-     kidImgView.hidden=NO;
-    NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
-    
-      [kidImgView setImageWithPath:[pathOne copy]];
-    
+        kidImgView.hidden=NO;
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
+        
+        [kidImgView setImageWithPath:[pathOne copy]];
+        
         NSLog(@"!!!!!%@",myDelegate.childDictionary);
-    
-    NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
-    [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
-    tempDictionary=nil;
+        
+        NSDictionary *tempDictionary=[NSDictionary dictionaryWithObjectsAndKeys:[myDelegate.childDictionary objectForKey:@"child_id"], @"childId",self.avgDaysStr, @"avgDays", nil];
+        [self getRequest:GET_REPORTS delegate:self RequestDictionary:[tempDictionary copy]];
+        tempDictionary=nil;
     }
     //开启加载
-//    [HUD show:YES];
+    //    [HUD show:YES];
 }
 
 -(void)timerFired:(id)sender
@@ -3271,7 +3346,7 @@ else
     if (theTextField == self.FeekBackTxt) {
         [theTextField resignFirstResponder];
     }
-
+    
     
     return YES;
     
@@ -3280,7 +3355,7 @@ else
 -(void)viewTapped:(UITapGestureRecognizer*)tapGr
 {
     [self.FeekBackTxt resignFirstResponder];
-
+    
     
 }
 
@@ -3303,12 +3378,12 @@ else
 {
     if(![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0)
     {
-    [_PopupSView setHidden:NO];
-    _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
-    [_listTypeView setHidden:NO];
-    [_dateTableView setHidden:YES];
-    [_organizationTableView setHidden:YES];
-    [_kidsMassageView setHidden:YES];
+        [_PopupSView setHidden:NO];
+        _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+        [_listTypeView setHidden:NO];
+        [_dateTableView setHidden:YES];
+        [_organizationTableView setHidden:YES];
+        [_kidsMassageView setHidden:YES];
     }
     else
     {
@@ -3322,14 +3397,14 @@ else
 /**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
-//    if (_disconectKidsAy.count == 0) {
-//        _disconectKidsAy = [[NSMutableArray alloc]init];
-//        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-//    }
+    //    if (_disconectKidsAy.count == 0) {
+    //        _disconectKidsAy = [[NSMutableArray alloc]init];
+    //        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+    //    }
     if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
         _isloadNews=YES;
         ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
-//        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        //        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         
         
         tt._childrenArray = _disconectKidsAy;
@@ -3346,7 +3421,7 @@ else
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
     }
-   
+    
 }
 
 -(void)goToSettingAction:(id)sender
@@ -3354,8 +3429,8 @@ else
     _settingVc= [[SettingsViewController alloc] init];
     
     
-        [self.navigationController pushViewController:self.settingVc animated:YES];
-        self.settingVc.title = LOCALIZATION(@"btn_options");
+    [self.navigationController pushViewController:self.settingVc animated:YES];
+    self.settingVc.title = LOCALIZATION(@"btn_options");
 }
 
 /**显示机构选择列表*/
@@ -3385,22 +3460,22 @@ else
 -(void)childrenListAction:(id)sender
 {
     if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
-    [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
-    
-//    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
-//   
-//    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-//
-//     NSLog(@"---%@",kindlist.childrenArray);
-//    [self.navigationController pushViewController:kindlist animated:YES];
-//    kindlist.title = @"";
-    
-    KidViewController* kindlist = [[KidViewController alloc] init];
-    
-    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
-    kindlist.kidsRoomArray=_roomArray;
-         NSLog(@"---%@",kindlist.childrenArray);
-    NSLog(@"kindlist.kidsRoomArray%@",kindlist.kidsRoomArray);
+        [self getRequest:@"kindergartenList" delegate:self RequestDictionary:nil];
+        
+        //    KidslistViewController * kindlist = [[KidslistViewController alloc] init];
+        //
+        //    kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        //
+        //     NSLog(@"---%@",kindlist.childrenArray);
+        //    [self.navigationController pushViewController:kindlist animated:YES];
+        //    kindlist.title = @"";
+        
+        KidViewController* kindlist = [[KidViewController alloc] init];
+        
+        kindlist.childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        kindlist.kidsRoomArray=_roomArray;
+        NSLog(@"---%@",kindlist.childrenArray);
+        NSLog(@"kindlist.kidsRoomArray%@",kindlist.kidsRoomArray);
         [self.navigationController pushViewController:kindlist animated:YES];
         kindlist.title = @"";
     }
@@ -3422,10 +3497,10 @@ else
 /**儿童头像点击事件*/
 - (void)ShowKindAction:(id)sender
 {
-
-   
+    
+    
     UIButton *tempBtn=sender;
-
+    
     NSMutableArray *keyArray=[NSMutableArray array];
     NSEnumerator * enumeratorKey=[_childrenDictionary keyEnumerator];
     for(NSString *s in enumeratorKey)
@@ -3435,7 +3510,7 @@ else
     UITableViewCell *cell = (UITableViewCell *)[[tempBtn superview]superview];
     NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
     NSLog(@"indexPath is = %zi",indexPath.row);
-     NSArray *tempChildArray=[_childrenDictionary objectForKey:[[keyArray objectAtIndex: indexPath.row]copy]];
+    NSArray *tempChildArray=[_childrenDictionary objectForKey:[[keyArray objectAtIndex: indexPath.row]copy]];
     keyArray=nil;
     enumeratorKey=nil;
     [_PopupSView setHidden:NO];
@@ -3446,7 +3521,7 @@ else
     
     [_kidsMassageView setHidden:NO];
     
-     DBImageView  * KidsImgView=(DBImageView *)[_kidsMassageView viewWithTag:219];
+    DBImageView  * KidsImgView=(DBImageView *)[_kidsMassageView viewWithTag:219];
     KidsImgView.image= tempBtn.imageView.image;
     [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
@@ -3455,7 +3530,7 @@ else
     [KidsImgView setImageWithPath:[pathOne copy]];
     UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
     [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
-   
+    
     UILabel * roomNameLbl =(UILabel *)[_kidsMassageView viewWithTag:221];
     NSLog(@"MEIDE %@",[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]);
     NSString * kidsAppearDate =  [self timeSp2date:[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]];
@@ -3482,7 +3557,7 @@ else
 /**显示表现*/
 - (void)showPerformanceAction:(id)sender
 {
-
+    
     _divisionTwoLbl.frame=CGRectMake(0,CGRectGetHeight(_performanceBtn.bounds)-7, CGRectGetWidth(_performanceBtn.bounds), 3);
     [_divisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
     _divisionFourLbl.frame=CGRectMake(0, CGRectGetHeight(_activitiesBtn.bounds)-5, CGRectGetWidth(_activitiesBtn.bounds), 1);
@@ -3495,17 +3570,17 @@ else
     _ActivitiesTableView.hidden=YES;
     if (_dailyAvgFigureArray.count>0) {
         _bulletinLbl.hidden=YES;
-//        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     }
     else
     {
         _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
         _bulletinLbl.hidden=NO;
         _bulletinLbl.text=LOCALIZATION(@"text_no_content");
-//        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        [self.view bringSubviewToFront:_bulletinLbl];
+        //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        //        [self.view bringSubviewToFront:_bulletinLbl];
     }
-//    _bulletinLbl.hidden=YES;
+    //    _bulletinLbl.hidden=YES;
 }
 
 /**显示活动*/
@@ -3513,9 +3588,9 @@ else
 {
     _divisionFourLbl.frame=CGRectMake(0,CGRectGetHeight(_activitiesBtn.bounds)-7, CGRectGetWidth(_activitiesBtn.bounds), 3);
     [_divisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
-   _divisionTwoLbl.frame=CGRectMake(0, CGRectGetHeight(_performanceBtn.bounds)-5, CGRectGetWidth(_performanceBtn.bounds), 1);
+    _divisionTwoLbl.frame=CGRectMake(0, CGRectGetHeight(_performanceBtn.bounds)-5, CGRectGetWidth(_performanceBtn.bounds), 1);
     [_divisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
-[_performanceBtn setSelected:NO];
+    [_performanceBtn setSelected:NO];
     [_activitiesBtn setSelected:YES];
     _PerformanceTableView.hidden=YES;
     _PerformanceTimeBtn.hidden=YES;
@@ -3531,7 +3606,7 @@ else
         _bulletinLbl.hidden=NO;
         _bulletinLbl.text=LOCALIZATION(@"text_no_content");
         _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//        [self.view bringSubviewToFront:_bulletinLbl];
+        //        [self.view bringSubviewToFront:_bulletinLbl];
     }
     
 }
@@ -3541,185 +3616,185 @@ else
 {
     UIButton *tempBtn=(UIButton *)sender;
     int num=tempBtn.tag-214;
-//    if(num !=1)
-//    {
-        switch (tempBtn.tag) {
-            case 214:
-                if ([_childrenByAreaArray isEqual:[NSNull null]]) {
+    //    if(num !=1)
+    //    {
+    switch (tempBtn.tag) {
+        case 214:
+            if ([_childrenByAreaArray isEqual:[NSNull null]]) {
+                _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+                _bulletinLbl.hidden=NO;
+            }
+            else
+            {
+                if (_childrenByAreaArray.count<1) {
                     _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
                     _bulletinLbl.hidden=NO;
                 }
                 else
                 {
-                    if (_childrenByAreaArray.count<1) {
-                        _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
-                        _bulletinLbl.hidden=NO;
-                    }
-                    else
-                    {
-                        _bulletinLbl.hidden=YES;
-                    }
+                    _bulletinLbl.hidden=YES;
                 }
-                _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
-                _progressView.hidden=YES;
-                [_HomeBtn setSelected:YES];
-                [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                [_RadarBtn setSelected:NO];
-                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
-                [_NewsBtn setSelected:NO];
-                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
-                [_PersonageBtn setSelected:NO];
-                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                break;
-            case 215:
-                [_HomeBtn setSelected:NO];
-                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                [_RadarBtn setSelected:YES];
-                [_RadarBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                [_NewsBtn setSelected:NO];
-                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
-                [_PersonageBtn setSelected:NO];
-                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                _bulletinLbl.hidden=YES;
-                
-                break;
-                
-                
-                
-            case 216:
-                [_HomeBtn setSelected:NO];
-                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                [_RadarBtn setSelected:NO];
-                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
-                [_NewsBtn setSelected:YES];
-                [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                [_PersonageBtn setSelected:NO];
-                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
-                if(_ActivitiesTableView.hidden==YES)
-                {
-                    if (_dailyAvgFigureArray.count<1) {
-                        _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
-                        _bulletinLbl.hidden=NO;
-                        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
-                        
-                    }
-                    else
-                    {
-                        _bulletinLbl.hidden=YES;
-                    }
+            }
+            _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);
+            _progressView.hidden=YES;
+            [_HomeBtn setSelected:YES];
+            [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+            [_RadarBtn setSelected:NO];
+            [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+            [_NewsBtn setSelected:NO];
+            [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+            [_PersonageBtn setSelected:NO];
+            [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+            break;
+        case 215:
+            [_HomeBtn setSelected:NO];
+            [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+            [_RadarBtn setSelected:YES];
+            [_RadarBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+            [_NewsBtn setSelected:NO];
+            [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+            [_PersonageBtn setSelected:NO];
+            [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+            _bulletinLbl.hidden=YES;
+            
+            break;
+            
+            
+            
+        case 216:
+            [_HomeBtn setSelected:NO];
+            [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+            [_RadarBtn setSelected:NO];
+            [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+            [_NewsBtn setSelected:YES];
+            [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+            [_PersonageBtn setSelected:NO];
+            [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+            if(_ActivitiesTableView.hidden==YES)
+            {
+                if (_dailyAvgFigureArray.count<1) {
+                    _bulletinLbl.frame=CGRectMake(10, 200, Drive_Wdith-20, 30);
+                    _bulletinLbl.hidden=NO;
+                    _bulletinLbl.text=LOCALIZATION(@"text_no_content");
                     
-                    //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                }
+                else
+                {
+                    _bulletinLbl.hidden=YES;
+                }
+                
+                //        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+                //                        [self.view bringSubviewToFront:_bulletinLbl];
+            }
+            else
+            {
+                if (_activityInfosArray.count<1) {
+                    _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
+                    _bulletinLbl.hidden=NO;
+                    _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+                    _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
                     //                        [self.view bringSubviewToFront:_bulletinLbl];
                 }
                 else
                 {
-                    if (_activityInfosArray.count<1) {
-                        _bulletinLbl.frame=CGRectMake(10, 160, Drive_Wdith-20, 30);
-                        _bulletinLbl.hidden=NO;
-                        _bulletinLbl.text=LOCALIZATION(@"text_no_content");
-                        _ActivitiesTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-                        //                        [self.view bringSubviewToFront:_bulletinLbl];
-                    }
-                    else
-                    {
-                        _bulletinLbl.hidden=YES;
-                    }
-                    
-                    
+                    _bulletinLbl.hidden=YES;
                 }
                 
-                break;
-            case 217:
-                _bulletinLbl.hidden=YES;
-                _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 1.0f);
-                _progressView.hidden=YES;
-                [_HomeBtn setSelected:NO];
-                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-                [_RadarBtn setSelected:NO];
-                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
-                [_NewsBtn setSelected:NO];
-                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
-                [_PersonageBtn setSelected:YES];
-                [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-                break;
                 
-            default:
-                break;
-        }
+            }
+            
+            break;
+        case 217:
+            _bulletinLbl.hidden=YES;
+            _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 1.0f);
+            _progressView.hidden=YES;
+            [_HomeBtn setSelected:NO];
+            [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+            [_RadarBtn setSelected:NO];
+            [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+            [_NewsBtn setSelected:NO];
+            [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+            [_PersonageBtn setSelected:YES];
+            [_PersonageBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+            break;
+            
+        default:
+            break;
+    }
     
     NSLog(@"numnum -- > %d",num);
-        huaHMSegmentedControl = num;
-        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * num, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-        if(num==0)
+    huaHMSegmentedControl = num;
+    [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * num, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+    if(num==0)
+    {
+        //            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
+        if (self.isautoOn==YES) {
+            //开启定时器
+            [self.refreshTimer setFireDate:[NSDate distantPast]];
+        }
+        
+    }
+    if(num==1){
+        //[self.refreshTimer setFireDate:[NSDate distantPast]];
+        [self.refreshTimer setFireDate:[NSDate distantFuture]];
+        if (_disconectKidsAy.count == 0) {
+            [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+        }
+        
+    }
+    if (num==2) {
+        //            if (_disconectKidsAy.count == 0) {
+        //                [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+        //            }
+        
+        if(_isloadNews==YES)
         {
-//            [self getRequest:@"reportService/api/childrenLocList" delegate:self];
-            if (self.isautoOn==YES) {
-                //开启定时器
-                [self.refreshTimer setFireDate:[NSDate distantPast]];
-            }
-           
-        }
-        if(num==1){
-            //[self.refreshTimer setFireDate:[NSDate distantPast]];
+            //关闭定时器
             [self.refreshTimer setFireDate:[NSDate distantFuture]];
-            if (_disconectKidsAy.count == 0) {
-                [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-            }
-
-        }
-        if (num==2) {
-//            if (_disconectKidsAy.count == 0) {
-//                [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-//            }
-
-            if(_isloadNews==YES)
-            {
-                //关闭定时器
-                [self.refreshTimer setFireDate:[NSDate distantFuture]];
-                [self insertChildMessage];
-               
-                
-            }
-        }
-        if (num==3) {
+            [self insertChildMessage];
             
-            if(_isreloadpersonal==YES)
-            {
-                //关闭定时器
-                [self.refreshTimer setFireDate:[NSDate distantFuture]];
-                [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
-                //开启加载
-//                [HUD show:YES];
-            }
+            
         }
-//    }
-//    else
-//    {
-//        
-//        [[[UIAlertView alloc] initWithTitle:@"系统提示"
-//                                    message:@"IOS暂时不支持此功能，敬请期待"
-//                                   delegate:self
-//                          cancelButtonTitle:@"确定"
-//                          otherButtonTitles:nil] show];
-//        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-//    }
-//    UISegmentedControl *segmentedControl=(UISegmentedControl *)sender;
-//    if([sender selectedSegmentIndex] !=1)
-//    {
-//        huaHMSegmentedControl = [sender selectedSegmentIndex];
-//        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * [sender selectedSegmentIndex], 0, Drive_Wdith, Drive_Height-44) animated:YES];
-//    }
-//    else
-//    {
-//        segmentedControl.selectedSegmentIndex = huaHMSegmentedControl;
-//        [[[UIAlertView alloc] initWithTitle:@"系统提示"
-//                                    message:@"IOS暂时不支持此功能，敬请期待"
-//                                   delegate:self
-//                          cancelButtonTitle:@"确定"
-//                          otherButtonTitles:nil] show];
-//        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
-//    }
-
+    }
+    if (num==3) {
+        
+        if(_isreloadpersonal==YES)
+        {
+            //关闭定时器
+            [self.refreshTimer setFireDate:[NSDate distantFuture]];
+            [self getRequest:GET_NOTICES delegate:self RequestDictionary:nil];
+            //开启加载
+            //                [HUD show:YES];
+        }
+    }
+    //    }
+    //    else
+    //    {
+    //
+    //        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+    //                                    message:@"IOS暂时不支持此功能，敬请期待"
+    //                                   delegate:self
+    //                          cancelButtonTitle:@"确定"
+    //                          otherButtonTitles:nil] show];
+    //        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+    //    }
+    //    UISegmentedControl *segmentedControl=(UISegmentedControl *)sender;
+    //    if([sender selectedSegmentIndex] !=1)
+    //    {
+    //        huaHMSegmentedControl = [sender selectedSegmentIndex];
+    //        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * [sender selectedSegmentIndex], 0, Drive_Wdith, Drive_Height-44) animated:YES];
+    //    }
+    //    else
+    //    {
+    //        segmentedControl.selectedSegmentIndex = huaHMSegmentedControl;
+    //        [[[UIAlertView alloc] initWithTitle:@"系统提示"
+    //                                    message:@"IOS暂时不支持此功能，敬请期待"
+    //                                   delegate:self
+    //                          cancelButtonTitle:@"确定"
+    //                          otherButtonTitles:nil] show];
+    //        [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * huaHMSegmentedControl, 0, Drive_Wdith, Drive_Height-44) animated:YES];
+    //    }
+    
 }
 /**显示时间段选择列表*/
 -(void)dateChageAction:(id)sender
@@ -3737,23 +3812,23 @@ else
     [_PopupSView setHidden:YES];
     
     
-   
+    
 }
 
 -(void)CencelAction:(id)sender
 {
-     [_PopupSView setHidden:YES];
+    [_PopupSView setHidden:YES];
 }
 -(void)OkAction:(id)sender
 {
-   if([_FeekBackTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0)
-   {
-
-    NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.FeekBackTxt.text, @"content", @"b",@"type",nil];
-    [self postRequest:FEED_BACK RequestDictionary:[tempDoct copy] delegate:self];
-    tempDoct=nil;
-     [_PopupSView setHidden:YES];
-   }
+    if([_FeekBackTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]].length>0)
+    {
+        
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.FeekBackTxt.text, @"content", @"b",@"type",nil];
+        [self postRequest:FEED_BACK RequestDictionary:[tempDoct copy] delegate:self];
+        tempDoct=nil;
+        [_PopupSView setHidden:YES];
+    }
     else
     {
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
@@ -3761,7 +3836,7 @@ else
                                    delegate:self
                           cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                           otherButtonTitles:nil] show];
-
+        
     }
 }
 
@@ -3769,13 +3844,13 @@ else
     
     selected = Seg.selectedSegmentIndex;
     
-//    NSLog(@"Index %i", Index);
-//    
-//    switch (Index) {
-//            
-//        case 0:
-//            break;
-//    }
+    //    NSLog(@"Index %i", Index);
+    //
+    //    switch (Index) {
+    //
+    //        case 0:
+    //            break;
+    //    }
 }
 
 
@@ -3786,15 +3861,24 @@ else
  */
 -(void)switchAction:(id)sender
 {
-   
+    
     BOOL isButtonOn = [_switchButton isOn];
     if (isButtonOn) {
-      [self scanTheDevice];
+        [self scanTheDevice];
         //reg broad cast
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scanDeviceBroadcast:) name:nil object:nil ];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scanDeviceBroadcast:) name:nil object:nil ];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_RadarConnectTableView reloadData];
+        });
+        //   UITableView *rRadarConnectTableView = [[[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  _disconectKidsAy.count * 45)]viewWithTag:900 ];
+        //        dispatch_async(dispatch_get_main_queue(), ^{
+        //                        [rRadarConnectTableView reloadData];
+        //                    });
+        
     }else {
-      [self stopScanTheDevice];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:nil];
+        [self stopScanTheDevice];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:nil];
     }
 }
 
@@ -3813,16 +3897,16 @@ else
             
         case 0:
             
-         
+            
             
             break;
             
         case 1:
             
-     
+            
             
             break;
-
+            
             
     }
     
@@ -3882,13 +3966,27 @@ else
 - (void) scanDeviceBroadcast:(NSNotification *)notification{
     if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME]){
         NSLog(@"BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME");
-       
+        
         
         _connectKidsAy = [(NSMutableArray *)[notification object] copy];
-//        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        //        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
         NSLog(@"_disconectKidsAy CONUT--- > %lu",(unsigned long)_disconectKidsAy.count);
         
+        disconnectNum = _disconectKidsAy.count;
+        [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
+        _RadarConnectTableView = [[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45)];
+        _RadarConnectTableView.userInteractionEnabled = NO;
+        _RadarConnectTableView.scrollEnabled = NO;
+        _RadarConnectTableView.dataSource = self;
+        _RadarConnectTableView.delegate = self;
+        //    [self.positionDetailsTableView setBounces:NO];
+        _RadarConnectTableView.tableFooterView = [[UIView alloc] init];
+        _RadarConnectTableView.tag = 900;
+        [_RadarScrollView addSubview:_RadarConnectTableView];
+        
+        connectNum = _connectKidsAy.count;
+        [_connectBtn setTitle:[NSString stringWithFormat:@"%d %@",connectNum,LOCALIZATION(@"btn_supervised")] forState:UIControlStateNormal];
         
     }
     
@@ -3901,7 +3999,7 @@ else
 
 #pragma mark - timeSp to date
 -(NSString *)timeSp2date:(NSString *)timeSp{
-
+    
     NSString * timeStampString = timeSp;
     NSTimeInterval _interval=[timeStampString doubleValue] / 1000.0;
     NSDate *date = [NSDate dateWithTimeIntervalSince1970:_interval];
