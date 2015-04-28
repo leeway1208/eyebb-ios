@@ -198,8 +198,11 @@
     self.title = LOCALIZATION(@"app_name");
     // Do any additional setup after loading the view.
     [self iv];
+    
+    [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
 //    [self getRequest:@"kindergartenList" delegate:self];
     [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
+ 
    
    
     
@@ -3068,9 +3071,38 @@ else
         
     }
     
+    if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
+        NSData *responseData = [request responseData];
+        NSMutableArray* childrenArray=[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"];
+        if ([childrenArray isKindOfClass:[NSNull class]]) {
+            childrenArray = nil;
+        }
+        
+        for(int i=0;i<childrenArray.count; i++)
+        {
+            NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+            if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqual:[NSNull null]]) {
+                [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
+                
+                
+                if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                    [_disconectKidsAy addObject:[tempDictionary copy]];
+                }
+                
+                //                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                //                                    }
+                
+            }
+
+        }
+    }
+    
     [_progressView setHidden:YES];
     //关闭加载
 //    [HUD hide:YES afterDelay:0];
+    
+    
+    
     
 }
 
@@ -3269,7 +3301,10 @@ else
     if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
         _isloadNews=YES;
         ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
-        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+//        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        
+        tt._childrenArray = _disconectKidsAy;
+        NSLog(@" tt._childrenArray  (%lu)", (unsigned long)tt._childrenArray.count);
         [self.navigationController pushViewController:tt animated:YES];
         tt .title = @"";
     }
@@ -3805,7 +3840,7 @@ else
        
         
         _connectKidsAy = [(NSMutableArray *)[notification object] copy];
-        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+//        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
         NSLog(@"_disconectKidsAy CONUT--- > %lu",(unsigned long)_disconectKidsAy.count);
         
