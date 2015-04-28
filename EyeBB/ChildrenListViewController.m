@@ -457,7 +457,7 @@
         }
         
         
-        NSLog(@"_childrenArray (%@)",_childrenArray);
+        //NSLog(@"_childrenArray (%@)",_childrenArray);
         
         for (int i=0; i<_childrenArray.count; i++) {
             [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];

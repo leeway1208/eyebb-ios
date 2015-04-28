@@ -1039,12 +1039,13 @@
     kidNameLbl.tag=220;
     [_kidsMassageView addSubview:kidNameLbl];
     
-    UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 35, CGRectGetWidth(_kidsMassageView.frame)-100, 20)];
+    UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 35, CGRectGetWidth(_kidsMassageView.frame)-100, 40)];
     [roomNameLbl setText:@"sss"];
     //            [messageLbl setAlpha:0.6];
-    [roomNameLbl setFont:[UIFont systemFontOfSize: 15.0]];
+    [roomNameLbl setFont:[UIFont systemFontOfSize: 12.0]];
     [roomNameLbl setTextColor:[UIColor blackColor]];
     [roomNameLbl setTextAlignment:NSTextAlignmentLeft];
+    roomNameLbl.numberOfLines = 2;
     roomNameLbl.tag=221;
     [_kidsMassageView addSubview:roomNameLbl];
     
@@ -3008,7 +3009,9 @@ else
     if ([tag isEqualToString:GET_REPORTS]) {
 //        NSString *responseString = [request responseString];
         NSData *responseData = [request responseData];
-       
+        NSString * resFEED_BACK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"FEED_BACK %@",resFEED_BACK);
+      
         if(_activityInfosArray!=nil)
         {
             _activityInfosArray=nil;
@@ -3075,7 +3078,7 @@ else
     if ([tag isEqualToString:FEED_BACK]) {
         
         NSData *responseData = [request responseData];
-             NSString * resFEED_BACK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSString * resFEED_BACK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         NSLog(@"FEED_BACK %@",resFEED_BACK);
         if ([resFEED_BACK isEqualToString:@"true"]) {
             
@@ -3452,16 +3455,22 @@ else
     [KidsImgView setImageWithPath:[pathOne copy]];
     UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
     [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+   
     UILabel * roomNameLbl =(UILabel *)[_kidsMassageView viewWithTag:221];
+    NSLog(@"MEIDE %@",[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]);
+    NSString * kidsAppearDate =  [self timeSp2date:[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]];
+    
     switch (myDelegate.applanguage) {
+            
+            
         case 0:
-            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]]];
+            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"], kidsAppearDate ]];
             break;
         case 1:
-            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]]];
+            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"],kidsAppearDate  ]];
             break;
         case 2:
-            [roomNameLbl setText:[NSString stringWithFormat:@"@ %@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"]]];
+            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"],kidsAppearDate ]];
             break;
             
         default:
@@ -3889,6 +3898,19 @@ else
     
 }
 
+
+#pragma mark - timeSp to date
+-(NSString *)timeSp2date:(NSString *)timeSp{
+
+    NSString * timeStampString = timeSp;
+    NSTimeInterval _interval=[timeStampString doubleValue] / 1000.0;
+    NSDate *date = [NSDate dateWithTimeIntervalSince1970:_interval];
+    NSDateFormatter *objDateformat = [[NSDateFormatter alloc] init];
+    [objDateformat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSLog(@"%@", [objDateformat stringFromDate: date]);
+    return [objDateformat stringFromDate: date];
+    
+}
 
 @end
 
