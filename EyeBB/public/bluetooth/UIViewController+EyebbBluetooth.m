@@ -29,15 +29,23 @@
     [[self BluetoothRequest] writeMajorAndMinorThenMajor:UUID writeMajor:writeMajor writeMinor:writeMinor];
     
 }
--(void) startScan{
-    [[self BluetoothRequest] startScan];
+
+
+-(void)scanTheDevice{
+    [[self BluetoothRequest] scanTheDevice];
 }
--(void) stopScan{
-    [[self BluetoothRequest] stopScan];
+
+-(void)stopScanTheDevice{
+    [[self BluetoothRequest] stopScanTheDevice];
+
 }
 
 -(void) findSOSDevice{
     [[self BluetoothRequest] findSOSDevice ];
 }
+-(void)stopfindSOSDevice{
+    [[self BluetoothRequest] stopfindSOSDevice ];
+}
+
 
 @end

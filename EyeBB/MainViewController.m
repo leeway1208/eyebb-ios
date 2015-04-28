@@ -32,6 +32,10 @@
     AppDelegate * myDelegate;
     int textHeight;
     int selected;
+    
+    //radar status number
+    int connectNum;
+    int disconnectNum;
 }
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
@@ -163,6 +167,22 @@
 /**意见输入框*/
 @property (nonatomic,strong)UITextField *FeekBackTxt;
 
+// RADAR VIEW
+@property (nonatomic,strong) UISwitch *switchButton;
+// RADAR UISegmented Control
+@property (nonatomic,strong) UISegmentedControl *radarViewSegmentedControl;
+/**表现按钮*/
+@property (strong,nonatomic) UIButton * connectBtn;
+/**活动按钮*/
+@property (strong,nonatomic) UIButton * disconnectBtn;
+//间隔线2
+@property (strong,nonatomic) UILabel *RadarDivisionTwoLbl;
+//间隔线4
+@property (strong,nonatomic) UILabel *radarDivisionFourLbl;
+/**connect kids*/
+@property (strong,nonatomic) NSMutableArray * connectKidsAy;
+//disconnect kids
+@property (strong,nonatomic) NSMutableArray * disconectKidsAy;
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
 
@@ -181,7 +201,7 @@
 //    [self getRequest:@"kindergartenList" delegate:self];
     [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
    
-    
+   
     
     [self lc];
 }
@@ -224,7 +244,7 @@
     if (self.web!=nil) {
         self.web =nil;
     }
-    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==1&&self.isloadNews==YES) {
+    if (myDelegate.childDictionary!=nil&&huaHMSegmentedControl==2&&self.isloadNews==YES) {
         
         [self insertChildMessage];
        
@@ -236,6 +256,10 @@
     }
 }
 
+-(void)viewDidDisappear:(BOOL)animated{
+   
+    
+}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
@@ -259,6 +283,9 @@
  */
 -(void)iv
 {
+    connectNum = 0;
+    disconnectNum = 0;
+    
     _colorArray=@[[UIColor colorWithRed:0.282 green:0.800 blue:0.922 alpha:1],[UIColor colorWithRed:0.392 green:0.549 blue:0.745 alpha:1],[UIColor colorWithRed:0.396 green:0.741 blue:0.561 alpha:1],[UIColor colorWithRed:0.149 green:0.686 blue:0.663 alpha:1],[UIColor colorWithRed:0.925 green:0.278 blue:0.510 alpha:1],[UIColor colorWithRed:0.690 green:0.380 blue:0.208 alpha:1],[UIColor colorWithRed:0.898 green:0.545 blue:0.682 alpha:1],[UIColor colorWithRed:0.643 green:0.537 blue:0.882 alpha:1],[UIColor colorWithRed:0.847 green:0.749 blue:0.216 alpha:1],[UIColor colorWithRed:0.835 green:0.584 blue:0.329 alpha:1]];
     
     _organizationArray=[[NSMutableArray alloc]init];
@@ -268,6 +295,8 @@
     _childrenByRoomDictionary=[[NSMutableDictionary alloc]init];
     _dailyAvgFigureArray=[[NSMutableArray alloc]init];
     _activityInfosArray=[[NSMutableArray alloc]init];
+    _connectKidsAy =[[NSMutableArray alloc]init];
+    _disconectKidsAy =[[NSMutableArray alloc]init];
     _isallRoomOn=NO;
     _isautoOn=NO;
     _isreloadRoomList=YES;
@@ -300,7 +329,7 @@
 
     
     //室内定位选择按钮
-    _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/3, 44)];
+    _HomeBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
     [_HomeBtn setImage:[UIImage imageNamed:@"actbar_home"] forState:UIControlStateNormal];
     [_HomeBtn setImage:[UIImage imageNamed:@"actbar_homeOn"] forState:UIControlStateSelected];
@@ -318,24 +347,24 @@
     
     
     
-//    //雷达选择按钮
-//    _RadarBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
-//    //设置按显示图片
-//    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
-//    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_trackingOn"] forState:UIControlStateSelected];
-//    //设置按钮背景颜色
-//    [_RadarBtn setBackgroundColor:[UIColor clearColor]];
-//    //设置按钮响应事件
-//    [_RadarBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
-//    //设置按钮是否圆角
-//    [_RadarBtn.layer setMasksToBounds:NO];
-//    //圆角像素化
-//    //    [listSetBtn.layer setCornerRadius:4.0];
-//        _RadarBtn.tag=215;
-//    [self.view addSubview:_RadarBtn];
+    //雷达选择按钮
+    _RadarBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4, 20, Drive_Wdith/4, 44)];
+    //设置按显示图片
+    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_tracking"] forState:UIControlStateNormal];
+    [_RadarBtn setImage:[UIImage imageNamed:@"actbar_trackingOn"] forState:UIControlStateSelected];
+    //设置按钮背景颜色
+    [_RadarBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [_RadarBtn addTarget:self action:@selector(tabAction:) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [_RadarBtn.layer setMasksToBounds:NO];
+    //圆角像素化
+    //    [listSetBtn.layer setCornerRadius:4.0];
+        _RadarBtn.tag=215;
+    [self.view addSubview:_RadarBtn];
     
     //简报选择按钮
-    _NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/3, 20, Drive_Wdith/3, 44)];
+    _NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4 * 2, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
     [_NewsBtn setImage:[UIImage imageNamed:@"actbar_report"] forState:UIControlStateNormal];
     [_NewsBtn setImage:[UIImage imageNamed:@"actbar_reportOn"] forState:UIControlStateSelected];
@@ -347,11 +376,11 @@
     [_NewsBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _NewsBtn.tag=215;
+        _NewsBtn.tag=216;
     [self.view addSubview:_NewsBtn];
     
     //个人信息选择按钮
-    _PersonageBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/3*2, 20, Drive_Wdith/3, 44)];
+    _PersonageBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith/4*3, 20, Drive_Wdith/4, 44)];
     //设置按显示图片
     [_PersonageBtn setImage:[UIImage imageNamed:@"actbar_profile"] forState:UIControlStateNormal];
     [_PersonageBtn setImage:[UIImage imageNamed:@"actbar_profileOn"] forState:UIControlStateSelected];
@@ -363,31 +392,31 @@
     [_PersonageBtn.layer setMasksToBounds:NO];
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
-        _PersonageBtn.tag=216;
+        _PersonageBtn.tag=217;
     [self.view addSubview:_PersonageBtn];
     
     NSLog(@"CGRectGetm(_RadarBtn.bounds) is %f",CGRectGetMinX(_RadarBtn.bounds));
     //间隔线
-    UILabel *divisionHomeLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/3-1, 24.0f, 2, 34)];
+    UILabel *divisionHomeLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4-1, 24.0f, 2, 34)];
     [divisionHomeLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [self.view addSubview:divisionHomeLbl];
     
     //间隔线
-    UILabel *divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/3*2-1, 24.0f, 2, 34)];
+    UILabel *divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*2-1, 24.0f, 2, 34)];
     [divisionRadarLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [self.view addSubview:divisionRadarLbl];
     
-//    //间隔线
-//    UILabel *divisionNewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*3-1, 24.0f, 2, 34)];
-//    [divisionNewsLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
-//    [self.view addSubview:divisionNewsLbl];
+    //间隔线
+    UILabel *divisionNewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(Drive_Wdith/4*3-1, 24.0f, 2, 34)];
+    [divisionNewsLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [self.view addSubview:divisionNewsLbl];
     
     
     //设置scrollView
     _MainInfoScrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, 64, Drive_Wdith, Drive_Height-44)];
     [_MainInfoScrollView setBackgroundColor:[UIColor colorWithRed:0.941 green:0.941 blue:0.941 alpha:1]];
     [_MainInfoScrollView setDelegate:self];
-    _MainInfoScrollView.contentSize = CGSizeMake(Drive_Wdith*3, CGRectGetHeight(_MainInfoScrollView.frame));
+    _MainInfoScrollView.contentSize = CGSizeMake(Drive_Wdith*4, CGRectGetHeight(_MainInfoScrollView.frame));
     [_MainInfoScrollView setTag:101];
     // 滚动时,是否显示水平滚动条
     _MainInfoScrollView.showsHorizontalScrollIndicator = NO;
@@ -493,20 +522,187 @@
     [_MainInfoScrollView addSubview:_RoomTableView];
     
     //------------------------雷达-------------------------------
-//    //初始化雷达
-//    _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
-//    
-//    _RadarTableView.dataSource = self;
-//    _RadarTableView.delegate = self;
-//    //    [self.positionDetailsTableView setBounces:NO];
-//    [_MainInfoScrollView addSubview:_RadarTableView];
+    //初始化雷达
+    
+    UIView *radarTitleView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith , 0, Drive_Wdith, 90)];
+    radarTitleView.backgroundColor=[UIColor clearColor];
+    
+    // title left label
+    UILabel *radarLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-150, 54.0f)];
+    [radarLbl setBackgroundColor:[UIColor clearColor]];
+    radarLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+    
+    radarLbl.textAlignment = NSTextAlignmentLeft;
+    radarLbl.textColor=[UIColor blackColor];
+    
+    radarLbl.text = LOCALIZATION(@"text_radar_tracking");
+    
+    [radarTitleView addSubview:radarLbl];
     
     
+    // title right button
+    _switchButton = [[UISwitch alloc] initWithFrame:CGRectMake(Drive_Wdith  - 60, 10, 85, 30)];
+    _switchButton.onTintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    [_switchButton setOn:NO];
+    [_switchButton addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    
+    _switchButton.transform = CGAffineTransformMakeScale(0.75, 0.75);
+    [radarTitleView addSubview:_switchButton];
+    
+    // title segmented control
+    NSArray *radarSegmentedArray = [[NSArray alloc]initWithObjects:LOCALIZATION(@"text_radar_tracking"),LOCALIZATION(@"text_anti_lost_mode"),nil];
+    
+    _radarViewSegmentedControl = [[UISegmentedControl alloc]initWithItems:radarSegmentedArray];
+    
+    _radarViewSegmentedControl.frame = CGRectMake(Drive_Wdith / 2 -125, 45.0, 250.0, 25.0);
+    _radarViewSegmentedControl.selectedSegmentIndex = 0;//设置默认选择项索引
+    _radarViewSegmentedControl.tintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+  
+    //style
+    _radarViewSegmentedControl.segmentedControlStyle = UISegmentedControlStylePlain;
+    
+    [_radarViewSegmentedControl addTarget:self action:@selector(radarViewSegmentAction:) forControlEvents:UIControlEventValueChanged];  //添加委托方法
+    
+    [radarTitleView addSubview:_radarViewSegmentedControl];
+    
+    [_MainInfoScrollView addSubview:radarTitleView];
+    
+    //-----------------------------Radar dish-----------------------------
+    
+    // 1.创建UIScrollView
+    UIScrollView *scrollView = [[UIScrollView alloc] init];
+    scrollView.frame = CGRectMake(Drive_Wdith + 5 , 80, Drive_Wdith - 10, Drive_Height +  _connectKidsAy.count * 45);
+    // frame中的size指UIScrollView的可视范围
+    scrollView.showsHorizontalScrollIndicator = NO;
+    scrollView.showsVerticalScrollIndicator = NO;
+    scrollView.backgroundColor = [UIColor clearColor];
+    [_MainInfoScrollView addSubview:scrollView];
+    
+    //bg_radar_circle
+    UIView *radarDishView=[[UIView alloc]initWithFrame:CGRectMake(0 , 0, Drive_Wdith - 10, 200)];
+    radarDishView.backgroundColor=[UIColor whiteColor];
+    
+    UIImageView *bgRadaCircle = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith/2 - 90, 10, 180, 180)];
+    bgRadaCircle.image = [UIImage imageNamed:@"bg_radar_circle"];
+    
+    
+    [radarDishView addSubview:bgRadaCircle];
+    
+    //bg_radar_rotate
+    
+    UIImageView *bgRadarRotate = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith/2 - 90, 10, 180, 180)];
+    bgRadarRotate.image = [UIImage imageNamed:@"bg_radar_rotate"];
+    
+    
+    [self rotate360DegreeWithImageView:bgRadarRotate];
+    
+    [radarDishView addSubview:bgRadarRotate];
+
+    
+    
+    [scrollView addSubview:radarDishView];
+    
+    //------------------------------Radar table---------------------------
+    
+    //radar foot view
+    UIView *radarConnectView =[[UIView alloc]initWithFrame:CGRectMake(0, 205, Drive_Wdith-10, 44)];
+    radarConnectView.backgroundColor=[UIColor clearColor];
+    [scrollView addSubview:radarConnectView];
+    
+    //connect table
+    _connectBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(radarConnectView.bounds)/2, 48)];
+    //设置按显示图片
+    [_connectBtn setTitle:[NSString stringWithFormat:@"%d %@",connectNum,LOCALIZATION(@"btn_supervised")]   forState:UIControlStateNormal];
+    [_connectBtn setTitleColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1] forState:UIControlStateNormal];
+    [_connectBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
+    [_connectBtn setSelected:YES];
+    
+    //image view
+    if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"] ) {
+        
+    }else{
+        UIImageView *tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30,14,20,20)];
+        tickImageView.image = [UIImage imageNamed:@"tick"];
+        [_connectBtn addSubview:tickImageView];
+    }
+
+
+    //font size
+   //_connectBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
+    
+    //设置按钮背景颜色
+    [_connectBtn setBackgroundColor:[UIColor whiteColor]];
+    //设置按钮是否圆角
+    [_connectBtn.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_connectBtn.layer setCornerRadius:4.0];
+    //设置按钮响应事件
+    [_connectBtn addTarget:self action:@selector(radarConnectionAction:) forControlEvents:UIControlEventTouchUpInside];
+    [radarConnectView addSubview:_connectBtn];
+    
+    //间隔线2
+    _RadarDivisionTwoLbl = [[UILabel alloc] initWithFrame:CGRectMake(0,CGRectGetHeight(_connectBtn.bounds)-7, CGRectGetWidth(_connectBtn.bounds), 3)];
+    [_RadarDivisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
+    [_connectBtn addSubview:_RadarDivisionTwoLbl];
+    
+    
+    //disconnect table
+    _disconnectBtn = [[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(radarConnectView.bounds)/2, 0, CGRectGetWidth(radarConnectView.bounds)/2, 48)];
+    //设置按显示图片
+    [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
+    [_disconnectBtn setTitleColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1] forState:UIControlStateNormal];
+    [_disconnectBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
+    
+    //image view
+    if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"]) {
+        
+    }else{
+        UIImageView *crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
+        crossImageView.image = [UIImage imageNamed:@"cross2"];
+        [_disconnectBtn addSubview:crossImageView];
+    }
+
+   
+   
+    //_disconnectBtn.titleLabel.font = [UIFont systemFontOfSize: 16.0];
+
+    //设置按钮背景颜色
+    [_disconnectBtn setBackgroundColor:[UIColor whiteColor]];
+    //设置按钮是否圆角
+    [_disconnectBtn.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_disconnectBtn.layer setCornerRadius:4.0];
+    
+    //设置按钮响应事件
+    [_disconnectBtn addTarget:self action:@selector(radarDisconnectionAction:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [radarConnectView addSubview:_disconnectBtn];
+    
+    //间隔线
+    UILabel *radarDivisionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(radarConnectView.bounds)/2, 0.0f, 1, 48)];
+    [radarDivisionLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [radarConnectView addSubview:radarDivisionLbl];
+    
+
+    //间隔线4
+    _radarDivisionFourLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_disconnectBtn.bounds)-5, CGRectGetWidth(_disconnectBtn.bounds), 1)];
+    [_radarDivisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [_disconnectBtn addSubview:_radarDivisionFourLbl];
+    
+    // table ----------------------------
+    _RadarTableView = [[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  _connectKidsAy.count * 45)];
+    _RadarTableView.userInteractionEnabled = NO;
+    _RadarTableView.dataSource = self;
+    _RadarTableView.delegate = self;
+    //    [self.positionDetailsTableView setBounces:NO];
+    _RadarTableView.tableFooterView = [[UIView alloc] init];
+    [scrollView addSubview:_RadarTableView];
+
     
     //------------------------简报-------------------------------
 
     //简报名称
-    UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith, 0, Drive_Wdith, 54)];
+    UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2, 0, Drive_Wdith, 54)];
     NewsView.backgroundColor=[UIColor clearColor];
     
     UILabel *NewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
@@ -521,16 +717,16 @@
     [NewsView addSubview:NewsLbl];
     
     //选择要查看的儿童
-    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-92, 5, 72, 44)];
+    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 92, 5, 72, 44)];
 
     //设置按钮背景颜色
     [NewsBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-//<<<<<<< Updated upstream
+
 //    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
-//=======
+
     [NewsBtn addTarget:self action:@selector(showChildrenList) forControlEvents:UIControlEventTouchUpInside];
-//>>>>>>> Stashed changes
+
     
     [NewsView addSubview:NewsBtn];
     
@@ -562,7 +758,7 @@
     if(revampLbl.text.length>2)
     {
        
-        NewsBtn.frame=CGRectMake(Drive_Wdith-((revampLbl.text.length*9)+55), 5, (revampLbl.text.length*9)+45, 44);
+        NewsBtn.frame=CGRectMake(Drive_Wdith  -((revampLbl.text.length*9)+55), 5, (revampLbl.text.length*9)+45, 44);
          revampLbl.frame=CGRectMake(32.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
     }
     
@@ -573,7 +769,7 @@
     
     
     //通告标题
-    UIView *changeView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 54, Drive_Wdith-20, 44)];
+    UIView *changeView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2 +10, 54, Drive_Wdith-20, 44)];
     changeView.backgroundColor=[UIColor clearColor];
     [_MainInfoScrollView addSubview:changeView];
     
@@ -635,7 +831,7 @@
     
 
     //选择显示范围
-    _PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 40)];
+    _PerformanceTimeBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith * 2 +10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, 40)];
     //设置按钮背景颜色
     [_PerformanceTimeBtn setBackgroundColor:[UIColor whiteColor]];
     
@@ -696,7 +892,7 @@
     
     
     //初始化表现列表
-    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 138, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-138)];
+    _PerformanceTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2 +10, 138, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-138)];
     _PerformanceTableView.dataSource = self;
     _PerformanceTableView.delegate = self;
     //隐藏table自带的cell下划线
@@ -708,7 +904,7 @@
 
     
     //初始化活动列表
-    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith+10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
+    _ActivitiesTableView = [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2 +10, 98, CGRectGetWidth(_MainInfoScrollView.frame)-20, CGRectGetHeight(_MainInfoScrollView.frame)-98)];
     _ActivitiesTableView.dataSource = self;
     _ActivitiesTableView.delegate = self;
     self.ActivitiesTableView.tableFooterView = [[UIView alloc] init];
@@ -716,7 +912,7 @@
     [_MainInfoScrollView addSubview:_ActivitiesTableView];
       _ActivitiesTableView.hidden=YES;
     
-    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 120, Drive_Wdith-20, 30)];
+    _bulletinLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 120, Drive_Wdith -20, 30)];
     _bulletinLbl.text=LOCALIZATION(@"text_no_content");
     _bulletinLbl.textColor=[UIColor blackColor];
     _bulletinLbl.font=[UIFont systemFontOfSize:16];
@@ -729,7 +925,7 @@
     
     
     //用户名
-    UIView *PersonageView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 0, Drive_Wdith, 54)];
+    UIView *PersonageView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 0, Drive_Wdith, 54)];
     PersonageView.backgroundColor=[UIColor clearColor];
     
     _UserNameLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
@@ -761,7 +957,7 @@
     [_MainInfoScrollView addSubview:PersonageView];
     
     //通告标题
-    UIView *PersonageTitleView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 54, Drive_Wdith, 30)];
+    UIView *PersonageTitleView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 54, Drive_Wdith, 30)];
     PersonageTitleView.backgroundColor=[UIColor whiteColor];
     
     UILabel * PersonageLbl = [[UILabel alloc] initWithFrame:CGRectMake(-1.0f, -1.0f, Drive_Wdith+2, 31.0f)];
@@ -777,7 +973,7 @@
     [_MainInfoScrollView addSubview:PersonageTitleView];
     
     //初始化个人信息
-    _PersonageTableView= [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*2, 84, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
+    _PersonageTableView= [[UITableView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 84, CGRectGetWidth(_MainInfoScrollView.frame), CGRectGetHeight(_MainInfoScrollView.frame))];
     _PersonageTableView.dataSource = self;
     _PersonageTableView.delegate = self;
     //    [self.positionDetailsTableView setBounces:NO];
@@ -1002,7 +1198,7 @@
     
     if(tableView == self.RadarTableView){
         
-        return 70;
+        return 45;
     }
     
     else if(tableView == self.ActivitiesTableView){
@@ -1039,7 +1235,7 @@
         
     }
     else if(tableView == self.RadarTableView){
-        return 1;
+        return _connectKidsAy.count;
     }
     else if(tableView == self.ActivitiesTableView){
         return _activityInfosArray.count;
@@ -2458,7 +2654,20 @@
                     }
                     
                     break;
+                    
                 case 1:
+                    [_HomeBtn setSelected:NO];
+                    [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_RadarBtn setSelected:YES];
+                    [_RadarBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                    [_NewsBtn setSelected:NO];
+                    [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                    [_PersonageBtn setSelected:NO];
+                    [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                    _bulletinLbl.hidden=YES;
+                    
+                    break;
+                case 2:
                     if(_ActivitiesTableView.hidden==YES)
                     {
                         if (_dailyAvgFigureArray.count<1) {
@@ -2506,7 +2715,7 @@
                     //关闭定时器
                     [self.refreshTimer setFireDate:[NSDate distantFuture]];
                     break;
-                case 2:
+                case 3:
                     _bulletinLbl.hidden=YES;
                     _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 3.0f);
                     _progressView.hidden=YES;
@@ -3191,9 +3400,11 @@ else
     UIButton *tempBtn=sender;
     
     
-    UITableViewCell *cell = (UITableViewCell *)[tempBtn superview];
+    UITableViewCell *cell = [(UITableViewCell *)[tempBtn superview]superview ];
     NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
     NSLog(@"indexPath is = %zi",indexPath.row);
+    NSLog(@"tempBtn.tag = %ld",(long)tempBtn.tag);
+    
      NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
     [_PopupSView setHidden:NO];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
@@ -3310,8 +3521,8 @@ else
                 _progressView.hidden=YES;
                 [_HomeBtn setSelected:YES];
                 [_HomeBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
-//                [_RadarBtn setSelected:NO];
-//                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
                 [_NewsBtn setSelected:NO];
                 [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                 [_PersonageBtn setSelected:NO];
@@ -3320,8 +3531,23 @@ else
             case 215:
                 [_HomeBtn setSelected:NO];
                 [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-//                [_RadarBtn setSelected:NO];
-//                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:YES];
+                [_RadarBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+                [_NewsBtn setSelected:NO];
+                [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
+                [_PersonageBtn setSelected:NO];
+                [_PersonageBtn setBackgroundColor:[UIColor whiteColor]];
+                _bulletinLbl.hidden=YES;
+                
+                break;
+                
+                
+                
+            case 216:
+                [_HomeBtn setSelected:NO];
+                [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
                 [_NewsBtn setSelected:YES];
                 [_NewsBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
                 [_PersonageBtn setSelected:NO];
@@ -3360,14 +3586,14 @@ else
                 }
                 
                 break;
-            case 216:
+            case 217:
                 _bulletinLbl.hidden=YES;
                 _progressView.frame=CGRectMake(Drive_Wdith*2, 0.0f, Drive_Wdith, 1.0f);
                 _progressView.hidden=YES;
                 [_HomeBtn setSelected:NO];
                 [_HomeBtn setBackgroundColor:[UIColor whiteColor]];
-//                [_RadarBtn setSelected:NO];
-//                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
+                [_RadarBtn setSelected:NO];
+                [_RadarBtn setBackgroundColor:[UIColor whiteColor]];
                 [_NewsBtn setSelected:NO];
                 [_NewsBtn setBackgroundColor:[UIColor whiteColor]];
                 [_PersonageBtn setSelected:YES];
@@ -3377,6 +3603,8 @@ else
             default:
                 break;
         }
+    
+    NSLog(@"numnum -- > %d",num);
         huaHMSegmentedControl = num;
         [self.MainInfoScrollView scrollRectToVisible:CGRectMake(Drive_Wdith * num, 0, Drive_Wdith, Drive_Height-44) animated:YES];
         if(num==0)
@@ -3387,6 +3615,10 @@ else
                 [self.refreshTimer setFireDate:[NSDate distantPast]];
             }
            
+        }
+        if(num==1){
+            //[self.refreshTimer setFireDate:[NSDate distantPast]];
+            [self.refreshTimer setFireDate:[NSDate distantFuture]];
         }
         if (num==2) {
             if(_isloadNews==YES)
@@ -3493,6 +3725,127 @@ else
 //            break;
 //    }
 }
+
+
+/**
+ *  switch button
+ *
+ *  @param sender <#sender description#>
+ */
+-(void)switchAction:(id)sender
+{
+   
+    BOOL isButtonOn = [_switchButton isOn];
+    if (isButtonOn) {
+      [self scanTheDevice];
+        //reg broad cast
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scanDeviceBroadcast:) name:nil object:nil ];
+    }else {
+      [self stopScanTheDevice];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:nil];
+    }
+}
+
+/**
+ *  choose radar tracking or anti lost
+ *
+ *  @param Seg <#Seg description#>
+ */
+-(void)radarViewSegmentAction:(UISegmentedControl *)Seg{
+    
+    NSInteger Index = Seg.selectedSegmentIndex;
+    
+    NSLog(@"Index %li", (long)Index);
+    
+    switch (Index) {
+            
+        case 0:
+            
+         
+            
+            break;
+            
+        case 1:
+            
+     
+            
+            break;
+
+            
+    }
+    
+}
+
+
+-(void)radarConnectionAction:(id)sender{
+    _RadarDivisionTwoLbl.frame=CGRectMake(0,CGRectGetHeight(_connectBtn.bounds)-7, CGRectGetWidth(_connectBtn.bounds), 3);
+    [_RadarDivisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
+    _radarDivisionFourLbl.frame=CGRectMake(0, CGRectGetHeight(_disconnectBtn.bounds)-5, CGRectGetWidth(_disconnectBtn.bounds), 1);
+    [_radarDivisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    
+    [_connectBtn setSelected:YES];
+    [_disconnectBtn setSelected:NO];
+    
+    
+}
+
+-(void)radarDisconnectionAction:(id)sender{
+    _radarDivisionFourLbl.frame=CGRectMake(0,CGRectGetHeight(_disconnectBtn.bounds)-7, CGRectGetWidth(_disconnectBtn.bounds), 3);
+    [_radarDivisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1]];
+    _RadarDivisionTwoLbl.frame=CGRectMake(0, CGRectGetHeight(_connectBtn.bounds)-5, CGRectGetWidth(_connectBtn.bounds), 1);
+    [_RadarDivisionTwoLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
+    [_connectBtn setSelected:NO];
+    [_disconnectBtn setSelected:YES];
+    
+    
+}
+
+#pragma mark - ui-image rotate 360
+- (UIImageView *)rotate360DegreeWithImageView:(UIImageView *)imageView{
+    CABasicAnimation *animation = [ CABasicAnimation
+                                   animationWithKeyPath: @"transform" ];
+    animation.fromValue = [NSValue valueWithCATransform3D:CATransform3DIdentity];
+    
+    //围绕Z轴旋转，垂直与屏幕
+    animation.toValue = [ NSValue valueWithCATransform3D:
+                         
+                         CATransform3DMakeRotation(M_PI, 0.0, 0.0, 1.0) ];
+    animation.duration = 1.0;
+    //旋转效果累计，先转180度，接着再旋转180度，从而实现360旋转
+    animation.cumulative = YES;
+    animation.repeatCount = INT_MAX;
+    
+    //在图片边缘添加一个像素的透明区域，去图片锯齿
+    CGRect imageRrect = CGRectMake(0, 0,imageView.frame.size.width, imageView.frame.size.height);
+    UIGraphicsBeginImageContext(imageRrect.size);
+    [imageView.image drawInRect:CGRectMake(1,1,imageView.frame.size.width-2,imageView.frame.size.height-2)];
+    imageView.image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    [imageView.layer addAnimation:animation forKey:nil];
+    return imageView;
+}
+
+#pragma mark - broadcast
+- (void) scanDeviceBroadcast:(NSNotification *)notification{
+    if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME]){
+        NSLog(@"BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME");
+       
+        
+        _connectKidsAy = [(NSMutableArray *)[notification object] copy];
+        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+        NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
+        NSLog(@"_disconectKidsAy CONUT--- > %lu",(unsigned long)_disconectKidsAy.count);
+        
+        
+    }
+    
+    
+    
+    
+    
+}
+
 
 @end
 

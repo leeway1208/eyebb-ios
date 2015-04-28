@@ -375,7 +375,7 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    [self stopScan];
+    [self stopfindSOSDevice];
     [HUD show:YES];
     _didSelectTargetAdvertisementData = (NSDictionary *)_SOSDiscoveredAdvertisementData[indexPath.row];
     _didSelectTargetPeripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];

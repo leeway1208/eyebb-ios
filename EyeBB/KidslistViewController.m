@@ -415,7 +415,7 @@
                 [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
                 
                 
-                if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""] && [[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
                     [self.BindingArray addObject:[tempDictionary copy]];
                 }
                 

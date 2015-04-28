@@ -75,8 +75,7 @@
     //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
     
     
-    [self iv];
-    [self lc];
+   
     
     NSLog(@"childrenDictionary(%@)",self.childrenDictionary);
     NSLog(@"name (%@)",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"name"]);
@@ -94,6 +93,10 @@
     
     //reg broad cast
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(beepTimeout:) name:nil object:nil ];
+    
+    
+    [self iv];
+    [self lc];
 }
 
 -(void)viewWillAppear:(BOOL)animated

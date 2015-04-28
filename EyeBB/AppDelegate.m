@@ -90,17 +90,17 @@
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     
     NSString *appLanguage = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
-    NSArray *arrayOfLanguages = [[NSArray alloc]init];
-    arrayOfLanguages = [[[Localisator sharedInstance] availableLanguagesArray] copy];
+    NSArray * availableLanguagesArray = @[@"en", @"zh-Hans-CN", @"zh-Hant-HK"];
+    NSLog(@"arrayOfLanguages (%@)",availableLanguagesArray);
     if([appLanguage isEqualToString:@"zh-Hans-CN"]){
         //zh-Hans-CN   zh-Hant-HK
-        [[Localisator sharedInstance] setLanguage:arrayOfLanguages[2]];
+        [[Localisator sharedInstance] setLanguage:availableLanguagesArray[1]];
         applanguage=0;
     }else if([appLanguage isEqualToString:@"zh-Hant-HK"]){
-        [[Localisator sharedInstance] setLanguage:arrayOfLanguages[1]];
+        [[Localisator sharedInstance] setLanguage:availableLanguagesArray[2]];
         applanguage=1;
     }else{
-        [[Localisator sharedInstance] setLanguage:arrayOfLanguages[0]];
+        [[Localisator sharedInstance] setLanguage:availableLanguagesArray[0]];
         applanguage=2;
     }
     

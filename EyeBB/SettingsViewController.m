@@ -16,11 +16,13 @@
 #import "UpdatePDViewController.h"//更新密码
 #import "UpdateNameViewController.h"//更新昵称
 #import "AppDelegate.h"
+#import "MainViewController.h"
 
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
     AppDelegate * myDelegate;
     NSString * currentLanguge;
+    Boolean ifChangeTheLangugae;
 }
 
 /** all items */
@@ -51,7 +53,8 @@
 @property(nonatomic, strong) UpdatePDViewController * updatePD;
 //更新昵称
 @property(nonatomic, strong) UpdateNameViewController * UpdateName;
-
+//refresh main view
+@property(nonatomic, strong) MainViewController * mainView;
 @end
 
 @implementation SettingsViewController
@@ -66,7 +69,9 @@
     
     self.navigationItem.rightBarButtonItem = self.rightBtnItem;
     
-    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(settingsSelectLeftAction:)];
+    //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(settingsSelectLeftAction:)];
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(settingsSelectLeftAction:)];
+    self.navigationItem.leftBarButtonItem = newBackButton;
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
@@ -105,6 +110,9 @@
     if (_UpdateName!=nil) {
         _UpdateName=nil;
     }
+    if (_mainView != nil) {
+        _mainView = nil;
+    }
 }
 
 
@@ -138,7 +146,7 @@
 
 
 -(void)loadPara{
-    
+    ifChangeTheLangugae = false;
     self.title = LOCALIZATION(@"btn_options");
     
     
@@ -369,12 +377,12 @@
             if (myDelegate.appSound == 1 || myDelegate.appSound == 0) {
                 cell.textLabel.text=LOCALIZATION(@"text_enableSound");
                 
-              
+                
                 //            [cell addSubview:[self settingLable:@"text_enableSound"]];
                 
                 if (myDelegate.appSound == 1) {
                     imgView.image=[UIImage imageNamed:@"selected"];
-                   //myDelegate.appSound = 0;
+                    //myDelegate.appSound = 0;
                 }else if(myDelegate.appSound == 0){
                     
                     imgView.image=[UIImage imageNamed:@"selected_off"];
@@ -560,6 +568,10 @@
             [self setUserLanguge:1];
         }
         
+        ifChangeTheLangugae = true;
+
+        
+        
         myDelegate.applanguage=indexPath.row;
         
         [_optionsTable reloadData];
@@ -612,7 +624,23 @@
  */
 -(void)settingsSelectLeftAction:(id)sender
 {
-    [[self navigationController] pushViewController:nil animated:YES];
+    if (ifChangeTheLangugae) {
+        if (_mainView == nil) {
+            _mainView = [[MainViewController alloc] init];
+        }
+        [[self navigationController] pushViewController:_mainView animated:YES];
+        ifChangeTheLangugae = false;
+    }else{
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
+        }
+        ifChangeTheLangugae = false;
+        
+    }
+    
 }
 
 -(void)exitAction:(id)sender

@@ -15,11 +15,10 @@
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
 -(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
 -(void) findSOSDevice;
+-(void)stopfindSOSDevice;
 
-
--(void) startScan;
--(void) stopScan;
-
+-(void)scanTheDevice;
+-(void)stopScanTheDevice;
 
 
 @end

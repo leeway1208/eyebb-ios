@@ -18,6 +18,7 @@
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
 @property (strong,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
 @property (strong,nonatomic) NSMutableArray *discoveredPeripheralsRssi;
+@property (strong,nonatomic) NSMutableArray *discoveredPeripheralsBroadcastDataForScanDevice;
 @property (strong,nonatomic) NSArray * noDuplicates;
 /* timer to refresh the table view */
 @property (strong,nonatomic) NSTimer *refreshTableTimer;
@@ -49,6 +50,7 @@ Boolean isReadBattery = false;
 Boolean isMajor = false;
 Boolean isMinor = false;
 Boolean isSOSDevice = false;
+Boolean isScanDevice = false;
 Boolean startTimerOnce = true;
 
 #pragma mark --- 处理业务逻辑委托
@@ -124,9 +126,18 @@ Boolean startTimerOnce = true;
         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:self.SOSDiscoveredAdvertisementData];
         NSLog(@"timerRefreshTableSelector --- > %lu",(unsigned long)self.SOSDiscoveredPeripherals.count);
-
+    }else if (isScanDevice){
+        [self stopScan];
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDevice];
+         NSLog(@"isScanDevice --- > %lu",(unsigned long)self.discoveredPeripheralsBroadcastDataForScanDevice.count);
+        
+        //clear
+        self.discoveredPeripheralsBroadcastDataForScanDevice.removeAllObjects;
+        [self startScan];
         
     }
+    
+    
 }
 
 - (void)otherSelector:(NSTimer*)timer{
@@ -171,6 +182,7 @@ Boolean startTimerOnce = true;
             break;
         case CBCentralManagerStatePoweredOff:
             state = @"Bluetooth is currently powered off.";
+            
             break;
         case CBCentralManagerStatePoweredOn:
             state = @"work";
@@ -200,8 +212,15 @@ Boolean startTimerOnce = true;
 -(void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     
-    //    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,peripheral.identifier.UUIDString,RSSI);
-    
+    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,peripheral.identifier.UUIDString,RSSI);
+    //this is for scanning device
+    if(![self.discoveredPeripheralsBroadcastDataForScanDevice containsObject:advertisementData]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
+            
+        });
+    }
+
     if(advertisementData != nil){
         NSString *toStringFromData = NSDataToHex([ advertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
         if(toStringFromData.length > 0){
@@ -528,6 +547,8 @@ NSString * NSDataToHex(NSData *data) {
 -(void) startScan {
     NSLog(@"Starting scan");
     
+//    self.central = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
+
     // scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"FFE0"]]  (make your own device)
     //CBCentralManagerOptionRestoreIdentifierKey :@YES @{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES}
     [self.central scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@NO ,CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
@@ -535,7 +556,7 @@ NSString * NSDataToHex(NSData *data) {
 
 -(void) stopScan{
     NSLog(@"Stop scan");
-    
+   
     [self.central stopScan];
 }
 
@@ -546,6 +567,21 @@ NSString * NSDataToHex(NSData *data) {
 
 
 #pragma mark - write functions
+-(void)scanTheDevice{
+    isScanDevice = true;
+    
+    [self startTimer];
+    [self initData:nil minor:nil];
+    [self startScan];
+}
+
+
+-(void)stopScanTheDevice{
+    isScanDevice = false;
+    
+    [self stopTimer];
+    [self stopScan];
+}
 
 -(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue {
     //initial data
@@ -597,6 +633,9 @@ NSString * NSDataToHex(NSData *data) {
     
 }
 
+/**
+ *  use to find the device that you wanan binding
+ */
 -(void) findSOSDevice{
     
     isSOSDevice = true;
@@ -606,6 +645,15 @@ NSString * NSDataToHex(NSData *data) {
     [self startScan];
     
 }
+
+
+-(void)stopfindSOSDevice{
+    isSOSDevice = false;
+    
+    [self stopTimer];
+    [self stopScan];
+}
+
 
 #pragma mark - initial data
 
@@ -618,7 +666,7 @@ NSString * NSDataToHex(NSData *data) {
     self.checkDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredAdvertisementData = [NSMutableArray new];
-
+    self.discoveredPeripheralsBroadcastDataForScanDevice = [NSMutableArray new];
     
     self.service2000 = [CBUUID UUIDWithString:@"0x2000"];
     self.service1000 = [CBUUID UUIDWithString:@"0x1000"];

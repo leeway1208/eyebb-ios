@@ -18,7 +18,7 @@
 #define BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME @"get_sos_device_advertisementData"
 #define BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME @"write_success"
 #define BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME @"write_fail"
-
+#define BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME @"scan_device"
 +(CustomerBluetooth *)instance;
 
 
@@ -26,10 +26,12 @@
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
 -(void) writeMajorAndMinorThenMajor:(NSString *)UUID  writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
 -(void) findSOSDevice;
+-(void)stopfindSOSDevice;
 NSString * NSDataToHex(NSData *data);
 
+-(void)scanTheDevice;
+-(void)stopScanTheDevice;
 
--(void) startScan;
--(void) stopScan;
+
 
 @end

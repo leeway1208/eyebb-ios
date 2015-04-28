@@ -52,7 +52,9 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;
 -(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor;
 -(void) findSOSDevice;
--(void) startScan;
--(void) stopScan;
+-(void)stopfindSOSDevice;
+
+-(void)scanTheDevice;
+-(void)stopScanTheDevice;
 
 @end
