@@ -5,7 +5,7 @@
  Created by Evan on 15/2/23.
  Copyright (c) 2015年 EyeBB. All rights reserved.
  */
-//CFBundleDisplayName ="宝宝安";
+CFBundleDisplayName ="宝宝安";
 //"reg"="注册";
 //"tel"="Tel";
 

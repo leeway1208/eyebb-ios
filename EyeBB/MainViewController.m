@@ -1014,7 +1014,7 @@
     [_kidsMassageView.layer setCornerRadius:4.0];
     [_PopupSView addSubview:_kidsMassageView];
     
-    UIImageView * KidsImgView=[[UIImageView alloc] initWithFrame:CGRectMake(10, 15, 75, 75)];
+    DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 75, 75)];
     [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
     [KidsImgView.layer setMasksToBounds:YES];
     [KidsImgView.layer setBorderWidth:2];
@@ -1022,7 +1022,7 @@
     [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
     
     
-            [KidsImgView setImage:[UIImage imageNamed:@"logo_en"]];
+            [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
     
     KidsImgView.tag=219;
     [_kidsMassageView addSubview:KidsImgView];
@@ -1549,47 +1549,9 @@
                 //儿童图标
                 UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
                 kindBtn.frame=kindImgView.frame;
-      
-//                [kindBtn.layer setMasksToBounds:YES];
-//                [kindBtn.layer setBorderWidth:2];
+
                 [kindBtn setBackgroundColor:[UIColor clearColor]];
-                
-//                [kindBtn.layer setBorderColor:[UIColor whiteColor].CGColor];
-//                if (tempChildArray.count>0&&![[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] isEqualToString:@""]) {
-//                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
-//                    
-//                    NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-//                    NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
-//
-//
-//                    
-//                    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-//                        
-//                         [kindBtn setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath] forState:UIControlStateNormal];
-//                    }
-//                    else
-//                    {
-//                        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-//                        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-//                        [kindBtn setImage:[UIImage imageWithData:data] forState:UIControlStateNormal];
-//                        //Get Image From URL
-//                        UIImage * imageFromURL  = nil;
-//                        imageFromURL=[UIImage imageWithData:data];
-//                        //Save Image to Directory
-//                        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-//                        
-//                        
-//                    }
-//                    pathOne=nil;
-//                    array=nil;
-//                    array2=nil;
-//
-//                }
-//                else
-//                {
-//                    [kindBtn setImage:[UIImage imageNamed:@"logo_en"] forState:UIControlStateNormal];
-//                }
-//
+
                 
                 
                 
@@ -3398,14 +3360,19 @@ else
 
    
     UIButton *tempBtn=sender;
-    
-    
-    UITableViewCell *cell = [(UITableViewCell *)[tempBtn superview]superview ];
+
+    NSMutableArray *keyArray=[NSMutableArray array];
+    NSEnumerator * enumeratorKey=[_childrenDictionary keyEnumerator];
+    for(NSString *s in enumeratorKey)
+    {
+        [keyArray addObject:s];
+    }
+    UITableViewCell *cell = (UITableViewCell *)[[tempBtn superview]superview];
     NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
     NSLog(@"indexPath is = %zi",indexPath.row);
-    NSLog(@"tempBtn.tag = %ld",(long)tempBtn.tag);
-    
-     NSArray *tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+     NSArray *tempChildArray=[_childrenDictionary objectForKey:[[keyArray objectAtIndex: indexPath.row]copy]];
+    keyArray=nil;
+    enumeratorKey=nil;
     [_PopupSView setHidden:NO];
     _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
     [_listTypeView setHidden:YES];
@@ -3414,8 +3381,13 @@ else
     
     [_kidsMassageView setHidden:NO];
     
-    UIImageView * KidsImgView=(UIImageView *)[_kidsMassageView viewWithTag:219];
+     DBImageView  * KidsImgView=(DBImageView *)[_kidsMassageView viewWithTag:219];
     KidsImgView.image= tempBtn.imageView.image;
+    [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+    
+    
+    [KidsImgView setImageWithPath:[pathOne copy]];
     UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
     [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
     UILabel * roomNameLbl =(UILabel *)[_kidsMassageView viewWithTag:221];
