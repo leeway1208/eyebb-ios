@@ -36,6 +36,7 @@
     //radar status number
     int connectNum;
     int disconnectNum;
+    
 }
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
@@ -74,6 +75,8 @@
 @property (strong,nonatomic) UIImageView * conditionImgView;
 /**选择机构按钮*/
 @property (strong,nonatomic) UIButton * organizationShowBtn;
+/**小孩列表*/
+@property (strong,nonatomic) UIButton * childrenListBtn;
 /**机构列表*/
 @property (strong,nonatomic) UITableView * organizationTableView;
 /**查询日期范围列表*/
@@ -144,19 +147,20 @@
 
 @property (nonatomic,strong) SettingsViewController *settingVc;
 /**查看所有房间功能打开*/
-@property (nonatomic) BOOL isallRoomOn;
+@property (nonatomic,assign) BOOL isallRoomOn;
 /**自动刷新功能打开*/
-@property (nonatomic) BOOL isautoOn;
+@property (nonatomic,assign) BOOL isautoOn;
 /**是否刷新房间列表*/
-@property (nonatomic) BOOL isreloadRoomList;
+@property (nonatomic,assign) BOOL isreloadRoomList;
 /**是否刷新系统通知*/
-@property (nonatomic) BOOL isreloadpersonal;
+@property (nonatomic,assign) BOOL isreloadpersonal;
 /**是否加载简报信息*/
-@property (nonatomic) BOOL isloadNews;
+@property (nonatomic,assign) BOOL isloadNews;
 /**是否加载意见反馈*/
-@property (nonatomic) BOOL isloadFeekBack;
+@property (nonatomic,assign) BOOL isloadFeekBack;
+
 /**机构下标*/
-@property (nonatomic) int organizationIndex;
+@property (nonatomic,assign) int organizationIndex;
 
 /**时间格式*/
 @property (nonatomic,strong) NSDateFormatter *dateFormatter;
@@ -179,10 +183,23 @@
 @property (strong,nonatomic) UIButton * connectBtn;
 /**活动按钮*/
 @property (strong,nonatomic) UIButton * disconnectBtn;
+
+@property (strong,nonatomic) UIButton * NewsKidBtn;
+@property (strong,nonatomic) UIButton * closeBtn;
 //间隔线2
-@property (strong,nonatomic) UILabel *RadarDivisionTwoLbl;
+@property (strong,nonatomic) UILabel * RadarDivisionTwoLbl;
 //间隔线4
-@property (strong,nonatomic) UILabel *radarDivisionFourLbl;
+@property (strong,nonatomic) UILabel * radarDivisionFourLbl;
+
+@property (strong,nonatomic) UILabel * labelTitle;
+
+@property (strong,nonatomic) UILabel * radarLbl;
+@property (strong,nonatomic) UILabel * NewsLbl;
+@property (strong,nonatomic) UILabel * revampLbl;
+@property (strong,nonatomic) UILabel * todayLbl;
+@property (strong,nonatomic) UILabel * customizedLbl;
+@property (strong,nonatomic) UILabel * PersonageLbl;
+@property (strong,nonatomic) UILabel * listtitleLal;
 /**connect kids*/
 @property (strong,nonatomic) NSMutableArray * connectKidsAy;
 @property (strong,nonatomic) NSMutableArray * connectKidsRssiAy;
@@ -202,6 +219,11 @@
     self.view.backgroundColor=[UIColor whiteColor];
     self.title = LOCALIZATION(@"app_name");
     // Do any additional setup after loading the view.
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateLanuage)
+                                                 name:@"updateLanuage"
+                                               object:nil];
     [self iv];
     
     
@@ -444,15 +466,15 @@
     //室内定位titleView
     UIView *titleView=[[UIView alloc]initWithFrame:CGRectMake(0, 1, Drive_Wdith, 44)];
     titleView.backgroundColor=[UIColor clearColor];
-    UILabel *labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-64, 44.0f)];
-    [labelTitle setBackgroundColor:[UIColor clearColor]];
-    labelTitle.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
-    labelTitle.textAlignment = NSTextAlignmentLeft;
-    labelTitle.textColor=[UIColor blackColor];
+    _labelTitle = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-64, 44.0f)];
+    [_labelTitle setBackgroundColor:[UIColor clearColor]];
+    _labelTitle.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+    _labelTitle.textAlignment = NSTextAlignmentLeft;
+    _labelTitle.textColor=[UIColor blackColor];
     
-    labelTitle.text = LOCALIZATION(@"text_indoor_locator");
+    _labelTitle.text = LOCALIZATION(@"text_indoor_locator");
     
-    [titleView addSubview:labelTitle];
+    [titleView addSubview:_labelTitle];
     
     //室内定位条件刷选
     UIButton * listSetBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-54, 0, 44, 44)];
@@ -504,17 +526,17 @@
     _organizationShowBtn.hidden=YES;
     [_MainInfoScrollView addSubview:organizationShowBtnShowView];
     
-    //室内定位显示选择
-    UIButton * childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-40, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
+    //小孩列表
+    _childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-40, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
     
     //设置按显示title
-    [childrenListBtn setTitle:@"儿童列表" forState:UIControlStateNormal];
-    [childrenListBtn setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
+    [_childrenListBtn setTitle:LOCALIZATION(@"text_kids_list") forState:UIControlStateNormal];
+    [_childrenListBtn setTitleColor:[UIColor whiteColor]  forState:UIControlStateNormal];
     //设置按钮背景颜色
-    [childrenListBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
+    [_childrenListBtn setBackgroundColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1]];
     //设置按钮响应事件
-    [childrenListBtn addTarget:self action:@selector(childrenListAction:) forControlEvents:UIControlEventTouchUpInside];
-    [_MainInfoScrollView addSubview:childrenListBtn];
+    [_childrenListBtn addTarget:self action:@selector(childrenListAction:) forControlEvents:UIControlEventTouchUpInside];
+    [_MainInfoScrollView addSubview:_childrenListBtn];
     
     
     
@@ -536,16 +558,16 @@
     radarTitleView.backgroundColor=[UIColor clearColor];
     
     // title left label
-    UILabel *radarLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-150, 54.0f)];
-    [radarLbl setBackgroundColor:[UIColor clearColor]];
-    radarLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+    _radarLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-150, 54.0f)];
+    [_radarLbl setBackgroundColor:[UIColor clearColor]];
+    _radarLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
     
-    radarLbl.textAlignment = NSTextAlignmentLeft;
-    radarLbl.textColor=[UIColor blackColor];
+    _radarLbl.textAlignment = NSTextAlignmentLeft;
+    _radarLbl.textColor=[UIColor blackColor];
     
-    radarLbl.text = LOCALIZATION(@"text_radar_tracking");
+    _radarLbl.text = LOCALIZATION(@"text_radar_tracking");
     
-    [radarTitleView addSubview:radarLbl];
+    [radarTitleView addSubview:_radarLbl];
     
     
     // title right button
@@ -720,30 +742,30 @@
     UIView *NewsView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith * 2, 0, Drive_Wdith, 54)];
     NewsView.backgroundColor=[UIColor clearColor];
     
-    UILabel *NewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
-    [NewsLbl setBackgroundColor:[UIColor clearColor]];
-    NewsLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
+    _NewsLbl = [[UILabel alloc] initWithFrame:CGRectMake(5.0f, 0.0f, Drive_Wdith-200, 54.0f)];
+    [_NewsLbl setBackgroundColor:[UIColor clearColor]];
+    _NewsLbl.font=[UIFont fontWithName:@"Helvetica-Bold" size:20];
     
-    NewsLbl.textAlignment = NSTextAlignmentLeft;
-    NewsLbl.textColor=[UIColor blackColor];
+    _NewsLbl.textAlignment = NSTextAlignmentLeft;
+    _NewsLbl.textColor=[UIColor blackColor];
     
-    NewsLbl.text = LOCALIZATION(@"text_report");
+    _NewsLbl.text = LOCALIZATION(@"text_report");
     
-    [NewsView addSubview:NewsLbl];
+    [NewsView addSubview:_NewsLbl];
     
     //选择要查看的儿童
-    UIButton * NewsBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 92, 5, 72, 44)];
+    _NewsKidBtn = [[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 92, 5, 72, 44)];
     
     //设置按钮背景颜色
-    [NewsBtn setBackgroundColor:[UIColor clearColor]];
+    [_NewsKidBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
     
     //    [NewsBtn addTarget:self action:@selector(reportViewChangeChildBtmAction:) forControlEvents:UIControlEventTouchUpInside];
     
-    [NewsBtn addTarget:self action:@selector(showChildrenList) forControlEvents:UIControlEventTouchUpInside];
+    [_NewsKidBtn addTarget:self action:@selector(showChildrenList) forControlEvents:UIControlEventTouchUpInside];
     
     
-    [NewsView addSubview:NewsBtn];
+    [NewsView addSubview:_NewsKidBtn];
     
     [_MainInfoScrollView addSubview:NewsView];
     //kids头像
@@ -756,31 +778,31 @@
     
     //    [kidImgView setImage:[UIImage imageNamed:@"20150207105906"]];
     //    kindImgView.tag=206;
-    [NewsBtn addSubview:kidImgView];
+    [_NewsKidBtn addSubview:kidImgView];
     kidImgView.hidden=YES;
     
     
     
     
-    UILabel *revampLbl = [[UILabel alloc] initWithFrame:CGRectMake(32.0f, 0.0f, CGRectGetWidth(NewsBtn.bounds)-42, 44.0f)];
-    [revampLbl setBackgroundColor:[UIColor clearColor]];
-    revampLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
-    revampLbl.textAlignment = NSTextAlignmentLeft;
-    revampLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    revampLbl.text = LOCALIZATION(@"text_change");
+    _revampLbl = [[UILabel alloc] initWithFrame:CGRectMake(32.0f, 0.0f, CGRectGetWidth(_NewsKidBtn.bounds)-42, 44.0f)];
+    [_revampLbl setBackgroundColor:[UIColor clearColor]];
+    _revampLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
+    _revampLbl.textAlignment = NSTextAlignmentLeft;
+    _revampLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    _revampLbl.text = LOCALIZATION(@"text_change");
     
-    [NewsBtn addSubview:revampLbl];
-    if(revampLbl.text.length>2)
+    [_NewsKidBtn addSubview:_revampLbl];
+    if(_revampLbl.text.length>2)
     {
         
-        NewsBtn.frame=CGRectMake(Drive_Wdith  -((revampLbl.text.length*9)+55), 5, (revampLbl.text.length*9)+45, 44);
-        revampLbl.frame=CGRectMake(32.0f, 0.0f, (revampLbl.text.length*9), 44.0f);
+        _NewsKidBtn.frame=CGRectMake(Drive_Wdith  -((_revampLbl.text.length*9)+55), 5, (_revampLbl.text.length*9)+45, 44);
+        _revampLbl.frame=CGRectMake(32.0f, 0.0f, (_revampLbl.text.length*9), 44.0f);
     }
     
-    UIImageView * ImgView=[[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(NewsBtn.bounds)-12, 14, 12, 16)];
+    UIImageView * ImgView=[[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(_NewsKidBtn.bounds)-12, 14, 12, 16)];
     [ImgView setImage:[UIImage imageNamed:@"arrow_go"]];
-    //    kindImgView.tag=206;
-    [NewsBtn addSubview:ImgView];
+        ImgView.tag=99;
+    [_NewsKidBtn addSubview:ImgView];
     
     
     //通告标题
@@ -868,39 +890,41 @@
     [_PerformanceTimeBtn addSubview:todayColorLbl];
     //本日
     NSString *str=LOCALIZATION(@"text_today");
-    UILabel *todayLbl = [[UILabel alloc] initWithFrame:CGRectMake(28.0f, 14.0f, (str.length>2?str.length*8.0f:str.length*15), 16.0f)];
-    [todayLbl setBackgroundColor:[UIColor clearColor]];
-    todayLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
-    todayLbl.textAlignment = NSTextAlignmentLeft;
-    todayLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    todayLbl.text = str;
-    [_PerformanceTimeBtn addSubview:todayLbl];
+    _todayLbl = [[UILabel alloc] initWithFrame:CGRectMake(28.0f, 14.0f, (str.length>2?str.length*8.0f:str.length*15), 16.0f)];
+    [_todayLbl setBackgroundColor:[UIColor clearColor]];
+    _todayLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
+    _todayLbl.textAlignment = NSTextAlignmentLeft;
+    _todayLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    _todayLbl.text = [str copy];
+    [_PerformanceTimeBtn addSubview:_todayLbl];
     
     
     //自定义色块 todayLbl.bounds
-    UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(todayLbl.bounds)+todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f)];
+    UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_todayLbl.bounds)+_todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f)];
     [customizedColorLbl setBackgroundColor:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]];
     [_PerformanceTimeBtn addSubview:customizedColorLbl];
     //自定义
     NSString *str2=LOCALIZATION(@"text_customized");
-    UILabel *customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedColorLbl.bounds)+customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f)];
-    [customizedLbl setBackgroundColor:[UIColor clearColor]];
-    customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
-    customizedLbl.textAlignment = NSTextAlignmentLeft;
-    customizedLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    customizedLbl.text = str2;
-    [_PerformanceTimeBtn addSubview:customizedLbl];
+    _customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedColorLbl.bounds)+customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f)];
+    [_customizedLbl setBackgroundColor:[UIColor clearColor]];
+    _customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
+    _customizedLbl.textAlignment = NSTextAlignmentLeft;
+    _customizedLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    _customizedLbl.text = [str2 copy];
+    [_PerformanceTimeBtn addSubview:_customizedLbl];
     
     NSString *str3=LOCALIZATION(@"this_Week");
     //查询条件
-    _conditionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedLbl.bounds)+customizedLbl.frame.origin.x, 14.0f, (str3.length>2?str3.length*8.0f:str3.length*15), 16.0f)];
+    _conditionLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_customizedLbl.bounds)+_customizedLbl.frame.origin.x, 14.0f, (str3.length>2?str3.length*8.0f:str3.length*15), 16.0f)];
     [_conditionLbl setBackgroundColor:[UIColor clearColor]];
     _conditionLbl.font=[UIFont fontWithName:@"Helvetica" size:15];
     _conditionLbl.textAlignment = NSTextAlignmentLeft;
     _conditionLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    _conditionLbl.text = str3;
+    _conditionLbl.text = [str3 copy];
     [_PerformanceTimeBtn addSubview:_conditionLbl];
-    
+    str=nil;
+    str2=nil;
+    str3=nil;
     _conditionImgView=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 15.5,20,13)];
     [_conditionImgView setImage:[UIImage imageNamed:@"arrow_down"]];
     [_PerformanceTimeBtn addSubview:_conditionImgView];
@@ -975,16 +999,16 @@
     UIView *PersonageTitleView =[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith*3, 54, Drive_Wdith, 30)];
     PersonageTitleView.backgroundColor=[UIColor whiteColor];
     
-    UILabel * PersonageLbl = [[UILabel alloc] initWithFrame:CGRectMake(-1.0f, -1.0f, Drive_Wdith+2, 31.0f)];
-    [PersonageLbl setBackgroundColor:[UIColor clearColor]];
-    PersonageLbl.font=[UIFont fontWithName:@"Helvetica" size:16];
-    PersonageLbl.textAlignment = NSTextAlignmentCenter;
-    PersonageLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
-    [PersonageLbl.layer setBorderWidth:1.0]; //边框宽度
-    [PersonageLbl.layer setBorderColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1].CGColor];//边框颜色
-    PersonageLbl.text = LOCALIZATION(@"text_notifications");
+    _PersonageLbl = [[UILabel alloc] initWithFrame:CGRectMake(-1.0f, -1.0f, Drive_Wdith+2, 31.0f)];
+    [_PersonageLbl setBackgroundColor:[UIColor clearColor]];
+    _PersonageLbl.font=[UIFont fontWithName:@"Helvetica" size:16];
+    _PersonageLbl.textAlignment = NSTextAlignmentCenter;
+    _PersonageLbl.textColor=[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1];
+    [_PersonageLbl.layer setBorderWidth:1.0]; //边框宽度
+    [_PersonageLbl.layer setBorderColor:[UIColor colorWithRed:0.839 green:0.839 blue:0.839 alpha:1].CGColor];//边框颜色
+    _PersonageLbl.text = LOCALIZATION(@"text_notifications");
     
-    [PersonageTitleView addSubview:PersonageLbl];
+    [PersonageTitleView addSubview:_PersonageLbl];
     [_MainInfoScrollView addSubview:PersonageTitleView];
     
     //初始化个人信息
@@ -1067,15 +1091,15 @@
     [_kidsMassageView addSubview:divisionRadarLbl];
     
     //提交按钮
-    UIButton *closeBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_kidsMassageView.frame)-40,CGRectGetWidth(_kidsMassageView.frame), 40)];
+    _closeBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_kidsMassageView.frame)-40,CGRectGetWidth(_kidsMassageView.frame), 40)];
     //设置按显示文字
-    [closeBtn setTitle:LOCALIZATION(@"btn_back") forState:UIControlStateNormal];
-    [closeBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    [_closeBtn setTitle:LOCALIZATION(@"btn_back") forState:UIControlStateNormal];
+    [_closeBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
     //设置按钮背景颜色
-    [closeBtn setBackgroundColor:[UIColor clearColor]];
+    [_closeBtn setBackgroundColor:[UIColor clearColor]];
     //设置按钮响应事件
-    [closeBtn addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
-    [_kidsMassageView addSubview:closeBtn];
+    [_closeBtn addTarget:self action:@selector(closeAction) forControlEvents:UIControlEventTouchUpInside];
+    [_kidsMassageView addSubview:_closeBtn];
     
     
     
@@ -1083,7 +1107,7 @@
     
     
     //机构显示选择列表
-    _organizationTableView=[[UITableView alloc]initWithFrame:CGRectMake(20, 132, (Drive_Wdith-20)/2, 44)];
+    _organizationTableView=[[UITableView alloc]initWithFrame:CGRectMake(20, 132, Drive_Wdith-40, 44)];
     [_organizationTableView setBackgroundColor:[UIColor whiteColor] ];
     _organizationTableView.dataSource = self;
     _organizationTableView.delegate = self;
@@ -1107,13 +1131,13 @@
     
     
     //设定title
-    UILabel *listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
-    [listtitleLal setText:LOCALIZATION(@"btn_options")];
-    [listtitleLal setTextColor:[UIColor blackColor]];
-    [listtitleLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20]];
-    [listtitleLal setTextAlignment:NSTextAlignmentCenter];
-    [listtitleLal setBackgroundColor:[UIColor clearColor]];
-    [_listTypeView addSubview:listtitleLal];
+    _listtitleLal=[[UILabel alloc]initWithFrame:CGRectMake(0, 0, CGRectGetWidth(_listTypeView.frame), 44)];
+    [_listtitleLal setText:LOCALIZATION(@"btn_options")];
+    [_listtitleLal setTextColor:[UIColor blackColor]];
+    [_listtitleLal setFont:[UIFont fontWithName:@"Helvetica-Bold" size:20]];
+    [_listtitleLal setTextAlignment:NSTextAlignmentCenter];
+    [_listtitleLal setBackgroundColor:[UIColor clearColor]];
+    [_listTypeView addSubview:_listtitleLal];
     
     _listTypeTableView= [[UITableView alloc]initWithFrame:CGRectMake(0, 44, CGRectGetWidth(_listTypeView.frame), 88)];
     _listTypeTableView.dataSource = self;
@@ -2008,42 +2032,10 @@
         }
         if([cell viewWithTag:206]!=nil)
         {
-            UIImageView * messageImgView=(UIImageView *)[cell viewWithTag:206];
-            if (_personalDetailsArray.count>0&&![pathOne isEqualToString:@""]&&![pathOne isEqualToString:@"<null>"]&&indexPath.row>0) {
-                
-                
-                NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
-                NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."]copy];
-                
-                
-                
-                if ([self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]!=nil) {
-                    [messageImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
-                    
-                }
-                else
-                {
-                    NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-                    NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-                    [messageImgView setImage:[UIImage imageWithData:data]];
-                    //Get Image From URL
-                    UIImage * imageFromURL  = nil;
-                    imageFromURL=[UIImage imageWithData:data];
-                    //Save Image to Directory
-                    [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-                    
-                    
-                }
-                pathOne=nil;
-                array=nil;
-                array2=nil;
-            }
-            else
-            {
-                
-                [messageImgView setImage:[UIImage imageNamed:@"logo_en"]];
-            }
+            DBImageView * messageImgView=(DBImageView *)[cell viewWithTag:206];
+          
             
+            [messageImgView setImageWithPath:[pathOne copy]];
             
         }
         
@@ -3450,6 +3442,103 @@
     
 }
 
+-(void)updateLanuage
+{
+    NSString *organizationStr;
+    switch (myDelegate.applanguage) {
+        case 0:
+            organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+            break;
+        case 1:
+            organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
+            break;
+        case 2:
+            organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
+    
+    UIImageView * osBtnImgView=(UIImageView *)[self.organizationShowBtn viewWithTag:218];
+    osBtnImgView.frame=CGRectMake((organizationStr.length*15+20>(CGRectGetWidth(_organizationShowBtn.frame)-20)?(CGRectGetWidth(_organizationShowBtn.frame)-20):(organizationStr.length*15+20)),15.5,20,13);
+    [_RoomTableView reloadData];
+
+    _labelTitle.text = LOCALIZATION(@"text_indoor_locator");
+    _radarLbl.text = LOCALIZATION(@"text_radar_tracking");
+    [_childrenListBtn setTitle:LOCALIZATION(@"text_kids_list") forState:UIControlStateNormal];
+    [_radarViewSegmentedControl setTitle:LOCALIZATION(@"text_radar_tracking") forSegmentAtIndex:0];
+    [_radarViewSegmentedControl setTitle:LOCALIZATION(@"text_anti_lost_mode") forSegmentAtIndex:1];
+    
+    [_connectBtn setTitle:[NSString stringWithFormat:@"%d %@",connectNum,LOCALIZATION(@"btn_supervised")]   forState:UIControlStateNormal];
+    //image view
+    if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"] ) {
+        
+    }else{
+        UIImageView *tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30,14,20,20)];
+        tickImageView.image = [UIImage imageNamed:@"tick"];
+        [_connectBtn addSubview:tickImageView];
+    }
+    
+    
+    [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
+    //image view
+    if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"]) {
+        
+    }else{
+        UIImageView *crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
+        crossImageView.image = [UIImage imageNamed:@"cross2"];
+        [_disconnectBtn addSubview:crossImageView];
+    }
+_NewsLbl.text = LOCALIZATION(@"text_report");
+    _revampLbl.text = LOCALIZATION(@"text_change");
+    
+    if(_revampLbl.text.length>2)
+    {
+        
+        _NewsKidBtn.frame=CGRectMake(Drive_Wdith  -((_revampLbl.text.length*9)+55), 5, (_revampLbl.text.length*9)+45, 44);
+        _revampLbl.frame=CGRectMake(32.0f, 0.0f, (_revampLbl.text.length*9), 44.0f);
+    }
+    
+    UIImageView * ImgView=(UIImageView *)[_NewsKidBtn viewWithTag:99];
+    ImgView.frame=CGRectMake(CGRectGetWidth(_NewsKidBtn.bounds)-12, 14, 12, 16);
+[_performanceBtn setTitle:LOCALIZATION(@"btn_performance") forState:UIControlStateNormal];
+    [_activitiesBtn setTitle:LOCALIZATION(@"btn_activities") forState:UIControlStateNormal];
+    _bulletinLbl.text=LOCALIZATION(@"text_no_content");
+    
+    NSString *str=LOCALIZATION(@"text_today");
+    _todayLbl.frame = CGRectMake(28.0f, 14.0f, (str.length>2?str.length*8.0f:str.length*15), 16.0f);
+    _todayLbl.text = [str copy];
+    
+    NSString *str2=LOCALIZATION(@"text_customized");
+    _customizedLbl.frame = CGRectMake(CGRectGetWidth(_todayLbl.bounds)+_todayLbl.frame.origin.x+24.0f, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f);
+
+    _customizedLbl.text = [str2 copy];
+    
+    NSString *str3=LOCALIZATION(@"this_Week");
+    //查询条件
+    _conditionLbl.frame = CGRectMake(CGRectGetWidth(_customizedLbl.bounds)+_customizedLbl.frame.origin.x, 14.0f, (str3.length>2?str3.length*8.0f:str3.length*15), 16.0f);
+    _conditionLbl.text = [str3 copy];
+    str=nil;
+    str2=nil;
+    str3=nil;
+    _PersonageLbl.text = LOCALIZATION(@"text_notifications");
+    [_closeBtn setTitle:LOCALIZATION(@"btn_back") forState:UIControlStateNormal];
+    [_listtitleLal setText:LOCALIZATION(@"btn_options")];
+    [_listTypeChangeBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
+    
+    
+    
+    
+    [_PersonageTableView reloadData];
+    
+    [_PerformanceTableView reloadData];
+    [_ActivitiesTableView reloadData];
+    [_organizationTableView reloadData];
+    
+}
 
 #pragma mark --
 #pragma mark - Handle Gestures

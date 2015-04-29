@@ -572,9 +572,13 @@
         
         ifChangeTheLangugae = true;
         
-        
+        self.title = LOCALIZATION(@"btn_options");
         
         myDelegate.applanguage=indexPath.row;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationLanguageChanged object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"updateLanuage" object:nil userInfo:nil];
+
         
         [_optionsTable reloadData];
     }
@@ -626,23 +630,23 @@
  */
 -(void)settingsSelectLeftAction:(id)sender
 {
-    if (ifChangeTheLangugae) {
-        if (_mainView == nil) {
-            _mainView = [[MainViewController alloc] init];
-        }
-        [[self navigationController] pushViewController:_mainView animated:YES];
-        ifChangeTheLangugae = false;
-    }else{
-        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
-        {
-            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
-                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
-            }
-        }
-        ifChangeTheLangugae = false;
-        
-    }
-    
+//    if (ifChangeTheLangugae) {
+//        if (_mainView == nil) {
+//            _mainView = [[MainViewController alloc] init];
+//        }
+//        [[self navigationController] pushViewController:_mainView animated:YES];
+//        ifChangeTheLangugae = false;
+//    }else{
+//        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+//        {
+//            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
+//                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+//            }
+//        }
+//        ifChangeTheLangugae = false;
+//        
+//    }
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 -(void)exitAction:(id)sender
