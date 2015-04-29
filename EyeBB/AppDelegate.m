@@ -95,13 +95,13 @@
     if([appLanguage isEqualToString:@"zh-Hans-CN"]){
         //zh-Hans-CN   zh-Hant-HK
         [[Localisator sharedInstance] setLanguage:availableLanguagesArray[1]];
-        applanguage=0;
+        applanguage=1;
     }else if([appLanguage isEqualToString:@"zh-Hant-HK"]){
         [[Localisator sharedInstance] setLanguage:availableLanguagesArray[2]];
-        applanguage=1;
+        applanguage=2;
     }else{
         [[Localisator sharedInstance] setLanguage:availableLanguagesArray[0]];
-        applanguage=2;
+        applanguage=0;
     }
     
     
