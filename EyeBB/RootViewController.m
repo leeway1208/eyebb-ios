@@ -71,7 +71,8 @@
 
     
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(qrCodeNavigationBarLeftBtnAction:)];
-    
+    [newBackButton setBackgroundImage:[UIImage
+                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = newBackButton;
 //    self.view.backgroundColor = [UIColor blackColor];
 //    self.view.alpha = TINTCOLOR_ALPHA;

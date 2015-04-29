@@ -67,7 +67,8 @@
     //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(selectLeftAction:)];
     
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(regViewLeftAction:)];
-    
+    [newBackButton setBackgroundImage:[UIImage
+                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = newBackButton;
     
     self.title = LOCALIZATION(@"btn_sign_up");

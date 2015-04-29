@@ -71,6 +71,8 @@
     
     //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(settingsSelectLeftAction:)];
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(settingsSelectLeftAction:)];
+    [newBackButton setBackgroundImage:[UIImage
+                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = newBackButton;
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
@@ -569,7 +571,7 @@
         }
         
         ifChangeTheLangugae = true;
-
+        
         
         
         myDelegate.applanguage=indexPath.row;

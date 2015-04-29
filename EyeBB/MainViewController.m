@@ -709,7 +709,7 @@
 //    _RadarConnectTableView.tableFooterView = [[UIView alloc] init];
 //    _RadarConnectTableView.tag = 900;
 //    [scrollView addSubview:_RadarConnectTableView];
-    
+    _RadarConnectTableView = [[UITableView alloc]init];
     
     //------------------------简报-------------------------------
     
@@ -3868,14 +3868,10 @@
         //reg broad cast
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scanDeviceBroadcast:) name:nil object:nil ];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_RadarConnectTableView reloadData];
-        });
-        //   UITableView *rRadarConnectTableView = [[[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  _disconectKidsAy.count * 45)]viewWithTag:900 ];
-        //        dispatch_async(dispatch_get_main_queue(), ^{
-        //                        [rRadarConnectTableView reloadData];
-        //                    });
-        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [_RadarConnectTableView reloadData];
+//        });
+
     }else {
         [self stopScanTheDevice];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:nil];
@@ -3975,7 +3971,7 @@
         
         disconnectNum = _disconectKidsAy.count;
         [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
-        _RadarConnectTableView = [[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45)];
+        _RadarConnectTableView.frame = CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45);
         _RadarConnectTableView.userInteractionEnabled = NO;
         _RadarConnectTableView.scrollEnabled = NO;
         _RadarConnectTableView.dataSource = self;

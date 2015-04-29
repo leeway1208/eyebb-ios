@@ -82,7 +82,8 @@
 //    
 
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(childInformationSelectLeftAction:)]; 
-    
+    [newBackButton setBackgroundImage:[UIImage
+                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = newBackButton;
     
     self.title = LOCALIZATION(@"text_child_information_matching");
