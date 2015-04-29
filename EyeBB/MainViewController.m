@@ -185,6 +185,7 @@
 @property (strong,nonatomic) UILabel *radarDivisionFourLbl;
 /**connect kids*/
 @property (strong,nonatomic) NSMutableArray * connectKidsAy;
+@property (strong,nonatomic) NSMutableArray * connectKidsRssiAy;
 //disconnect kids
 @property (strong,nonatomic) NSMutableArray * disconectKidsAy;
 //-------------------跳转页面--------------------
@@ -710,6 +711,8 @@
 //    _RadarConnectTableView.tag = 900;
 //    [scrollView addSubview:_RadarConnectTableView];
     _RadarConnectTableView = [[UITableView alloc]init];
+    _RadarDisconnectTableView = [[UITableView alloc]init];
+
     
     //------------------------简报-------------------------------
     
@@ -1212,6 +1215,8 @@
     if(tableView == self.RadarConnectTableView){
         
         return 45;
+    }else if (tableView == self.RadarDisconnectTableView){
+         return 45;
     }
     
     else if(tableView == self.ActivitiesTableView){
@@ -1248,6 +1253,9 @@
         
     }
     else if(tableView == self.RadarConnectTableView){
+        return _connectKidsAy.count;
+    }
+    else if (tableView == self.RadarDisconnectTableView){
         return _disconectKidsAy.count;
     }
     else if(tableView == self.ActivitiesTableView){
@@ -1289,6 +1297,79 @@
         NSDictionary *tempChildDictionary=[NSDictionary dictionary];
         // for (int i=0; i<_disconectKidsAy.count; i++) {
         
+        tempChildDictionary=[_connectKidsAy  objectAtIndex:row];
+        //NSLog(@"tempChildDictionary is%@",tempChildDictionary);
+        NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
+        
+        
+        //}
+        
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            
+            
+            //儿童图标
+            DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 2.5, 40, 40)];
+            [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
+            [KidsImgView.layer setMasksToBounds:YES];
+            [KidsImgView.layer setBorderWidth:2];
+            
+            [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+            
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+            [KidsImgView setImageWithPath:[pathOne copy]];
+            pathOne=nil;
+            
+            KidsImgView.tag=801;
+            [cell addSubview:KidsImgView];
+            
+            
+            
+            //儿童名称
+            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 5, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [KidsLbl setTextColor:[UIColor blackColor]];
+            [KidsLbl setTextAlignment:NSTextAlignmentLeft];
+            KidsLbl.tag=802;
+            [cell addSubview:KidsLbl];
+            
+            
+            //device status
+            
+            UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
+            [deviceStatusLbl setTextColor:[UIColor redColor]];
+            [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
+            deviceStatusLbl.tag=803;
+            //deviceStatusLbl.text = LOCALIZATION(@"btn_missed");
+            [cell addSubview:deviceStatusLbl];
+        }
+        
+        //kid image
+        DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:801];
+        
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+        
+        [KidsImgView setImageWithPath:[pathOne copy]];
+        //儿童名称
+        UILabel * KidsLbl =(UILabel *)[cell viewWithTag:802];
+        [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
+        
+        
+        
+    }
+
+    if (tableView == self.RadarDisconnectTableView) {
+        
+        int row = indexPath.row;
+        
+        NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+        // for (int i=0; i<_disconectKidsAy.count; i++) {
+        
         tempChildDictionary=[_disconectKidsAy  objectAtIndex:row];
         //NSLog(@"tempChildDictionary is%@",tempChildDictionary);
         NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
@@ -1308,7 +1389,7 @@
             [KidsImgView.layer setMasksToBounds:YES];
             [KidsImgView.layer setBorderWidth:2];
             
-            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             [KidsImgView setImageWithPath:[pathOne copy]];
@@ -1320,15 +1401,25 @@
             
             
             //儿童名称
-            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 10, CGRectGetWidth(cell.frame)-80, 20)];
+            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 5, CGRectGetWidth(cell.frame)-80, 20)];
             
             [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
             [KidsLbl setTextColor:[UIColor blackColor]];
             [KidsLbl setTextAlignment:NSTextAlignmentLeft];
             KidsLbl.tag=902;
             [cell addSubview:KidsLbl];
-
             
+            
+            //device status
+
+            UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
+            [deviceStatusLbl setTextColor:[UIColor redColor]];
+            [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
+            deviceStatusLbl.tag=903;
+            deviceStatusLbl.text = LOCALIZATION(@"btn_missed");
+            [cell addSubview:deviceStatusLbl];
         }
         
         //kid image
@@ -1439,13 +1530,13 @@
         }
         switch (myDelegate.applanguage) {
             case 0:
-                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameSc"];
+                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"name"];
                 break;
             case 1:
                 cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameTc"];
                 break;
             case 2:
-                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"name"];
+                cell.textLabel.text=[[[_organizationArray objectAtIndex:indexPath.row] objectForKey:@"area"]objectForKey:@"nameSc"];
                 break;
                 
             default:
@@ -1536,13 +1627,13 @@
                 
                 switch (myDelegate.applanguage) {
                     case 0:
-                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"]];
                         break;
                     case 1:
                         [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]];
                         break;
                     case 2:
-                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"]];
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
                         break;
                         
                     default:
@@ -1735,13 +1826,13 @@
                 
                 switch (myDelegate.applanguage) {
                     case 0:
-                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"]];
                         break;
                     case 1:
                         [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"]];
                         break;
                     case 2:
-                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"]];
+                        [RoomLbl setText:[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"]];
                         break;
                         
                     default:
@@ -1872,13 +1963,13 @@
             if (indexPath.row>0) {
                 switch (myDelegate.applanguage) {
                     case 0:
-                        [messageLbl setText:[tempDictionary objectForKey:@"titleSc"]];
+                        [messageLbl setText:[tempDictionary objectForKey:@"title"]];
                         break;
                     case 1:
                         [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
                         break;
                     case 2:
-                        [messageLbl setText:[tempDictionary objectForKey:@"title"]];
+                        [messageLbl setText:[tempDictionary objectForKey:@"titleSc"]];
                         break;
                         
                     default:
@@ -1962,13 +2053,13 @@
             if (indexPath.row>0) {
                 switch (myDelegate.applanguage) {
                     case 0:
-                        [messageLbl setText:[tempDictionary objectForKey:@"titleSc"]];
+                        [messageLbl setText:[tempDictionary objectForKey:@"title"]];
                         break;
                     case 1:
                         [messageLbl setText:[tempDictionary objectForKey:@"titleTc"]];
                         break;
                     case 2:
-                        [messageLbl setText:[tempDictionary objectForKey:@"title"]];
+                        [messageLbl setText:[tempDictionary objectForKey:@"titleSc"]];
                         break;
                         
                     default:
@@ -2071,13 +2162,13 @@
             if (_dailyAvgFigureArray.count>0) {
                 switch (myDelegate.applanguage) {
                     case 0:
-                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameSc"]];
+                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locName"]];
                         break;
                     case 1:
                         [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameTc"]];
                         break;
                     case 2:
-                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locName"]];
+                        [roomNameLbl setText:[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"locNameSc"]];
                         break;
                         
                     default:
@@ -2221,13 +2312,13 @@
             
             switch (myDelegate.applanguage) {
                 case 0:
-                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleSc"]];
+                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
                     break;
                 case 1:
                     [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleTc"]];
                     break;
                 case 2:
-                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"title"]];
+                    [messageLbl setText:[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"titleSc"]];
                     break;
                     
                 default:
@@ -2362,13 +2453,13 @@
         NSString *organizationStr;
         switch (myDelegate.applanguage) {
             case 0:
-                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
                 break;
             case 1:
                 organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
                 break;
             case 2:
-                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
                 break;
                 
             default:
@@ -2388,13 +2479,13 @@
         
         switch (myDelegate.applanguage) {
             case 0:
-                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activitySc"];
+                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activity"];
                 break;
             case 1:
                 urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activityTc"];
                 break;
             case 2:
-                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activity"];
+                urlStr=[[_activityInfosArray objectAtIndex:indexPath.row] objectForKey:@"activitySc"];
                 break;
                 
             default:
@@ -2511,13 +2602,13 @@
             NSString *urlStr;
             switch (myDelegate.applanguage) {
                 case 0:
-                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"noticeSc"];
+                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"notice"];
                     break;
                 case 1:
                     urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"noticeTc"];
                     break;
                 case 2:
-                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"notice"];
+                    urlStr=[[_personalDetailsArray objectAtIndex:indexPath.row-1] objectForKey:@"noticeSc"];
                     break;
                     
                 default:
@@ -2938,13 +3029,13 @@
             NSString *organizationStr;
             switch (myDelegate.applanguage) {
                 case 0:
-                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
                     break;
                 case 1:
                     organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
                     break;
                 case 2:
-                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+                    organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
                     break;
                     
                 default:
@@ -3430,7 +3521,7 @@
     
     
     [self.navigationController pushViewController:self.settingVc animated:YES];
-    self.settingVc.title = LOCALIZATION(@"btn_options");
+    
 }
 
 /**显示机构选择列表*/
@@ -3539,13 +3630,13 @@
             
             
         case 0:
-            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"], kidsAppearDate ]];
+            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"], kidsAppearDate ]];
             break;
         case 1:
             [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameTc"],kidsAppearDate  ]];
             break;
         case 2:
-            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"locationName"],kidsAppearDate ]];
+            [roomNameLbl setText:[NSString stringWithFormat:@"@%@  \n%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"nameSc"],kidsAppearDate ]];
             break;
             
         default:
@@ -3918,7 +4009,10 @@
     [_connectBtn setSelected:YES];
     [_disconnectBtn setSelected:NO];
     
-    
+    //show the connect table
+    _RadarConnectTableView.hidden = NO;
+    //hide the disconnect table
+    _RadarDisconnectTableView.hidden = YES;
 }
 
 -(void)radarDisconnectionAction:(id)sender{
@@ -3929,7 +4023,10 @@
     [_connectBtn setSelected:NO];
     [_disconnectBtn setSelected:YES];
     
-    
+    //hide the connect table
+    _RadarConnectTableView.hidden = YES;
+    //show the disconnect table
+    _RadarDisconnectTableView.hidden = NO;
 }
 
 #pragma mark - ui-image rotate 360
@@ -3964,6 +4061,16 @@
         NSLog(@"BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME");
         
         
+        for (int i =0 ; i < _disconectKidsAy.count; i++) {
+            NSDictionary *tempDic = [NSDictionary dictionary];
+            tempDic = [_disconectKidsAy objectAtIndex:i];
+            NSString *major = [NSString stringWithFormat:@"%@", [tempDic objectForKey:@"major"]];
+            
+            
+            NSLog(@"majormajor %@",major);
+        }
+        
+        
         _connectKidsAy = [(NSMutableArray *)[notification object] copy];
         //        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
@@ -3971,18 +4078,23 @@
         
         disconnectNum = _disconectKidsAy.count;
         [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
-        _RadarConnectTableView.frame = CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45);
-        _RadarConnectTableView.userInteractionEnabled = NO;
-        _RadarConnectTableView.scrollEnabled = NO;
-        _RadarConnectTableView.dataSource = self;
-        _RadarConnectTableView.delegate = self;
+        _RadarDisconnectTableView.frame = CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45);
+        _RadarDisconnectTableView.userInteractionEnabled = NO;
+        _RadarDisconnectTableView.scrollEnabled = NO;
+        _RadarDisconnectTableView.dataSource = self;
+        _RadarDisconnectTableView.delegate = self;
         //    [self.positionDetailsTableView setBounces:NO];
-        _RadarConnectTableView.tableFooterView = [[UIView alloc] init];
-        _RadarConnectTableView.tag = 900;
-        [_RadarScrollView addSubview:_RadarConnectTableView];
+        _RadarDisconnectTableView.tableFooterView = [[UIView alloc] init];
+        _RadarDisconnectTableView.tag = 900;
+        _RadarDisconnectTableView.hidden = YES;
+        [_RadarScrollView addSubview:_RadarDisconnectTableView];
         
         connectNum = _connectKidsAy.count;
         [_connectBtn setTitle:[NSString stringWithFormat:@"%d %@",connectNum,LOCALIZATION(@"btn_supervised")] forState:UIControlStateNormal];
+        
+    }else if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME]){
+        
+         _connectKidsRssiAy = [(NSMutableArray *)[notification object] copy];
         
     }
     

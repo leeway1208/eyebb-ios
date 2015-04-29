@@ -46,7 +46,7 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 
 
 //bluetooth test
-#define BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME @"read_battery_life"
+
 @property(nonatomic, retain)CustomerBluetooth *CustomerBluetoothRequest;
 -(void) writeBeepMajor:(NSString *)major minor:(NSString *)minor writeValue:(NSString *)writeValue;
 -(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor;

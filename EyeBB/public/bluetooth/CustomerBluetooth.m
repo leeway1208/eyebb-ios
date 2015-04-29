@@ -18,7 +18,9 @@
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
 @property (strong,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
 @property (strong,nonatomic) NSMutableArray *discoveredPeripheralsRssi;
+
 @property (strong,nonatomic) NSMutableArray *discoveredPeripheralsBroadcastDataForScanDevice;
+@property (strong,nonatomic) NSMutableArray *discoveredPeripheralsBroadcastDataForScanDeviceRssi;
 @property (strong,nonatomic) NSArray * noDuplicates;
 /* timer to refresh the table view */
 @property (strong,nonatomic) NSTimer *refreshTableTimer;
@@ -129,6 +131,7 @@ Boolean startTimerOnce = true;
     }else if (isScanDevice){
         [self stopScan];
         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDevice];
+         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDeviceRssi];
          NSLog(@"isScanDevice --- > %lu",(unsigned long)self.discoveredPeripheralsBroadcastDataForScanDevice.count);
         
         //clear
@@ -217,6 +220,7 @@ Boolean startTimerOnce = true;
     if(![self.discoveredPeripheralsBroadcastDataForScanDevice containsObject:advertisementData]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
+            [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
             
         });
     }
@@ -569,10 +573,14 @@ NSString * NSDataToHex(NSData *data) {
 #pragma mark - write functions
 -(void)scanTheDevice{
     isScanDevice = true;
+    self.discoveredPeripheralsBroadcastDataForScanDevice = [NSMutableArray new];
+    self.discoveredPeripheralsBroadcastDataForScanDeviceRssi = [NSMutableArray new];
     
     [self startTimer];
     [self initData:nil minor:nil];
     [self startScan];
+    
+    
 }
 
 
@@ -666,7 +674,7 @@ NSString * NSDataToHex(NSData *data) {
     self.checkDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredAdvertisementData = [NSMutableArray new];
-    self.discoveredPeripheralsBroadcastDataForScanDevice = [NSMutableArray new];
+  
     
     self.service2000 = [CBUUID UUIDWithString:@"0x2000"];
     self.service1000 = [CBUUID UUIDWithString:@"0x1000"];

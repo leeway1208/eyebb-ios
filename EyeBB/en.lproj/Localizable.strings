@@ -1,10 +1,10 @@
-/* 
-  Localizable.strings
-  EyeBB
-
-  Created by Evan on 15/2/23.
-  Copyright (c) 2015年 EyeBB. All rights reserved.
-*/
+/*
+ Localizable.strings
+ EyeBB
+ 
+ Created by Evan on 15/2/23.
+ Copyright (c) 2015年 EyeBB. All rights reserved.
+ */
 CFBundleDisplayName ="EyeBB";
 
 

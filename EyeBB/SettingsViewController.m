@@ -77,7 +77,7 @@
     //can cancel swipe gesture
     self.navigationController.interactivePopGestureRecognizer.enabled = NO;
     self.navigationController.interactivePopGestureRecognizer.delegate = self;
-    
+    self.title = LOCALIZATION(@"btn_options");
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     [self loadPara];

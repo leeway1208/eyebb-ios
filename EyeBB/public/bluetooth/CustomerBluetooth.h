@@ -19,6 +19,8 @@
 #define BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME @"write_success"
 #define BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME @"write_fail"
 #define BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME @"scan_device"
+#define BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME @"scan_devic_rssi"
+
 +(CustomerBluetooth *)instance;
 
 
