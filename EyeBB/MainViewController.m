@@ -37,6 +37,11 @@
     int connectNum;
     int disconnectNum;
     
+    //radar dot
+    int dotNum;
+    Boolean isAddBot;
+    
+    
 }
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
@@ -59,6 +64,7 @@
 @property (strong, nonatomic) UITableView *PersonageTableView;
 /**弹出框*/
 @property (strong,nonatomic) UIScrollView * PopupSView;
+@property (strong,nonatomic) UIScrollView * RadarPopupSView;
 /**列表显示模式容器*/
 @property (strong,nonatomic) UIView * listTypeView;
 /**儿童相关信息容器*/
@@ -202,9 +208,15 @@
 @property (strong,nonatomic) UILabel * listtitleLal;
 /**connect kids*/
 @property (strong,nonatomic) NSMutableArray * connectKidsAy;
+@property (strong,nonatomic) NSMutableArray * connectKidsByScanedAy;
 @property (strong,nonatomic) NSMutableArray * connectKidsRssiAy;
+@property (strong,nonatomic) NSMutableArray *tempDisconnectKidsAy;
 //disconnect kids
 @property (strong,nonatomic) NSMutableArray * disconectKidsAy;
+//bg  Rada  Circle
+@property (strong,nonatomic) UIImageView *bgRadaCircle;
+//bg Radar Rotate
+@property (strong,nonatomic) UIImageView *bgRadarRotate;
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
 
@@ -315,6 +327,8 @@
 {
     connectNum = 0;
     disconnectNum = 0;
+    isAddBot = true;
+    dotNum = 0;
     
     _colorArray=@[[UIColor colorWithRed:0.282 green:0.800 blue:0.922 alpha:1],[UIColor colorWithRed:0.392 green:0.549 blue:0.745 alpha:1],[UIColor colorWithRed:0.396 green:0.741 blue:0.561 alpha:1],[UIColor colorWithRed:0.149 green:0.686 blue:0.663 alpha:1],[UIColor colorWithRed:0.925 green:0.278 blue:0.510 alpha:1],[UIColor colorWithRed:0.690 green:0.380 blue:0.208 alpha:1],[UIColor colorWithRed:0.898 green:0.545 blue:0.682 alpha:1],[UIColor colorWithRed:0.643 green:0.537 blue:0.882 alpha:1],[UIColor colorWithRed:0.847 green:0.749 blue:0.216 alpha:1],[UIColor colorWithRed:0.835 green:0.584 blue:0.329 alpha:1]];
     
@@ -326,7 +340,10 @@
     _dailyAvgFigureArray=[[NSMutableArray alloc]init];
     _activityInfosArray=[[NSMutableArray alloc]init];
     _connectKidsAy =[[NSMutableArray alloc]init];
+    _connectKidsByScanedAy = [[NSMutableArray alloc]init];
     _disconectKidsAy =[[NSMutableArray alloc]init];
+    _tempDisconnectKidsAy = [[NSMutableArray alloc]init];
+    _connectKidsRssiAy = [[NSMutableArray alloc]init];
     _isallRoomOn=NO;
     _isautoOn=NO;
     _isreloadRoomList=YES;
@@ -553,6 +570,11 @@
     
     //------------------------雷达-------------------------------
     //初始化雷达
+//    _RadarPopupSView =[[UIScrollView alloc]initWithFrame:CGRectMake(Drive_Wdith, 109, Drive_Wdith*2 , Drive_Height)];
+//    _RadarPopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.4];
+//    
+//    [_MainInfoScrollView addSubview:_RadarPopupSView];
+//    [_RadarPopupSView setHidden:NO];
     
     UIView *radarTitleView=[[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith , 0, Drive_Wdith, 90)];
     radarTitleView.backgroundColor=[UIColor clearColor];
@@ -615,21 +637,21 @@
     UIView *radarDishView=[[UIView alloc]initWithFrame:CGRectMake(0 , 0, Drive_Wdith - 10, 200)];
     radarDishView.backgroundColor=[UIColor whiteColor];
     
-    UIImageView *bgRadaCircle = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith/2 - 90, 10, 180, 180)];
-    bgRadaCircle.image = [UIImage imageNamed:@"bg_radar_circle"];
+    _bgRadaCircle = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith/2 - 90, 10, 180, 180)];
+    _bgRadaCircle.image = [UIImage imageNamed:@"bg_radar_circle"];
     
     
-    [radarDishView addSubview:bgRadaCircle];
+    [radarDishView addSubview:_bgRadaCircle];
     
     //bg_radar_rotate
     
-    UIImageView *bgRadarRotate = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith/2 - 90, 10, 180, 180)];
-    bgRadarRotate.image = [UIImage imageNamed:@"bg_radar_rotate"];
+    _bgRadarRotate = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith/2 - 90, 10, 180, 180)];
+    _bgRadarRotate.image = [UIImage imageNamed:@"bg_radar_rotate"];
     
     
-    [self rotate360DegreeWithImageView:bgRadarRotate];
+    //[self rotate360DegreeWithImageView:bgRadarRotate];
     
-    [radarDishView addSubview:bgRadarRotate];
+    [radarDishView addSubview:_bgRadarRotate];
     
     
     
@@ -1028,6 +1050,9 @@
     [self.view addSubview:_PopupSView];
     [_PopupSView setHidden:YES];
     
+
+
+    
     //单击空白处关闭遮盖层
     self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
     self.singleTap.delegate = self;
@@ -1277,10 +1302,10 @@
         
     }
     else if(tableView == self.RadarConnectTableView){
-        return _connectKidsAy.count;
+        return _connectKidsByScanedAy.count;
     }
     else if (tableView == self.RadarDisconnectTableView){
-        return _disconectKidsAy.count;
+        return _tempDisconnectKidsAy.count;
     }
     else if(tableView == self.ActivitiesTableView){
         return _activityInfosArray.count;
@@ -1319,9 +1344,11 @@
         int row = indexPath.row;
         
         NSDictionary *tempChildDictionary=[NSDictionary dictionary];
-        // for (int i=0; i<_disconectKidsAy.count; i++) {
+       // NSDictionary *tempChildRssiDictionary=[NSDictionary dictionary];
+   
+        tempChildDictionary=[_connectKidsByScanedAy  objectAtIndex:row];
+        //tempChildRssiDictionary = [_connectKidsRssiAy  objectAtIndex:row];
         
-        tempChildDictionary=[_connectKidsAy  objectAtIndex:row];
         //NSLog(@"tempChildDictionary is%@",tempChildDictionary);
         NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
         
@@ -1340,7 +1367,7 @@
             [KidsImgView.layer setMasksToBounds:YES];
             [KidsImgView.layer setBorderWidth:2];
             
-            [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             [KidsImgView setImageWithPath:[pathOne copy]];
@@ -1366,10 +1393,10 @@
             UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
             
             [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
-            [deviceStatusLbl setTextColor:[UIColor redColor]];
+            //[deviceStatusLbl setTextColor:[UIColor redColor]];
             [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
             deviceStatusLbl.tag=803;
-            //deviceStatusLbl.text = LOCALIZATION(@"btn_missed");
+     
             [cell addSubview:deviceStatusLbl];
         }
         
@@ -1383,8 +1410,21 @@
         UILabel * KidsLbl =(UILabel *)[cell viewWithTag:802];
         [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
         
-        
-        
+        //kids rssi
+        UILabel * KidsdeviceStatusLbl =(UILabel *)[cell viewWithTag:803];
+        if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > -50) {
+            [KidsdeviceStatusLbl setTextColor:[UIColor greenColor]];
+        }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -50 && [[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > - 80){
+            [KidsdeviceStatusLbl setTextColor:[UIColor blueColor]];
+        }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -80){
+            [KidsdeviceStatusLbl setTextColor:[UIColor redColor]];
+            
+        }
+
+       
+        KidsdeviceStatusLbl.text = [self rssiLevel:[[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue]];
+       // _connectKidsByScanedAy.removeAllObjects;
+       
     }
 
     if (tableView == self.RadarDisconnectTableView) {
@@ -1394,9 +1434,9 @@
         NSDictionary *tempChildDictionary=[NSDictionary dictionary];
         // for (int i=0; i<_disconectKidsAy.count; i++) {
         
-        tempChildDictionary=[_disconectKidsAy  objectAtIndex:row];
+        tempChildDictionary=[_tempDisconnectKidsAy  objectAtIndex:row];
         //NSLog(@"tempChildDictionary is%@",tempChildDictionary);
-        NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
+//        NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
         
         
         //}
@@ -1456,7 +1496,7 @@
         UILabel * KidsLbl =(UILabel *)[cell viewWithTag:902];
         [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
 
-        
+        // _tempDisconnectKidsAy.removeAllObjects;
         
     }
     
@@ -4047,14 +4087,14 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         [self scanTheDevice];
         //reg broad cast
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scanDeviceBroadcast:) name:nil object:nil ];
-        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [_RadarConnectTableView reloadData];
-//        });
+  
+        [self rotate360DegreeWithImageView:_bgRadarRotate];
 
     }else {
         [self stopScanTheDevice];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:nil];
+        [_bgRadarRotate.layer removeAllAnimations];
+        //[_RadarPopupSView setHidden:NO];
     }
 }
 
@@ -4150,15 +4190,9 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         NSLog(@"BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME");
         
         _connectKidsAy = [(NSMutableArray *)[notification object] copy];
-
-        for (int i =0 ; i < _disconectKidsAy.count; i++) {
-            NSDictionary *tempDic = [NSDictionary dictionary];
-            tempDic = [_disconectKidsAy objectAtIndex:i];
-            NSString *major = [self getMajor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"major"]]];
-            NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"minor"]]];
-            
-            NSLog(@"majormajor %@%@",minor,major);
-        }
+        
+        _tempDisconnectKidsAy = _disconectKidsAy;
+        
         
         for (int i = 0; i < _connectKidsAy.count ; i ++) {
             NSDictionary *tempDic = [NSDictionary dictionary];
@@ -4166,16 +4200,44 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
             if ([NSString stringWithFormat:@"%@", [tempDic objectForKey:@"kCBAdvDataManufacturerData"]].length == 15) {
                 NSString * scanedMajorAndMinor = [[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"kCBAdvDataManufacturerData"]] substringWithRange:NSMakeRange(1, 8)];
                 NSLog(@"tempDic %@",scanedMajorAndMinor);
+                
+                
+                for (int y =0 ; y < _tempDisconnectKidsAy.count; y++) {
+                    NSDictionary *tempDic = [NSDictionary dictionary];
+                    tempDic = [_tempDisconnectKidsAy objectAtIndex:y];
+                    NSString *major = [self getMajor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"major"]]];
+                    NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"minor"]]];
+                    NSString *kidsMajorAndMinor = [NSString stringWithFormat:@"%@%@",minor,major];
+                    
+                    if ([kidsMajorAndMinor isEqualToString:scanedMajorAndMinor]) {
+                        [_connectKidsByScanedAy addObject:[_tempDisconnectKidsAy objectAtIndex:y]];
+                        
+                        [_tempDisconnectKidsAy removeObjectAtIndex:y];
+                        if (_connectKidsRssiAy.count == 0) {
+                            
+                        }else{
+                            [_connectKidsRssiAy removeObjectAtIndex:y];
+                        }
+                        
+                       
+                        
+                    }
+                    
+                    
+                    //NSLog(@"majormajor %@%@",minor,major);
+                }
+
+                
             }
-        
+            
         }
-        
+
         
                //        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
         NSLog(@"_disconectKidsAy CONUT--- > %lu",(unsigned long)_disconectKidsAy.count);
         
-        disconnectNum = _disconectKidsAy.count;
+        disconnectNum = _tempDisconnectKidsAy.count;
         [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
         _RadarDisconnectTableView.frame = CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45);
         _RadarDisconnectTableView.userInteractionEnabled = NO;
@@ -4188,12 +4250,40 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         _RadarDisconnectTableView.hidden = YES;
         [_RadarScrollView addSubview:_RadarDisconnectTableView];
         
-        connectNum = _connectKidsAy.count;
+        
+        
+        connectNum = _connectKidsByScanedAy.count;
         [_connectBtn setTitle:[NSString stringWithFormat:@"%d %@",connectNum,LOCALIZATION(@"btn_supervised")] forState:UIControlStateNormal];
+        _RadarConnectTableView.frame = CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  connectNum * 45);
+        _RadarConnectTableView.userInteractionEnabled = NO;
+        _RadarConnectTableView.scrollEnabled = NO;
+        _RadarConnectTableView.dataSource = self;
+        _RadarConnectTableView.delegate = self;
+        //    [self.positionDetailsTableView setBounces:NO];
+        _RadarConnectTableView.tableFooterView = [[UIView alloc] init];
+        _RadarConnectTableView.tag = 800;
+        _RadarConnectTableView.hidden = NO;
+        [_RadarScrollView addSubview:_RadarConnectTableView];
+        
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_RadarConnectTableView reloadData];
+            [_RadarDisconnectTableView reloadData];
+        });
+        
+//        if(![self.connectKidsByScanedAy containsObject:advertisementData]) {
+//            dispatch_async(dispatch_get_main_queue(), ^{
+//    
+//                
+//            });
+//        }
+
+        
+       
         
     }else if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME]){
         
-         _connectKidsRssiAy = [(NSMutableArray *)[notification object] copy];
+         _connectKidsRssiAy = [(NSMutableArray *)[notification object] mutableCopy];
         
     }
     
@@ -4215,6 +4305,70 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     NSLog(@"%@", [objDateformat stringFromDate: date]);
     return [objDateformat stringFromDate: date];
     
+}
+
+
+#pragma mark - rssi level
+-(NSString *)rssiLevel:(int) rssi{
+    NSString *level = @"";
+    NSLog(@"rssi --> %d",rssi);
+ 
+    if (rssi > -50) {
+        if (isAddBot) {
+            int OffsetX = (arc4random() % 60) - 30;
+            int OffsetY = (arc4random() % 60) - 30;
+            UIImageView *radarDot = [[UIImageView alloc] initWithFrame:CGRectMake(90 - 3 + OffsetX,  90 - 3 + OffsetY, 6, 6)];
+            radarDot.image = [UIImage imageNamed:@"ic_radar_dot"];
+            
+            [_bgRadaCircle addSubview:radarDot];
+            
+            dotNum++;
+        }
+      
+        level = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_strong"),rssi] ;
+     
+    }else if (rssi < -50 && rssi > - 80){
+       
+        if (isAddBot) {
+            int OffsetX = (arc4random() % 90) - 30;
+            int OffsetY = (arc4random() % 90) - 30;
+            UIImageView *radarDot = [[UIImageView alloc] initWithFrame:CGRectMake(90 - 3 + OffsetX,  90 - 3 + OffsetY, 6, 6)];
+            radarDot.image = [UIImage imageNamed:@"ic_radar_dot"];
+            
+            [_bgRadaCircle addSubview:radarDot];
+            
+            dotNum++;
+        }
+        level = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_good"),rssi] ;
+
+
+    }else if (rssi < -80){
+      
+        if (isAddBot) {
+            int OffsetX = (arc4random() % 120) - 90;
+            int OffsetY = (arc4random() % 120) - 90;
+            UIImageView *radarDot = [[UIImageView alloc] initWithFrame:CGRectMake(90 - 3 + OffsetX,  90 - 3 + OffsetY, 6, 6)];
+            radarDot.image = [UIImage imageNamed:@"ic_radar_dot"];
+            
+            [_bgRadaCircle addSubview:radarDot];
+            
+            dotNum++;
+        }
+        
+        level = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_weak"),rssi] ;
+        
+
+
+    }
+    
+    if(dotNum == _connectKidsByScanedAy.count){
+        isAddBot = false;
+    }else{
+        isAddBot = true;
+
+    }
+    
+    return level;
 }
 
 @end
