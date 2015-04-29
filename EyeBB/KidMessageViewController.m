@@ -561,51 +561,6 @@
 }
 
 
-#pragma mark - initial major and minor
-
--(NSString *)getMajor:(NSString *)major{
-    
-    
-    switch (major.length) {
-        case 1:
-            major = [NSString stringWithFormat:@"%@%@", major, @"000" ];
-            break;
-            
-        case 2:
-            major = [NSString stringWithFormat:@"%@%@", major, @"00" ];
-            break;
-            
-        case 3:
-            major = [NSString stringWithFormat:@"%@%@", major, @"0" ];
-            break;
-        default:
-            break;
-    }
-    
-    
-    
-    return major;
-}
-
--(NSString *)getMinor:(NSString *)minor{
-    
-    switch (minor.length) {
-        case 1:
-            minor = [NSString stringWithFormat:@"%@%@", minor, @"000" ];
-            break;
-            
-        case 2:
-            minor = [NSString stringWithFormat:@"%@%@", minor, @"00" ];
-            break;
-            
-        case 3:
-            minor = [NSString stringWithFormat:@"%@%@", minor, @"0" ];
-            break;
-        default:
-            break;
-    }
-    return minor;
-}
 
 
 #pragma mark - button action

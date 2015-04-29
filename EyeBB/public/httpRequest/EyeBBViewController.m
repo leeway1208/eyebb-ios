@@ -127,6 +127,51 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize) {
 //-(void) readBattery:(NSNotification *)notification major:(NSString *)major minor:(NSString *)minor{}
 //-(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{}
 
+#pragma mark - initial major and minor
+
+-(NSString *)getMajor:(NSString *)major{
+    
+    
+    switch (major.length) {
+        case 1:
+            major = [NSString stringWithFormat:@"%@%@",  @"000",major ];
+            break;
+            
+        case 2:
+            major = [NSString stringWithFormat:@"%@%@",  @"00" ,major];
+            break;
+            
+        case 3:
+            major = [NSString stringWithFormat:@"%@%@",  @"0", major ];
+            break;
+        default:
+            break;
+    }
+    
+    
+    
+    return major;
+}
+
+-(NSString *)getMinor:(NSString *)minor{
+    
+    switch (minor.length) {
+        case 1:
+            minor = [NSString stringWithFormat:@"%@%@",  @"000",minor ];
+            break;
+            
+        case 2:
+            minor = [NSString stringWithFormat:@"%@%@", @"00",minor ];
+            break;
+            
+        case 3:
+            minor = [NSString stringWithFormat:@"%@%@",  @"0",minor ];
+            break;
+        default:
+            break;
+    }
+    return minor;
+}
 
 
 

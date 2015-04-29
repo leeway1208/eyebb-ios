@@ -4149,19 +4149,29 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME]){
         NSLog(@"BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME");
         
-        
+        _connectKidsAy = [(NSMutableArray *)[notification object] copy];
+
         for (int i =0 ; i < _disconectKidsAy.count; i++) {
             NSDictionary *tempDic = [NSDictionary dictionary];
             tempDic = [_disconectKidsAy objectAtIndex:i];
-            NSString *major = [NSString stringWithFormat:@"%@", [tempDic objectForKey:@"major"]];
+            NSString *major = [self getMajor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"major"]]];
+            NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"minor"]]];
             
-            
-            NSLog(@"majormajor %@",major);
+            NSLog(@"majormajor %@%@",minor,major);
+        }
+        
+        for (int i = 0; i < _connectKidsAy.count ; i ++) {
+            NSDictionary *tempDic = [NSDictionary dictionary];
+            tempDic = [_connectKidsAy objectAtIndex:i];
+            if ([NSString stringWithFormat:@"%@", [tempDic objectForKey:@"kCBAdvDataManufacturerData"]].length == 15) {
+                NSString * scanedMajorAndMinor = [[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"kCBAdvDataManufacturerData"]] substringWithRange:NSMakeRange(1, 8)];
+                NSLog(@"tempDic %@",scanedMajorAndMinor);
+            }
+        
         }
         
         
-        _connectKidsAy = [(NSMutableArray *)[notification object] copy];
-        //        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+               //        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
         NSLog(@"_disconectKidsAy CONUT--- > %lu",(unsigned long)_disconectKidsAy.count);
         
