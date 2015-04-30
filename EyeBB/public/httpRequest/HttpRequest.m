@@ -76,6 +76,7 @@ static HttpRequest *instance;
     [request setTimeOutSeconds:10];
     [request setValidatesSecureCertificate:NO];
     [request setDelegate:self];
+   
     //[request failWithError:ASIRequestTimedOutError];
     [request startAsynchronous];
     
@@ -84,6 +85,8 @@ static HttpRequest *instance;
 
 -(void)postRequest:(NSString *)requestStr RequestDictionary:(NSDictionary *)requestDictionary delegate:(id)delegate
 {
+
+    
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:SERVER_URL"%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:@"0"];
@@ -102,6 +105,8 @@ static HttpRequest *instance;
     [request setTimeOutSeconds:10];
     [request setDelegate:self];
     [request startAsynchronous];
+    
+    
 }
 
 
@@ -153,6 +158,7 @@ static HttpRequest *instance;
 //    NSLog(@"------> %@",message);
 //    
 }
+
 
 @end
 

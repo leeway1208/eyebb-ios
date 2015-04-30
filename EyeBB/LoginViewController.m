@@ -75,6 +75,9 @@
     
     //[self setUserLanguge:1];
     
+  
+
+    
     [self loadParameter];
     [self loadWidget];
     
@@ -581,18 +584,14 @@
         //Loding progress bar
         [HUD show:YES];
         
+     
         
-        NSDictionary * infoDictionary = [[NSBundle mainBundle] infoDictionary];
-        ;
-        NSString * version = [infoDictionary objectForKey:@"CFBundleShortVersionString"];
-        
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password,version,LOGIN_TO_CHECK_KEY_appVersion,nil];
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:userAccount, LOGIN_TO_CHECK_KEY_j_username, [CommonUtils getSha256String:hashUserPassword].uppercaseString ,LOGIN_TO_CHECK_KEY_j_password,[self getAppVersion],LOGIN_TO_CHECK_KEY_appVersion,nil];
         // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         
         [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
         
-        infoDictionary = nil;
-        version = nil;
+
         
         
     }
@@ -607,7 +606,8 @@
     [HUD hide:YES afterDelay:0];
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
-        
+        NSString * resLOGIN_TO_CHECK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"LOGIN_TO_CHECK %@",resLOGIN_TO_CHECK);
         
         
         _guardian = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_guardian];
@@ -669,7 +669,6 @@
         
         
     }
-    
     
 }
 

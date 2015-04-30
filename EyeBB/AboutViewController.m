@@ -11,14 +11,13 @@
 @interface AboutViewController ()
 /* logo */
 @property (nonatomic,strong) UIImageView* logoImg;
-/* version */
+/* version label*/
 @property (nonatomic,strong) UILabel* versionLbl;
 /* web */
 @property (nonatomic,strong) UILabel* webLbl;
 /* introduction */
 @property (nonatomic,strong) UILabel* introductionLbl;
 
-@property (nonatomic,strong) NSDictionary *infoDictionary;
 @property (nonatomic,strong) NSString *version;
 @end
 
@@ -65,12 +64,7 @@
     [self setView:nil];
     [super viewDidDisappear:animated];
     
-    if (_infoDictionary != nil) {
-        _infoDictionary = nil;
-    }
-    if (_version != nil) {
-        _version = nil;
-    }
+
 }
 
 
@@ -99,12 +93,10 @@
     [self.view addSubview:_logoImg];
     
     
-    _infoDictionary = [[NSBundle mainBundle] infoDictionary];
-;
-    _version = [_infoDictionary objectForKey:@"CFBundleShortVersionString"];
+
     //version
     _versionLbl =[[UILabel alloc]initWithFrame:CGRectMake(0,  Drive_Height /2 - 240 + 150 + 30, self.view.frame.size.width, 20)];
-    [_versionLbl setText:[NSString stringWithFormat:@"%@  %@", LOCALIZATION(@"text_version"), _version ]];
+    [_versionLbl setText:[NSString stringWithFormat:@"%@  %@", LOCALIZATION(@"text_version"), [self getAppVersion] ]];
     
     [_versionLbl setFont:[UIFont systemFontOfSize: 12.0]];
     [_versionLbl setTextColor:[UIColor blackColor]];

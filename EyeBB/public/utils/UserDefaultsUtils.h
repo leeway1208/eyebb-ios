@@ -21,7 +21,7 @@
 #define LoginViewController_type @"type"
 #define LoginViewController_registrationId @"registrationId"
 
-
+#define LoginViewController_device_token @"device_token"
 //ChildInformationMatchingViewController
 #define ChildInformationMatchingViewController_userDefaults_childName @"childName"
 #define ChildInformationMatchingViewController_userDefaults_dateOfBirth @"dateOfBirth"

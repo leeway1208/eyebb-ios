@@ -165,6 +165,12 @@
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];
+    
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    [defaults setObject:str forKey:LoginViewController_device_token];
+    [defaults synchronize];
+    
+    
     NSLog(@"%@", str);
 }
 

@@ -166,6 +166,11 @@
 //重设密码 也就是忘记密码那里
 #define RESET_PASSWORD @"regService/api/resetPassword"
 
+//post token
+#define POST_TOKEN @"accSetting/api/updateDeviceId"
+
+
+
 //暂时没用到
 #define GET_MASTER_CHILDREN @"masterService/api/masterChildren"
 
@@ -211,10 +216,12 @@
 
 
 //LoginViewController_forgetPassword
-#define LOGIN_TO_CHECK_KEY_accName @"j_username"
-#define LOGIN_TO_CHECK_KEY_childName @"j_password"
-#define LOGIN_TO_CHECK_KEY_dob @"appVersion"
+#define LOGIN_TO_CHECK_KEY_accName @"birthday"
+#define LOGIN_TO_CHECK_KEY_childName @"childName"
+#define LOGIN_TO_CHECK_KEY_dob @"birthday"
 
+#define LOGIN_TO_CHECK_KEY_deviceId @"deviceId"
+#define LOGIN_TO_CHECK_KEY_type @"type"
 
 //RegViewController
 #define REG_PARENTS_KEY_ACCNAME @"accName"

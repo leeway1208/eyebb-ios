@@ -61,4 +61,6 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 -(NSString *)getMajor:(NSString *)major;
 -(NSString *)getMinor:(NSString *)minor;
 
+
+-(NSString *)getAppVersion;
 @end

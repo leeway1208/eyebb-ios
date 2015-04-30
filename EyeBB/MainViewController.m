@@ -340,9 +340,9 @@
     _dailyAvgFigureArray=[[NSMutableArray alloc]init];
     _activityInfosArray=[[NSMutableArray alloc]init];
     _connectKidsAy =[[NSMutableArray alloc]init];
-    _connectKidsByScanedAy = [[NSMutableArray alloc]init];
+    
     _disconectKidsAy =[[NSMutableArray alloc]init];
-    _tempDisconnectKidsAy = [[NSMutableArray alloc]init];
+   
     _connectKidsRssiAy = [[NSMutableArray alloc]init];
     _isallRoomOn=NO;
     _isautoOn=NO;
@@ -1411,19 +1411,22 @@
         [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
         
         //kids rssi
-        UILabel * KidsdeviceStatusLbl =(UILabel *)[cell viewWithTag:803];
-        if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > -50) {
-            [KidsdeviceStatusLbl setTextColor:[UIColor greenColor]];
-        }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -50 && [[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > - 80){
-            [KidsdeviceStatusLbl setTextColor:[UIColor blueColor]];
-        }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -80){
-            [KidsdeviceStatusLbl setTextColor:[UIColor redColor]];
+        if (_connectKidsRssiAy.count > 0) {
+            UILabel * KidsdeviceStatusLbl =(UILabel *)[cell viewWithTag:803];
+            if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > -50) {
+                [KidsdeviceStatusLbl setTextColor:[UIColor greenColor]];
+            }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -50 && [[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > - 80){
+                [KidsdeviceStatusLbl setTextColor:[UIColor blueColor]];
+            }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -80){
+                [KidsdeviceStatusLbl setTextColor:[UIColor redColor]];
+                
+            }
             
-        }
+            
+            KidsdeviceStatusLbl.text = [self rssiLevel:[[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue]];
 
-       
-        KidsdeviceStatusLbl.text = [self rssiLevel:[[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue]];
-       // _connectKidsByScanedAy.removeAllObjects;
+        }
+            // _connectKidsByScanedAy.removeAllObjects;
        
     }
 
@@ -1432,14 +1435,9 @@
         int row = indexPath.row;
         
         NSDictionary *tempChildDictionary=[NSDictionary dictionary];
-        // for (int i=0; i<_disconectKidsAy.count; i++) {
-        
+       
         tempChildDictionary=[_tempDisconnectKidsAy  objectAtIndex:row];
-        //NSLog(@"tempChildDictionary is%@",tempChildDictionary);
-//        NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
-        
-        
-        //}
+
         
         
         if (cell == nil) {
@@ -2965,6 +2963,16 @@
         
         //        [self simulateProgress];
         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
+        
+        if ([_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count<1) {
+            _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
+            _bulletinLbl.hidden=NO;
+        }
+        else
+        {
+            _bulletinLbl.hidden=YES;
+        }
+
         //开启加载
         //        [HUD show:YES];
     }
@@ -3544,7 +3552,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     
     UIImageView * ImgView=(UIImageView *)[_NewsKidBtn viewWithTag:99];
     ImgView.frame=CGRectMake(CGRectGetWidth(_NewsKidBtn.bounds)-12, 14, 12, 16);
-[_performanceBtn setTitle:LOCALIZATION(@"btn_performance") forState:UIControlStateNormal];
+    [_performanceBtn setTitle:LOCALIZATION(@"btn_performance") forState:UIControlStateNormal];
     [_activitiesBtn setTitle:LOCALIZATION(@"btn_activities") forState:UIControlStateNormal];
     _bulletinLbl.text=LOCALIZATION(@"text_no_content");
     
@@ -3617,10 +3625,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
 /**选查看儿童简报的列表*/
 -(void)showChildrenList
 {
-    //    if (_disconectKidsAy.count == 0) {
-    //        _disconectKidsAy = [[NSMutableArray alloc]init];
-    //        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-    //    }
+
     if (![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0) {
         _isloadNews=YES;
         ChildrenListViewController *tt= [[ChildrenListViewController alloc] init];
@@ -3963,9 +3968,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         
     }
     if (num==2) {
-        //            if (_disconectKidsAy.count == 0) {
-        //                [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-        //            }
+
         
         if(_isloadNews==YES)
         {
@@ -4189,10 +4192,11 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME]){
         NSLog(@"BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME");
         
-        _connectKidsAy = [(NSMutableArray *)[notification object] copy];
-        
+        _connectKidsAy = [(NSMutableArray *)[notification object] mutableCopy];
+        _tempDisconnectKidsAy = [[NSMutableArray alloc]init];
+        _connectKidsByScanedAy = [[NSMutableArray alloc]init];
         _tempDisconnectKidsAy = _disconectKidsAy;
-        
+         NSLog(@"_tempDisconnectKidsAy CONUT--- > %lu",(unsigned long)_tempDisconnectKidsAy.count);
         
         for (int i = 0; i < _connectKidsAy.count ; i ++) {
             NSDictionary *tempDic = [NSDictionary dictionary];
@@ -4236,6 +4240,8 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
                //        _disconectKidsAy = [[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
         NSLog(@"_connectKidsAy CONUT--- > %lu",(unsigned long)_connectKidsAy.count);
         NSLog(@"_disconectKidsAy CONUT--- > %lu",(unsigned long)_disconectKidsAy.count);
+         NSLog(@"_tempDisconnectKidsAy CONUT--- > %lu",(unsigned long)_tempDisconnectKidsAy.count);
+        NSLog(@"_connectKidsByScanedAy CONUT--- > %lu",(unsigned long)_connectKidsByScanedAy.count);
         
         disconnectNum = _tempDisconnectKidsAy.count;
         [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];

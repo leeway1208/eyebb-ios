@@ -173,6 +173,11 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize) {
     return minor;
 }
 
-
+#pragma mark - get version
+-(NSString *)getAppVersion{
+    NSDictionary* infoDictionary = [[NSBundle mainBundle] infoDictionary];
+    ;
+    return [infoDictionary objectForKey:@"CFBundleShortVersionString"];
+}
 
 @end

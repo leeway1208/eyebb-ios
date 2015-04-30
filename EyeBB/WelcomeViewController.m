@@ -45,9 +45,9 @@
     
 //    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
     NSString* strLanguage = [[NSLocale preferredLanguages] objectAtIndex:0];
-//    NSArray * allLanguages = [defaults objectForKey:@"AppleLanguages"];
-//    
-//    NSString * preferredLang = [allLanguages objectAtIndex:0];
+
+
+    
     
     NSLog(@"当前语言:%@", strLanguage);
     
@@ -134,7 +134,7 @@
     
 
         if (accNameStr!=nil&&![accNameStr isEqualToString:@""]&&accPdeStr!=nil&&![accPdeStr isEqualToString:@""]) {
-            NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password, nil];
+            NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:accNameStr, LOGIN_TO_CHECK_KEY_j_username, accPdeStr ,LOGIN_TO_CHECK_KEY_j_password,[self getAppVersion],LOGIN_TO_CHECK_KEY_appVersion, nil];
             // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
             
             [self postRequest:LOGIN_TO_CHECK RequestDictionary:tempDoct delegate:self];
@@ -324,9 +324,14 @@
         
         if(guardian != nil){
 
-                MainViewController *mvc = [[MainViewController alloc] init];
-                [self.navigationController pushViewController:mvc animated:YES];
-                self.title = @"";
+            
+            //post token
+            NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+            NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:[defaults objectForKey:LoginViewController_device_token], LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
+            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+            
+            [self postRequest:POST_TOKEN RequestDictionary:tempDoctToken delegate:self];
+      
 
         }else{
             logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
@@ -341,7 +346,20 @@
                               otherButtonTitles:nil] show];
         }
         
+       
+        
+    }else if ([tag isEqualToString:POST_TOKEN]){
+        NSData *responseData = [request responseData];
+        NSString * resPOST_TOKEN= [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        
+        NSLog(@"resPOST_TOKEN ---> %@",resPOST_TOKEN);
+        
+        
+        MainViewController *mvc = [[MainViewController alloc] init];
+        [self.navigationController pushViewController:mvc animated:YES];
+        self.title = @"";
     }
+
     //关闭加载
     [HUD hide:YES afterDelay:0];
 }
