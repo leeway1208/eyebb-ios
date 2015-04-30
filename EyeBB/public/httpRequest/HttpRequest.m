@@ -89,7 +89,8 @@ static HttpRequest *instance;
     
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:SERVER_URL"%@",requestStr]];
-    [[self clientDelegates] setObject:delegate forKey:@"0"];
+    [[self clientDelegates] setObject:delegate forKey:self.methodStr];
+    NSLog(@"self.methodStr 1 = %@",self.methodStr);
     
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
@@ -116,12 +117,10 @@ static HttpRequest *instance;
     //    EyeBBViewController *httpView = (EyeBBViewController *)delegate;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
     NSString *responseString = [request responseString];
-    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
-
+    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: self.methodStr];
     
+    [[self clientDelegates] removeObjectForKey:self.methodStr];
     [clientDelegate requestFinished:request tag:self.methodStr];
-    [[self clientDelegates] removeAllObjects];
-    
     
     // 当以文本形式读取返回内容时用这个方法
     
@@ -137,10 +136,10 @@ static HttpRequest *instance;
 
 {
     NSString *responseString = [request responseString];
-     EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: @"0"] ;
-
-     [clientDelegate requestFailed:request tag:self.methodStr];
-    [[self clientDelegates] removeAllObjects];
+    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: self.methodStr];
+    
+    [[self clientDelegates] removeObjectForKey:self.methodStr];
+    [clientDelegate requestFinished:request tag:self.methodStr];
 //    NSString *message = NULL;
 //    
 //    NSError *error = [request error];

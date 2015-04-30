@@ -359,14 +359,24 @@
         
         NSLog(@"resPOST_TOKEN ---> %@",resPOST_TOKEN);
         
-        
-        MainViewController *mvc = [[MainViewController alloc] init];
-        [self.navigationController pushViewController:mvc animated:YES];
-        self.title = @"";
+        if ([resPOST_TOKEN isEqualToString:SERVER_RETURN_T]) {
+            //关闭加载
+            [HUD hide:YES afterDelay:0];
+            
+            MainViewController *mvc = [[MainViewController alloc] init];
+            [self.navigationController pushViewController:mvc animated:YES];
+            self.title = @"";
+        } else {
+            [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                        message:LOCALIZATION(@" text_network_error")
+                                       delegate:self
+                              cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                              otherButtonTitles:nil] show];
+        }
+   
     }
 
-    //关闭加载
-    [HUD hide:YES afterDelay:0];
+ 
 }
 
 
