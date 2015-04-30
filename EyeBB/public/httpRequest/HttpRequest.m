@@ -15,6 +15,7 @@
 
 @property(strong,nonatomic) NSMutableDictionary *clientDelegates;
 @property (strong,nonatomic) NSString *methodStr;
+
 @end
 @implementation HttpRequest
 static HttpRequest *instance;
@@ -26,6 +27,7 @@ static HttpRequest *instance;
     
     if(clientDelegates==nil){
         clientDelegates = [[NSMutableDictionary alloc] init];
+
     }
     
     return clientDelegates;
@@ -68,7 +70,7 @@ static HttpRequest *instance;
             tempNum++;
         }
     }
-    [[self clientDelegates] setObject:delegate forKey:@"0"];
+    [[self clientDelegates] setObject:delegate forKey:self.methodStr];
     ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     
     [ request setCacheStoragePolicy:ASICacheForSessionDurationCacheStoragePolicy ];
@@ -90,8 +92,10 @@ static HttpRequest *instance;
     self.methodStr=requestStr;
     NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:SERVER_URL"%@",requestStr]];
     [[self clientDelegates] setObject:delegate forKey:self.methodStr];
+
     NSLog(@"self.methodStr 1 = %@",self.methodStr);
     
+
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
     [request setCacheStoragePolicy:ASICachePermanentlyCacheStoragePolicy];
@@ -117,10 +121,13 @@ static HttpRequest *instance;
     //    EyeBBViewController *httpView = (EyeBBViewController *)delegate;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
     NSString *responseString = [request responseString];
-    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: self.methodStr];
-    
+
+    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: self.methodStr]  ;
+
     [[self clientDelegates] removeObjectForKey:self.methodStr];
     [clientDelegate requestFinished:request tag:self.methodStr];
+    
+
     
     // 当以文本形式读取返回内容时用这个方法
     
