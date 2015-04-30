@@ -167,7 +167,7 @@
     NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];
     
     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-    [defaults setObject:str forKey:LoginViewController_device_token];
+    [defaults setObject:deviceToken forKey:LoginViewController_device_token];
     [defaults synchronize];
     
     

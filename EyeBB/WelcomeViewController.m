@@ -327,9 +327,14 @@
             
             //post token
             NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-            NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:[defaults objectForKey:LoginViewController_device_token], LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
-            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+            NSString * token =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_device_token]];
+            NSLog(@"==== %@", [[token stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)]);
             
+            
+            
+            NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:[[token stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)], LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
+            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+            //sleep(10);
             [self postRequest:POST_TOKEN RequestDictionary:tempDoctToken delegate:self];
       
 
