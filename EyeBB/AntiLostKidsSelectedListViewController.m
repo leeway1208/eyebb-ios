@@ -83,19 +83,25 @@
     
     
     self.SelectedchildrenIDArray=[NSMutableArray array];
-    NSLog(@"SelectedchildrenIDArray %@",_SelectedchildrenIDArray);
+  
     _childrenArray= (NSMutableArray *)myDelegate.allKidsWithMacAddressBeanArray;
     //    _childrenArray=[NSMutableArray array];
     
-    for (int j=0; j<_childrenArray.count; j++) {
-//        NSLog(@"%@,%@",[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ],[NSNumber numberWithLong:(long)[self.guestId longLongValue]]);
-        for(int i=0; i<SelectedchildrenArray.count; i++)
-        {
-            if ([[[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]isEqualToNumber:[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]]) {
-                [self.SelectedchildrenIDArray addObject: [[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]] ;
-            }
-        }
+    if (![SelectedchildrenArray isKindOfClass:[NSNull class]]) {
+        for (int j=0; j<_childrenArray.count; j++) {
+            //        NSLog(@"%@,%@",[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ],[NSNumber numberWithLong:(long)[self.guestId longLongValue]]);
+            NSLog(@"_childrenArray %@",[[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]);
         
+            for(int i=0; i<SelectedchildrenArray.count; i++)
+            {
+                     NSLog(@"SelectedchildrenArray %@",[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]);
+                if ([[[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]isEqualToNumber:[[[[SelectedchildrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]]) {
+                    [self.SelectedchildrenIDArray addObject: [[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]] ;
+                }
+            }
+            
+        }
+
     }
     
     for (int i=0; i<_childrenArray.count; i++) {

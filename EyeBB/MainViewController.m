@@ -213,6 +213,7 @@
 /**connect kids*/
 @property (strong,nonatomic) NSMutableArray * connectKidsAy;
 @property (strong,nonatomic) NSMutableArray * connectKidsByScanedAy;
+@property (strong,nonatomic) NSMutableArray * connectKidsByScanedToAntiLostAy;
 @property (strong,nonatomic) NSMutableArray * connectKidsRssiAy;
 @property (strong,nonatomic) NSMutableArray *tempDisconnectKidsAy;
 //disconnect kids
@@ -248,6 +249,19 @@
     [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
     
     
+    /**
+     *  check the app version
+     */
+    NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+    NSString * appLowestVer =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_app_version]];
+    NSLog(@"appLowestVer -> %@",appLowestVer);
+    if (![appLowestVer isEqualToString:[self getAppVersion]]) {
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_new_version_to_update")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
+    }
     
     
     [self lc];
@@ -348,7 +362,7 @@
     _dailyAvgFigureArray=[[NSMutableArray alloc]init];
     _activityInfosArray=[[NSMutableArray alloc]init];
     _connectKidsAy =[[NSMutableArray alloc]init];
-    
+    _connectKidsByScanedToAntiLostAy =[[NSMutableArray alloc]init];
     _disconectKidsAy =[[NSMutableArray alloc]init];
    
     _connectKidsRssiAy = [[NSMutableArray alloc]init];
@@ -4155,7 +4169,8 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
             if(_antiLostView == nil){
                 _antiLostView = [[AntiLostKidsSelectedListViewController alloc]init];
             }
-            _antiLostView.SelectedchildrenArray = [_connectKidsByScanedAy mutableCopy];
+            _antiLostView.SelectedchildrenArray = [_connectKidsByScanedToAntiLostAy mutableCopy];
+//            NSLog(@"_antiLostView.SelectedchildrenArray  - %@",_antiLostView.SelectedchildrenArray );
             [self.navigationController pushViewController:_antiLostView animated:YES];
             break;
             
@@ -4285,7 +4300,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         NSLog(@"_connectKidsRssiAy CONUT--- > %lu",(unsigned long)_connectKidsRssiAy.count);
          NSLog(@"_tempDisconnectKidsAy CONUT--- > %lu",(unsigned long)_tempDisconnectKidsAy.count);
         NSLog(@"_connectKidsByScanedAy CONUT--- > %lu",(unsigned long)_connectKidsByScanedAy.count);
-        
+        _connectKidsByScanedToAntiLostAy = [_connectKidsByScanedAy mutableCopy];
         disconnectNum = _tempDisconnectKidsAy.count;
         [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
         _RadarDisconnectTableView.frame = CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  disconnectNum * 45);

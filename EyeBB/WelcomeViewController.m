@@ -316,9 +316,9 @@
     NSString *responseString = [request responseString];
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
+        NSString * resLOGIN_TO_CHECK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
-        
-        
+        NSLog(@"LOGIN_TO_CHECK %@",resLOGIN_TO_CHECK);
         NSDictionary *  guardian = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_guardian];
 
         
@@ -337,8 +337,9 @@
                 token = @"-1";
             }
        
+            [defaults setObject:[[[responseData mutableObjectFromJSONData] objectForKey:@"iosLowestVer"] copy] forKey:LoginViewController_app_version] ;
             
-            
+            [defaults synchronize];
             
             NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:token, LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
             // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);

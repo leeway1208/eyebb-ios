@@ -183,6 +183,8 @@ CFBundleDisplayName ="宝宝安";
 "text_press_the_button_on_the_device" = "请按宝宝安设备的按钮超过3秒钟,然后在屏幕上选择你的宝宝安.(请打开手机蓝牙)";
 "text_connect_error" = "连接失败";
 "text_scan_qr_error" = "二维码错误";
+"text_new_version_to_update" = "有新版本,请更新";
+
 
 //<!-- Button strings -->
 "btn_sign_up"="注册";
