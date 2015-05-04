@@ -12,12 +12,16 @@
 //添加授权人
 #import "AddGuestViewController.h"
 @interface AccreditViewController ()<UITableViewDelegate,UITableViewDataSource,UIGestureRecognizerDelegate>
+{
+    Boolean isAuthorizationFrom;
+}
 /**内容列表*/
 @property (nonatomic,strong) UITableView *AccredTableView;
 /**已授权的亲友数组*/
 @property (nonatomic,strong)  NSArray *authorizedArray;
 /**被哪些亲友授权数组*/
 @property (nonatomic,strong)  NSArray *authorizationArray;
+@property (nonatomic,strong)  NSMutableArray *pushAuthorizationArray;
 //添加或改变授权儿童
 @property (nonatomic,strong)  GuardianKidsViewController * guardianKids;
 //添加授权人
@@ -65,6 +69,7 @@
 {
     self.authorizedArray=[NSArray array];
     self.authorizationArray=[NSArray array];
+    self.pushAuthorizationArray =[NSMutableArray array];
 }
 
 /**
@@ -166,11 +171,11 @@
     switch (indexPath.row) {
         case 0:
             tempArray=[_authorizedArray copy];
-            
+            isAuthorizationFrom = false;
             break;
         case 1:
             tempArray=[_authorizationArray copy];
-            
+            isAuthorizationFrom = true;
             break;
         default:
             break;
@@ -253,8 +258,14 @@
             //圆角像素化
             [guardianBtn.layer setCornerRadius:4.0];
             //设置按钮响应事件
-            [guardianBtn addTarget:self action:@selector(ShowGuardianBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
-            guardianBtn.tag=105+i;
+            if (isAuthorizationFrom) {
+                [guardianBtn addTarget:self action:@selector(ShowGuardianMasterBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
+                guardianBtn.tag=205+i;
+            }else{
+                [guardianBtn addTarget:self action:@selector(ShowGuardianBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
+                guardianBtn.tag=105+i;
+            }
+        
             [bindView addSubview:guardianBtn];
             
             UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 5, 40, 40)];
@@ -338,8 +349,14 @@
         //圆角像素化
         [guardianBtn.layer setCornerRadius:4.0];
         //设置按钮响应事件
-        [guardianBtn addTarget:self action:@selector(ShowGuardianBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
-        guardianBtn.tag=105+i;
+        if (isAuthorizationFrom) {
+            [guardianBtn addTarget:self action:@selector(ShowGuardianMasterBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
+            guardianBtn.tag=205+i;
+        }else{
+            [guardianBtn addTarget:self action:@selector(ShowGuardianBtnMessageAction:) forControlEvents:UIControlEventTouchUpInside];
+            guardianBtn.tag=105+i;
+        }
+
         [bindView addSubview:guardianBtn];
         
         UIImageView *logoImgView=[[UIImageView alloc]initWithFrame:CGRectMake(0, 5, 40, 40)];
@@ -384,6 +401,10 @@
     NSLog(@"responseString --> %@",responseString);
     if ([tag isEqualToString:AUTH_FIND_GUESTS]) {
         NSData *responseData = [request responseData];
+        NSString * resAUTH_FIND_GUESTS= [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"resAUTH_FIND_GUESTS %@",resAUTH_FIND_GUESTS);
+        
+        
         if ([responseData isKindOfClass:[NSNull class]]) {
             responseData = nil;
         }else{
@@ -411,6 +432,8 @@
                 self.authorizationArray = nil;
             }else{
                 self.authorizationArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"masters"] copy];
+//                self.pushAuthorizationArray=[[[[responseData mutableObjectFromJSONData] objectForKey:@"masters"] objectForKey:@"chilrenByGuardian" ] copy];
+
             }
             
             responseData=nil;
@@ -424,6 +447,26 @@
 #pragma mark --
 #pragma mark --点击事件
 //显示
+-(void)ShowGuardianMasterBtnMessageAction:(id)sender{
+    
+    UIButton *guardianbtn=(UIButton *)sender;
+    
+    if (self.guardianKids==nil) {
+        self.guardianKids=[[GuardianKidsViewController alloc]init];
+        
+    }
+    //    NSLog(@"---%@",_authorizedArray);
+//    self.guardianKids.SelectedchildrenArray=[[_authorizedArray objectAtIndex:(guardianbtn.tag-205)] objectForKey:@"chilrenByGuardian"];
+    self.guardianKids._childrenArray= [[_authorizationArray objectAtIndex:(guardianbtn.tag-205)] objectForKey:@"chilrenByGuardian"];
+    self.guardianKids.guestOrMaster = 2;
+    [self.navigationController pushViewController:self.guardianKids animated:YES];
+    self.guardianKids.title = [NSString stringWithFormat:@"<%@>",[[[_authorizationArray objectAtIndex:(guardianbtn.tag-205)] objectForKey:@"guardian"] objectForKey:@"accName"]];
+    
+    
+    
+}
+
+
 -(void)ShowGuardianBtnMessageAction:(id)sender
 {
     UIButton *guardianbtn=(UIButton *)sender;
@@ -435,11 +478,10 @@
     //    NSLog(@"---%@",_authorizedArray);
     self.guardianKids.SelectedchildrenArray=[[_authorizedArray objectAtIndex:(guardianbtn.tag-105)] objectForKey:@"chilrenByGuardian"];
     self.guardianKids.guestId=[[[_authorizedArray objectAtIndex:(guardianbtn.tag-105)] objectForKey:@"guardian"] objectForKey:@"guardianId"];
+    self.guardianKids.guestOrMaster = 1;
     [self.navigationController pushViewController:self.guardianKids animated:YES];
+    self.guardianKids.title = [NSString stringWithFormat:@"<%@>",[[[_authorizedArray objectAtIndex:(guardianbtn.tag-105)] objectForKey:@"guardian"] objectForKey:@"accName"]];
     
-    
-    //    [[[tempArray objectAtIndex:i] objectForKey:@"guardian"] objectForKey:@"name"]
-    //       [{"guardian":{"guardianId":54,"accName":"99999999","name":"9999","phoneNumber":"99999999","type":"P"},"chilrenByGuardian":[{"childId":19,"name":"C2014112801","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_C20141128_20150312041842.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":18,"name":"c20141127","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000003_20150312041748.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null}]},{"guardian":{"guardianId":17,"accName":"12341234","name":"qqq","phoneNumber":"12341234","type":"P"},"chilrenByGuardian":[{"childId":6,"name":"軒仔","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000015_20150312042828.png","dateOfBirth":"06/06/2013","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":18,"name":"c20141127","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000003_20150312041748.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":5,"name":"Haibo","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000007_20150312042305.png","dateOfBirth":"03/10/2011","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":{"classId":1,"name":"Class 1"}},{"childId":2,"name":"Betty","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000002_20150312041644.png","dateOfBirth":"01/02/2010","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":{"classId":1,"name":"Class 1"}},{"childId":3,"name":"Wanwan","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000012_20150312042716.png","dateOfBirth":"02/06/2010","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":{"classId":1,"name":"Class 1"}},{"childId":19,"name":"C2014112801","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_C20141128_20150312041842.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null}]},{"guardian":{"guardianId":7,"accName":"terry","name":"terry","phoneNumber":"93706395","type":"P"},"chilrenByGuardian":[{"childId":9,"name":"français","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000005_20150312042214.png","dateOfBirth":"15/07/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":19,"name":"C2014112801","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_C20141128_20150312041842.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":18,"name":"c20141127","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000003_20150312041748.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":20,"name":"C2014112802","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_2014112802_20150312041907.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null}]},{"guardian":{"guardianId":18,"accName":"11223344","name":"test111410","phoneNumber":"11223344","type":"P"},"chilrenByGuardian":[{"childId":20,"name":"C2014112802","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_2014112802_20150312041907.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":2,"name":"Betty","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000002_20150312041644.png","dateOfBirth":"01/02/2010","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":{"classId":1,"name":"Class 1"}},{"childId":18,"name":"c20141127","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000003_20150312041748.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":10,"name":"Español","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000004_20150312042040.png","dateOfBirth":"06/05/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":{"classId":1,"name":"Class 1"}},{"childId":19,"name":"C2014112801","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_C20141128_20150312041842.png","dateOfBirth":"27/11/2014","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":null},{"childId":1,"name":"Peter","icon":"http://test.eyebb.com/twinly/share/images/childrenIcons/area_2/2_c201000010_20150312042547.png","dateOfBirth":"01/01/2010","kindergarten":{"areaId":2,"name":"Funful Kindergarten","nameTc":"方方樂趣幼稚園","nameSc":"方方乐趣幼稚园","icon":"http://test.eyebb.com/twinly/share/images/locationAreas/icons/2_area_icon_20150312041239.png"},"cls":{"classId":1,"name":"Class 1"}}]}]
 }
 
 -(void)addgusetAction

@@ -94,7 +94,6 @@ static HttpRequest *instance;
     [[self clientDelegates] setObject:delegate forKey:self.methodStr];
 
     NSLog(@"self.methodStr 1 = %@",self.methodStr);
-    
 
     //ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:url];
     ASIFormDataRequest *request=[ASIFormDataRequest requestWithURL:url];
@@ -122,11 +121,10 @@ static HttpRequest *instance;
     //     NSLog(@"---%@,---%@\n",[NSString stringWithFormat:@"%@",httpView.class],httpView.nibName);
     NSString *responseString = [request responseString];
 
-    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: self.methodStr]  ;
-
+    EyeBBViewController *clientDelegate = [[self clientDelegates] objectForKey: self.methodStr];
+    
     [[self clientDelegates] removeObjectForKey:self.methodStr];
     [clientDelegate requestFinished:request tag:self.methodStr];
-    
 
     
     // 当以文本形式读取返回内容时用这个方法

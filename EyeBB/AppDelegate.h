@@ -28,5 +28,9 @@
 
 /**儿童列表*/
 @property (strong, nonatomic) NSDictionary * childrenBeanArray;
+/**all kids*/
+@property (strong, nonatomic) NSMutableArray * allKidsBeanArray;
+/**all kids with device*/
+@property (strong, nonatomic) NSMutableArray * allKidsWithMacAddressBeanArray;
 @end
 

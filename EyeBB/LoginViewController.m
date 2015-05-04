@@ -53,6 +53,8 @@
 @property (strong,nonatomic) UIView * dateViewContainer;
 /**date view container confirm button*/
 @property (nonatomic,strong) UIButton *dateViewContainerConfirmBtn;
+/*registrationId data was got from server */
+@property (nonatomic,strong) NSString * registrationId;
 @end
 
 @implementation LoginViewController
@@ -603,7 +605,7 @@
 #pragma mark - server request
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag{
     //关闭加载
-    [HUD hide:YES afterDelay:0];
+   
     if ([tag isEqualToString:LOGIN_TO_CHECK]) {
         NSData *responseData = [request responseData];
         NSString * resLOGIN_TO_CHECK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
@@ -611,19 +613,35 @@
         
         
         _guardian = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_guardian];
-        NSString * registrationId = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_registrationId];
+        _registrationId = [[responseData mutableObjectFromJSONData] objectForKey:LoginViewController_json_key_registrationId];
         // NSLog(@"login ----> %@ ",guardian);
         
         if(_guardian != nil){
-            //save to the UserDefaults
-            if([self saveNSUserDefaults:_guardian RegistrationId:registrationId]){
-                
-                MainViewController *mvc = [[MainViewController alloc] init];
-                [self.navigationController pushViewController:mvc animated:YES];
-                self.title = @"";
-            }
-        }else{
             
+            //post token
+            NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+            NSString * token = @"";
+            NSString * tokenDefault =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_device_token]];
+            if (token.length > 20) {
+                NSLog(@"==== %@", [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)]);
+                token = [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)];
+                
+            }else{
+                token = @"-1";
+            }
+            
+            
+            
+            
+            NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:token, LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
+
+            // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
+            //sleep(10);
+            [self postRequest:POST_TOKEN RequestDictionary:tempDoctToken delegate:self];
+
+
+        }else{
+            [HUD hide:YES afterDelay:0];
             //if the user name or password is invaild. alerting the user.
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"toast_invalid_username_or_password")
@@ -633,6 +651,7 @@
         }
         
     }else if ([tag isEqualToString:RESET_PASSWORD]){
+        [HUD hide:YES afterDelay:0];
         
         NSData *responseData = [request responseData];
         NSString * resRESET_PASSWORD= [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
@@ -668,6 +687,30 @@
         }
         
         
+    }else if ([tag isEqualToString:POST_TOKEN]){
+        //save to the UserDefaults
+        if([self saveNSUserDefaults:_guardian RegistrationId:_registrationId]){
+            NSData *responseData = [request responseData];
+            NSString * resPOST_TOKEN= [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+            
+            NSLog(@"resPOST_TOKEN ---> %@",resPOST_TOKEN);
+            [HUD hide:YES afterDelay:0];
+            if ([resPOST_TOKEN isEqualToString:SERVER_RETURN_T]) {
+                
+                MainViewController *mvc = [[MainViewController alloc] init];
+                [self.navigationController pushViewController:mvc animated:YES];
+                self.title = @"";
+                
+            } else {
+                [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                            message:LOCALIZATION(@" text_network_error")
+                                           delegate:self
+                                  cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                                  otherButtonTitles:nil] show];
+            }
+
+      
+        }
     }
     
 }

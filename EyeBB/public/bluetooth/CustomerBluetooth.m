@@ -130,15 +130,17 @@ Boolean startTimerOnce = true;
         NSLog(@"timerRefreshTableSelector --- > %lu",(unsigned long)self.SOSDiscoveredPeripherals.count);
     }else if (isScanDevice){
         [self stopScan];
+    
          [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDevice];
-        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDeviceRssi];
+         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDeviceRssi];
        
       
          NSLog(@"isScanDevice --- > %lu",(unsigned long)self.discoveredPeripheralsBroadcastDataForScanDevice.count);
         
         //clear
-        self.discoveredPeripheralsBroadcastDataForScanDevice.removeAllObjects;
-        self.discoveredPeripheralsBroadcastDataForScanDeviceRssi.removeAllObjects;
+        [self.discoveredPeripheralsBroadcastDataForScanDevice removeAllObjects];
+        [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi removeAllObjects];
+ 
         [self startScan];
         
     }
@@ -222,8 +224,9 @@ Boolean startTimerOnce = true;
     //this is for scanning device
     if(![self.discoveredPeripheralsBroadcastDataForScanDevice containsObject:advertisementData]) {
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
             [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
+            [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
+            
             
         });
     }

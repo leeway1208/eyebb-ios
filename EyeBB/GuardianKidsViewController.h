@@ -16,5 +16,8 @@
 @property (nonatomic,strong) NSMutableArray*SelectedchildrenArray;
 /**授权人ID*/
 @property (nonatomic,strong) NSString *guestId;
-
+/**数据源数组*/
+@property (nonatomic,strong) NSArray *_childrenArray;
+/* guest == 1 master == 2 */
+@property int guestOrMaster ;
 @end

@@ -17,6 +17,8 @@
 @synthesize childDictionary;
 @synthesize applanguage;
 @synthesize childrenBeanArray;
+@synthesize allKidsBeanArray;
+@synthesize allKidsWithMacAddressBeanArray;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     

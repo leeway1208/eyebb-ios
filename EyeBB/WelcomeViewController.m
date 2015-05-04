@@ -327,18 +327,27 @@
             
             //post token
             NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
-            NSString * token =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_device_token]];
-            NSLog(@"==== %@", [[token stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)]);
+            NSString * token = @"";
+            NSString * tokenDefault =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_device_token]];
+            if (token.length > 20) {
+                     NSLog(@"==== %@", [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)]);
+                token = [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)];
+             
+            }else{
+                token = @"-1";
+            }
+       
             
             
             
-            NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:[[token stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)], LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
+            NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:token, LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
             // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
             //sleep(10);
             [self postRequest:POST_TOKEN RequestDictionary:tempDoctToken delegate:self];
       
 
         }else{
+            [HUD hide:YES afterDelay:0];
             logoImgView.frame=CGRectMake(Drive_Wdith/4, Drive_Wdith/10*3, Drive_Wdith/2, Drive_Wdith/2);
             RegBtn.hidden=NO;
             LoginBtn.hidden=NO;
@@ -358,10 +367,10 @@
         NSString * resPOST_TOKEN= [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         
         NSLog(@"resPOST_TOKEN ---> %@",resPOST_TOKEN);
-        
+        [HUD hide:YES afterDelay:0];
         if ([resPOST_TOKEN isEqualToString:SERVER_RETURN_T]) {
             //关闭加载
-            [HUD hide:YES afterDelay:0];
+          
             
             MainViewController *mvc = [[MainViewController alloc] init];
             [self.navigationController pushViewController:mvc animated:YES];
