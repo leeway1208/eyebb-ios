@@ -329,7 +329,7 @@
             NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
             NSString * token = @"";
             NSString * tokenDefault =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_device_token]];
-            if (token.length > 20) {
+            if (tokenDefault.length > 20) {
                      NSLog(@"==== %@", [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)]);
                 token = [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)];
              

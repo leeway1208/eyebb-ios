@@ -577,7 +577,7 @@
         myDelegate.applanguage=indexPath.row;
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationLanguageChanged object:nil userInfo:nil];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"updateLanuage" object:nil userInfo:nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SETTING_CHANGE_LANGUAGE_BROADCAST object:nil userInfo:nil];
 
         
         [_optionsTable reloadData];
@@ -657,8 +657,11 @@
     NSUserDefaults *userDefatluts = [NSUserDefaults standardUserDefaults];
     NSDictionary *dictionary = [userDefatluts dictionaryRepresentation];
     for(NSString* key in [dictionary allKeys]){
-        [userDefatluts removeObjectForKey:key];
-        [userDefatluts synchronize];
+        if( [key isEqualToString:LoginViewController_accName] ||  [key isEqualToString:LoginViewController_hashPassword]){
+            [userDefatluts removeObjectForKey:key];
+            [userDefatluts synchronize];
+        }
+        
     }
     [self.navigationController popToRootViewControllerAnimated:YES];
 }

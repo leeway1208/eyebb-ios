@@ -16,6 +16,8 @@
 @property (strong,nonatomic) NSMutableArray *checkDiscoveredPeripherals;
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredPeripherals;
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
+
+@property (strong,nonatomic) NSMutableArray *keepAntiLostBroadDataAy;
 @property (strong,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
 @property (strong,nonatomic) NSMutableArray *discoveredPeripheralsRssi;
 
@@ -25,6 +27,7 @@
 /* timer to refresh the table view */
 @property (strong,nonatomic) NSTimer *refreshTableTimer;
 @property (strong,nonatomic) NSTimer *otherTimer;
+@property (strong,nonatomic) NSTimer *antiLostTimer;
 @property (strong,nonatomic) CBPeripheral *connectedPeripheral;
 @property (strong,nonatomic) CBUUID *service2000;
 @property (strong,nonatomic) CBUUID *service1000;
@@ -36,6 +39,14 @@
 
 
 @property(strong,nonatomic) NSMutableDictionary *clientDelegates;
+@property (strong,nonatomic) NSMutableArray *antiLostAy;
+@property (strong,nonatomic) NSMutableArray *antiLostLongConnectAy;
+@property (strong,nonatomic) NSMutableArray *antiLostMonitoringAy;
+
+@property (strong,nonatomic) NSMutableArray *antiLostBroadcastData;
+@property (strong,nonatomic) NSMutableArray *stopAntiLostBroadcastData;
+
+@property (strong,nonatomic)  NSMutableDictionary  *antiLostTempDictionary;
 @end
 
 @implementation CustomerBluetooth
@@ -45,6 +56,7 @@ static CustomerBluetooth *instance;
 
 double timerInterval = 5.0f;
 double otherTimerInterval = 20.0f;
+double antiLostTimerInterval = 5.0f;
 NSInteger *tableNumberConut;
 Boolean setPassword = false;
 Boolean isBeep = false;
@@ -54,6 +66,19 @@ Boolean isMinor = false;
 Boolean isSOSDevice = false;
 Boolean isScanDevice = false;
 Boolean startTimerOnce = true;
+Boolean isAntiLost = false;
+Boolean isAntiLostMoreThanThree = false;
+Boolean isStopAntiLost = false;
+
+int keepAntiNumFlag = 0;
+
+int retry1Ptimes = 0;
+int retry2Ptimes = 0;
+int retry3Ptimes = 0;
+
+NSString *getMajorAndMinor;
+NSString *keepMajorAndMinor;
+
 
 #pragma mark --- 处理业务逻辑委托
 -(NSMutableDictionary *)clientDelegates{
@@ -95,9 +120,21 @@ Boolean startTimerOnce = true;
     return _otherTimer;
 }
 
+- (NSTimer *) antiLostTimer {
+    if (!_antiLostTimer) {
+        _antiLostTimer = [NSTimer timerWithTimeInterval:antiLostTimerInterval target:self selector:@selector(antiLostSelector:) userInfo:nil repeats:YES];
+    }
+    return _antiLostTimer;
+}
+
 -(void) startTimer{
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     NSLog(@"timer start...");
+}
+
+-(void) startAntiLostTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.antiLostTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"antiLostTimer start...");
 }
 
 -(void) startOtherTimer{
@@ -121,6 +158,15 @@ Boolean startTimerOnce = true;
     }
 }
 
+- (void) stopAntiLostTimer{
+    if (_antiLostTimer != nil){
+        [_antiLostTimer invalidate];
+        _antiLostTimer = nil;
+        NSLog(@"antiLost timer stop...");
+    }
+}
+
+
 - (void)timerRefreshTableSelector:(NSTimer*)timer{
     
     if(isSOSDevice){
@@ -130,17 +176,17 @@ Boolean startTimerOnce = true;
         NSLog(@"timerRefreshTableSelector --- > %lu",(unsigned long)self.SOSDiscoveredPeripherals.count);
     }else if (isScanDevice){
         [self stopScan];
-    
-         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDevice];
-         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDeviceRssi];
-       
-      
-         NSLog(@"isScanDevice --- > %lu",(unsigned long)self.discoveredPeripheralsBroadcastDataForScanDevice.count);
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDevice];
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME object:self.discoveredPeripheralsBroadcastDataForScanDeviceRssi];
+        
+        
+        NSLog(@"isScanDevice --- > %lu",(unsigned long)self.discoveredPeripheralsBroadcastDataForScanDevice.count);
         
         //clear
         [self.discoveredPeripheralsBroadcastDataForScanDevice removeAllObjects];
         [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi removeAllObjects];
- 
+        
         [self startScan];
         
     }
@@ -148,12 +194,40 @@ Boolean startTimerOnce = true;
     
 }
 
-- (void)otherSelector:(NSTimer*)timer{
 
+- (void)antiLostSelector:(NSTimer*)timer{
+    if (isAntiLostMoreThanThree) {
+        
+        [self stopScan];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME object:_antiLostMonitoringAy];
+        
+        
+        
+        NSLog(@"_antiLostLongConnectAy --- > %lu",(unsigned long)_antiLostMonitoringAy.count);
+        
+        //clear
+        [_antiLostMonitoringAy removeAllObjects];
+        
+        
+        [self startScan];
+        
+        
+        
+    }
+    
+    
+}
+
+
+
+
+- (void)otherSelector:(NSTimer*)timer{
+    
     if (isBeep){
         NSLog(@"BEEP ONCE ...");
-
-         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_BEEP_TIME_OUT object:nil];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_BEEP_TIME_OUT object:nil];
         isBeep = false;
         
         [self stopScan];
@@ -169,7 +243,7 @@ Boolean startTimerOnce = true;
         [self stopOtherTimer];
         
     }
-
+    
     
 }
 
@@ -220,30 +294,109 @@ Boolean startTimerOnce = true;
 -(void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     
-    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,peripheral.identifier.UUIDString,RSSI);
-    //this is for scanning device
-    if(![self.discoveredPeripheralsBroadcastDataForScanDevice containsObject:advertisementData]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
-            [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
-            
-            
-        });
-    }
-
+    //    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,peripheral.identifier.UUIDString,RSSI);
+    
+    
     if(advertisementData != nil){
+        
+        //this is for scanning device
+        if(![self.discoveredPeripheralsBroadcastDataForScanDevice containsObject:advertisementData]) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
+                [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
+                
+                
+            });
+        }
+        
+        
         NSString *toStringFromData = NSDataToHex([ advertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
         if(toStringFromData.length > 0){
-            NSString *getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
-            //NSLog(@"MAJOR AND MINOR ---> %@",toStringFromData);
+            getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
+            NSLog(@"MAJOR AND MINOR ---> %@",getMajorAndMinor);
             
+            /**
+             *  anti lost function
+             */
+            
+            
+            if (isAntiLost) {
+                
+                
+                if(isAntiLostMoreThanThree){
+              
+                    {
+                        //more than three
+                        if(![_antiLostMonitoringAy containsObject:advertisementData]) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                //                            [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
+                                [_antiLostMonitoringAy addObject:advertisementData];
+                                
+                                
+                            });
+                        }
+                        
+                    }
+
+                }else{
+                    
+                    
+                    for (int i = 0; i < _antiLostLongConnectAy.count; i++) {
+                        if ([getMajorAndMinor isEqualToString:[NSString stringWithFormat:@"%@",[_antiLostLongConnectAy objectAtIndex:i]]]) {
+                            
+                            if(![_antiLostBroadcastData containsObject:peripheral]) {
+                                dispatch_async(dispatch_get_main_queue(), ^{
+                                    keepMajorAndMinor = getMajorAndMinor;
+                                    [self.central connectPeripheral:peripheral options:nil];
+                                    
+                                });
+                            }
+                            
+                            
+                        }
+                        
+                    }
+                    
+                    
+                }
+                
+                
+            }
+            
+            /**
+             *  stop anti lost
+             */
+            if (isStopAntiLost) {
+                for (int i = 0; i < _antiLostLongConnectAy.count; i++) {
+                    if ([getMajorAndMinor isEqualToString:[NSString stringWithFormat:@"%@",[_antiLostLongConnectAy objectAtIndex:i]]]) {
+                        
+                        if(![_stopAntiLostBroadcastData containsObject:peripheral]) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                        
+                                [self.central connectPeripheral:peripheral options:nil];
+                                
+                            });
+                        }
+                        
+                        
+                    }
+                    
+                }
+                
+                
+                
+            }
+            
+            /**
+             *  sos is use for bind device
+             */
             if (isSOSDevice) {
                 self.targetBatteryLifePeripheral = [toStringFromData substringWithRange:NSMakeRange(10,2)];
                 if(startTimerOnce){
                     [self startTimer];
                     startTimerOnce = false;
                 }
-               
+                
                 //NSLog(@"BATTERY LIFE ---> %@",self.targetBatteryLifePeripheral);
                 if ([self.targetBatteryLifePeripheral isEqualToString:@"01"]) {
                     //[self stopScan];
@@ -253,7 +406,7 @@ Boolean startTimerOnce = true;
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.SOSDiscoveredPeripherals addObject:peripheral];
                             [self.SOSDiscoveredAdvertisementData addObject:advertisementData];
-                           
+                            
                         });
                     }
                 }
@@ -327,10 +480,39 @@ Boolean startTimerOnce = true;
         [self.central connectPeripheral:_targetUUIDPeripheral options:nil];
     }
     
-    if ([self.targetPeripheral isEqualToString:peripheral.identifier.UUIDString]) {
-        NSLog(@"Retrying");
-        [self.central connectPeripheral:peripheral options:nil];
+    
+    if (isAntiLost) {
+        for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
+            
+            CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
+            if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
+                if(i == 0){
+                    retry1Ptimes++;
+                }else if (i == 1) {
+                    retry2Ptimes++;
+                }else if(i == 2){
+                    retry3Ptimes++;
+                }
+                NSLog(@"Retrying ======================");
+                [self.central connectPeripheral:peripheral options:nil];
+                
+                if (retry1Ptimes == 3) {
+                      [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:0]];
+                    retry1Ptimes = 0;
+                }else if(retry2Ptimes == 3){
+                      [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:1]];
+                    retry2Ptimes = 0;
+                }else if (retry3Ptimes == 3){
+                      [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:2]];
+                    retry3Ptimes = 0;
+                }
+                
+                
+            }
+            
+        }
     }
+   
 }
 
 #pragma mark - CBPeripheralManager delegate methods
@@ -414,6 +596,23 @@ Boolean startTimerOnce = true;
                     
                 }
                 
+            }else if(isAntiLost){
+                if ([characteristic.UUID.UUIDString isEqualToString:@"1003"]) {
+                    //[peripheral readValueForCharacteristic:characteristic];
+                    //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
+                    [peripheral writeValue:[self stringToByte:@"FFFF"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+                    
+                }
+                
+            }else if (isStopAntiLost){
+                if ([characteristic.UUID.UUIDString isEqualToString:@"1003"]) {
+                    //[peripheral readValueForCharacteristic:characteristic];
+                    //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
+                    [peripheral writeValue:[self stringToByte:@"0000"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+                    
+                }
+
+                
             }
             
         }
@@ -476,6 +675,33 @@ Boolean startTimerOnce = true;
             isMinor = false;
             //post get sos device broadcast
             [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
+        }else if (isAntiLost){
+            NSLog(@"is anti !!! ");
+            
+            [_antiLostBroadcastData addObject:peripheral];
+            [_keepAntiLostBroadDataAy addObject:keepMajorAndMinor];
+            [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME object:keepMajorAndMinor];
+            [self startScan];
+        }else if (isStopAntiLost){
+            [_stopAntiLostBroadcastData addObject:peripheral];
+            
+            
+            NSLog(@"keepAntiNumFlag %d   %lu",keepAntiNumFlag,(unsigned long)_stopAntiLostBroadcastData.count);
+            
+            if (keepAntiNumFlag == _stopAntiLostBroadcastData.count) {
+                [self.central cancelPeripheralConnection:peripheral];
+                [self stopScan];
+                isStopAntiLost = false;
+            }else{
+                
+                
+                [self startScan];
+                setPassword = false;
+            }
+            
+        
+            //stop scan
+        
         }
         
     }else{
@@ -557,8 +783,8 @@ NSString * NSDataToHex(NSData *data) {
 -(void) startScan {
     NSLog(@"Starting scan");
     
-//    self.central = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
-
+    //    self.central = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
+    
     // scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"FFE0"]]  (make your own device)
     //CBCentralManagerOptionRestoreIdentifierKey :@YES @{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES}
     [self.central scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@NO ,CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
@@ -566,7 +792,7 @@ NSString * NSDataToHex(NSData *data) {
 
 -(void) stopScan{
     NSLog(@"Stop scan");
-   
+    
     [self.central stopScan];
 }
 
@@ -619,7 +845,7 @@ NSString * NSDataToHex(NSData *data) {
     NSLog(@"NAME --- > %@" , [notification name] );
     
     isReadBattery = true;
-     [self startOtherTimer];
+    [self startOtherTimer];
     
     
     [self initData:major minor:minor];
@@ -653,7 +879,7 @@ NSString * NSDataToHex(NSData *data) {
 -(void) findSOSDevice{
     
     isSOSDevice = true;
-
+    
     [self initData:@"" minor:@""];
     
     [self startScan];
@@ -668,6 +894,63 @@ NSString * NSDataToHex(NSData *data) {
     [self stopScan];
 }
 
+-(void)stopAntiLostService{
+    
+    isStopAntiLost = true;
+    isAntiLost = false;
+    setPassword = false;
+    _stopAntiLostBroadcastData = [[NSMutableArray alloc]init];
+    if(isAntiLostMoreThanThree){
+        
+        [self stopAntiLostTimer];
+        [self stopScan];
+        
+    }else{
+        
+        [self initData:@"" minor:@""];
+        
+    }
+    
+}
+
+
+
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy{
+    isStopAntiLost = false;
+    isAntiLost = true;
+    [self initData:@"" minor:@""];
+    _antiLostAy = [antiLostDeviceAy mutableCopy];
+    _antiLostBroadcastData = [NSMutableArray new];
+    _antiLostLongConnectAy = [[NSMutableArray alloc]initWithCapacity:3];
+    _antiLostMonitoringAy = [NSMutableArray new];
+    _keepAntiLostBroadDataAy = [NSMutableArray new];
+    
+    if (_antiLostAy.count > 3) {
+        
+        isAntiLostMoreThanThree = true;
+        
+        for (int i = 0; i < _antiLostAy.count; i ++) {
+            [ _antiLostMonitoringAy addObject:[_antiLostAy objectAtIndex:i]];
+        }
+        
+        [self startAntiLostTimer];
+        
+    }else{
+        isAntiLostMoreThanThree = false;
+        
+        [ _antiLostLongConnectAy addObjectsFromArray:_antiLostAy];
+        
+        keepAntiNumFlag = _antiLostLongConnectAy.count;
+    }
+    
+    _antiLostTempDictionary = [[NSMutableDictionary alloc]init];
+    //NSLog(@"_antiLostAy -- %@",_antiLostAy);
+    [self startScan];
+    
+    
+}
+
+
 
 #pragma mark - initial data
 
@@ -680,7 +963,7 @@ NSString * NSDataToHex(NSData *data) {
     self.checkDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredAdvertisementData = [NSMutableArray new];
-  
+    
     
     self.service2000 = [CBUUID UUIDWithString:@"0x2000"];
     self.service1000 = [CBUUID UUIDWithString:@"0x1000"];

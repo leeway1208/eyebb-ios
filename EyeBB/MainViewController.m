@@ -41,6 +41,15 @@
     //radar dot
     Boolean isSelectedMissed;
     
+    //turn on the radar model
+    BOOL isButtonOn;
+    
+    NSMutableArray * antiResultAy;
+    NSMutableArray * antiResultNoMore3Ay;
+    //radar is more than 3
+    Boolean isMoreThanThree;
+    
+    
 //    //record all disconnect kids number
 //    int disconectKidsNum;
     
@@ -222,6 +231,15 @@
 @property (strong,nonatomic) UIImageView *bgRadaCircle;
 //bg Radar Rotate
 @property (strong,nonatomic) UIImageView *bgRadarRotate;
+//anti lost table view
+@property (strong,nonatomic) UITableView *antiLostTb;
+//ui tick image
+@property (strong,nonatomic) UIImageView *tickImageView;
+//ui cross image
+@property (strong,nonatomic) UIImageView *crossImageView;
+//anti lost scan data
+@property (strong,nonatomic) NSMutableArray *antiLostMore3scanDataAy;
+@property (strong,nonatomic) NSMutableArray *antiLostMore3scanSelectedDataAy;
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
 @property (nonatomic,strong) AntiLostKidsSelectedListViewController * antiLostView;
@@ -240,7 +258,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(updateLanuage)
-                                                 name:@"updateLanuage"
+                                                 name:SETTING_CHANGE_LANGUAGE_BROADCAST
                                                object:nil];
     [self iv];
     
@@ -322,6 +340,9 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:ANTILOST_VIEW_ANTI_LOST_CONFIRM_BROADCAST object:nil];
+    
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:SETTING_CHANGE_LANGUAGE_BROADCAST object:nil];
     
 }
 
@@ -347,6 +368,7 @@
  */
 -(void)iv
 {
+   
     connectNum = 0;
     disconnectNum = 0;
     isSelectedMissed = false;
@@ -364,7 +386,12 @@
     _connectKidsAy =[[NSMutableArray alloc]init];
     _connectKidsByScanedToAntiLostAy =[[NSMutableArray alloc]init];
     _disconectKidsAy =[[NSMutableArray alloc]init];
-   
+    antiResultAy =[[NSMutableArray alloc]init];
+    antiResultNoMore3Ay = [[NSMutableArray alloc]init];
+    _antiLostMore3scanDataAy = [[NSMutableArray alloc]init];
+    _antiLostMore3scanSelectedDataAy = [[NSMutableArray alloc]init];
+
+
     _connectKidsRssiAy = [[NSMutableArray alloc]init];
     _isallRoomOn=NO;
     _isautoOn=NO;
@@ -695,13 +722,15 @@
     [_connectBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
     [_connectBtn setSelected:YES];
     
+    _tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30,14,20,20)];
+    _tickImageView.image = [UIImage imageNamed:@"tick"];
+    [_connectBtn addSubview:_tickImageView];
     //image view
     if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"] ) {
-        
+        _tickImageView.hidden = YES;
     }else{
-        UIImageView *tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30,14,20,20)];
-        tickImageView.image = [UIImage imageNamed:@"tick"];
-        [_connectBtn addSubview:tickImageView];
+      
+         _tickImageView.hidden = NO;
     }
     
     
@@ -767,18 +796,14 @@
     [_radarDivisionFourLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [_disconnectBtn addSubview:_radarDivisionFourLbl];
     
-    // table ----------------------------
-//    _RadarConnectTableView = [[UITableView alloc]initWithFrame:CGRectMake( 0, 255, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  Drive_Height)];
-//    _RadarConnectTableView.userInteractionEnabled = NO;
-//    _RadarConnectTableView.scrollEnabled = NO;
-//    _RadarConnectTableView.dataSource = self;
-//    _RadarConnectTableView.delegate = self;
-//    //    [self.positionDetailsTableView setBounces:NO];
-//    _RadarConnectTableView.tableFooterView = [[UIView alloc] init];
-//    _RadarConnectTableView.tag = 900;
-//    [scrollView addSubview:_RadarConnectTableView];
+
     _RadarConnectTableView = [[UITableView alloc]init];
     _RadarDisconnectTableView = [[UITableView alloc]init];
+    
+    
+    //anti lost table view
+    _antiLostTb = [[UITableView alloc]init];
+  
 
     
     //------------------------简报-------------------------------
@@ -1289,6 +1314,8 @@
         return 45;
     }else if (tableView == self.RadarDisconnectTableView){
          return 45;
+    }else if (tableView == self.antiLostTb){
+        return 45;
     }
     
     else if(tableView == self.ActivitiesTableView){
@@ -1329,6 +1356,8 @@
     }
     else if (tableView == self.RadarDisconnectTableView){
         return _tempDisconnectKidsAy.count;
+    }else if (tableView == self.antiLostTb){
+        return myDelegate.antiLostSelectedKidsAy.count;
     }
     else if(tableView == self.ActivitiesTableView){
         return _activityInfosArray.count;
@@ -1362,7 +1391,154 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     //房间列表显示/刷新设置
-    if (tableView == self.RadarConnectTableView) {
+    if(tableView == self.antiLostTb){
+        int row = indexPath.row;
+        NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+        
+        
+        tempChildDictionary=[myDelegate.antiLostSelectedKidsAy  objectAtIndex:row];
+        
+        NSLog(@"myDelegate.antiLostSelectedKidsAy -> %@",myDelegate.antiLostSelectedKidsAy);
+
+        
+      
+        
+        if (cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
+            
+            
+            //儿童图标
+            DBImageView * KidsImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 2.5, 40, 40)];
+            [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            [KidsImgView.layer setCornerRadius:CGRectGetHeight([KidsImgView bounds]) / 2];
+            [KidsImgView.layer setMasksToBounds:YES];
+            [KidsImgView.layer setBorderWidth:2];
+            
+            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+            [KidsImgView setImageWithPath:[pathOne copy]];
+            pathOne=nil;
+            
+            KidsImgView.tag=701;
+            [cell addSubview:KidsImgView];
+            
+            
+            
+            //儿童名称
+            UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 5, CGRectGetWidth(cell.frame)-80, 20)];
+            
+            [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
+            [KidsLbl setTextColor:[UIColor blackColor]];
+            [KidsLbl setTextAlignment:NSTextAlignmentLeft];
+            KidsLbl.tag=702;
+            [cell addSubview:KidsLbl];
+            
+            
+            //device status
+            
+            UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
+            [deviceStatusLbl setText:LOCALIZATION(@"btn_missed")];
+            [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
+            //[deviceStatusLbl setTextColor:[UIColor redColor]];
+            [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
+            deviceStatusLbl.tag=703;
+            
+            [cell addSubview:deviceStatusLbl];
+        }
+        
+        if (isMoreThanThree) {
+            //kid image
+            DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:701];
+            
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+            
+            //儿童名称
+            UILabel * KidsLbl =(UILabel *)[cell viewWithTag:702];
+            [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
+            
+            UILabel * kidStatus =(UILabel *)[cell viewWithTag:703];
+            
+            for (int i = 0; i < _antiLostMore3scanDataAy.count ; i ++) {
+                NSDictionary *tempDic = [NSDictionary dictionary];
+                tempDic = [_antiLostMore3scanDataAy objectAtIndex:i];
+                if ([NSString stringWithFormat:@"%@", [tempDic objectForKey:@"kCBAdvDataManufacturerData"]].length == 15) {
+                    NSString * scanedMajorAndMinor = [[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"kCBAdvDataManufacturerData"]] substringWithRange:NSMakeRange(1, 8)];
+                    NSLog(@"tempDic %@",scanedMajorAndMinor);
+                    
+                    
+              
+                        NSString *major = [self getMajor:[NSString stringWithFormat:@"%@", [tempChildDictionary objectForKey:@"major"]]];
+                        NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempChildDictionary objectForKey:@"minor"]]];
+                        NSString *kidsMajorAndMinor = [NSString stringWithFormat:@"%@%@",minor,major];
+                        
+                        if ([kidsMajorAndMinor isEqualToString:scanedMajorAndMinor]) {
+                        
+                            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+                            
+                            [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                    
+                        }
+                        
+                    
+                    
+                    
+                }
+                
+            }
+            
+            
+        }else{
+            //kid image
+            DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:701];
+            
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+            
+            
+            for (int i = 0; i < antiResultAy.count; i ++) {
+                if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                    
+                    [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+                    NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
+                    
+                    
+                    
+                }
+                
+                //            else{
+                //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+                //
+                //            }
+                
+            }
+            
+            
+            [KidsImgView setImageWithPath:[pathOne copy]];
+            
+            //儿童名称
+            UILabel * KidsLbl =(UILabel *)[cell viewWithTag:702];
+            [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
+            
+            UILabel * kidStatus =(UILabel *)[cell viewWithTag:703];
+            
+            for (int i = 0; i < antiResultAy.count; i ++) {
+                if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                    
+                    [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                    
+                }
+                
+                //            else{
+                //                [kidStatus setText:LOCALIZATION(@"btn_missed")];
+                //            }
+                
+            }
+            
+
+        }
+        
+        
+    }else if (tableView == self.RadarConnectTableView) {
         
         int row = indexPath.row;
         
@@ -3320,6 +3496,11 @@
         NSString * resFEED_BACK = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
         NSLog(@"FEED_BACK %@",resFEED_BACK);
         if ([resFEED_BACK isEqualToString:@"true"]) {
+            HUD.mode = MBProgressHUDModeCustomView;
+            HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_tick"]];
+            HUD.labelText = LOCALIZATION(@"text_select_child");
+            [HUD show:YES];
+            [HUD hide:YES afterDelay:1];
             
         }else{
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
@@ -3538,12 +3719,19 @@
     switch (myDelegate.applanguage) {
         case 0:
             organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+            _crossImageView.hidden = YES;
+            _tickImageView.hidden = YES;
+
             break;
         case 1:
             organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
+            _crossImageView.hidden = NO;
+            _tickImageView.hidden = NO;
             break;
         case 2:
             organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+            _crossImageView.hidden = NO;
+            _tickImageView.hidden = NO;
             break;
             
         default:
@@ -3574,13 +3762,17 @@
     
     
     [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
-    //image view
+    
+    //cross image view
+    _crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
+    _crossImageView.image = [UIImage imageNamed:@"cross2"];
+    [_disconnectBtn addSubview:_crossImageView];
+    
+    
     if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"]) {
-        
+        _crossImageView.hidden = YES;
     }else{
-        UIImageView *crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
-        crossImageView.image = [UIImage imageNamed:@"cross2"];
-        [_disconnectBtn addSubview:crossImageView];
+     _crossImageView.hidden = NO;
     }
 _NewsLbl.text = LOCALIZATION(@"text_report");
     _revampLbl.text = LOCALIZATION(@"text_change");
@@ -3693,10 +3885,20 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
 
 -(void)goToSettingAction:(id)sender
 {
-    _settingVc= [[SettingsViewController alloc] init];
     
-    
-    [self.navigationController pushViewController:self.settingVc animated:YES];
+    if (isButtonOn) {
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_arrow"]];
+        HUD.labelText = LOCALIZATION(@"text_can_not_open_options");
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1];
+    }else{
+        _settingVc= [[SettingsViewController alloc] init];
+        
+        
+        [self.navigationController pushViewController:self.settingVc animated:YES];
+    }
+
     
 }
 
@@ -4096,11 +4298,11 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     }
     else
     {
-        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
-                                    message:LOCALIZATION(@"text_feed_back_content")
-                                   delegate:self
-                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
-                          otherButtonTitles:nil] show];
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_arrow"]];
+        HUD.labelText = LOCALIZATION(@"text_something_has_gone_wrong");
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1];
         
     }
 }
@@ -4127,13 +4329,16 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
 -(void)switchAction:(id)sender
 {
     
-    BOOL isButtonOn = [_switchButton isOn];
+    isButtonOn = [_switchButton isOn];
     if (isButtonOn) {
         [self scanTheDevice];
         //reg broad cast
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scanDeviceBroadcast:) name:nil object:nil ];
         [_RadarScrollView setAlpha:1.0];
         [self rotate360DegreeWithImageView:_bgRadarRotate];
+        
+        _RadarScrollView.hidden = NO;
+        _antiLostTb.hidden = YES;
 
     }else {
         [self stopScanTheDevice];
@@ -4141,7 +4346,19 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         [_bgRadarRotate.layer removeAllAnimations];
         //[_RadarPopupSView setHidden:NO];
         
+        //set default is 0
+        _radarViewSegmentedControl.selectedSegmentIndex = 0;
+        
         [_RadarScrollView setAlpha:0.3];
+        
+        //stop anti lost function
+        [self stopAntiLostService];
+        
+        _RadarScrollView.hidden = NO;
+        _antiLostTb.hidden = YES;
+        
+        
+        
     }
 }
 
@@ -4151,30 +4368,43 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
  *  @param Seg <#Seg description#>
  */
 -(void)radarViewSegmentAction:(UISegmentedControl *)Seg{
-    
-    NSInteger Index = Seg.selectedSegmentIndex;
-    
-    NSLog(@"Index %li", (long)Index);
-    
-    switch (Index) {
-            
-        case 0:
-            
-            
-            
-            break;
-            
-        case 1:
-            
-            if(_antiLostView == nil){
-                _antiLostView = [[AntiLostKidsSelectedListViewController alloc]init];
-            }
-            _antiLostView.SelectedchildrenArray = [_connectKidsByScanedToAntiLostAy mutableCopy];
-//            NSLog(@"_antiLostView.SelectedchildrenArray  - %@",_antiLostView.SelectedchildrenArray );
-            [self.navigationController pushViewController:_antiLostView animated:YES];
-            break;
-            
-            
+    if (isButtonOn){
+        NSInteger Index = Seg.selectedSegmentIndex;
+        
+        NSLog(@"Index %li", (long)Index);
+        
+        switch (Index) {
+                
+            case 0:
+                [self scanTheDevice];
+                _RadarScrollView.hidden = NO;
+                _antiLostTb.hidden = YES;
+                
+                [self stopAntiLostService];
+                break;
+                
+            case 1:
+                /**
+                 *  turn on the anti lost and turn off the scan
+                 */
+                [self stopScanTheDevice];
+                
+                if(_antiLostView == nil){
+                    _antiLostView = [[AntiLostKidsSelectedListViewController alloc]init];
+                }
+                
+                _antiLostView.SelectedchildrenArray = [_connectKidsByScanedToAntiLostAy mutableCopy];
+                //            NSLog(@"_antiLostView.SelectedchildrenArray  - %@",_antiLostView.SelectedchildrenArray );
+                [self.navigationController pushViewController:_antiLostView animated:YES];
+                break;
+                
+                
+        }
+
+    }else{
+        
+        //set default is 0
+        _radarViewSegmentedControl.selectedSegmentIndex = 0;
     }
     
 }
@@ -4280,7 +4510,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
                         if (_tempDisconnectKidsAy.count > 0) {
                             [_tempDisconnectKidsAy removeObjectAtIndex:y];
                         }
-                        if(_connectKidsRssiAy.count > 0){
+                        if(_connectKidsRssiAy.count > 0 && _connectKidsRssiAy.count > y){
                              [_connectKidsRssiAy removeObjectAtIndex:y];
                         }
                         
@@ -4300,6 +4530,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         NSLog(@"_connectKidsRssiAy CONUT--- > %lu",(unsigned long)_connectKidsRssiAy.count);
          NSLog(@"_tempDisconnectKidsAy CONUT--- > %lu",(unsigned long)_tempDisconnectKidsAy.count);
         NSLog(@"_connectKidsByScanedAy CONUT--- > %lu",(unsigned long)_connectKidsByScanedAy.count);
+
         _connectKidsByScanedToAntiLostAy = [_connectKidsByScanedAy mutableCopy];
         disconnectNum = _tempDisconnectKidsAy.count;
         [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
@@ -4356,6 +4587,83 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     }else if ([[notification name] isEqualToString:BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME]){
         
          _connectKidsRssiAy = [(NSMutableArray *)[notification object] mutableCopy];
+        
+    }else if ([[notification name] isEqualToString:ANTILOST_VIEW_ANTI_LOST_CONFIRM_BROADCAST]){
+        
+        NSString * result = [(NSString *)[notification object]copy];
+        if ([result isEqualToString:@"turn_on"]) {
+            
+            //set default is 0
+            _radarViewSegmentedControl.selectedSegmentIndex = 1;
+            
+            _RadarScrollView.hidden = YES;
+            _antiLostTb.hidden = NO;
+//            NSMutableArray * tempArray = [myDelegate.antiLostSelectedKidsAy mutableCopy];
+//            NSLog(@"myDelegate.antiLostSelectedKidsAy (%@)) ",tempArray);
+            
+            _antiLostTb.frame = CGRectMake( Drive_Wdith + 5 , 80, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  myDelegate.antiLostSelectedKidsAy.count * 45);
+            //_antiLostTb.scrollEnabled = NO;
+            _antiLostTb.dataSource = self;
+            _antiLostTb.delegate = self;
+            //    [self.positionDetailsTableView setBounces:NO];
+            _antiLostTb.tableFooterView = [[UIView alloc] init];
+            _antiLostTb.tag = 700;
+            
+            NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+            NSMutableArray *tempDeviceAy = [[NSMutableArray alloc]init];
+            for(int i = 0; i < myDelegate.antiLostSelectedKidsAy.count ; i++){
+                tempChildDictionary=[myDelegate.antiLostSelectedKidsAy  objectAtIndex:i];
+
+//                NSLog(@"LALALA -- %@",[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]);
+                [tempDeviceAy addObject:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]];
+            }
+            
+            [self antiLostService:tempDeviceAy];
+            
+            [_MainInfoScrollView addSubview:_antiLostTb];
+            
+            //[_antiLostTb reloadData];
+
+        } else if([result isEqualToString:@"turn_off"]){
+            
+            //set default is 0
+            _radarViewSegmentedControl.selectedSegmentIndex = 0;
+            
+            _RadarScrollView.hidden = NO;
+              _antiLostTb.hidden = YES;
+            [self scanTheDevice];
+        }
+        
+        
+    }else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME]){
+        
+        NSString * antiResult  = [(NSString *)[notification object]copy];
+        [antiResultAy addObject:antiResult];
+        NSLog(@"BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME = %@",antiResult);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.antiLostTb reloadData];
+        });
+        
+        
+    }else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME]){
+        
+        
+        isMoreThanThree = false;
+        
+        NSString * antiResult  = [(NSString *)[notification object]copy];
+        NSLog(@"BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME -- %@",antiResult);
+        
+        
+    }else if([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME]){
+        
+        isMoreThanThree = true;
+        
+        _antiLostMore3scanDataAy = [(NSMutableArray *)[notification mutableCopy]copy];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.antiLostTb reloadData];
+        });
+
         
     }
     
@@ -4415,8 +4723,8 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     }else if (rssi < -80){
         
         
-        int OffsetX = (arc4random() % 170) - 90;
-        int OffsetY = (arc4random() % 170) - 90;
+        int OffsetX = (arc4random() % 160) - 90;
+        int OffsetY = (arc4random() % 160) - 90;
         UIImageView *radarDot = [[UIImageView alloc] initWithFrame:CGRectMake(90 - 3 + OffsetX,  90 - 3 + OffsetY, 6, 6)];
         radarDot.image = [UIImage imageNamed:@"ic_radar_dot"];
        

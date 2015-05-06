@@ -20,7 +20,7 @@
 #define LoginViewController_phoneNumber @"phoneNumber"
 #define LoginViewController_type @"type"
 #define LoginViewController_registrationId @"registrationId"
-#define LoginViewController_app_version @"registrationId"
+#define LoginViewController_app_version @"app_version"
 #define LoginViewController_device_token @"device_token"
 //ChildInformationMatchingViewController
 #define ChildInformationMatchingViewController_userDefaults_childName @"childName"

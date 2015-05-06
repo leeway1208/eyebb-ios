@@ -7,6 +7,9 @@
 //
 
 #import "EyeBBViewController.h"
+
+#define SETTING_CHANGE_LANGUAGE_BROADCAST @"updateLanuage"
+
 @interface SettingsViewController : EyeBBViewController
 
 @end

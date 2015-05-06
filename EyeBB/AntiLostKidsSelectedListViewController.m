@@ -7,6 +7,7 @@
 //
 
 #import "AntiLostKidsSelectedListViewController.h"
+#import "MainViewController.h"
 #import "IIILocalizedIndex.h"
 #import "DBImageView.h"
 #import "AppDelegate.h"
@@ -33,7 +34,8 @@
 /**已选中儿童ID列表*/
 @property (nonatomic,strong) NSMutableArray*SelectedchildrenIDArray;
 
-
+/*next view*/
+@property (nonatomic,strong) MainViewController *mainView;
 
 @end
 
@@ -46,6 +48,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationItem.rightBarButtonItem = self.rightBtnItem;
+    
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(antiLostLeftAction:)];
+    [newBackButton setBackgroundImage:[UIImage
+                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
+    self.navigationItem.leftBarButtonItem = newBackButton;
+
     [self iv];
     [self lc];
 }
@@ -58,6 +66,7 @@
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
+ 
     
 }
 - (void)didReceiveMemoryWarning {
@@ -500,64 +509,71 @@
 }
 
 #pragma mark --
-#pragma mark --服务器返回信息
-- (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
-{
-    NSString *responseString = [request responseString];
-    if ([tag isEqualToString:GRANT_GUESTS]) {
-        NSData *responseData = [request responseData];
-        //关闭加载
-        [HUD hide:YES afterDelay:0];
-        //        if (_childrenArray.count>0) {
-        //            _childrenArray =nil;
-        //            _childrenArray=[NSArray array];
-        //        }
-        //        _childrenArray=[[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"] copy];
-        ////        tempDictionary=nil;
-        //        responseData=nil;
-        //
-        //
-        //        for (int j=0; j<_childrenArray.count; j++) {
-        //            NSLog(@"%@,%@",[[[_childrenArray objectAtIndex:j] objectForKey:@"parents"]objectForKey:@"guardianId" ],[NSNumber numberWithLong:(long)[self.guestId longLongValue]]);
-        //            if ([[[[_childrenArray objectAtIndex:j] objectForKey:@"parents"]objectForKey:@"guardianId" ] isEqualToNumber:[NSNumber numberWithLong:(long)[self.guestId longLongValue]]]) {
-        //                    [self.SelectedchildrenIDArray addObject: [[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]] ;
-        //        }
-        //    }
-        //
-        //        for (int i=0; i<_childrenArray.count; i++) {
-        //            [_dataArray addObject:[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
-        //
-        //        }
-        //        _resultArray=(NSArray *)_dataArray;
-        //        self.data = [IIILocalizedIndex indexed:_dataArray];
-        //        self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
-        //        [_tableView reloadData];
-    }
-}
-#pragma mark --
 #pragma mark - 点击事件
 /**提交表单*/
 -(void)Ok
 {
-    //开启加载
-    [HUD show:YES];
+ 
+    
+    if(myDelegate.antiLostSelectedKidsAy == nil){
+        myDelegate.antiLostSelectedKidsAy = [[NSMutableArray alloc]init];
+    }
+    //[HUD show:YES];
     NSMutableArray *tempArray=[NSMutableArray array];
     for (int i=0; i<_childrenArray.count; i++) {
         for(int j=0;j<_SelectedchildrenIDArray.count;j++)
         {
-            if(![[_SelectedchildrenIDArray objectAtIndex:j] isEqualToNumber:[[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy]])
+            if([[_SelectedchildrenIDArray objectAtIndex:j] isEqualToNumber:[[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy]])
             {
-                [tempArray addObject:[[[[[_childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]copy]];
+                [tempArray addObject:[[_childrenArray objectAtIndex:i]copy]];
                 break;
             }
         }
     }
-//    NSString *_str = [_SelectedchildrenIDArray componentsJoinedByString:@","];
-//    NSString *_str2 = [tempArray componentsJoinedByString:@","];
-//    NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.guestId, @"guestId", _str,@"accessChildIds",_str2,@"noAccessChildIds",nil];
-//    
-//    [self postRequest:GRANT_GUESTS RequestDictionary:[tempDoct copy] delegate:self];
-//    tempDoct=nil;
+    //NSString *_str = [_SelectedchildrenIDArray componentsJoinedByString:@","];
+    
+    NSLog(@"anti lost _str --> %@ ",tempArray);
+    myDelegate.antiLostSelectedKidsAy = [tempArray mutableCopy];
+
+    //post NSNotificationCenter
+    [[NSNotificationCenter defaultCenter] postNotificationName:ANTILOST_VIEW_ANTI_LOST_CONFIRM_BROADCAST object:@"turn_on"];
+    if (myDelegate.antiLostSelectedKidsAy.count > 0) {
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
+                
+                
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
+        }
+
+    }else{
+        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_arrow"]];
+        HUD.labelText = LOCALIZATION(@"text_select_child");
+        [HUD show:YES];
+        [HUD hide:YES afterDelay:1];
+        
+    }
+    
+    
+
 }
+
+-(void)antiLostLeftAction:(id)sender{
+    //myDelegate.antiLostConfirmBool = NO;
+    [[NSNotificationCenter defaultCenter] postNotificationName:ANTILOST_VIEW_ANTI_LOST_CONFIRM_BROADCAST object:@"turn_off"];
+    
+    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+    {
+        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
+            
+            
+            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+        }
+    }
+
+}
+
 
 @end

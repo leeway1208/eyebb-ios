@@ -32,5 +32,10 @@
 @property (strong, nonatomic) NSMutableArray * allKidsBeanArray;
 /**all kids with device*/
 @property (strong, nonatomic) NSMutableArray * allKidsWithMacAddressBeanArray;
+
+
+/* anti lost selected kids */
+@property (strong, nonatomic) NSMutableArray * antiLostSelectedKidsAy;
+
 @end
 

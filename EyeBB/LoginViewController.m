@@ -618,11 +618,13 @@
         
         if(_guardian != nil){
             
+            
             //post token
-            NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
+            NSUserDefaults *loginDefaults=[NSUserDefaults standardUserDefaults];
             NSString * token = @"";
-            NSString * tokenDefault =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_device_token]];
-            if (token.length > 20) {
+            NSString * tokenDefault =  [NSString stringWithFormat:@"%@",[loginDefaults objectForKey:LoginViewController_device_token]];
+            NSLog(@"device_token - %@",[NSString stringWithFormat:@"%@",[loginDefaults objectForKey:LoginViewController_device_token]]);
+            if (tokenDefault.length > 20) {
                 NSLog(@"==== %@", [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)]);
                 token = [[tokenDefault stringByReplacingOccurrencesOfString:@" " withString:@""] substringWithRange:NSMakeRange(1, 64)];
                 
@@ -630,14 +632,15 @@
                 token = @"-1";
             }
             
+            [loginDefaults setObject:[[[responseData mutableObjectFromJSONData] objectForKey:@"iosLowestVer"] copy] forKey:LoginViewController_app_version] ;
             
-            
-            
+            [loginDefaults synchronize];
+           // NSLog(@"token >> %@",token);
             NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:token, LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];
-
             // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
             //sleep(10);
             [self postRequest:POST_TOKEN RequestDictionary:tempDoctToken delegate:self];
+
 
 
         }else{

@@ -19,6 +19,8 @@
 
 -(void)scanTheDevice;
 -(void)stopScanTheDevice;
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy;
+-(void)stopAntiLostService;
 
 
 @end

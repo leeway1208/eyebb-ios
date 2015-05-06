@@ -20,6 +20,9 @@
 #define BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME @"write_fail"
 #define BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME @"scan_device"
 #define BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME @"scan_devic_rssi"
+#define BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME @"anti_lost_data"
+#define BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME @"anti_lost_scan_device_data"
+#define BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME @"no_more_3_lost"
 
 +(CustomerBluetooth *)instance;
 
@@ -33,7 +36,7 @@ NSString * NSDataToHex(NSData *data);
 
 -(void)scanTheDevice;
 -(void)stopScanTheDevice;
-
-
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy;
+-(void)stopAntiLostService;
 
 @end

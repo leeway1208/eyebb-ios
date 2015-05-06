@@ -19,6 +19,8 @@
 @synthesize childrenBeanArray;
 @synthesize allKidsBeanArray;
 @synthesize allKidsWithMacAddressBeanArray;
+@synthesize antiLostSelectedKidsAy;
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     

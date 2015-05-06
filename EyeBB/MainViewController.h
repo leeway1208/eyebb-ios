@@ -12,4 +12,6 @@
 @interface MainViewController : EyeBBViewController
 
 
+
+@property BOOL antiLostConfirm;
 @end

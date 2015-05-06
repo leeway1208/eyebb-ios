@@ -56,6 +56,8 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 
 -(void)scanTheDevice;
 -(void)stopScanTheDevice;
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy;
+-(void)stopAntiLostService;
 
 
 -(NSString *)getMajor:(NSString *)major;
