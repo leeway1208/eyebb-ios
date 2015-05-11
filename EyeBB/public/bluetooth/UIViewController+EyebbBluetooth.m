@@ -47,10 +47,14 @@
     [[self BluetoothRequest] stopfindSOSDevice ];
 }
 
--(void)antiLostService:(NSMutableArray * )antiLostDeviceAy{
-    [[self BluetoothRequest] antiLostService:(NSMutableArray * )antiLostDeviceAy ];
 
+
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy NameAy:(NSMutableArray * )nameAy{
+    [[self BluetoothRequest] antiLostService:(NSMutableArray * )antiLostDeviceAy NameAy:(NSMutableArray * )nameAy ];
+
+    
 }
+
 
 -(void)stopAntiLostService{
      [[self BluetoothRequest] stopAntiLostService ];

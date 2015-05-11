@@ -184,6 +184,8 @@ CFBundleDisplayName ="寶寶安";
 "text_connect_error" = "連接失敗";
 "text_scan_qr_error" = "二維碼錯誤";
 "text_new_version_to_update" = "有新版本,請更新";
+"text_is_missing" = " 已丟失!";
+"text_view_list" = "消息列表";
 
 //<!-- Button strings -->
 "btn_sign_up"="註冊";

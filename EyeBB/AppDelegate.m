@@ -8,6 +8,9 @@
 
 #import "AppDelegate.h"
 #import "WelcomeViewController.h"
+#import <AudioToolbox/AudioToolbox.h>
+
+#define BACKGROUND_ACTIVE_BRODACAST @"back_ground_active"
 //#import "WelcomeViewController.h"
 @interface AppDelegate ()
 
@@ -20,9 +23,18 @@
 @synthesize allKidsBeanArray;
 @synthesize allKidsWithMacAddressBeanArray;
 @synthesize antiLostSelectedKidsAy;
+@synthesize isBackgroud;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    if ([UIApplication instancesRespondToSelector:@selector(registerUserNotificationSettings:)])
+        
+    {
+        
+        [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert|UIUserNotificationTypeBadge|UIUserNotificationTypeSound categories:nil]];
+        
+    }
+    
     
     
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"everLaunched"]) {
@@ -138,14 +150,25 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    
+     isBackgroud = true;
 }
+
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+   
+    
+    
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+       [[NSNotificationCenter defaultCenter] postNotificationName:BACKGROUND_ACTIVE_BRODACAST object:nil];
+    isBackgroud = false;
+    
+    
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
@@ -163,6 +186,17 @@
 }
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification{
+    
+    if ([[notification.userInfo objectForKey:@"id"] isEqualToString:@"affair.schedule"]) {
+        //判断应用程序当前的运行状态，如果是激活状态，则进行提醒，否则不提醒
+        if (application.applicationState == UIApplicationStateActive) {
+   
+            
+        }
+    }
+    
+    AudioServicesPlaySystemSound(1057);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     [UIApplication sharedApplication].applicationIconBadgeNumber--;
 }
 

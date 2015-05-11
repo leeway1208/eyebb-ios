@@ -7,9 +7,12 @@
 //
 
 #import "CustomerBluetooth.h"
-
+#import "AppDelegate.h"
 
 @interface CustomerBluetooth()
+{
+    AppDelegate * myDelegate;
+}
 @property (strong,nonatomic) CBCentralManager *central;
 @property (copy,nonatomic) NSString *targetPeripheral;
 @property (strong,nonatomic) NSMutableArray *discoveredPeripherals;
@@ -27,6 +30,7 @@
 /* timer to refresh the table view */
 @property (strong,nonatomic) NSTimer *refreshTableTimer;
 @property (strong,nonatomic) NSTimer *otherTimer;
+@property (strong,nonatomic) NSTimer *reConnectTimer;
 @property (strong,nonatomic) NSTimer *antiLostTimer;
 @property (strong,nonatomic) CBPeripheral *connectedPeripheral;
 @property (strong,nonatomic) CBUUID *service2000;
@@ -47,6 +51,10 @@
 @property (strong,nonatomic) NSMutableArray *stopAntiLostBroadcastData;
 
 @property (strong,nonatomic)  NSMutableDictionary  *antiLostTempDictionary;
+
+@property (strong,nonatomic)  NSMutableArray  *antiLostChildNameFromMainAy;
+@property (strong,nonatomic)  NSMutableArray  *antiLostChildNameAy;
+@property (strong,nonatomic)  NSMutableDictionary  *antiLostChildNameDictionary;
 @end
 
 @implementation CustomerBluetooth
@@ -56,6 +64,7 @@ static CustomerBluetooth *instance;
 
 double timerInterval = 5.0f;
 double otherTimerInterval = 20.0f;
+double repeatTimerInterval = 15.0f;
 double antiLostTimerInterval = 5.0f;
 NSInteger *tableNumberConut;
 Boolean setPassword = false;
@@ -69,6 +78,7 @@ Boolean startTimerOnce = true;
 Boolean isAntiLost = false;
 Boolean isAntiLostMoreThanThree = false;
 Boolean isStopAntiLost = false;
+
 
 int keepAntiNumFlag = 0;
 
@@ -120,6 +130,15 @@ NSString *keepMajorAndMinor;
     return _otherTimer;
 }
 
+
+
+- (NSTimer *) reConnectTimer {
+    if (!_reConnectTimer) {
+        _reConnectTimer = [NSTimer timerWithTimeInterval:repeatTimerInterval target:self selector:@selector(repeatSelector:) userInfo:nil repeats:YES];
+    }
+    return _reConnectTimer;
+}
+
 - (NSTimer *) antiLostTimer {
     if (!_antiLostTimer) {
         _antiLostTimer = [NSTimer timerWithTimeInterval:antiLostTimerInterval target:self selector:@selector(antiLostSelector:) userInfo:nil repeats:YES];
@@ -130,6 +149,11 @@ NSString *keepMajorAndMinor;
 -(void) startTimer{
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     NSLog(@"timer start...");
+}
+
+-(void) startReConnectTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.reConnectTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"repeat timer start...");
 }
 
 -(void) startAntiLostTimer{
@@ -151,21 +175,46 @@ NSString *keepMajorAndMinor;
 }
 
 - (void) stopOtherTimer{
-    if (_otherTimer != nil){
-        [_otherTimer invalidate];
-        _otherTimer = nil;
+    if (self.otherTimer != nil){
+        [self.otherTimer invalidate];
+        self.otherTimer = nil;
         NSLog(@"other timer stop...");
     }
 }
 
 - (void) stopAntiLostTimer{
-    if (_antiLostTimer != nil){
-        [_antiLostTimer invalidate];
-        _antiLostTimer = nil;
-        NSLog(@"antiLost timer stop...");
+    if (self.antiLostTimer != nil){
+        [self.antiLostTimer invalidate];
+        self.antiLostTimer = nil;
+        NSLog(@"anti timer stop...");
     }
 }
 
+- (void) stopReConnectTimer{
+    if (self.reConnectTimer != nil){
+        [self.reConnectTimer invalidate];
+        self.reConnectTimer = nil;
+        NSLog(@"re connect timer stop...");
+    }
+}
+
+
+-(void)repeatSelector:(NSTimer*)timer{
+    if (retry1Ptimes == 1) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:0]];
+        retry1Ptimes = 0;
+    }else if(retry2Ptimes == 1){
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:1]];
+        retry2Ptimes = 0;
+    }else if (retry3Ptimes == 1){
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:2]];
+        retry3Ptimes = 0;
+    }
+    
+    NSLog(@"LOST 1 OR 2 OR 3");
+    
+    [self stopReConnectTimer];
+}
 
 - (void)timerRefreshTableSelector:(NSTimer*)timer{
     
@@ -297,6 +346,9 @@ NSString *keepMajorAndMinor;
     //    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,peripheral.identifier.UUIDString,RSSI);
     
     
+    
+    
+    
     if(advertisementData != nil){
         
         //this is for scanning device
@@ -324,7 +376,7 @@ NSString *keepMajorAndMinor;
                 
                 
                 if(isAntiLostMoreThanThree){
-              
+                    
                     {
                         //more than three
                         if(![_antiLostMonitoringAy containsObject:advertisementData]) {
@@ -337,7 +389,7 @@ NSString *keepMajorAndMinor;
                         }
                         
                     }
-
+                    
                 }else{
                     
                     
@@ -348,6 +400,12 @@ NSString *keepMajorAndMinor;
                                 dispatch_async(dispatch_get_main_queue(), ^{
                                     keepMajorAndMinor = getMajorAndMinor;
                                     [self.central connectPeripheral:peripheral options:nil];
+                                    
+                                    
+                                    
+                                    [_antiLostChildNameDictionary setValue:[NSString stringWithFormat:@"%@",[_antiLostChildNameFromMainAy objectAtIndex:i]] forKey:peripheral.identifier.UUIDString ];
+                                    
+                                    [_antiLostChildNameAy addObject:_antiLostChildNameDictionary];
                                     
                                 });
                             }
@@ -372,7 +430,7 @@ NSString *keepMajorAndMinor;
                         
                         if(![_stopAntiLostBroadcastData containsObject:peripheral]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
-                        
+                                
                                 [self.central connectPeripheral:peripheral options:nil];
                                 
                             });
@@ -468,13 +526,41 @@ NSString *keepMajorAndMinor;
     
     [self stopScan];
     
+    if (isAntiLost) {
+        if (retry1Ptimes >= 1 || retry2Ptimes >= 1 || retry3Ptimes >= 1) {
+            for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
+                
+                CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
+                if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
+                    if(i == 0){
+                        retry1Ptimes--;
+                    }else if (i == 1) {
+                        retry2Ptimes--;
+                    }else if(i == 2){
+                        retry3Ptimes--;
+                    }
+                    //                    NSLog(@"Retrying ======================");
+                    //                    [self.central connectPeripheral:peripheral options:nil];
+                    //                    [self startReConnectTimer];
+                    [_antiLostBroadcastData removeObjectAtIndex:i];
+                    [self stopReConnectTimer];
+                    
+                    
+                }
+                
+            }
+        }
+        
+    }
+    
+    
     //[peripheral discoverServices:@[firstServiceUUID, secondServiceUUID]];
     //[peripheral discoverServices:@[self.service2000]];
     [peripheral discoverServices:nil];
 }
 
 -(void) centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
-    NSLog(@"Disconnected from peripheral");
+    NSLog(@"Disconnected from peripheral = %hhu",myDelegate.isBackgroud);
     
     if(isMajor){
         [self.central connectPeripheral:_targetUUIDPeripheral options:nil];
@@ -482,6 +568,19 @@ NSString *keepMajorAndMinor;
     
     
     if (isAntiLost) {
+        if (myDelegate.isBackgroud) {
+            NSMutableDictionary *tempDc = [NSMutableDictionary new];
+            for (int i = 0; i < _antiLostChildNameAy.count; i ++) {
+                tempDc = [_antiLostChildNameAy objectAtIndex:i];
+                [self scheduleLocalNotification:[NSString stringWithFormat:@"%@",[tempDc objectForKey:peripheral.identifier.UUIDString]]];
+            }
+            
+            
+            
+            
+            
+        }
+        
         for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
             
             CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
@@ -495,24 +594,18 @@ NSString *keepMajorAndMinor;
                 }
                 NSLog(@"Retrying ======================");
                 [self.central connectPeripheral:peripheral options:nil];
+                [self startReConnectTimer];
                 
-                if (retry1Ptimes == 3) {
-                      [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:0]];
-                    retry1Ptimes = 0;
-                }else if(retry2Ptimes == 3){
-                      [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:1]];
-                    retry2Ptimes = 0;
-                }else if (retry3Ptimes == 3){
-                      [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:2]];
-                    retry3Ptimes = 0;
-                }
+                
                 
                 
             }
             
+            
         }
+        
     }
-   
+    
 }
 
 #pragma mark - CBPeripheralManager delegate methods
@@ -611,7 +704,7 @@ NSString *keepMajorAndMinor;
                     [peripheral writeValue:[self stringToByte:@"0000"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
                     
                 }
-
+                
                 
             }
             
@@ -699,9 +792,9 @@ NSString *keepMajorAndMinor;
                 setPassword = false;
             }
             
-        
+            
             //stop scan
-        
+            
         }
         
     }else{
@@ -915,15 +1008,18 @@ NSString * NSDataToHex(NSData *data) {
 
 
 
--(void)antiLostService:(NSMutableArray * )antiLostDeviceAy{
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy NameAy:(NSMutableArray * )nameAy{
     isStopAntiLost = false;
     isAntiLost = true;
     [self initData:@"" minor:@""];
     _antiLostAy = [antiLostDeviceAy mutableCopy];
+    _antiLostChildNameAy = [NSMutableArray new];
     _antiLostBroadcastData = [NSMutableArray new];
     _antiLostLongConnectAy = [[NSMutableArray alloc]initWithCapacity:3];
     _antiLostMonitoringAy = [NSMutableArray new];
     _keepAntiLostBroadDataAy = [NSMutableArray new];
+    _antiLostChildNameDictionary = [NSMutableDictionary new];
+    _antiLostChildNameFromMainAy = [nameAy mutableCopy];
     
     if (_antiLostAy.count > 3) {
         
@@ -963,10 +1059,68 @@ NSString * NSDataToHex(NSData *data) {
     self.checkDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredAdvertisementData = [NSMutableArray new];
-    
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     self.service2000 = [CBUUID UUIDWithString:@"0x2000"];
     self.service1000 = [CBUUID UUIDWithString:@"0x1000"];
+}
+
+
+#pragma mark -- local push
+- (void)scheduleLocalNotification : (NSString *)childName{
+    [self setupNotificationSetting];
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
+    localNotification.alertBody = [NSString stringWithFormat:@"%@%@",childName,LOCALIZATION(@"text_is_missing") ] ;
+    localNotification.alertAction = LOCALIZATION(@"text_view_list");
+    localNotification.category = @"shoppingListReminderCategory";
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber++;
+    //localNotification.soundName = UILocalNotificationDefaultSoundName;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+}
+
+
+- (void)setupNotificationSetting{
+    UIUserNotificationType type = UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound;
+    
+    UIMutableUserNotificationAction *justInformAction = [[UIMutableUserNotificationAction alloc] init];
+    justInformAction.identifier = @"justInform";
+    justInformAction.title = @"YES,I got it.";
+    justInformAction.activationMode = UIUserNotificationActivationModeBackground;
+    justInformAction.destructive = NO;
+    justInformAction.authenticationRequired = NO;
+    
+    UIMutableUserNotificationAction *modifyListAction = [[UIMutableUserNotificationAction alloc] init];
+    modifyListAction.identifier = @"editList";
+    modifyListAction.title = @"Edit list";
+    modifyListAction.activationMode = UIUserNotificationActivationModeForeground;
+    modifyListAction.destructive = NO;
+    modifyListAction.authenticationRequired = YES;
+    
+    UIMutableUserNotificationAction *trashAction = [[UIMutableUserNotificationAction alloc] init];
+    trashAction.identifier = @"trashAction";
+    trashAction.title = @"Delete list";
+    trashAction.activationMode = UIUserNotificationActivationModeBackground;
+    trashAction.destructive = YES;
+    trashAction.authenticationRequired = YES;
+    
+    NSArray *actionArray = [NSArray arrayWithObjects:justInformAction,modifyListAction,trashAction, nil];
+    NSArray *actionArrayMinimal = [NSArray arrayWithObjects:modifyListAction,trashAction, nil];
+    
+    UIMutableUserNotificationCategory *shoppingListReminderCategory = [[UIMutableUserNotificationCategory alloc] init];
+    shoppingListReminderCategory.identifier = @"shoppingListReminderCategory";
+    [shoppingListReminderCategory setActions:actionArray forContext:UIUserNotificationActionContextDefault];
+    [shoppingListReminderCategory setActions:actionArrayMinimal forContext:UIUserNotificationActionContextMinimal];
+    
+    NSSet *categoriesForSettings = [[NSSet alloc] initWithObjects:shoppingListReminderCategory, nil];
+    UIUserNotificationSettings *newNotificationSettings = [UIUserNotificationSettings settingsForTypes:type categories:categoriesForSettings];
+    
+    UIUserNotificationSettings *notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:newNotificationSettings];
+    }
+    
 }
 
 @end

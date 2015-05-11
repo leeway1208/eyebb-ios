@@ -180,6 +180,8 @@ CFBundleDisplayName ="EyeBB";
 "text_connect_error" = "Connect Error";
 "text_scan_qr_error" = "QR code error";
 "text_new_version_to_update" = "eyebb has a new version ,please update";
+"text_is_missing" = " is missing!";
+"text_view_list" = "View List";
 
 //<!-- Button strings -->
 "btn_sign_up"="Sign Up";

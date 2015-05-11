@@ -112,12 +112,12 @@
     CopyrightLbl.hidden=YES;
     
     
-    if ([NSDate date]) {
+//    if ([NSDate date]) {
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleModifyListNotification) name:@"modifyListNotification" object:nil];
 //        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleDeleteListNotification) name:@"deleteListNotification" object:nil];
-        //添加本地推送
-        //[self scheduleLocalNotification];
-    }
+//       // 添加本地推送
+//        [self scheduleLocalNotification];
+//    }
     NSLog(@"commit ok");
 }
 
@@ -463,7 +463,7 @@
 - (void)scheduleLocalNotification{
     [self setupNotificationSetting];
     UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-    localNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:30];;
+    localNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:0];
     localNotification.alertBody = @"Hey, you must go shopping, remember?";
     localNotification.alertAction = @"View List";
     localNotification.category = @"shoppingListReminderCategory";

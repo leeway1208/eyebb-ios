@@ -37,5 +37,8 @@
 /* anti lost selected kids */
 @property (strong, nonatomic) NSMutableArray * antiLostSelectedKidsAy;
 
+/* if the app is in background */
+@property Boolean isBackgroud;
+
 @end
 

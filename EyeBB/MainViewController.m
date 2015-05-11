@@ -48,7 +48,7 @@
     NSMutableArray * antiResultNoMore3Ay;
     //radar is more than 3
     Boolean isMoreThanThree;
-    
+    NSString* antiLostNoMore3;
     
 //    //record all disconnect kids number
 //    int disconectKidsNum;
@@ -272,6 +272,7 @@
      */
     NSUserDefaults *defaults=[NSUserDefaults standardUserDefaults];
     NSString * appLowestVer =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_app_version]];
+    
     NSLog(@"appLowestVer -> %@",appLowestVer);
     if (![appLowestVer isEqualToString:[self getAppVersion]]) {
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
@@ -281,9 +282,12 @@
                           otherButtonTitles:nil] show];
     }
     
-    
+
+  
     [self lc];
 }
+
+
 
 - (void)simulateProgress {
     
@@ -336,6 +340,10 @@
         //开启定时器
         [self.refreshTimer setFireDate:[NSDate distantPast]];
     }
+    
+    
+    
+    
 }
 
 -(void)viewDidDisappear:(BOOL)animated{
@@ -1440,7 +1448,7 @@
             UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
             [deviceStatusLbl setText:LOCALIZATION(@"btn_missed")];
             [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
-            //[deviceStatusLbl setTextColor:[UIColor redColor]];
+            [deviceStatusLbl setTextColor:[UIColor redColor]];
             [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
             deviceStatusLbl.tag=703;
             
@@ -1495,22 +1503,30 @@
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             
             
-            for (int i = 0; i < antiResultAy.count; i ++) {
-                if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+            if ([antiLostNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                
+                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+                
+            }else{
+                for (int i = 0; i < antiResultAy.count; i ++) {
+                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                        
+                        [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+                        NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
+                        
+                        
+                        
+                    }
                     
-                    [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-                    NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
-                    
-                    
+                    //            else{
+                    //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+                    //
+                    //            }
                     
                 }
-                
-                //            else{
-                //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
-                //
-                //            }
-                
+
             }
+            
             
             
             [KidsImgView setImageWithPath:[pathOne copy]];
@@ -1521,17 +1537,25 @@
             
             UILabel * kidStatus =(UILabel *)[cell viewWithTag:703];
             
-            for (int i = 0; i < antiResultAy.count; i ++) {
-                if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+            if ([antiLostNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                
+                [kidStatus setText:LOCALIZATION(@"btn_missed")];
+                [kidStatus setTextColor:[UIColor redColor]];
+            }else{
+                
+                for (int i = 0; i < antiResultAy.count; i ++) {
+                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                        [kidStatus setTextColor:[UIColor blackColor]];
+                        [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                        
+                    }
                     
-                    [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                    //            else{
+                    //                [kidStatus setText:LOCALIZATION(@"btn_missed")];
+                    //            }
                     
                 }
-                
-                //            else{
-                //                [kidStatus setText:LOCALIZATION(@"btn_missed")];
-                //            }
-                
+
             }
             
 
@@ -2856,6 +2880,10 @@
             [self.navigationController pushViewController:self.web animated:YES];
         }
     }
+    
+    
+    
+   
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -3886,6 +3914,8 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
 -(void)goToSettingAction:(id)sender
 {
     
+    
+    
     if (isButtonOn) {
         HUD.mode = MBProgressHUDModeCustomView;
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_arrow"]];
@@ -4462,7 +4492,8 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     //在图片边缘添加一个像素的透明区域，去图片锯齿
     CGRect imageRrect = CGRectMake(0, 0,imageView.frame.size.width, imageView.frame.size.height);
     UIGraphicsBeginImageContext(imageRrect.size);
-    [imageView.image drawInRect:CGRectMake(1,1,imageView.frame.size.width-2,imageView.frame.size.height-2)];
+   //[imageView.image drawInRect:CGRectMake(1,1,imageView.frame.size.width-2,imageView.frame.size.height-2)];
+     [imageView.image drawInRect:CGRectMake(0,0,imageView.frame.size.width,imageView.frame.size.height)];
     imageView.image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
@@ -4611,14 +4642,17 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
             
             NSDictionary *tempChildDictionary=[NSDictionary dictionary];
             NSMutableArray *tempDeviceAy = [[NSMutableArray alloc]init];
+            NSMutableArray *tempNameAy = [[NSMutableArray alloc]init];
             for(int i = 0; i < myDelegate.antiLostSelectedKidsAy.count ; i++){
                 tempChildDictionary=[myDelegate.antiLostSelectedKidsAy  objectAtIndex:i];
 
 //                NSLog(@"LALALA -- %@",[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]);
+                NSLog(@"tempChildDictionary - >%@",tempChildDictionary);
                 [tempDeviceAy addObject:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]];
+                [tempNameAy addObject:  [NSString stringWithFormat:@"%@",[[[tempChildDictionary objectForKey:@"childRel"] objectForKey:@"child" ]objectForKey:@"name" ]]];
             }
-            
-            [self antiLostService:tempDeviceAy];
+          
+            [self antiLostService:tempDeviceAy NameAy:tempNameAy];
             
             [_MainInfoScrollView addSubview:_antiLostTb];
             
@@ -4647,11 +4681,28 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         
     }else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME]){
         
+        antiLostNoMore3  = [(NSString *)[notification object]copy];
+        NSDictionary *tempChildDictionary=[NSDictionary dictionary];
+        for (int i = 0; i < _connectKidsByScanedToAntiLostAy.count; i ++) {
+             tempChildDictionary=[_connectKidsByScanedToAntiLostAy  objectAtIndex:i];
+            NSString *major = [self getMajor:[NSString stringWithFormat:@"%@", [tempChildDictionary objectForKey:@"major"]]];
+            NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempChildDictionary objectForKey:@"minor"]]];
+            NSString *kidsMajorAndMinor = [NSString stringWithFormat:@"%@%@",minor,major];
+            if ([antiLostNoMore3 isEqualToString:kidsMajorAndMinor]) {
+                 [self scheduleLocalNotification:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
+            }
+        }
         
+       
+
         isMoreThanThree = false;
         
-        NSString * antiResult  = [(NSString *)[notification object]copy];
-        NSLog(@"BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME -- %@",antiResult);
+        
+        NSLog(@"BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME -- %@",antiLostNoMore3);
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.antiLostTb reloadData];
+        });
         
         
     }else if([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME]){
@@ -4664,6 +4715,18 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
             [self.antiLostTb reloadData];
         });
 
+        
+    }else if([[notification name] isEqualToString:BACKGROUND_ACTIVE_BRODACAST]){
+        
+        
+        if (isButtonOn) {
+
+            //[_bgRadarRotate.layer removeAllAnimations];
+            [self rotate360DegreeWithImageView:_bgRadarRotate];
+          
+        }
+
+        
         
     }
     
@@ -4743,6 +4806,64 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     
     return level;
 }
+
+#pragma mark -- local push
+- (void)scheduleLocalNotification : (NSString *)childName{
+    [self setupNotificationSetting];
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
+    localNotification.alertBody = [NSString stringWithFormat:@"%@%@",childName,LOCALIZATION(@"text_is_missing") ] ;
+    localNotification.alertAction = LOCALIZATION(@"text_view_list");
+    localNotification.category = @"shoppingListReminderCategory";
+     localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber++;
+    //localNotification.soundName = UILocalNotificationDefaultSoundName;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+}
+
+
+- (void)setupNotificationSetting{
+    UIUserNotificationType type = UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound;
+    
+    UIMutableUserNotificationAction *justInformAction = [[UIMutableUserNotificationAction alloc] init];
+    justInformAction.identifier = @"justInform";
+    justInformAction.title = @"YES,I got it.";
+    justInformAction.activationMode = UIUserNotificationActivationModeBackground;
+    justInformAction.destructive = NO;
+    justInformAction.authenticationRequired = NO;
+    
+    UIMutableUserNotificationAction *modifyListAction = [[UIMutableUserNotificationAction alloc] init];
+    modifyListAction.identifier = @"editList";
+    modifyListAction.title = @"Edit list";
+    modifyListAction.activationMode = UIUserNotificationActivationModeForeground;
+    modifyListAction.destructive = NO;
+    modifyListAction.authenticationRequired = YES;
+    
+    UIMutableUserNotificationAction *trashAction = [[UIMutableUserNotificationAction alloc] init];
+    trashAction.identifier = @"trashAction";
+    trashAction.title = @"Delete list";
+    trashAction.activationMode = UIUserNotificationActivationModeBackground;
+    trashAction.destructive = YES;
+    trashAction.authenticationRequired = YES;
+    
+    NSArray *actionArray = [NSArray arrayWithObjects:justInformAction,modifyListAction,trashAction, nil];
+    NSArray *actionArrayMinimal = [NSArray arrayWithObjects:modifyListAction,trashAction, nil];
+    
+    UIMutableUserNotificationCategory *shoppingListReminderCategory = [[UIMutableUserNotificationCategory alloc] init];
+    shoppingListReminderCategory.identifier = @"shoppingListReminderCategory";
+    [shoppingListReminderCategory setActions:actionArray forContext:UIUserNotificationActionContextDefault];
+    [shoppingListReminderCategory setActions:actionArrayMinimal forContext:UIUserNotificationActionContextMinimal];
+    
+    NSSet *categoriesForSettings = [[NSSet alloc] initWithObjects:shoppingListReminderCategory, nil];
+    UIUserNotificationSettings *newNotificationSettings = [UIUserNotificationSettings settingsForTypes:type categories:categoriesForSettings];
+    
+    UIUserNotificationSettings *notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:newNotificationSettings];
+    }
+    
+}
+
 
 @end
 

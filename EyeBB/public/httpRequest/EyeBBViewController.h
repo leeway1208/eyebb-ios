@@ -26,6 +26,11 @@
 #import "CustomerBluetooth.h"
 #import "UserDefaultsUtils.h"
 
+
+
+#define BACKGROUND_ACTIVE_BRODACAST @"back_ground_active"
+
+
 @interface EyeBBViewController : UIViewController<MBProgressHUDDelegate,UIGestureRecognizerDelegate>
 {
     MBProgressHUD *HUD;
@@ -56,7 +61,7 @@ CGFloat getLableTextWidth(UILabel * label,CGFloat textSize);
 
 -(void)scanTheDevice;
 -(void)stopScanTheDevice;
--(void)antiLostService:(NSMutableArray * )antiLostDeviceAy;
+-(void)antiLostService:(NSMutableArray * )antiLostDeviceAy NameAy:(NSMutableArray * )nameAy;
 -(void)stopAntiLostService;
 
 
