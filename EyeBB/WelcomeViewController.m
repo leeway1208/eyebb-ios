@@ -336,7 +336,7 @@
             }else{
                 token = @"-1";
             }
-       
+            [defaults setInteger:[[guardian objectForKey:LoginViewController_guardianId] intValue] forKey:LoginViewController_guardianId];
             [defaults setObject:[[[responseData mutableObjectFromJSONData] objectForKey:@"iosLowestVer"] copy] forKey:LoginViewController_app_version] ;
             
             [defaults synchronize];

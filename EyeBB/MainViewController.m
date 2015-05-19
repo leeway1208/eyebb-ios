@@ -24,6 +24,7 @@
 
 #import "KidViewController.h"//查询儿童列表
 #import "AntiLostKidsSelectedListViewController.h"
+#import "ChildLocationController.h"
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate>
 {
@@ -50,10 +51,12 @@
     Boolean isMoreThanThree;
     NSString* antiLostNoMore3;
     
-//    //record all disconnect kids number
-//    int disconectKidsNum;
-    
-    
+    //location
+    float kidsLatitude;
+    float kidsLongitude;
+    double locationTimerInterval;
+    NSString *childId;
+    NSString *locChildName;
     
 }
 //-------------------视图控件--------------------
@@ -245,6 +248,11 @@
 @property (nonatomic,strong) AntiLostKidsSelectedListViewController * antiLostView;
 
 
+//location
+@property (nonatomic, strong) CLLocationManager  *locationManager;
+@property (strong,nonatomic) NSTimer *locationTimer;
+@property (strong,nonatomic) NSMutableArray *locationAy;
+
 @end
 
 @implementation MainViewController
@@ -285,9 +293,20 @@
 
   
     [self lc];
+    
+    [self location];
 }
 
-
+-(void)location{
+    locationTimerInterval = 300.0f;
+    self.locationManager = [[CLLocationManager alloc]init];
+    _locationManager.delegate = self;
+    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    // 10 meters / per
+    _locationManager.distanceFilter = 10;
+    [_locationManager requestAlwaysAuthorization];
+    
+}
 
 - (void)simulateProgress {
     
@@ -348,6 +367,8 @@
 
 -(void)viewDidDisappear:(BOOL)animated{
     
+    [_locationManager stopUpdatingLocation];
+    
 //    [[NSNotificationCenter defaultCenter] removeObserver:self name:ANTILOST_VIEW_ANTI_LOST_CONFIRM_BROADCAST object:nil];
     
 //    [[NSNotificationCenter defaultCenter] removeObserver:self name:SETTING_CHANGE_LANGUAGE_BROADCAST object:nil];
@@ -398,6 +419,7 @@
     antiResultNoMore3Ay = [[NSMutableArray alloc]init];
     _antiLostMore3scanDataAy = [[NSMutableArray alloc]init];
     _antiLostMore3scanSelectedDataAy = [[NSMutableArray alloc]init];
+    _locationAy = [[NSMutableArray alloc]init];
 
 
     _connectKidsRssiAy = [[NSMutableArray alloc]init];
@@ -769,12 +791,13 @@
     [_disconnectBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
     
     //image view
+    _crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
+    _crossImageView.image = [UIImage imageNamed:@"cross2"];
+    [_disconnectBtn addSubview:_crossImageView];
     if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"]) {
-        
+        _crossImageView.hidden = YES;
     }else{
-        UIImageView *crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
-        crossImageView.image = [UIImage imageNamed:@"cross2"];
-        [_disconnectBtn addSubview:crossImageView];
+        _crossImageView.hidden = NO;
     }
     
     
@@ -1170,6 +1193,21 @@
     divisionRadarLbl = [[UILabel alloc] initWithFrame:CGRectMake(0, CGRectGetHeight(_kidsMassageView.frame)-41, CGRectGetWidth(_kidsMassageView.frame), 1)];
     [divisionRadarLbl setBackgroundColor:[UIColor colorWithRed:0.949 green:0.949 blue:0.949 alpha:1]];
     [_kidsMassageView addSubview:divisionRadarLbl];
+    
+    
+    //map button
+    UIButton * mapBtn=[[UIButton alloc]initWithFrame:CGRectMake(90, 74, (Drive_Wdith/2) - 10 , Drive_Wdith/8 - 10)];
+    [mapBtn setTitle:LOCALIZATION(@"btn_map") forState:UIControlStateNormal];
+    [mapBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    
+    [mapBtn addTarget:self action:@selector(mapAction) forControlEvents:UIControlEventTouchUpInside];
+    //设置按钮是否圆角
+    [mapBtn.layer setMasksToBounds:YES];
+    //圆角像素化
+    [mapBtn.layer setCornerRadius:4.0];
+    [mapBtn.layer setBorderWidth:1.0]; //边框宽度
+    [mapBtn.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];//边框颜色
+    [_kidsMassageView addSubview:mapBtn];
     
     //提交按钮
     _closeBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_kidsMassageView.frame)-40,CGRectGetWidth(_kidsMassageView.frame), 40)];
@@ -1616,7 +1654,8 @@
             UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
             
             [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
-            //[deviceStatusLbl setTextColor:[UIColor redColor]];
+            [deviceStatusLbl setText:@"(-90)"];
+            [deviceStatusLbl setTextColor:[UIColor redColor]];
             [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
             deviceStatusLbl.tag=803;
      
@@ -2019,6 +2058,10 @@
                 [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
+                
+            
+
+            
             }
             
             
@@ -2211,6 +2254,10 @@
                 [kindBtn addTarget:self action:@selector(ShowKindAction:) forControlEvents:UIControlEventTouchUpInside];
                 kindBtn.tag=1000+i;
                 [RoomBtn addSubview:kindBtn];
+                
+                
+     
+
             }
             
         }
@@ -3221,6 +3268,21 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
+    
+    if([tag isEqualToString:POST_LOCATION]){
+        NSData *responseData = [request responseData];
+        
+        NSString * resPOST_LOCATION = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+        NSLog(@"POST_LOCATION %@",resPOST_LOCATION);
+        
+        
+        
+        
+        
+        
+        
+        
+    }
     //    NSString *responseString = [request responseString];
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_LOC_LIST]) {
@@ -3781,28 +3843,18 @@
     [_connectBtn setTitle:[NSString stringWithFormat:@"%d %@",connectNum,LOCALIZATION(@"btn_supervised")]   forState:UIControlStateNormal];
     //image view
     if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"] ) {
-        
+        [_tickImageView setHidden:YES];
+        _crossImageView.hidden = YES;
     }else{
-        UIImageView *tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30,14,20,20)];
-        tickImageView.image = [UIImage imageNamed:@"tick"];
-        [_connectBtn addSubview:tickImageView];
+        _tickImageView.hidden = NO;
+        _crossImageView.hidden = NO;
     }
-    
+
     
     [_disconnectBtn setTitle:[NSString stringWithFormat:@"%d %@",disconnectNum,LOCALIZATION(@"btn_missed")] forState:UIControlStateNormal];
     
-    //cross image view
-    _crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
-    _crossImageView.image = [UIImage imageNamed:@"cross2"];
-    [_disconnectBtn addSubview:_crossImageView];
-    
-    
-    if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"]) {
-        _crossImageView.hidden = YES;
-    }else{
-     _crossImageView.hidden = NO;
-    }
-_NewsLbl.text = LOCALIZATION(@"text_report");
+
+    _NewsLbl.text = LOCALIZATION(@"text_report");
     _revampLbl.text = LOCALIZATION(@"text_change");
     
     if(_revampLbl.text.length>2)
@@ -3864,6 +3916,21 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
 #pragma mark --点击事件
 
 /**弹出房间列表显示设置*/
+-(void)mapAction{
+    ChildLocationController *childloc= [[ChildLocationController alloc] init];
+    //        tt._childrenArray=[[_childrenByAreaArray objectAtIndex:self.organizationIndex] objectForKey:@"childrenBean"];
+    
+    
+    childloc.childId = childId;
+    childloc.childName = locChildName;
+    
+    //NSLog(@" tt._childrenArray  (%@)", tt._childrenArray);
+    [self.navigationController pushViewController:childloc animated:YES];
+
+    
+}
+
+
 -(void)changeAction:(id)sender
 {
     if(![_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count>0)
@@ -3992,7 +4059,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
 
 
 
-
+//first page
 /**儿童头像点击事件*/
 - (void)ShowKindAction:(id)sender
 {
@@ -4021,17 +4088,21 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
     [_kidsMassageView setHidden:NO];
     
     DBImageView  * KidsImgView=(DBImageView *)[_kidsMassageView viewWithTag:219];
-    KidsImgView.image= tempBtn.imageView.image;
+    //KidsImgView.image= tempBtn.imageView.image;
     [KidsImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+    //NSLog(@"pathOnepathOne  -> %@",pathOne);
+    childId = [NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]];
+    locChildName = [NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
     
     
-    [KidsImgView setImageWithPath:[pathOne copy]];
+    //[KidsImgView setImageWithPath:[pathOne copy]];
+    KidsImgView.imageWithPath = [pathOne copy];
     UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
     [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
     
     UILabel * roomNameLbl =(UILabel *)[_kidsMassageView viewWithTag:221];
-    NSLog(@"MEIDE %@",[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]);
+//    NSLog(@"lastAppearTime %@",[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]);
     NSString * kidsAppearDate =  [self timeSp2date:[NSString stringWithFormat:@"%@",[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"lastAppearTime"]]];
     
     switch (myDelegate.applanguage) {
@@ -4051,6 +4122,10 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
             break;
     }
     
+    
+    //map button
+    
+  
 }
 
 /**显示表现*/
@@ -4369,6 +4444,10 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         
         _RadarScrollView.hidden = NO;
         _antiLostTb.hidden = YES;
+        
+        [_locationManager startUpdatingLocation];
+        
+        [self startLocationTimer];
 
     }else {
         [self stopScanTheDevice];
@@ -4387,7 +4466,9 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         _RadarScrollView.hidden = NO;
         _antiLostTb.hidden = YES;
         
+        [_locationManager stopUpdatingLocation];
         
+        [self stopLocationTimer];
         
     }
 }
@@ -4529,14 +4610,26 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
                 
                 
                 for (int y =0 ; y < _tempDisconnectKidsAy.count; y++) {
+                   
                     NSDictionary *tempDic = [NSDictionary dictionary];
                     tempDic = [_tempDisconnectKidsAy objectAtIndex:y];
                     NSString *major = [self getMajor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"major"]]];
                     NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"minor"]]];
+                    NSString *macAddress = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"macAddress"]]];
                     NSString *kidsMajorAndMinor = [NSString stringWithFormat:@"%@%@",minor,major];
                     
                     if ([kidsMajorAndMinor isEqualToString:scanedMajorAndMinor]) {
                         [_connectKidsByScanedAy addObject:[_tempDisconnectKidsAy objectAtIndex:y]];
+                        
+                        
+                        if(![_locationAy containsObject:macAddress]) {
+                            dispatch_async(dispatch_get_main_queue(), ^{
+                                
+                                [_locationAy addObject:macAddress];
+                                 NSLog(@"_locationAy  %@",_locationAy);
+                            });
+                        }
+
                         
                         if (_tempDisconnectKidsAy.count > 0) {
                             [_tempDisconnectKidsAy removeObjectAtIndex:y];
@@ -4670,7 +4763,7 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         
         
     }else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME]){
-        
+        //if the device has been connected
         NSString * antiResult  = [(NSString *)[notification object]copy];
         [antiResultAy addObject:antiResult];
         NSLog(@"BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME = %@",antiResult);
@@ -4729,7 +4822,6 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         
         
     }
-    
     
     
     
@@ -4862,6 +4954,79 @@ _NewsLbl.text = LOCALIZATION(@"text_report");
         [[UIApplication sharedApplication] registerUserNotificationSettings:newNotificationSettings];
     }
     
+}
+
+#pragma mark - location manager
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    CLLocation *currLocation = [locations lastObject];
+    NSLog(@"经度=%f 纬度=%f 高度=%f", currLocation.coordinate.latitude, currLocation.coordinate.longitude, currLocation.altitude);
+    
+    kidsLatitude = currLocation.coordinate.latitude;
+    kidsLongitude = currLocation.coordinate.longitude;
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    if ([error code] == kCLErrorDenied)
+    {
+        //访问被拒绝
+    }
+    if ([error code] == kCLErrorLocationUnknown) {
+        //无法获取位置信息
+    }
+}
+
+
+#pragma mark - location timer
+- (NSTimer *) locationTimer {
+    if (!_locationTimer) {
+        _locationTimer = [NSTimer timerWithTimeInterval:locationTimerInterval target:self selector:@selector(timerRefreshLocationSelector:) userInfo:nil repeats:YES];
+    }
+    return _locationTimer;
+}
+
+-(void) startLocationTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.locationTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"location timer start...");
+}
+
+- (void) stopLocationTimer{
+    if (self.locationTimer != nil){
+        [self.locationTimer invalidate];
+        self.locationTimer = nil;
+        NSLog(@"location timer stop...");
+    }
+}
+
+-(void)timerRefreshLocationSelector:(NSTimer*)timer{
+    NSString * macAddressList = @"";
+    if (_locationAy.count > 0) {
+        if (_locationAy.count == 1) {
+            macAddressList = [NSString stringWithFormat:@"%@%@",[_locationAy objectAtIndex:0],@";"];
+        }else{
+            
+            for (int i = 1; i < _locationAy.count ; i ++) {
+                macAddressList = [NSString stringWithFormat:@"%@%@%@%@",macAddressList,@";",[_locationAy objectAtIndex:i],@";"];
+            }
+        }
+    }
+    NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+    
+    NSString *userId = [NSString stringWithFormat:@"%@",[loginStatus objectForKey:LoginViewController_guardianId]];
+
+    
+    NSLog(@"macAddressList -> %@",macAddressList);
+
+    NSDictionary *tempLocationDoct = [NSDictionary dictionaryWithObjectsAndKeys:userId, @"userId", [NSString stringWithFormat:@"%f",kidsLatitude] ,@"latitude",[NSString stringWithFormat:@"%f",kidsLongitude] ,@"longitude", @"300" ,@"radius" ,macAddressList,@"macAddressList",nil];
+    
+    [self postRequest:POST_LOCATION RequestDictionary:tempLocationDoct delegate:self];
+    
+    
+    
+    NSLog(@"timerRefreshLocationSelector...");
+    
+    [_locationAy removeAllObjects];
 }
 
 

@@ -221,7 +221,7 @@ CFBundleDisplayName ="宝宝安";
 "btn_missed"="未连接";
 "btn_disconnect"="解绑";
 "btn_options"="设定";
-
+"btn_map" = "地图";
 
 //<!-- Toast strings -->
 "toast_login"="登录中...;";

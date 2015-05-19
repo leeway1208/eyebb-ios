@@ -475,6 +475,8 @@ NSString *keepMajorAndMinor;
                 if (isReadBattery) {
                     //stop scan
                     [self stopScan];
+                    //stop timer
+                    [self stopOtherTimer];
                     //stop read battery life
                     isReadBattery = false;
                     
@@ -702,6 +704,9 @@ NSString *keepMajorAndMinor;
                     //[peripheral readValueForCharacteristic:characteristic];
                     //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
                     [peripheral writeValue:[self stringToByte:@"0000"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+                    
+                    // - 1
+                    [_antiLostBroadcastData removeObject:peripheral];
                     
                 }
                 
@@ -1000,7 +1005,10 @@ NSString * NSDataToHex(NSData *data) {
         
     }else{
         
-        [self initData:@"" minor:@""];
+        if (_antiLostBroadcastData.count > 0) {
+            [self initData:@"" minor:@""];
+        }
+    
         
     }
     
@@ -1052,6 +1060,7 @@ NSString * NSDataToHex(NSData *data) {
 
 -(void) initData:(NSString *) major minor:(NSString*)minor{
     self.targetMajorAndMinorPeripheral = [NSString stringWithFormat:@"%@%@",minor,major];
+    NSLog(@"targetMajorAndMinorPeripheral -- > %@",self.targetMajorAndMinorPeripheral);
     self.central = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
     self.discoveredPeripherals = [NSMutableArray new];
     self.discoveredPeripheralsRssi = [NSMutableArray new];

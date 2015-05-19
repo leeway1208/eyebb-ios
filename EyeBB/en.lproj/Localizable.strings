@@ -219,6 +219,7 @@ CFBundleDisplayName ="EyeBB";
 "btn_missed"="Missed";
 "btn_disconnect"="Disconnect";
 "btn_options"="Setting";
+"btn_map" = "map";
 
 //<!-- Toast strings -->
 "toast_login"="Login...;";

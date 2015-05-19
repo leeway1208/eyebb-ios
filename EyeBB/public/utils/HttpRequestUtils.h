@@ -14,6 +14,10 @@
 /*
  * http request
  */
+//location
+#define POST_LOCATION @"appBgService/api/radar"
+
+
 //LoginViewController
 #define LOGIN_TO_CHECK @"j_spring_security_check"
 //RegViewController
@@ -169,7 +173,8 @@
 //post token
 #define POST_TOKEN @"accSetting/api/updateDeviceId"
 
-
+//get location bean
+#define GET_LOCATION_BEAN @"masterService/api/currentGpsLocationsByChild"
 
 //暂时没用到
 #define GET_MASTER_CHILDREN @"masterService/api/masterChildren"

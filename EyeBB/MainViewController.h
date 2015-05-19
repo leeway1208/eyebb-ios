@@ -8,8 +8,9 @@
 
 
 #import "EyeBBViewController.h"
+#import <CoreLocation/CoreLocation.h> 
 
-@interface MainViewController : EyeBBViewController
+@interface MainViewController : EyeBBViewController<CLLocationManagerDelegate>
 
 
 

@@ -222,7 +222,7 @@ CFBundleDisplayName ="寶寶安";
 "btn_missed"="未連接";
 "btn_disconnect"="解綁";
 "btn_options"="設定";
-
+"btn_map" = "地圖";
 
 //<!-- Toast strings -->
 "toast_login"="登錄中...;";

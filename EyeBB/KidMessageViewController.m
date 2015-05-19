@@ -179,14 +179,7 @@
     //头像背景容器
     _kidBgView=[[UIView alloc]initWithFrame:CGRectZero];
     _kidBgView.frame=CGRectMake(0, 0, Drive_Wdith, Drive_Height/6*2);
-    if (macAddress.length > 0) {
-        [self readBattery:nil major:major minor:minor];
-        _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
-    }else{
-        _kidBgView.backgroundColor= [UIColor colorWithRed:0.910 green:0.910 blue:0.910 alpha:1];
-        
-    }
-    
+
     [self.view addSubview:_kidBgView];
     
     
@@ -255,7 +248,7 @@
     
     _closedIndicator = closedIndicator;
     //设置downloadedBytes就可以了，这个为电量的百分比
-    [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
+    //[_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
     
     //选项列表
     _SelectedTView=[[UITableView alloc] initWithFrame:CGRectMake(0, Drive_Height/6*2, Drive_Wdith, Drive_Height/6*4)];
@@ -367,6 +360,17 @@
     [confirmBtn.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
     [_QRView addSubview:confirmBtn];
     
+    
+    
+    
+    if (macAddress.length > 0) {
+        [self readBattery:nil major:[self getMajor:major] minor:[self getMinor:minor]];
+        _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+    }else{
+        _kidBgView.backgroundColor= [UIColor colorWithRed:0.910 green:0.910 blue:0.910 alpha:1];
+        
+    }
+    
 }
 
 #pragma mark --
@@ -391,20 +395,26 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         //        cell.tag = indexPath.row;
         
+        _batteryLifeLbl =[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith , 20 , 80, 20)];
+        //_batteryLifeLbl.text = @"ss";
+        [_batteryLifeLbl setFont:[UIFont systemFontOfSize: 15.0]];
+        [_batteryLifeLbl setTextColor:[UIColor blackColor]];
+        [_batteryLifeLbl setTextAlignment:NSTextAlignmentCenter];
+        _batteryLifeLbl.tag = 100;
+         cell.accessoryView = _batteryLifeLbl;
+        
     }
     
     if (indexPath.row==0) {
         
         cell.textLabel.text=LOCALIZATION(@"text_battery_life");
         
-        _batteryLifeLbl =[[UILabel alloc]initWithFrame:CGRectMake(Drive_Wdith - 50, 20 , 20, 20)];
+      UILabel *batteryLifeLbl = (UILabel*)[cell viewWithTag:100];;
         //_batteryLifeLbl.text = @"ss";
-        [_batteryLifeLbl setFont:[UIFont systemFontOfSize: 15.0]];
-        [_batteryLifeLbl setTextColor:[UIColor blackColor]];
-        [_batteryLifeLbl setTextAlignment:NSTextAlignmentCenter];
+        NSLog(@"batteryLife --> %d",batteryLife);
+      [batteryLifeLbl setText:[NSString stringWithFormat:@"%d%@",batteryLife,@"/100"]];
         
-        
-        cell.accessoryView = _batteryLifeLbl;
+       
         
     }else
     {
@@ -448,7 +458,7 @@
         if (indexPath.row == 0) {
             if (reReadBatteryLife) {
                 //read battery
-                [self readBattery:nil major:major minor:minor];
+                [self readBattery:nil major:[self getMajor:major] minor:[self getMinor:minor]];
                 _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
                 reReadBatteryLife = FALSE;
             }
@@ -456,7 +466,7 @@
             
         }else if (indexPath.row == 1) {
             
-            [self writeBeepMajor:major minor:minor writeValue:@"01"];
+            [self writeBeepMajor:[self getMajor:major] minor:[self getMinor:minor] writeValue:@"01"];
             [HUD show:YES];
             
             
@@ -526,7 +536,9 @@
 - (void) beepTimeout:(NSNotification *)notification{
     if ([[notification name] isEqualToString:BLUETOOTH_GET_BEEP_TIME_OUT]){
         NSLog(@"BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME");
-        [HUD hide:NO afterDelay:0];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [HUD hide:YES afterDelay:0];
+        });
         
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                     message:LOCALIZATION(@"text_connect_error")
@@ -547,11 +559,27 @@
         
         
         batteryLife = [(NSString *)[notification object] intValue];
-        _batteryLifeLbl.text = [NSString stringWithFormat:@"%d",batteryLife];
+//        _batteryLifeLbl.text = [NSString stringWithFormat:@"%d",batteryLife];
         
-        [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
+        NSLog(@"BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME --> %d",batteryLife);
+        
+       
         
         reReadBatteryLife = TRUE;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+             [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
+            [self.SelectedTView reloadData];
+        });
+        
+    }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
+        
+        NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
+       
+        dispatch_async(dispatch_get_main_queue(), ^{
+          [HUD hide:YES afterDelay:0];
+        });
+        
     }
     
     
