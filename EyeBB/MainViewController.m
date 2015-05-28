@@ -3602,8 +3602,9 @@
     }
     
     if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
-     
+        //myDelegate.allKidsWithMacAddressBeanArray=[[NSMutableArray alloc]init];
         [myDelegate.allKidsWithMacAddressBeanArray removeAllObjects];
+        [_disconectKidsAy removeAllObjects];
         NSData *responseData = [request responseData];
         NSMutableArray* childrenArray=[[responseData mutableObjectFromJSONData] objectForKey:@"childrenInfo"];
         if ([childrenArray isKindOfClass:[NSNull class]]) {
@@ -3637,7 +3638,7 @@
         }
         
         myDelegate.allKidsWithMacAddressBeanArray = [_disconectKidsAy mutableCopy];
-        NSLog(@"myDelegate.allKidsWithMacAddressBeanArray (%@)",myDelegate.allKidsWithMacAddressBeanArray);
+        NSLog(@"myDelegate.allKidsWithMacAddressBeanArray (%lu)",(unsigned long)myDelegate.allKidsWithMacAddressBeanArray.count);
     }
     
     [_progressView setHidden:YES];

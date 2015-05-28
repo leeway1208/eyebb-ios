@@ -5,6 +5,8 @@
 //  Created by Evan on 15/3/11.
 //  Copyright (c) 2015年 EyeBB. All rights reserved.
 //
+// third view (report view)
+
 
 #import "ChildrenListViewController.h"
 #import "IIILocalizedIndex.h"
@@ -349,6 +351,8 @@
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    
     if(tableView!=_tableView){
         
     }
