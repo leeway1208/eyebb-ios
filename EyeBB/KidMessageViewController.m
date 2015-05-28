@@ -518,7 +518,7 @@
                 
                 _scanDeviceView.childID = [[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"];
                 _scanDeviceView.guardianId = @"1L";
-                
+                _scanDeviceView.comeFrom = @"kids_message";
                 [[self navigationController] pushViewController:_scanDeviceView animated:YES];
                 
             }else{

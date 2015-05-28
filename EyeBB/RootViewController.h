@@ -14,9 +14,11 @@
     int num;
     BOOL upOrdown;
       NSTimer * timer;
+    
 }
 @property (nonatomic, retain) UIImageView * line;
 @property (nonatomic, retain) NSString * childID;
+@property (nonatomic, retain) NSString * comeFrom;
 /* guardian Id  */
 @property (strong,nonatomic) NSString *guardianId;
 @end

@@ -14,6 +14,7 @@
 #import "ChildInformationMatchingViewController.h"
 #import "HttpRequest.h"
 #import "ScanDeviceToBindingViewController.h"
+#import "KidMessageViewController.h"
 
 #define SCANVIEW_EdgeTop 40.0
 #define SCANVIEW_EdgeLeft 50.0
@@ -350,11 +351,23 @@
 
 #pragma mark - btn action
 -(void)qrCodeNavigationBarLeftBtnAction:(id)sender{
-    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
-    {
-        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
-            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+    
+    if([_comeFrom isEqualToString:@"kids_message"]){
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[KidMessageViewController class]]){
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
         }
+
+    }else{
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
+        }
+
     }
     
 }
