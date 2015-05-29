@@ -62,7 +62,8 @@
 //-------------------视图控件--------------------
 /**选项卡内容容器*/
 @property (strong, nonatomic) UIScrollView *MainInfoScrollView;
-
+/* inddor  locator */
+@property (strong, nonatomic) UIView *organizationShowBtnShowView;
 /**房间信息*/
 @property (strong, nonatomic) UITableView *RoomTableView;
 /**雷达*/
@@ -590,8 +591,9 @@
     [_MainInfoScrollView addSubview:titleView];
     
     //房间显示选择View
-    UIView *organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 45, Drive_Wdith, 44)];
-    organizationShowBtnShowView.backgroundColor=[UIColor whiteColor];
+    _organizationShowBtnShowView =[[UIView alloc]initWithFrame:CGRectMake(0, 45, Drive_Wdith, 44)];
+    _organizationShowBtnShowView.backgroundColor=[UIColor whiteColor];
+
     //室内定位显示选择
     NSString *organizationStr=@"****";
     _organizationShowBtn = [[UIButton alloc]initWithFrame:CGRectMake(10, 0, Drive_Wdith-30, 44)];
@@ -618,9 +620,9 @@
     //圆角像素化
     //    [listSetBtn.layer setCornerRadius:4.0];
     _organizationShowBtn.tag=103;
-    [organizationShowBtnShowView addSubview:_organizationShowBtn];
+    [_organizationShowBtnShowView addSubview:_organizationShowBtn];
     _organizationShowBtn.hidden=YES;
-    [_MainInfoScrollView addSubview:organizationShowBtnShowView];
+    [_MainInfoScrollView addSubview:_organizationShowBtnShowView];
     
     //小孩列表
     _childrenListBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, CGRectGetHeight(_MainInfoScrollView.frame)-40, CGRectGetWidth(_MainInfoScrollView.frame), 40)];
@@ -3063,7 +3065,7 @@
         huaHMSegmentedControl = (int)page;
         switch (huaHMSegmentedControl) {
             case 0:
-                if ([_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count<1) {
+                if ([_childrenByAreaArray isEqual:[NSNull null]]||_childrenByAreaArray.count<1) {
                     _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
                     _bulletinLbl.hidden=NO;
                 }
@@ -3240,7 +3242,7 @@
         //        [self simulateProgress];
         [self getRequest:GET_CHILDREN_LOC_LIST delegate:self RequestDictionary:nil];
         
-        if ([_childrenByAreaArray isEqual:[NSNull null]]&&_childrenByAreaArray.count<1) {
+        if ([_childrenByAreaArray isEqual:[NSNull null]]||_childrenByAreaArray.count<1) {
             _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
             _bulletinLbl.hidden=NO;
         }
@@ -3470,19 +3472,22 @@
             {
                 _roomArray=_kidsRoomArray;
             }
+            //_RoomTableView.hidden = NO;
             [_RoomTableView reloadData];
             [tempChindrenArray removeAllObjects];
             tempChindrenArray=nil;
             tempArray=nil;
             _isreloadRoomList=NO;
-            
-            
+            _organizationShowBtnShowView.hidden = NO;
+            _bulletinLbl.hidden=YES;
         }
         
         else
         {
             _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
             _bulletinLbl.hidden=NO;
+            _organizationShowBtnShowView.hidden = YES;
+            //_RoomTableView.hidden = YES;
         }
         
         
@@ -4198,16 +4203,19 @@
             if ([_childrenByAreaArray isEqual:[NSNull null]]) {
                 _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
                 _bulletinLbl.hidden=NO;
+                
             }
             else
             {
                 if (_childrenByAreaArray.count<1) {
                     _bulletinLbl.frame=CGRectMake(10, 120, Drive_Wdith-20, 30);
                     _bulletinLbl.hidden=NO;
+                  
                 }
                 else
                 {
                     _bulletinLbl.hidden=YES;
+                   
                 }
             }
             _progressView.frame=CGRectMake(0, 0.0f, Drive_Wdith, 1.0f);

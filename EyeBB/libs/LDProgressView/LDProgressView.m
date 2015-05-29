@@ -86,11 +86,21 @@
     //不需要背景
     //    [self drawProgressBackground:context inRect:rect];
     if (self.progress > 0) {
-        [self drawProgress:context withFrame:rect];
+        @try {
+            [self drawProgress:context withFrame:rect];
+        }
+        @catch (NSException *exception) {
+            
+        }
+        @finally {
+            
+        }
+        
     }
 }
 
 - (void)drawProgressBackground:(CGContextRef)context inRect:(CGRect)rect {
+    
     CGContextSaveGState(context);
     UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:self.borderRadius.floatValue];
     CGContextSetFillColorWithColor(context, [UIColor colorWithRed:0.51f green:0.51f blue:0.51f alpha:1.00f].CGColor);
@@ -119,46 +129,54 @@
 }
 
 - (void)drawProgress:(CGContextRef)context withFrame:(CGRect)frame {
-    CGRect rectToDrawIn = CGRectMake(0, 0, frame.size.width * self.progress, frame.size.height);
-    CGRect insetRect = CGRectInset(rectToDrawIn, self.progress > 0.03 ? 0.5 : -0.5, 0.5);
-    
-    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:insetRect cornerRadius:self.borderRadius.floatValue];
-    [roundedRect setLineWidth:0.0];
-    if ([self.flat boolValue]) {
-        CGContextSetFillColorWithColor(context, self.color.CGColor);
-        [roundedRect fill];
-    } else {
-        CGContextSaveGState(context);
-        [roundedRect addClip];
-        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGFloat locations[] = {0.0, 1.0};
-        NSArray *colors = @[(__bridge id)[self.color lighterColor].CGColor, (__bridge id)[self.color darkerColor].CGColor];
-        CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+    @try {
+        CGRect rectToDrawIn = CGRectMake(0, 0, frame.size.width * self.progress, frame.size.height);
+        CGRect insetRect = CGRectInset(rectToDrawIn, self.progress > 0.03 ? 0.5 : -0.5, 0.5);
         
-        CGContextDrawLinearGradient(context, gradient, CGPointMake(insetRect.size.width / 2, 0), CGPointMake(insetRect.size.width / 2, insetRect.size.height), 0);
-        CGContextRestoreGState(context);
+        UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:insetRect cornerRadius:self.borderRadius.floatValue];
+        [roundedRect setLineWidth:0.0];
+        if ([self.flat boolValue]) {
+            CGContextSetFillColorWithColor(context, self.color.CGColor);
+            [roundedRect fill];
+        } else {
+            CGContextSaveGState(context);
+            [roundedRect addClip];
+            CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+            CGFloat locations[] = {0.0, 1.0};
+            NSArray *colors = @[(__bridge id)[self.color lighterColor].CGColor, (__bridge id)[self.color darkerColor].CGColor];
+            CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+            
+            CGContextDrawLinearGradient(context, gradient, CGPointMake(insetRect.size.width / 2, 0), CGPointMake(insetRect.size.width / 2, insetRect.size.height), 0);
+            CGContextRestoreGState(context);
+            
+            CGGradientRelease(gradient);
+            CGColorSpaceRelease(colorSpace);
+        }
         
-        CGGradientRelease(gradient);
-        CGColorSpaceRelease(colorSpace);
-    }
-    
-    if (self.progress != 1.0) {
-        switch (self.type) {
-            case LDProgressGradient:
-                [self drawGradients:context inRect:insetRect];
-                break;
-            case LDProgressStripes:
-                [self drawStripes:context inRect:insetRect];
-                break;
-            default:
-                break;
+        if (self.progress != 1.0) {
+            switch (self.type) {
+                case LDProgressGradient:
+                    [self drawGradients:context inRect:insetRect];
+                    break;
+                case LDProgressStripes:
+                    [self drawStripes:context inRect:insetRect];
+                    break;
+                default:
+                    break;
+            }
+        }
+        CGContextSetStrokeColorWithColor(context, [[self.color darkerColor] darkerColor].CGColor);
+        [roundedRect stroke];
+        
+        if ([self.showText boolValue]) {
+            [self drawRightAlignedLabelInRect:insetRect];
         }
     }
-    CGContextSetStrokeColorWithColor(context, [[self.color darkerColor] darkerColor].CGColor);
-    [roundedRect stroke];
-    
-    if ([self.showText boolValue]) {
-        [self drawRightAlignedLabelInRect:insetRect];
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+        
     }
 }
 

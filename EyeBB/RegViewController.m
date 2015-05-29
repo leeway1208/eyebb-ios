@@ -522,7 +522,7 @@
                 _telTxt.leftViewMode=UITextFieldViewModeAlways;
                 _telTxt.placeholder=LOCALIZATION(@"text_phone_number");//默认显示的字
                 
-                _telTxt.text=@"testUser3";
+                //_telTxt.text=@"testUser3";
                 
                 
                 _telTxt.secureTextEntry=NO;//设置成密码格式
@@ -552,7 +552,7 @@
                 _nicknameTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _nicknameTxt.leftViewMode=UITextFieldViewModeAlways;
                 
-                _nicknameTxt.text=@"testUser3";
+                //_nicknameTxt.text=@"testUser3";
                 
                 _nicknameTxt.placeholder=LOCALIZATION(@"text_nick_name");//默认显示的字
                 _nicknameTxt.secureTextEntry=NO;//设置成密码格式
@@ -582,7 +582,7 @@
                 _pDTxt.leftViewMode=UITextFieldViewModeAlways;
                 _pDTxt.placeholder=LOCALIZATION(@"text_password");//默认显示的字
                 
-                _pDTxt.text=@"111111";
+                //_pDTxt.text=@"111111";
                 
                 _pDTxt.secureTextEntry=YES;//设置成密码格式
                 _pDTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
@@ -610,7 +610,7 @@
                 _verifyTxt.leftViewMode=UITextFieldViewModeAlways;
                 _verifyTxt.placeholder=LOCALIZATION(@"text_verify");//默认显示的字
                 
-                _verifyTxt.text=@"111111";
+                //_verifyTxt.text=@"111111";
                 
                 _verifyTxt.secureTextEntry=YES;//设置成密码格式
                 _verifyTxt.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
