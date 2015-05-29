@@ -11,7 +11,8 @@
 //#import "KidslistViewController.h"//儿童列表
 #import "JSONKit.h"
 #import "MSCellAccessory.h"
-#import "LDProgressView.h"
+//#import "LDProgressView.h"
+#import "EAColourfulProgressView.h"
 #import "UserDefaultsUtils.h"
 //#import "DBImageView.h"
 #import "AppDelegate.h"
@@ -2415,17 +2416,23 @@
             [compareView setBackgroundColor:[UIColor colorWithRed:0.957 green:0.957 blue:0.922 alpha:1]];
             [compareView setTag:222];
             [cell addSubview:compareView];
+            
             compareView.hidden=YES;
             //本日数据条
-            LDProgressView *progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
-            progressView.showText = @NO;
-            progressView.flat = @YES;
-            progressView.animate = @NO;
-            progressView.borderRadius = @0;
-            progressView.type = LDProgressSolid;
-            progressView.color = [UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1];
+            EAColourfulProgressView *progressView= [[EAColourfulProgressView alloc] initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
+//            progressView.showText = @NO;
+//            progressView.flat = @YES;
+//            progressView.animate = @NO;
+//            progressView.borderRadius = @0;
+//            progressView.type = LDProgressSolid;
+//            progressView.color = [UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1];
             progressView.tag=210;
             [cell addSubview:progressView];
+            progressView.hidden=YES;
+            [progressView awakeFromNib];
+            progressView.maximumValue=100;
+            progressView.currentValue=0;
+            [progressView updateToCurrentValue:100 color:[UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1]  animated:YES];
             
             //本日数据
             UILabel *progressLbl =[[UILabel alloc]initWithFrame:CGRectMake(20, 30, Drive_Wdith-60, 25)];
@@ -2440,16 +2447,20 @@
             
             
             //自定义数据条
-            progressView = [[LDProgressView alloc] initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
-            progressView.showText = @NO;
-            progressView.flat = @YES;
-            progressView.animate = @NO;
-            progressView.borderRadius = @0;
-            progressView.type = LDProgressSolid;
-            progressView.color = [UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1];
+            progressView = [[EAColourfulProgressView alloc] initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
+//            progressView.showText = @NO;
+//            progressView.flat = @YES;
+//            progressView.animate = @NO;
+//            progressView.borderRadius = @0;
+//            progressView.type = LDProgressSolid;
+//            progressView.color = [UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1];
             progressView.tag=223;
-            [cell addSubview:progressView];
             
+            [cell addSubview:progressView];
+            progressView.hidden=YES;
+            [progressView awakeFromNib];
+            progressView.maximumValue=100;
+            [progressView updateToCurrentValue:100 color:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]  animated:YES];
             
             //自定义数据
             UILabel * progressLbl2 =[[UILabel alloc]initWithFrame:CGRectMake(20, 55, Drive_Wdith-60, 25)];
@@ -2507,24 +2518,31 @@
         if([cell viewWithTag:210]!=nil)
         {
             
-            LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:210];
+            EAColourfulProgressView *progressView = (EAColourfulProgressView *)[cell viewWithTag:210];
             if (_dailyAvgFigureArray.count>0) {
                 if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"daily"] integerValue]>0) {
-                    
+                    progressView.hidden=NO;
                     UILabel *progressLbl =(UILabel *)[cell viewWithTag:224];
                     
                     int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"daily"]doubleValue];
-                    progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
+//                    progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
+
                     [progressLbl setText:[NSString stringWithFormat:@"%dhr %dmin",num/60,num%60]];
+                    [progressView updateToCurrentValue:(100-(num*100.00/([self.avgDaysStr doubleValue]*24.00*60.00))) color:[UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1]  animated:YES];
+                    
                 }
                 else
                 {
-                    progressView.progress = 0.00;
+                    [progressView updateToCurrentValue:100 color:[UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1]  animated:YES];
+                    progressView.hidden=YES;
+//                    progressView.progress = 0.00;
                 }
             }
             else
             {
-                progressView.progress = 0.00;
+                [progressView updateToCurrentValue:100 color:[UIColor colorWithRed:0.125 green:0.839 blue:0.992 alpha:1]  animated:YES];
+                progressView.hidden=YES;
+//                progressView.progress = 0.00;
                 
                 
             }
@@ -2534,9 +2552,9 @@
         
         if([cell viewWithTag:223]!=nil)
         {
-            LDProgressView *progressView = (LDProgressView *)[cell viewWithTag:223];
+            EAColourfulProgressView *progressView = (EAColourfulProgressView *)[cell viewWithTag:223];
             if (_dailyAvgFigureArray.count>0) {
-                
+                progressView.hidden=NO;
                 if ([[[_dailyAvgFigureArray objectAtIndex:indexPath.row]objectForKey:@"average"] integerValue]>0) {
                     
                     
@@ -2544,21 +2562,23 @@
                     //                    progressView.progress = 0.50;
                     
                     int num=(int)[[[_dailyAvgFigureArray objectAtIndex:indexPath.row] objectForKey:@"average"]doubleValue];
-                    progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
-                    
-                    
+//                    progressView.progress =num*1.00/([self.avgDaysStr doubleValue]*24.00*60.00);
+                 
+//                    NSLog(@"---%d",(int)(num*100.00/([self.avgDaysStr doubleValue]*24.00*60.00)));
+                    [progressView updateToCurrentValue:(100-(num*100.00/([self.avgDaysStr doubleValue]*24.00*60.00))) color:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]  animated:YES];
                     UILabel *progressLbl =(UILabel *)[cell viewWithTag:225];
                     [progressLbl setText:[NSString stringWithFormat:@"%dhr %dmin",num/60,num%60]];
                 }
                 else
                 {
-                    progressView.progress = 0.00;
+progressView.hidden=YES;
+                    [progressView updateToCurrentValue:100 color:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]  animated:YES];
                 }
             }
             else
             {
-                progressView.progress = 0.00;
-                
+progressView.hidden=YES;
+                [progressView updateToCurrentValue:100 color:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]  animated:YES];
                 
             }
             
@@ -4195,7 +4215,7 @@
 - (void)tabAction:(id)sender
 {
     UIButton *tempBtn=(UIButton *)sender;
-    int num=tempBtn.tag-214;
+    int num=(int)tempBtn.tag-214;
     //    if(num !=1)
     //    {
     switch (tempBtn.tag) {

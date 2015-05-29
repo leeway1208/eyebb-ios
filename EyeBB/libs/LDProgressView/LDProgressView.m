@@ -82,10 +82,12 @@
 }
 
 - (void)drawRect:(CGRect)rect {
+    @try {
     CGContextRef context = UIGraphicsGetCurrentContext();
     //不需要背景
     //    [self drawProgressBackground:context inRect:rect];
     if (self.progress > 0) {
+<<<<<<< Updated upstream
         @try {
             [self drawProgress:context withFrame:rect];
         }
@@ -95,6 +97,18 @@
         @finally {
             
         }
+=======
+        
+            [self drawProgress:context withFrame:rect];
+      
+        
+    }
+    }
+    @catch (NSException *exception) {
+        
+    }
+    @finally {
+>>>>>>> Stashed changes
         
     }
 }
@@ -129,9 +143,28 @@
 }
 
 - (void)drawProgress:(CGContextRef)context withFrame:(CGRect)frame {
+<<<<<<< Updated upstream
     @try {
         CGRect rectToDrawIn = CGRectMake(0, 0, frame.size.width * self.progress, frame.size.height);
         CGRect insetRect = CGRectInset(rectToDrawIn, self.progress > 0.03 ? 0.5 : -0.5, 0.5);
+=======
+     @try {
+    CGRect rectToDrawIn = CGRectMake(0, 0, frame.size.width * self.progress, frame.size.height);
+    CGRect insetRect = CGRectInset(rectToDrawIn, self.progress > 0.03 ? 0.5 : -0.5, 0.5);
+    
+    UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:insetRect cornerRadius:self.borderRadius.floatValue];
+    [roundedRect setLineWidth:0.0];
+    if ([self.flat boolValue]) {
+        CGContextSetFillColorWithColor(context, self.color.CGColor);
+        [roundedRect fill];
+    } else {
+        CGContextSaveGState(context);
+        [roundedRect addClip];
+        CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGFloat locations[] = {0.0, 1.0};
+        NSArray *colors = @[(__bridge id)[self.color lighterColor].CGColor, (__bridge id)[self.color darkerColor].CGColor];
+        CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+>>>>>>> Stashed changes
         
         UIBezierPath *roundedRect = [UIBezierPath bezierPathWithRoundedRect:insetRect cornerRadius:self.borderRadius.floatValue];
         [roundedRect setLineWidth:0.0];
@@ -178,6 +211,13 @@
     @finally {
         
     }
+}
+@catch (NSException *exception) {
+    
+}
+@finally {
+    
+}
 }
 
 - (void)drawGradients:(CGContextRef)context inRect:(CGRect)rect {
