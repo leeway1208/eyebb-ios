@@ -4110,7 +4110,7 @@ progressView.hidden=YES;
     [_listTypeView setHidden:YES];
     [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:YES];
-    
+    [_FeekBackView setHidden:YES];
     [_kidsMassageView setHidden:NO];
     
     DBImageView  * KidsImgView=(DBImageView *)[_kidsMassageView viewWithTag:219];
