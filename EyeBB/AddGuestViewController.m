@@ -15,6 +15,8 @@
     //记录搜索结果数组
     NSArray*_resultArray;
     UITableView*_tableView;
+    
+    NSString * guestId;
 }
 /**授权人搜索输入框*/
 @property (nonatomic,strong) UITextField *gusetTxt;
@@ -305,14 +307,25 @@
     }
     else
     {
-    if (_guardianKids==nil) {
-        _guardianKids=[[GuardianKidsViewController alloc]init];
-        
-    }
-//        self.guardianKids.SelectedchildrenArray=[[_authorizedArray objectAtIndex:(guardianbtn.tag-105)] objectForKey:@"chilrenByGuardian"];
+//    if (_guardianKids==nil) {
+//        _guardianKids=[[GuardianKidsViewController alloc]init];
+//        
+//    }
+//    self.guardianKids._childrenArray=[[_authorizedArray objectAtIndex:(guardianbtn.tag-105)] objectForKey:@"chilrenByGuardian"];
+    //self.guardianKids.SelectedchildrenArray=[_resultArray objectAtIndex:indexPath.row];
+   // self.guardianKids.guestId=[[_resultArray objectAtIndex:indexPath.row] objectForKey:@"guardianId"];
+    //self.guardianKids.guestOrMaster = 1;
+
         NSLog(@"_resultArray is %@",[_resultArray objectAtIndex:indexPath.row]);
-    _guardianKids.guestId=[[_resultArray objectAtIndex:indexPath.row] objectForKey:@"guardianId"];
-    [self.navigationController pushViewController:_guardianKids animated:YES];
+        
+        NSMutableDictionary * tempDictionary=[NSMutableDictionary dictionary];
+        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[_resultArray objectAtIndex:indexPath.row] objectForKey:@"guardianId"]] forKey:@"guestId"];
+        
+        guestId =  [NSString stringWithFormat:@"%@",[[_resultArray objectAtIndex:indexPath.row] objectForKey:@"guardianId"]];
+        
+        
+        [self postRequest:GUEST_CHILDREN RequestDictionary:tempDictionary delegate:nil];
+    //[self.navigationController pushViewController:_guardianKids animated:YES];
     }
 }
 
@@ -321,7 +334,8 @@
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
     NSString *responseString = [request responseString];
-    //请求房间列表
+ 
+    NSLog(@"resSEARCH_GUEST %@",responseString);
     if ([tag isEqualToString:SEARCH_GUEST]) {
 
             NSData *responseData = [request responseData];
@@ -341,7 +355,41 @@
        
             [_tableView reloadData];
         
+    }else if([tag isEqualToString:GUEST_CHILDREN]){
+        NSString *responseString = [request responseString];
+         NSData *responseData = [request responseData];
+        NSLog(@"resGUEST_CHILDREN %@",[[responseData mutableObjectFromJSONData] objectForKey:@"childrenQuota"]);
+        
+        if (_guardianKids==nil) {
+            _guardianKids=[[GuardianKidsViewController alloc]init];
+        
         }
+        NSArray * childAy = [[responseData mutableObjectFromJSONData] objectForKey:@"childrenQuota"];
+        NSMutableArray *selectChildAy =[NSMutableArray new];
+        
+        for (int i = 0; i < childAy.count ; i ++ ) {
+            NSDictionary *temodc = [childAy objectAtIndex:i];
+            
+            if ([[NSString stringWithFormat:@"%@",[temodc objectForKey:@"withAccess"] ] isEqualToString:@"1"]) {
+                
+                [selectChildAy addObject:[temodc objectForKey:@"child" ]];
+                
+                
+            }
+            
+        }
+        
+        NSLog(@"selectChildAy -> %@",selectChildAy);
+     
+        self.guardianKids._childrenArray= [childAy copy];
+
+        self.guardianKids.SelectedchildrenArray=[selectChildAy mutableCopy];
+        self.guardianKids.guestId= guestId;
+        self.guardianKids.guestOrMaster = 1;
+        
+        
+        [self.navigationController pushViewController:_guardianKids animated:YES];
+    }
         
     
 }

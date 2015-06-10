@@ -20,7 +20,7 @@
 @property (strong,nonatomic) NSMutableArray * connectKidsByScanedT;
 @end
 
-
+float initAlpha = 0.1f;
 @implementation ChildLocationController 
 #pragma mark - 原生方法
 - (void)viewDidLoad {
@@ -146,10 +146,13 @@
 
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay
 {
+   
     MKCircleView *circleView = [[MKCircleView alloc] initWithOverlay:overlay];
     [circleView setFillColor:[UIColor redColor]];
     [circleView setStrokeColor:[UIColor blackColor]];
-    [circleView setAlpha:0.3f];
+    [circleView setAlpha:initAlpha];
+    
+    initAlpha += 0.1f;
     return circleView;
 }
 

@@ -255,6 +255,9 @@
 @property (strong,nonatomic) NSTimer *locationTimer;
 @property (strong,nonatomic) NSMutableArray *locationAy;
 
+//自定义色块 todayLbl.bounds
+@property (strong,nonatomic) UILabel *customizedColorLbl;
+
 @end
 
 @implementation MainViewController
@@ -284,7 +287,7 @@
     NSString * appLowestVer =  [NSString stringWithFormat:@"%@",[defaults objectForKey:LoginViewController_app_version]];
     
     NSLog(@"appLowestVer -> %@",appLowestVer);
-    if (![appLowestVer isEqualToString:[self getAppVersion]]) {
+    if ([appLowestVer floatValue] > [[self getAppVersion] floatValue ]) {
         [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                     message:LOCALIZATION(@"text_new_version_to_update")
                                    delegate:self
@@ -1004,12 +1007,12 @@
     
     
     //自定义色块 todayLbl.bounds
-    UILabel *customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_todayLbl.bounds)+_todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f)];
-    [customizedColorLbl setBackgroundColor:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]];
-    [_PerformanceTimeBtn addSubview:customizedColorLbl];
+    _customizedColorLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_todayLbl.bounds)+_todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f)];
+    [_customizedColorLbl setBackgroundColor:[UIColor colorWithRed:0.996 green:0.761 blue:0.310 alpha:1]];
+    [_PerformanceTimeBtn addSubview:_customizedColorLbl];
     //自定义
     NSString *str2=LOCALIZATION(@"text_customized");
-    _customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(customizedColorLbl.bounds)+customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f)];
+    _customizedLbl = [[UILabel alloc] initWithFrame:CGRectMake(CGRectGetWidth(_customizedColorLbl.bounds)+_customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f)];
     [_customizedLbl setBackgroundColor:[UIColor clearColor]];
     _customizedLbl.font=[UIFont fontWithName:@"Helvetica" size:14];
     _customizedLbl.textAlignment = NSTextAlignmentLeft;
@@ -3900,8 +3903,11 @@ progressView.hidden=YES;
     _todayLbl.frame = CGRectMake(28.0f, 14.0f, (str.length>2?str.length*8.0f:str.length*15), 16.0f);
     _todayLbl.text = [str copy];
     
+    _customizedColorLbl.frame = CGRectMake(CGRectGetWidth(_todayLbl.bounds)+_todayLbl.frame.origin.x+5, 14.0f, 14.0f, 14.0f);
+
+    
     NSString *str2=LOCALIZATION(@"text_customized");
-    _customizedLbl.frame = CGRectMake(CGRectGetWidth(_todayLbl.bounds)+_todayLbl.frame.origin.x+24.0f, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f);
+    _customizedLbl.frame = CGRectMake(CGRectGetWidth(_customizedColorLbl.bounds)+_customizedColorLbl.frame.origin.x+5, 14.0f, (str2.length>4?str2.length*7.5f:str2.length*15), 16.0f);
 
     _customizedLbl.text = [str2 copy];
     
@@ -3909,9 +3915,13 @@ progressView.hidden=YES;
     //查询条件
     _conditionLbl.frame = CGRectMake(CGRectGetWidth(_customizedLbl.bounds)+_customizedLbl.frame.origin.x, 14.0f, (str3.length>2?str3.length*8.0f:str3.length*15), 16.0f);
     _conditionLbl.text = [str3 copy];
+    
     str=nil;
     str2=nil;
     str3=nil;
+    
+    _conditionImgView.frame = CGRectMake(CGRectGetWidth(_conditionLbl.bounds)+_conditionLbl.frame.origin.x, 15.5,20,13);
+    
     _PersonageLbl.text = LOCALIZATION(@"text_notifications");
     [_closeBtn setTitle:LOCALIZATION(@"btn_back") forState:UIControlStateNormal];
     [_listtitleLal setText:LOCALIZATION(@"btn_options")];

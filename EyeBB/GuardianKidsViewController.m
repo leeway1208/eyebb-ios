@@ -50,6 +50,8 @@
     
     [self iv];
     [self lc];
+    
+    NSLog(@"SelectedchildrenArray -> %@",SelectedchildrenArray );
 }
 
 
@@ -127,7 +129,7 @@
  */
 -(void)lc
 {
-    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith,Drive_Height-36) style:UITableViewStylePlain];
+    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith,Drive_Height-45) style:UITableViewStylePlain];
     _tableView.dataSource=self;
     _tableView.delegate=self;
     _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
