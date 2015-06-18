@@ -169,7 +169,7 @@ CFBundleDisplayName ="EyeBB";
 "text_Apply_qr_code_fail"="Fail to get the QR code";
 "text_network_unavailable"="Network unavailable (Click to connect)";
 "text_network_connecting"="Connecting...";
-"text_search_guset_activity_share_msg"="Invite him/her?。Link：play.google.com/xxxxxxxx";
+"text_search_guset_activity_share_msg"="Invite him/her?。Link：https://itunes.apple.com/us/app/eyebb/id987833491?mt=8";
 "text_no_new_firmware"="Sorry. There is no need to update the firmware of eyebb device.";
 "text_is_this_kid"="Is this kid right?";
 "text_qr_code"="QR Code";

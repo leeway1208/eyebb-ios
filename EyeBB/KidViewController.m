@@ -28,6 +28,8 @@
     //区域/姓名排序
     int Sorting;
     
+    Boolean isLocation;
+    
 }
 /**图片本地存储地址*/
 @property (nonatomic,strong)NSString * documentsDirectoryPath;
@@ -68,7 +70,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
-     self.navigationItem.rightBarButtonItem = self.rightBtnItem;
+    self.navigationItem.rightBarButtonItem = self.rightBtnItem;
     [self iv];
     [self lc];
     
@@ -120,9 +122,9 @@
         for (int j=0; j<_childrenArray.count; j++) {
             if(![[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationId"] isEqual:[NSNull null]]&&![[[_childrenArray objectAtIndex:j] objectForKey:@"locId"] isEqual:[NSNull null]])
             {
-            if ([[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationId"]longLongValue]==[[[_childrenArray objectAtIndex:j] objectForKey:@"locId"]longLongValue]) {
-                [_SortingArray addObject:[[[[_childrenArray  objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
-            }
+                if ([[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationId"]longLongValue]==[[[_childrenArray objectAtIndex:j] objectForKey:@"locId"]longLongValue]) {
+                    [_SortingArray addObject:[[[[_childrenArray  objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
+                }
             }
             
         }
@@ -147,19 +149,19 @@
     //    _tableView.sectionHeaderHeight=108.0f;
     [self.view addSubview:_NametableView];
     
-//    _SortingTView=[[UITableView alloc]initWithFrame:CGRectMake(0,44,Drive_Wdith,Drive_Height-84) style:UITableViewStylePlain];
-//    _SortingTView.dataSource=self;
-//    _SortingTView.delegate=self;
-//    _SortingTView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
-//    _SortingTView.sectionIndexColor = [UIColor blueColor];
-//    _SortingTView.separatorStyle = UITableViewCellSeparatorStyleNone;
-//    //    _tableView.sectionHeaderHeight=108.0f;
-//    [self.view addSubview:_SortingTView];
-//    _SortingTView.hidden=YES;
+    //    _SortingTView=[[UITableView alloc]initWithFrame:CGRectMake(0,44,Drive_Wdith,Drive_Height-84) style:UITableViewStylePlain];
+    //    _SortingTView.dataSource=self;
+    //    _SortingTView.delegate=self;
+    //    _SortingTView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
+    //    _SortingTView.sectionIndexColor = [UIColor blueColor];
+    //    _SortingTView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    //    //    _tableView.sectionHeaderHeight=108.0f;
+    //    [self.view addSubview:_SortingTView];
+    //    _SortingTView.hidden=YES;
     
     
     //    _childrenArray=[self allChildren];
-  
+    
     
     //    _dataArray=[self allChildren];
     
@@ -235,7 +237,7 @@
         [button setBackgroundColor:[UIColor clearColor]];
         [button setImage:[UIImage imageNamed:@"funcbar_list"]  forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-       
+        
         [button addTarget:self action:@selector(typeAction:) forControlEvents:UIControlEventTouchUpInside];
         [button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         rightBtnItem = [[UIBarButtonItem alloc] initWithCustomView:button] ;
@@ -259,37 +261,40 @@
 
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
-    NSLog(@"searchText is %@",searchText);
-    if ([searchText isEqualToString:@""]) {
+    if(isLocation){
+        NSLog(@"searchText is %@",searchText);
+        if ([searchText isEqualToString:@""]) {
+            if (Sorting==0) {
+                _dataArray = (NSMutableArray *)_resultArray;
+                self.data = [IIILocalizedIndex indexed:_dataArray];
+            }
+            else
+            {
+                _SortingArray = (NSMutableArray *)_resultArray;
+                self.data = [IIILocalizedIndex indexed:_SortingArray];
+            }
+            self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
+            [_NametableView reloadData];
+            return;
+        }
+        
+        
+        NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF contains [cd] %@", searchText];
+        NSLog(@"predicate:%@",predicate);
+        NSArray *results = [_resultArray filteredArrayUsingPredicate:predicate];
         if (Sorting==0) {
-            _dataArray = (NSMutableArray *)_resultArray;
+            _dataArray = (NSMutableArray *)results;
             self.data = [IIILocalizedIndex indexed:_dataArray];
         }
         else
         {
-        _SortingArray = (NSMutableArray *)_resultArray;
-        self.data = [IIILocalizedIndex indexed:_SortingArray];
+            _SortingArray = (NSMutableArray *)_resultArray;
+            self.data = [IIILocalizedIndex indexed:_SortingArray];
         }
         self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
         [_NametableView reloadData];
-        return;
+        
     }
-    
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"SELF contains [cd] %@", searchText];
-    NSLog(@"predicate:%@",predicate);
-    NSArray *results = [_resultArray filteredArrayUsingPredicate:predicate];
-    if (Sorting==0) {
-    _dataArray = (NSMutableArray *)results;
-    self.data = [IIILocalizedIndex indexed:_dataArray];
-    }
-    else
-    {
-        _SortingArray = (NSMutableArray *)_resultArray;
-        self.data = [IIILocalizedIndex indexed:_SortingArray];
-    }
-    self.keys = [self.data.allKeys sortedArrayUsingSelector:@selector(compare:)];
-    [_NametableView reloadData];
 }
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar
@@ -316,51 +321,51 @@
 #pragma -mark -UITableViewDelegate
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-        if(tableView!=_NametableView)
-        {
-            return 1;
-        }
-//        else
-//    if(tableView==_SortingTView&&Sorting==1)
-//    {
-//        return _kidsRoomArray.count;
-//    }
-    else if(tableView==_NametableView)
-    {
-    if (_isName==YES) {
-        return self.keys.count;
-    }
-    else
+    if(tableView!=_NametableView)
     {
         return 1;
     }
+    //        else
+    //    if(tableView==_SortingTView&&Sorting==1)
+    //    {
+    //        return _kidsRoomArray.count;
+    //    }
+    else if(tableView==_NametableView)
+    {
+        if (_isName==YES) {
+            return self.keys.count;
+        }
+        else
+        {
+            return 1;
+        }
     }
     return 1;
 }
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-//    if(tableView!=_NametableView&&tableView!=_SortingTView)
-//    {
-        //        //先清空数组里的内容。每次搜索显示的不能一样吧。
-        //        [_resultArray removeAllObjects];
-        //        //把输入的内容与原有数据源比较，有相似的就加到_resultArray数组里
-        //        for(NSMutableArray*mArray in _dataArray)
-        //        {
-        //            for(NSString*str in mArray)
-        //            {
-        //                NSRange range=[str rangeOfString:_searchBar.text];
-        //                if(range.location!=NSNotFound){
-        //                    [_resultArray addObject:str];
-        //                }
-        //            }
-        //
-        //        }
-        //
+    //    if(tableView!=_NametableView&&tableView!=_SortingTView)
+    //    {
+    //        //先清空数组里的内容。每次搜索显示的不能一样吧。
+    //        [_resultArray removeAllObjects];
+    //        //把输入的内容与原有数据源比较，有相似的就加到_resultArray数组里
+    //        for(NSMutableArray*mArray in _dataArray)
+    //        {
+    //            for(NSString*str in mArray)
+    //            {
+    //                NSRange range=[str rangeOfString:_searchBar.text];
+    //                if(range.location!=NSNotFound){
+    //                    [_resultArray addObject:str];
+    //                }
+    //            }
+    //
+    //        }
+    //
     if(tableView!=_NametableView&&tableView!=self.listTypeTableView)
     {
         return [_resultArray count];
     }
-//    }
+    //    }
     else if(tableView==_NametableView)
     {
         if (_isName==YES) {
@@ -368,21 +373,21 @@
             NSArray *arr = [self.data objectForKey:key];
             return arr.count;
         }
-       else
-       {
-           return _SortingArray.count;
-       }
+        else
+        {
+            return _SortingArray.count;
+        }
     }
     else if(tableView!=_NametableView)
     {
-         return 2;
+        return 2;
     }
-//    else if(tableView==_SortingTView&&Sorting==1)
-//    {
-//        NSString *key = [self.keys objectAtIndex:section];
-//        NSArray *arr = [self.data objectForKey:key];
-//        return arr.count;
-//    }
+    //    else if(tableView==_SortingTView&&Sorting==1)
+    //    {
+    //        NSString *key = [self.keys objectAtIndex:section];
+    //        NSArray *arr = [self.data objectForKey:key];
+    //        return arr.count;
+    //    }
     return 0;
 }
 //Cell的相关设置
@@ -397,7 +402,7 @@
         _dateFormatter=[[NSDateFormatter alloc] init];
     }
     [_dateFormatter setDateFormat:@"yyyy/MM/dd HH:mm:ss"];
-
+    
     
     UITableViewCell*cell=[tableView dequeueReusableCellWithIdentifier:cellName];
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -409,7 +414,7 @@
             //        cell.tag = indexPath.row;
         }
         
-               if (indexPath.row==0) {
+        if (indexPath.row==0) {
             if([cell viewWithTag:104]==nil)
             {
                 UILabel * refreshLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 0, CGRectGetWidth(cell.frame)-60, 44)];
@@ -482,10 +487,12 @@
                 
                 if (_isName==YES) {
                     [_SortingImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                    isLocation = false;
                 }
                 else
                 {
                     [_SortingImgView setImage:[UIImage imageNamed:@"selected"]];
+                    isLocation = true;
                 }
                 [_SortingImgView setTag:107];
                 [cell addSubview:_SortingImgView];
@@ -495,10 +502,12 @@
             {
                 if (_isName==YES) {
                     [_SortingImgView setImage:[UIImage imageNamed:@"selected_off"]];
+                    isLocation = false;
                 }
                 else
                 {
                     [_SortingImgView setImage:[UIImage imageNamed:@"selected"]];
+                    isLocation = true;
                 }
             }
         }
@@ -509,32 +518,32 @@
         //        cell.selectionStyle = UITableViewCellSelectionStyleNone;
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
     }
-else if (tableView == _NametableView) {
-    NSString  *RoomNameStr=@"";
-     NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
-    if (_isName==YES) {
-        for (int i=0; i<_childrenArray.count; i++) {
-            if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[arr objectAtIndex:row]]) {
-                tempChildDictionary=[_childrenArray  objectAtIndex:i];
-                
-                break;
+    else if (tableView == _NametableView) {
+        NSString  *RoomNameStr=@"";
+        NSArray *arr = [self.data objectForKey:[self.keys objectAtIndex:section]];
+        if (_isName==YES) {
+            for (int i=0; i<_childrenArray.count; i++) {
+                if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[arr objectAtIndex:row]]) {
+                    tempChildDictionary=[_childrenArray  objectAtIndex:i];
+                    
+                    break;
+                }
             }
         }
-    }
-    else
-    {
-        for (int i=0; i<_childrenArray.count; i++) {
-            if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[_SortingArray objectAtIndex:row]]) {
-                tempChildDictionary=[_childrenArray  objectAtIndex:i];
-                //                NSLog(@"tempChildDictionary is%@",tempChildDictionary);
-                //                NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
-                
-                break;
+        else
+        {
+            for (int i=0; i<_childrenArray.count; i++) {
+                if ([[[[[_childrenArray  objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[_SortingArray objectAtIndex:row]]) {
+                    tempChildDictionary=[_childrenArray  objectAtIndex:i];
+                    //                NSLog(@"tempChildDictionary is%@",tempChildDictionary);
+                    //                NSLog(@"tempChildDictionary message is%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]);
+                    
+                    break;
+                }
             }
         }
-    }
-                NSDate *lastAppearTime=[[NSDate alloc]initWithTimeIntervalSince1970:[[tempChildDictionary objectForKey:@"lastAppearTime"] longLongValue]/1000.0];
-
+        NSDate *lastAppearTime=[[NSDate alloc]initWithTimeIntervalSince1970:[[tempChildDictionary objectForKey:@"lastAppearTime"] longLongValue]/1000.0];
+        
         if (_kidsRoomArray.count>0) {
             for (int i=0; i<_kidsRoomArray.count; i++) {
                 if ([[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationId"]longLongValue]==[[tempChildDictionary objectForKey:@"locId"]longLongValue]) {
@@ -543,7 +552,7 @@ else if (tableView == _NametableView) {
                             RoomNameStr=[NSString stringWithFormat:@"@ %@",[[_kidsRoomArray objectAtIndex:i] objectForKey:@"nameSc"]];
                             break;
                         case 1:
-                             RoomNameStr=[NSString stringWithFormat:@"@ %@",[[_kidsRoomArray objectAtIndex:i] objectForKey:@"nameTc"]];
+                            RoomNameStr=[NSString stringWithFormat:@"@ %@",[[_kidsRoomArray objectAtIndex:i] objectForKey:@"nameTc"]];
                             break;
                         case 2:
                             RoomNameStr=[NSString stringWithFormat:@"@ %@",[[_kidsRoomArray objectAtIndex:i] objectForKey:@"locationName"]];
@@ -552,13 +561,13 @@ else if (tableView == _NametableView) {
                         default:
                             break;
                     }
-                
+                    
                     break;
                 }
             }
         }
-   
-       
+        
+        
         if(cell==nil)
         {
             cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:cellName];
@@ -600,7 +609,7 @@ else if (tableView == _NametableView) {
             
             UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 45, CGRectGetWidth(bgView.frame)-95, 20)];
             
-           
+            
             [roomNameLbl setText:[NSString stringWithFormat:@"%@ %@",RoomNameStr,[_dateFormatter stringFromDate:lastAppearTime]]];
             
             //            [messageLbl setAlpha:0.6];
@@ -624,10 +633,10 @@ else if (tableView == _NametableView) {
                         [kidNameLbl setText:@"*****"];
                     }
                 }
-               else
-               {
+                else
+                {
                     [kidNameLbl setText:[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
-               }
+                }
                 
                 
             }
@@ -636,7 +645,7 @@ else if (tableView == _NametableView) {
         DBImageView * KidsImgView=(DBImageView *)[bgView viewWithTag:102];
         UILabel * kidNameLbl =(UILabel *)[bgView viewWithTag:103];
         UILabel * roomNameLbl =(UILabel *)[bgView viewWithTag:104];
-         [roomNameLbl setText:[NSString stringWithFormat:@"%@ %@",RoomNameStr,[_dateFormatter stringFromDate:lastAppearTime]]];
+        [roomNameLbl setText:[NSString stringWithFormat:@"%@ %@",RoomNameStr,[_dateFormatter stringFromDate:lastAppearTime]]];
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
         [KidsImgView setImageWithPath:[pathOne copy]];
@@ -663,18 +672,18 @@ else if (tableView == _NametableView) {
             {
                 [kidNameLbl setText:[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
             }
-
+            
             
             
             
         }
     }
-//    else if(Sorting==1)
-//    {
-//        
-//    }
+    //    else if(Sorting==1)
+    //    {
+    //
+    //    }
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-
+    
     return cell;
 }
 ////设置索引条
@@ -721,72 +730,72 @@ else if (tableView == _NametableView) {
 }
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-//    if(tableView!=_NametableView){
-//        
-//    }
+    //    if(tableView!=_NametableView){
+    //
+    //    }
     //房间列表设置
     if(tableView == self.listTypeTableView)
     {
-            if (_isName==YES) {
-                [_NameImgView setImage:[UIImage imageNamed:@"selected_off"]];
-                _isName=NO;
-                [_SortingImgView setImage:[UIImage imageNamed:@"selected"]];
-
-                _resultArray=(NSArray *)_SortingArray;
-            }
-            else
-            {
-                [_NameImgView setImage:[UIImage imageNamed:@"selected"]];
-                _isName=YES;
-
-                [_SortingImgView setImage:[UIImage imageNamed:@"selected_off"]];
-                _resultArray=(NSArray *)_dataArray;
-            }
-               [_NametableView reloadData];
+        if (_isName==YES) {
+            [_NameImgView setImage:[UIImage imageNamed:@"selected_off"]];
+            _isName=NO;
+            [_SortingImgView setImage:[UIImage imageNamed:@"selected"]];
+            
+            _resultArray=(NSArray *)_SortingArray;
+        }
+        else
+        {
+            [_NameImgView setImage:[UIImage imageNamed:@"selected"]];
+            _isName=YES;
+            
+            [_SortingImgView setImage:[UIImage imageNamed:@"selected_off"]];
+            _resultArray=(NSArray *)_dataArray;
+        }
+        [_NametableView reloadData];
     }
-
-//    else  if(tableView == _NametableView)
-//    {
-//        //        if (myDelegate.childDictionary==nil) {
-//        //            myDelegate.childDictionary=[[NSDictionary alloc]init];
-//        //        }
-//        //        myDelegate.childDictionary=[_childrenArray objectAtIndex:indexPath.row];
-//        
-//        
-//        if(myDelegate.childDictionary !=nil)
-//        {
-//            myDelegate.childDictionary=nil;
-//            
-//            myDelegate.childDictionary=[[NSDictionary alloc]init];
-//        }
-//        if(myDelegate.childDictionary ==nil)
-//        {
-//            
-//            
-//            myDelegate.childDictionary=[[NSDictionary alloc]init];
-//        }
-//        
-//        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
-//        
-//        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
-//        
-//        
-//        
-//        
-//        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
-//        
-//        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
-//        
-//        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
-//        
-//        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
-//        
-//        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
-//        [tempDictionary removeAllObjects];
-//        tempDictionary=nil;
-//        
-//        [self.navigationController popViewControllerAnimated:YES];
-//    }
+    
+    //    else  if(tableView == _NametableView)
+    //    {
+    //        //        if (myDelegate.childDictionary==nil) {
+    //        //            myDelegate.childDictionary=[[NSDictionary alloc]init];
+    //        //        }
+    //        //        myDelegate.childDictionary=[_childrenArray objectAtIndex:indexPath.row];
+    //
+    //
+    //        if(myDelegate.childDictionary !=nil)
+    //        {
+    //            myDelegate.childDictionary=nil;
+    //
+    //            myDelegate.childDictionary=[[NSDictionary alloc]init];
+    //        }
+    //        if(myDelegate.childDictionary ==nil)
+    //        {
+    //
+    //
+    //            myDelegate.childDictionary=[[NSDictionary alloc]init];
+    //        }
+    //
+    //        NSMutableDictionary *tempDictionary=[[NSMutableDictionary alloc]init];
+    //
+    //        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row]objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] forKey:@"icon"];
+    //
+    //
+    //
+    //
+    //        [tempDictionary setObject:[NSString stringWithFormat:@"%@",[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] forKey:@"child_id"];
+    //
+    //        [tempDictionary setObject:[[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] forKey:@"name"];
+    //
+    //        [tempDictionary setObject:[[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"childRel"]objectForKey:@"relation" ]forKey:@"relation_with_user"];
+    //
+    //        [tempDictionary setObject:[[_childrenArray objectAtIndex:indexPath.row] objectForKey:@"macAddress"] forKey:@"mac_address"];
+    //
+    //        myDelegate.childDictionary=(NSDictionary *)[tempDictionary copy];
+    //        [tempDictionary removeAllObjects];
+    //        tempDictionary=nil;
+    //
+    //        [self.navigationController popViewControllerAnimated:YES];
+    //    }
 }
 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -829,7 +838,7 @@ else if (tableView == _NametableView) {
 -(void)typeAction:(id)sender
 {
     [_PopupSView setHidden:NO];
-
+    
 }
 /**保存房间列表显示设置*/
 -(void)SaveAction:(id)sender

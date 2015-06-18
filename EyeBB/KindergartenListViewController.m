@@ -47,7 +47,7 @@
     
     
     
-    [HUD show:YES];
+    //[HUD show:YES];
     
     [self requestServer];
     [self loadWidget];
@@ -207,8 +207,8 @@
     
     
     
-    [NSThread detachNewThreadSelector:@selector(loadKindergartenImage:) toTarget:self withObject:nil];
-    
+//    [NSThread detachNewThreadSelector:@selector(loadKindergartenImage:) toTarget:self withObject:nil];
+//    
     if(tableView == self.kindergartenTable)
     {
         if (cell == nil) {
@@ -253,7 +253,7 @@
             
             
            // DBImageView * RoomImgView=(DBImageView *)[RoomBtn viewWithTag:202];
-            [_cellLeftImg setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            //[_cellLeftImg setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
 
 //            
             [_cellLeftImg setImageWithPath:[pathOne copy]];

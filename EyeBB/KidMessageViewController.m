@@ -433,11 +433,15 @@
             cell.textLabel.text=LOCALIZATION(@"text_get_the_eyebb_device_qr_code");
             break;
         case 3:
-            
-            if(macAddress.length > 0){
-                cell.textLabel.text=LOCALIZATION(@"btn_binding");
-            }else{
+            NSLog(@"macAddress --> %@",macAddress);
+            if(macAddress.length > 0 && ![macAddress isEqualToString:@"<null>"]){
+                
+                
                 cell.textLabel.text=LOCALIZATION(@"btn_unbind");
+            }else{
+                
+                
+                cell.textLabel.text=LOCALIZATION(@"btn_binding");
             }
             
             
@@ -512,6 +516,9 @@
         {
             
             if(macAddress.length > 0){
+                
+                [_PopupSView setHidden:NO];
+            }else{
                 if (_scanDeviceView == nil) {
                     _scanDeviceView =  [[RootViewController alloc]init];
                 }
@@ -520,9 +527,6 @@
                 _scanDeviceView.guardianId = @"1L";
                 _scanDeviceView.comeFrom = @"kids_message";
                 [[self navigationController] pushViewController:_scanDeviceView animated:YES];
-                
-            }else{
-                [_PopupSView setHidden:NO];
             }
             
             

@@ -10,7 +10,13 @@
 #import "RootViewController.h"
 #import "WelcomeViewController.h"
 #import "ChildInformationMatchingViewController.h"
-@interface ScanDeviceToBindingViewController ()
+
+
+#define BROADCAST_GUARDIAN_ID @"guardian_id_kids_listview"
+
+@interface ScanDeviceToBindingViewController (){
+    NSString* guardian_id;
+}
 /**introdaction label*/
 @property (nonatomic,strong) UILabel* introLabel;
 /* device table */
@@ -49,9 +55,7 @@
     self.navigationItem.leftBarButtonItem = newBackButton;
     
     self.title = LOCALIZATION(@"text_search_your_device");
-    
-    
-    
+
     
     [self loadParameter];
     [self loadWidget];
@@ -105,14 +109,16 @@
 
 
 -(void)loadParameter{
+ 
+    
     
     _deviceTableView = [[UITableView alloc] initWithFrame:self.view.bounds];
-    _deviceTableView.frame = CGRectMake(0, 110, Drive_Wdith, Drive_Height);
+    _deviceTableView.frame = CGRectMake(0, 110, Drive_Wdith, Drive_Height - 160);
     self.deviceTableView.tableFooterView = [[UIView alloc] init];
     _deviceTableView.dataSource = self;
     _deviceTableView.delegate = self;
     //设置table是否可以滑动
-    _deviceTableView.scrollEnabled = NO;
+    _deviceTableView.scrollEnabled = YES;
     //隐藏table自带的cell下划线
     //_deviceTableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_deviceTableView];
@@ -122,10 +128,11 @@
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BROADCAST_GUARDIAN_ID object:nil];
     
     _SOSDiscoveredPeripherals = nil;
     [_introLabel removeFromSuperview];
@@ -143,7 +150,21 @@
 }
 
 #pragma mark - broadcast
+
+//- (void) getId:(NSNotification *)notification{
+//    if ([[notification name] isEqualToString:BROADCAST_GUARDIAN_ID]) {
+//        
+//        guardian_id = (NSString *)[notification object];
+//        
+//        
+//        
+//        
+//    }
+//}
+
 - (void) getSosDevice:(NSNotification *)notification{
+
+    
     if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME]) {
         
         
@@ -166,9 +187,15 @@
         
         
         NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
-       
-        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,_deviceMajor,_deviceMinor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId);
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,_deviceMajor,ScanDeviceToBindingViewController_KEY_majors,_deviceMinor,ScanDeviceToBindingViewController_KEY_minor,[self.guardianId isEqualToString:@"1L"] ? @"":self.guardianId,ScanDeviceToBindingViewController_KEY_guardianId,nil];
+//        if (guardian_id != nil) {
+//            self.guardianId = guardian_id;
+//        }
+        NSLog(@"guardian_id  - > %@", guardian_id);
+        NSLog(@"----> child:%@    mac addresss:%@      major:%@      minor:%@    guardian id: %@   ",self.childId,self.macAddress,_deviceMajor,_deviceMinor,self.guardianId);
+        
+      
+        
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,_deviceMajor,ScanDeviceToBindingViewController_KEY_majors,_deviceMinor,ScanDeviceToBindingViewController_KEY_minor,self.guardianId,ScanDeviceToBindingViewController_KEY_guardianId,nil];
         // NSLog(@"%@ --- %@",userAccount,[CommonUtils getSha256String:hashUserPassword].uppercaseString);
         
   

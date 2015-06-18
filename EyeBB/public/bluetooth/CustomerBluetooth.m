@@ -343,7 +343,7 @@ NSString *keepMajorAndMinor;
 -(void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     
-    //    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,peripheral.identifier.UUIDString,RSSI);
+        NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,advertisementData ,RSSI);
     
     
     
@@ -363,7 +363,7 @@ NSString *keepMajorAndMinor;
         
         
         NSString *toStringFromData = NSDataToHex([ advertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
-        if(toStringFromData.length > 0){
+        if(toStringFromData.length > 10 ){
             getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
             NSLog(@"MAJOR AND MINOR ---> %@",getMajorAndMinor);
             
@@ -449,6 +449,10 @@ NSString *keepMajorAndMinor;
              *  sos is use for bind device
              */
             if (isSOSDevice) {
+                
+                NSLog(@"toStringFromData --> %@",toStringFromData);
+                
+                
                 self.targetBatteryLifePeripheral = [toStringFromData substringWithRange:NSMakeRange(10,2)];
                 if(startTimerOnce){
                     [self startTimer];
@@ -565,7 +569,7 @@ NSString *keepMajorAndMinor;
     NSLog(@"Disconnected from peripheral = %hhu",myDelegate.isBackgroud);
     
     if(isMajor){
-        [self.central connectPeripheral:_targetUUIDPeripheral options:nil];
+        [self.central connectPeripheral:peripheral options:nil];
     }
     
     

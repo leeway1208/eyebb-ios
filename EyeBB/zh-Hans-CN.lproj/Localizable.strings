@@ -173,7 +173,7 @@ CFBundleDisplayName ="宝宝安";
 "text_Apply_qr_code_fail"="申请设备二维码失败,请使用监护人账号";
 "text_network_unavailable"="无法连接到服务器(点击连接)";
 "text_network_connecting"="连接中...";
-"text_search_guset_activity_share_msg"="我想授权你观看我的孩子情况，请你在完成安装宝宝安后通知我，我会再次授权给你。连结：play.google.com/xxxxxxxx";
+"text_search_guset_activity_share_msg"="我想授权你观看我的孩子情况，请你在完成安装宝宝安后通知我，我会再次授权给你。连结：https://itunes.apple.com/us/app/eyebb/id987833491?mt=8";
 "text_no_new_firmware"="抱歉,您的eyebb固件是最新的.";
 "text_is_this_kid"="是这个宝宝吗?";
 "text_qr_code"="二维码";

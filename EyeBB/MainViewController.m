@@ -26,6 +26,7 @@
 #import "KidViewController.h"//查询儿童列表
 #import "AntiLostKidsSelectedListViewController.h"
 #import "ChildLocationController.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface MainViewController ()<UITableViewDataSource,UITableViewDelegate,UITabBarControllerDelegate,UIGestureRecognizerDelegate,UITextFieldDelegate>
 {
@@ -244,7 +245,15 @@
 @property (strong,nonatomic) UIImageView *crossImageView;
 //anti lost scan data
 @property (strong,nonatomic) NSMutableArray *antiLostMore3scanDataAy;
+
+
 @property (strong,nonatomic) NSMutableArray *antiLostMore3scanSelectedDataAy;
+
+//room sos
+@property (strong,nonatomic) NSMutableArray *roomSosNumber;
+@property (strong,nonatomic) UIScrollView * PopRoomSosSView;
+@property (strong,nonatomic) UIView * popRoomViewContainer;
+
 //-------------------跳转页面--------------------
 @property (nonatomic,strong) WebViewController * web;
 @property (nonatomic,strong) AntiLostKidsSelectedListViewController * antiLostView;
@@ -261,6 +270,7 @@
 @end
 
 @implementation MainViewController
+static SystemSoundID shake_sound_male_id = 0;
 @synthesize kidImgView;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
@@ -425,6 +435,7 @@
     _antiLostMore3scanDataAy = [[NSMutableArray alloc]init];
     _antiLostMore3scanSelectedDataAy = [[NSMutableArray alloc]init];
     _locationAy = [[NSMutableArray alloc]init];
+    _roomSosNumber = [[NSMutableArray alloc]init];
 
 
     _connectKidsRssiAy = [[NSMutableArray alloc]init];
@@ -1084,7 +1095,7 @@
     NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
     
     
-    _UserNameLbl.text = [userDefaultes objectForKey:LoginViewController_accName];
+    _UserNameLbl.text = [userDefaultes objectForKey:LoginViewController_name];
     
     [PersonageView addSubview:_UserNameLbl];
     
@@ -1136,7 +1147,55 @@
     [_PopupSView setHidden:YES];
     
 
+    //弹出遮盖层
+    _PopRoomSosSView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 20, Drive_Wdith, Drive_Height)];
+    _PopRoomSosSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
+    [self.view addSubview:_PopRoomSosSView];
+    [_PopRoomSosSView setHidden:YES];
+    
+    /* pop View Container */
+    _popRoomViewContainer=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-140, Drive_Wdith-10, 176)];
+    [_popRoomViewContainer setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_popRoomViewContainer.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_popRoomViewContainer.layer setCornerRadius:4.0];
+    [_PopRoomSosSView addSubview:_popRoomViewContainer];
+    
+    //pop view dividing top line
+    UILabel * popTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popRoomViewContainer.frame)/2 + 45, CGRectGetWidth(_popRoomViewContainer.frame) - 20, 1)];
+    [popTopLabel.layer setBorderWidth:1.0]; //边框宽度
+    [popTopLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+    [_popRoomViewContainer addSubview:popTopLabel];
+    
+    
+    UIImageView *sosImg = [[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popRoomViewContainer.frame) /2 - 50,  CGRectGetHeight(_popRoomViewContainer.frame)/2 - 75 , 100, 100)
+                          ];
+    
+    sosImg.image = [UIImage imageNamed:@"btn_funcbarbeepred"];
+    [_popRoomViewContainer addSubview:sosImg];
+    
+    
+    UIButton *confirmRoomBtn=[[UIButton alloc]initWithFrame:CGRectMake(0 , 134 ,CGRectGetWidth(_popRoomViewContainer.frame) , 40)];
+    //设置按显示文字
+    [confirmRoomBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
+    [confirmRoomBtn setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [confirmRoomBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [confirmRoomBtn addTarget:self action:@selector(roomSOSAction) forControlEvents:UIControlEventTouchUpInside];
+    [_popRoomViewContainer addSubview:confirmRoomBtn];
+    
+    
+    
+    //pop view dividing bottom line
+//    UILabel * popBottomLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popRoomViewContainer.frame)/2 - 45, CGRectGetWidth(_popRoomViewContainer.frame) - 20, 1)];
+//    [popBottomLabel.layer setBorderWidth:1.0]; //边框宽度
+//    [popBottomLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
+//    [_popRoomViewContainer addSubview:popBottomLabel];
 
+    
     
     //单击空白处关闭遮盖层
     self.singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleSingleTap:)];
@@ -1934,9 +1993,12 @@
             RoomBtn.tag=201;
             [cell addSubview:RoomBtn];
             
+            
+            
+            
             //房间图标
             
-            
+        
             DBImageView * RoomImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10, 15, 60, 60)];
             [RoomImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
             
@@ -2003,6 +2065,24 @@
             [roomKindNumView addSubview:numImgView];
             
             
+            //房间开关
+            UISwitch *switchRoomButton = [[UISwitch alloc] initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10 + 50), 20, 35+(10*kindNum), 20)];
+            switchRoomButton.onTintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+            
+            for (int i = 0 ;i < _roomSosNumber.count ; i ++) {
+                if ([[NSString stringWithFormat:@"%@",[_roomSosNumber objectAtIndex:i]]isEqualToString:[NSString stringWithFormat:@"%zi",indexPath.row]]) {
+                    [switchRoomButton setOn:YES];
+                }
+            }
+
+            
+          
+            [switchRoomButton addTarget:self action:@selector(switchRoomAction:) forControlEvents:UIControlEventValueChanged];
+            
+            switchRoomButton.transform = CGAffineTransformMakeScale(0.75, 0.75);
+            [cell addSubview:switchRoomButton];
+            
+            
             //房间孩子数量
             UILabel * KindNumLbl =[[UILabel alloc]initWithFrame:CGRectMake(30, 0, CGRectGetWidth(roomKindNumView.frame)-35, 20)];
             [KindNumLbl setText:str];
@@ -2017,6 +2097,19 @@
             
             
             //儿童图标行数
+            for (int i = 0 ;i < _roomSosNumber.count ; i ++) {
+                if ([[NSString stringWithFormat:@"%@",[_roomSosNumber objectAtIndex:i]]isEqualToString:[NSString stringWithFormat:@"%zi",indexPath.row]]) {
+                    if (tempChildArray.count > 0) {
+                        
+                        [self playSound];
+                        [_PopRoomSosSView setHidden:NO];
+                        
+                        
+                    }
+                }
+            }
+            
+            
             int sNum=0;
             for (int i=0; i<tempChildArray.count; i++) {
                 
@@ -2190,6 +2283,21 @@
             RoomLbl.tag=203;
             [RoomBtn addSubview:RoomLbl];
             
+//            //房间开关
+//            UISwitch *switchRoomButton = [[UISwitch alloc] initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10 + 50), 20, 35+(10*kindNum), 20)];
+//            switchRoomButton.onTintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
+//            for (int i = 0 ;i < _roomSosNumber.count ; i ++) {
+//                if ([[NSString stringWithFormat:@"%@",[_roomSosNumber objectAtIndex:i]]isEqualToString:[NSString stringWithFormat:@"%zi",indexPath.row]]) {
+//                    [switchRoomButton setOn:YES];
+//                }
+//            }
+//
+//            
+//            [switchRoomButton addTarget:self action:@selector(switchRoomAction:) forControlEvents:UIControlEventValueChanged];
+//            
+//            switchRoomButton.transform = CGAffineTransformMakeScale(0.75, 0.75);
+//            [cell addSubview:switchRoomButton];
+            
             //当前房间人数
             UIView * roomKindNumView=[[UIView alloc]initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10), 20, 35+(10*kindNum), 20)];
             //设置按钮是否圆角
@@ -2215,6 +2323,8 @@
             [KindNumLbl setTextAlignment:NSTextAlignmentLeft];
             KindNumLbl.tag=205;
             [roomKindNumView addSubview:KindNumLbl];
+            
+            
             
             
             int sNum=0;
@@ -2925,7 +3035,12 @@ progressView.hidden=YES;
             }
             _PopupSView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.5];
             _PopupSView.hidden=NO;
-            _FeekBackView.hidden=NO;
+            [_dateTableView setHidden:YES];
+            [_listTypeView setHidden:YES];
+            [_dateTableView setHidden:YES];
+            [_organizationTableView setHidden:YES];
+            [_kidsMassageView setHidden:YES];
+             _FeekBackView.hidden=NO;
         }
         else
         {
@@ -3832,30 +3947,40 @@ progressView.hidden=YES;
     
 }
 
+#pragma mark - change language
 -(void)updateLanuage
 {
+    
+    
+    
     NSString *organizationStr;
-    switch (myDelegate.applanguage) {
-        case 0:
-            organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
-            _crossImageView.hidden = YES;
-            _tickImageView.hidden = YES;
+    if (![_organizationArray isEqual:[NSNull null]] && _organizationArray.count > 0) {
+        switch (myDelegate.applanguage) {
+            case 0:
+                
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"name"];
+                _crossImageView.hidden = YES;
+                _tickImageView.hidden = YES;
+                
+                break;
+            case 1:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
+                _crossImageView.hidden = NO;
+                _tickImageView.hidden = NO;
+                break;
+            case 2:
+                organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
+                _crossImageView.hidden = NO;
+                _tickImageView.hidden = NO;
+                break;
+                
+            default:
+                break;
+        }
+        
 
-            break;
-        case 1:
-            organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameTc"];
-            _crossImageView.hidden = NO;
-            _tickImageView.hidden = NO;
-            break;
-        case 2:
-            organizationStr=[[[_organizationArray objectAtIndex:self.organizationIndex] objectForKey:@"area"] objectForKey:@"nameSc"];
-            _crossImageView.hidden = NO;
-            _tickImageView.hidden = NO;
-            break;
-            
-        default:
-            break;
     }
+    
     
     [self.organizationShowBtn setTitle:organizationStr forState:UIControlStateNormal];
     
@@ -3928,7 +4053,11 @@ progressView.hidden=YES;
     [_listTypeChangeBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
     
     
+    UILabel * refreshLbl=(UILabel *)[_listTypeTableView viewWithTag:106];
+    [refreshLbl setText:LOCALIZATION(@"text_view_all_room")];
     
+    UILabel * refresh =(UILabel *)[_listTypeTableView viewWithTag:104];
+    [refresh setText:LOCALIZATION(@"text_auto_refresh")];
     
     [_PersonageTableView reloadData];
     
@@ -3950,6 +4079,9 @@ progressView.hidden=YES;
 
 
 #pragma mark --点击事件
+-(void)roomSOSAction{
+    [_PopRoomSosSView setHidden:YES];
+}
 
 /**弹出房间列表显示设置*/
 -(void)mapAction{
@@ -4044,6 +4176,7 @@ progressView.hidden=YES;
     [_dateTableView setHidden:YES];
     [_organizationTableView setHidden:NO];
     [_kidsMassageView setHidden:YES];
+     _FeekBackView.hidden=YES;
 }
 
 /**显示房间信息*/
@@ -4102,9 +4235,21 @@ progressView.hidden=YES;
     
     
     UIButton *tempBtn=sender;
-    
+    NSEnumerator * enumeratorKey;
     NSMutableArray *keyArray=[NSMutableArray array];
-    NSEnumerator * enumeratorKey=[_childrenDictionary keyEnumerator];
+    NSMutableArray *keyNumber=[NSMutableArray array];
+    if (self.isallRoomOn==YES) {
+         enumeratorKey=[_childrenDictionary keyEnumerator];
+    }
+    else
+    {
+        enumeratorKey=[_childrenByRoomDictionary keyEnumerator];
+        
+    }
+
+    NSLog(@"_childrenDictionary - > (%@)",_childrenDictionary);
+    NSLog(@"_childrenByRoomDictionary - > (%@)",_childrenByRoomDictionary);
+    
     for(NSString *s in enumeratorKey)
     {
         [keyArray addObject:s];
@@ -4112,7 +4257,17 @@ progressView.hidden=YES;
     UITableViewCell *cell = (UITableViewCell *)[[tempBtn superview]superview];
     NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
     NSLog(@"indexPath is = %zi",indexPath.row);
-    NSArray *tempChildArray=[_childrenDictionary objectForKey:[[keyArray objectAtIndex: indexPath.row]copy]];
+    
+    NSArray *tempChildArray;
+    if (self.isallRoomOn==YES) {
+          tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
+    }
+    else
+    {
+          tempChildArray=[_childrenByRoomDictionary objectForKey:[[keyArray objectAtIndex: indexPath.row]copy]];
+    }
+    NSLog(@"tempChildArray -- > (%@)",keyArray);
+  NSLog(@"tempChildArray -- > (%@)",[NSString stringWithFormat:@"%zi",indexPath.row]);
     keyArray=nil;
     enumeratorKey=nil;
     [_PopupSView setHidden:NO];
@@ -4416,6 +4571,7 @@ progressView.hidden=YES;
     [_dateTableView setHidden:NO];
     [_organizationTableView setHidden:YES];
     [_kidsMassageView setHidden:YES];
+    _FeekBackView.hidden=YES;
 }
 //提交按钮
 - (void)closeAction
@@ -4470,6 +4626,29 @@ progressView.hidden=YES;
  *
  *  @param sender <#sender description#>
  */
+
+-(void)switchRoomAction:(id)sender{
+    UISwitch *tempBtn=sender;
+    
+    UITableViewCell *cell = (UITableViewCell *)[tempBtn superview];
+    NSIndexPath *indexPath = [self.RoomTableView indexPathForCell:cell];
+    NSLog(@"indexPath is = %zi",indexPath.row);
+    
+    isButtonOn = [tempBtn isOn];
+    if (isButtonOn) {
+        [_roomSosNumber addObject:[NSString stringWithFormat:@"%zi",indexPath.row]];
+        
+    }else{
+        for (int i = 0; i < _roomSosNumber.count ; i ++) {
+            if ([[NSString stringWithFormat:@"%@",[_roomSosNumber objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%zi",indexPath.row]]) {
+                [_roomSosNumber removeObjectAtIndex:i];
+            }
+        }
+    }
+    
+}
+
+
 -(void)switchAction:(id)sender
 {
     
@@ -5068,6 +5247,20 @@ progressView.hidden=YES;
     [_locationAy removeAllObjects];
 }
 
+#pragma mark - sound
+-(void) playSound
+
+{
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"sos" ofType:@"wav"];
+    if (path) {
+        
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath:path],&shake_sound_male_id);
+        AudioServicesPlaySystemSound(shake_sound_male_id);
+        
+    }
+    AudioServicesPlaySystemSound(shake_sound_male_id);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+}
 
 @end
 

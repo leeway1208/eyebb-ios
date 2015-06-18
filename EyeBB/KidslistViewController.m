@@ -14,6 +14,8 @@
 #import "KidMessageViewController.h"
 #import "DBImageView.h"//图片加载
 
+#define BROADCAST_GUARDIAN_ID @"guardian_id_kids_listview"
+
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
     int index;
@@ -457,7 +459,15 @@
     if (_childView == nil) {
         _childView = [[ChildInformationMatchingViewController alloc]init];
     }
+    
+    NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+    
+
+//    [[NSNotificationCenter defaultCenter] postNotificationName:BROADCAST_GUARDIAN_ID object:[userDefaultes objectForKey:LoginViewController_guardianId]];
+//    
+//    NSLog(@" [userDefaultes objectForKey:LoginViewController_guardianId] -> %@",[userDefaultes objectForKey:LoginViewController_guardianId] );
     _childView.comeFrom = @"logined";
+    _childView.guardianId = [userDefaultes objectForKey:LoginViewController_guardianId];
     [self.navigationController pushViewController:_childView animated:YES];
 
 }
