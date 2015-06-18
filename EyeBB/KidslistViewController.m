@@ -393,7 +393,8 @@
 #pragma mark --服务器返回信息
 - (void)requestFinished:(ASIHTTPRequest *)request tag:(NSString *)tag
 {
-//        NSString *responseString = [request responseString];
+    NSString *responseString = [request responseString];
+    NSLog(@"responseString -> %@" ,responseString);
     //请求房间列表
     if ([tag isEqualToString:GET_CHILDREN_INFO_LIST]) {
         NSData *responseData = [request responseData];
@@ -419,6 +420,8 @@
                 
                 if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""] && [[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
                     [self.BindingArray addObject:[tempDictionary copy]];
+                }else if(![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""] && [[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"T"]){
+                    [self.BindingArray addObject:[tempDictionary copy]];
                 }
                 
 //                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
@@ -432,7 +435,7 @@
             }
            
             
-            if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
+            if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"] && ![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"T"]) {
                 [self.grantedArray addObject:[tempDictionary copy]];
             }
             
