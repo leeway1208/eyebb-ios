@@ -110,7 +110,7 @@
 -(void)lc
 {
     
-    _KindlistTView=[[UITableView alloc] initWithFrame:self.view.bounds];
+    _KindlistTView=[[UITableView alloc] initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height - 80)];
     _KindlistTView.dataSource = self;
     _KindlistTView.delegate = self;
     //设置table是否可以滑动

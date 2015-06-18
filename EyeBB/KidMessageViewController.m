@@ -381,8 +381,14 @@
 
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    
-    return 4;
+    NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+    if ([[NSString stringWithFormat:@"%@",[loginStatus objectForKey:LoginViewController_type]] isEqualToString:@"T"]) {
+        return 3;
+    }else{
+        return 4;
+    }
+
+    //return 4;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{

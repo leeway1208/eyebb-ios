@@ -86,7 +86,6 @@
     
     
     
-    
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -321,9 +320,16 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     
     if (section == 0){
-        return 3;
+        return 1;
     }else if(section == 1){
-        return 2;
+        NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+        if ([[NSString stringWithFormat:@"%@",[loginStatus objectForKey:LoginViewController_type]] isEqualToString:@"T"]) {
+            return 1;
+        }else{
+            return 2;
+        }
+
+        
     }else if(section == 2){
         return 3;
     }else if(section == 3){
