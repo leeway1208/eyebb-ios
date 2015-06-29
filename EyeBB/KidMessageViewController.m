@@ -724,11 +724,11 @@
         NSData *responseData = [request responseData];
         
         NSString * resREQUIRE_OR_GET_QR_CODE = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
-        
+        NSLog(@"REQUIRE_OR_GET_QR_CODE --> %@ ",resREQUIRE_OR_GET_QR_CODE);
         if(resREQUIRE_OR_GET_QR_CODE.length > 4 && resREQUIRE_OR_GET_QR_CODE.length < 25){
             [_PopupQRSView setHidden:NO];
             
-            NSLog(@"REQUIRE_OR_GET_QR_CODE --> %@ ",resREQUIRE_OR_GET_QR_CODE);
+            
             UIImage *image = [QRCodeGenerator qrImageForString:resREQUIRE_OR_GET_QR_CODE imageSize:200];
             
             

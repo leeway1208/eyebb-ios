@@ -719,14 +719,14 @@ static SystemSoundID shake_sound_male_id = 0;
     
     // 1.创建UIScrollView
     _RadarScrollView = [[UIScrollView alloc] init];
-    _RadarScrollView.frame = CGRectMake(Drive_Wdith + 5 , 80, Drive_Wdith - 10, Drive_Height - 35);
+    _RadarScrollView.frame = CGRectMake(Drive_Wdith + 5 , 80, Drive_Wdith - 10, Drive_Height - 35 );
     // frame中的size指UIScrollView的可视范围
     _RadarScrollView.showsHorizontalScrollIndicator = NO;
     _RadarScrollView.showsVerticalScrollIndicator = NO;
     _RadarScrollView.backgroundColor = [UIColor clearColor];
     _RadarScrollView.delegate = self;
     [_RadarScrollView setAlpha:0.3];
-    CGSize newSize = CGSizeMake(0, self.view.frame.size.height+1);
+    CGSize newSize = CGSizeMake(0, self.view.frame.size.height + 1);
     [_RadarScrollView setContentSize:newSize];
     [_MainInfoScrollView addSubview:_RadarScrollView];
     
@@ -1463,9 +1463,15 @@ static SystemSoundID shake_sound_male_id = 0;
         
     }
     else if(tableView == self.RadarConnectTableView){
+    
+    
+        
         return _connectKidsByScanedAy.count;
     }
     else if (tableView == self.RadarDisconnectTableView){
+        
+     
+        
         return _tempDisconnectKidsAy.count;
     }else if (tableView == self.antiLostTb){
         return myDelegate.antiLostSelectedKidsAy.count;
@@ -4754,6 +4760,13 @@ progressView.hidden=YES;
     _RadarConnectTableView.hidden = NO;
     //hide the disconnect table
     _RadarDisconnectTableView.hidden = YES;
+    
+    
+
+        
+    CGSize newSize = CGSizeMake(0, self.view.frame.size.height + _connectKidsByScanedAy.count * 45  -223 + 1);
+    [_RadarScrollView setContentSize:newSize];
+    
 }
 
 -(void)radarDisconnectionAction:(id)sender{
@@ -4771,6 +4784,10 @@ progressView.hidden=YES;
     _RadarConnectTableView.hidden = YES;
     //show the disconnect table
     _RadarDisconnectTableView.hidden = NO;
+    
+    
+    CGSize newSize = CGSizeMake(0, self.view.frame.size.height + _tempDisconnectKidsAy.count * 45  -223 + 1);
+    [_RadarScrollView setContentSize:newSize];
 }
 
 #pragma mark - ui-image rotate 360
@@ -4904,14 +4921,20 @@ progressView.hidden=YES;
         
         
         if (isSelectedMissed) {
+            CGSize newSize = CGSizeMake(0, self.view.frame.size.height + _tempDisconnectKidsAy.count * 45 - 223+ 1);
+            [_RadarScrollView setContentSize:newSize];
             _RadarDisconnectTableView.hidden = NO;
             _RadarConnectTableView.hidden = YES;
         } else {
+            CGSize newSize = CGSizeMake(0, self.view.frame.size.height + _connectKidsByScanedAy.count * 45 -223 + 1);
+            [_RadarScrollView setContentSize:newSize];
             _RadarDisconnectTableView.hidden = YES;
             _RadarConnectTableView.hidden = NO;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+      
+            
             [_RadarConnectTableView reloadData];
             [_RadarDisconnectTableView reloadData];
         });
