@@ -14,6 +14,7 @@
 #define BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME @"get_sos_device_peripheral"
 #define BLUETOOTH_GET_BEEP_TIME_OUT @"beep_time_out"
 #define BLUETOOTH_READ_BATTERY_TIME_OUT @"read_battery_time_out"
+#define BLUETOOTH_BINDING_TIME_OUT @"binding_time_out"
 
 #define BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME @"get_sos_device_advertisementData"
 #define BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME @"write_success"
@@ -23,6 +24,7 @@
 #define BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME @"anti_lost_data"
 #define BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME @"anti_lost_scan_device_data"
 #define BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME @"no_more_3_lost"
+#define BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_RECONNECT_BROADCAST_DATA_BROADCAST_NAME @"no_more_3_reconnect"
 
 +(CustomerBluetooth *)instance;
 

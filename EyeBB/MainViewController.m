@@ -52,7 +52,7 @@
     //radar is more than 3
     Boolean isMoreThanThree;
     NSString* antiLostNoMore3;
-    
+    NSString* reconnectNoMore3;
     //location
     float kidsLatitude;
     float kidsLongitude;
@@ -769,7 +769,7 @@ static SystemSoundID shake_sound_male_id = 0;
     [_connectBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
     [_connectBtn setSelected:YES];
     
-    _tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(30,14,20,20)];
+    _tickImageView = [[UIImageView alloc] initWithFrame:CGRectMake(27,14,20,20)];
     _tickImageView.image = [UIImage imageNamed:@"tick"];
     [_connectBtn addSubview:_tickImageView];
     //image view
@@ -808,7 +808,7 @@ static SystemSoundID shake_sound_male_id = 0;
     [_disconnectBtn setTitleColor:[UIColor colorWithRed:0.925 green:0.247 blue:0.212 alpha:1] forState:UIControlStateSelected];
     
     //image view
-    _crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(20,14,20,20)];
+    _crossImageView = [[UIImageView alloc] initWithFrame:CGRectMake(17,14,20,20)];
     _crossImageView.image = [UIImage imageNamed:@"cross2"];
     [_disconnectBtn addSubview:_crossImageView];
     if ([[self getCurrentAppLanguage]isEqualToString:@"en"] || [[self getCurrentSystemLanguage]isEqualToString:@"en"]) {
@@ -1515,7 +1515,7 @@ static SystemSoundID shake_sound_male_id = 0;
         
         tempChildDictionary=[myDelegate.antiLostSelectedKidsAy  objectAtIndex:row];
         
-        NSLog(@"myDelegate.antiLostSelectedKidsAy -> %@",myDelegate.antiLostSelectedKidsAy);
+//        NSLog(@"myDelegate.antiLostSelectedKidsAy -> %@",myDelegate.antiLostSelectedKidsAy);
 
         
       
@@ -1531,7 +1531,7 @@ static SystemSoundID shake_sound_male_id = 0;
             [KidsImgView.layer setMasksToBounds:YES];
             [KidsImgView.layer setBorderWidth:2];
             
-            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             [KidsImgView setImageWithPath:[pathOne copy]];
@@ -1576,6 +1576,15 @@ static SystemSoundID shake_sound_male_id = 0;
             
             UILabel * kidStatus =(UILabel *)[cell viewWithTag:703];
             
+            
+            // if miss
+            
+            [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+            [kidStatus setTextColor:[UIColor redColor]];
+            [kidStatus setText:LOCALIZATION(@"btn_missed")];
+
+            
+            
             for (int i = 0; i < _antiLostMore3scanDataAy.count ; i ++) {
                 NSDictionary *tempDic = [NSDictionary dictionary];
                 tempDic = [_antiLostMore3scanDataAy objectAtIndex:i];
@@ -1591,8 +1600,8 @@ static SystemSoundID shake_sound_male_id = 0;
                         
                         if ([kidsMajorAndMinor isEqualToString:scanedMajorAndMinor]) {
                         
-                            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-                            
+                            [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
+                            [kidStatus setTextColor:[UIColor blackColor]];
                             [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
                     
                         }
@@ -1601,11 +1610,11 @@ static SystemSoundID shake_sound_male_id = 0;
                     
                     
                 }
-                
             }
             
             
         }else{
+            //no more than three
             //kid image
             DBImageView * KidsImgView=(DBImageView *)[cell viewWithTag:701];
             
@@ -1616,26 +1625,38 @@ static SystemSoundID shake_sound_male_id = 0;
                 
                 [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
                 
-            }else{
-                for (int i = 0; i < antiResultAy.count; i ++) {
-                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
-                        
-                        [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
-                        NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
-                        
-                        
-                        
-                    }
-                    
-                    //            else{
-                    //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
-                    //
-                    //            }
-                    
-                }
+                antiLostNoMore3 = nil;
+                
+            }else if ([reconnectNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]){
+                
+                [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
 
+                reconnectNoMore3 = nil;
+                
             }
             
+            
+            
+//            else{
+//                for (int i = 0; i < antiResultAy.count; i ++) {
+//                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+//                        
+//                        [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
+//                        NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
+//                        
+//                        
+//                        
+//                    }
+//                    
+//                    //            else{
+//                    //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+//                    //
+//                    //            }
+//                    
+//                }
+//
+//            }
+//            
             
             
             [KidsImgView setImageWithPath:[pathOne copy]];
@@ -1648,24 +1669,43 @@ static SystemSoundID shake_sound_male_id = 0;
             
             if ([antiLostNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
                 
+                //change status
+                [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                [kidStatus setTextColor:[UIColor blackColor]];
+                
+   
+                antiLostNoMore3 = nil;
+                
+                
+            }else if ([reconnectNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]){
+                //change status
                 [kidStatus setText:LOCALIZATION(@"btn_missed")];
                 [kidStatus setTextColor:[UIColor redColor]];
-            }else{
                 
-                for (int i = 0; i < antiResultAy.count; i ++) {
-                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
-                        [kidStatus setTextColor:[UIColor blackColor]];
-                        [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
-                        
-                    }
-                    
-                    //            else{
-                    //                [kidStatus setText:LOCALIZATION(@"btn_missed")];
-                    //            }
-                    
-                }
+                reconnectNoMore3 = nil;
 
             }
+            
+            
+            
+            
+            
+//            else{
+//                
+//                for (int i = 0; i < antiResultAy.count; i ++) {
+//                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+//                        [kidStatus setTextColor:[UIColor blackColor]];
+//                        [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+//                        
+//                    }
+//                    
+//                    //            else{
+//                    //                [kidStatus setText:LOCALIZATION(@"btn_missed")];
+//                    //            }
+//                    
+//                }
+//
+//            }
             
 
         }
@@ -1699,7 +1739,7 @@ static SystemSoundID shake_sound_male_id = 0;
             [KidsImgView.layer setMasksToBounds:YES];
             [KidsImgView.layer setBorderWidth:2];
             
-            [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
+            [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             [KidsImgView setImageWithPath:[pathOne copy]];
@@ -1725,11 +1765,11 @@ static SystemSoundID shake_sound_male_id = 0;
             UILabel * deviceStatusLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 25, CGRectGetWidth(cell.frame)-80, 20)];
             
             [deviceStatusLbl setFont:[UIFont systemFontOfSize: 13.0]];
-            [deviceStatusLbl setText:@"(-90)"];
-            [deviceStatusLbl setTextColor:[UIColor redColor]];
+      
+            [deviceStatusLbl setTextColor:[UIColor blackColor]];
             [deviceStatusLbl setTextAlignment:NSTextAlignmentLeft];
             deviceStatusLbl.tag=803;
-     
+            deviceStatusLbl.text = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_weak"),94];
             [cell addSubview:deviceStatusLbl];
         }
         
@@ -1744,18 +1784,26 @@ static SystemSoundID shake_sound_male_id = 0;
         [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
         
         //kids rssi
+         NSLog(@"namenamename -----------     %@",[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]);
+        NSLog(@"_connectKidsRssiAy.count -----------     %lu",(unsigned long)_connectKidsRssiAy.count);
+        NSLog(@"---------------- %@",[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]);
         if (_connectKidsRssiAy.count > 0) {
+            //set color
             UILabel * KidsdeviceStatusLbl =(UILabel *)[cell viewWithTag:803];
+            
+             KidsdeviceStatusLbl.text = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_weak"),94];
+            
             if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > -50) {
                 [KidsdeviceStatusLbl setTextColor:[UIColor blackColor]];
             }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -50 && [[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] > - 80){
-                [KidsdeviceStatusLbl setTextColor:[UIColor blueColor]];
+                [KidsdeviceStatusLbl setTextColor:[UIColor blackColor]];
             }else if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]intValue] < -80){
-                [KidsdeviceStatusLbl setTextColor:[UIColor redColor]];
+                [KidsdeviceStatusLbl setTextColor:[UIColor blackColor]];
                 
             }
             
-            if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]isEqualToString:@"" ]) {
+            //set text string
+            if ([[NSString stringWithFormat:@"%@",[_connectKidsRssiAy objectAtIndex:row]]isEqualToString:@"" ] || [[_connectKidsRssiAy objectAtIndex:row] isKindOfClass:[NSNull class]]) {
                   KidsdeviceStatusLbl.text = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_weak"),94];
                 
             }else{
@@ -1763,6 +1811,10 @@ static SystemSoundID shake_sound_male_id = 0;
             }
            
 
+        }else{
+            
+            
+            
         }
             // _connectKidsByScanedAy.removeAllObjects;
        
@@ -3737,7 +3789,7 @@ progressView.hidden=YES;
         if ([resFEED_BACK isEqualToString:@"true"]) {
             HUD.mode = MBProgressHUDModeCustomView;
             HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_tick"]];
-            HUD.labelText = LOCALIZATION(@"text_select_child");
+            HUD.labelText = LOCALIZATION(@"text_feed_back_successful");
             [HUD show:YES];
             [HUD hide:YES afterDelay:1];
             
@@ -4074,11 +4126,11 @@ progressView.hidden=YES;
 }
 
 #pragma mark --
-#pragma mark - Handle Gestures
+#pragma mark - Handle Gestures (hide the pop view)
 
 - (void)handleSingleTap:(UITapGestureRecognizer *)theSingleTap
 {
-    [_PopupSView setHidden:YES];
+    //[_PopupSView setHidden:YES];
     [self.FeekBackTxt resignFirstResponder];
 }
 
@@ -4115,6 +4167,7 @@ progressView.hidden=YES;
         [_dateTableView setHidden:YES];
         [_organizationTableView setHidden:YES];
         [_kidsMassageView setHidden:YES];
+        _FeekBackView.hidden=YES;
     }
     else
     {
@@ -4966,12 +5019,14 @@ progressView.hidden=YES;
 //            NSMutableArray * tempArray = [myDelegate.antiLostSelectedKidsAy mutableCopy];
 //            NSLog(@"myDelegate.antiLostSelectedKidsAy (%@)) ",tempArray);
             
-            _antiLostTb.frame = CGRectMake( Drive_Wdith + 5 , 80, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  myDelegate.antiLostSelectedKidsAy.count * 45);
-            //_antiLostTb.scrollEnabled = NO;
+            _antiLostTb.frame = CGRectMake( Drive_Wdith + 5 , 80, CGRectGetWidth(_MainInfoScrollView.frame) - 10,  Drive_Height - 80 - 45);
+            _antiLostTb.scrollEnabled = YES;
             _antiLostTb.dataSource = self;
             _antiLostTb.delegate = self;
             //    [self.positionDetailsTableView setBounces:NO];
             _antiLostTb.tableFooterView = [[UIView alloc] init];
+//            CGSize newSize = CGSizeMake(0, (myDelegate.antiLostSelectedKidsAy.count + 1) * 45+ 1);
+//            [_antiLostTb setContentSize:newSize];
             _antiLostTb.tag = 700;
             
             NSDictionary *tempChildDictionary=[NSDictionary dictionary];
@@ -4990,7 +5045,7 @@ progressView.hidden=YES;
             
             [_MainInfoScrollView addSubview:_antiLostTb];
             
-            //[_antiLostTb reloadData];
+            [_antiLostTb reloadData];
 
         } else if([result isEqualToString:@"turn_off"]){
             
@@ -5013,9 +5068,22 @@ progressView.hidden=YES;
         });
         
         
-    }else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME]){
+    }else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_RECONNECT_BROADCAST_DATA_BROADCAST_NAME]){
+        isMoreThanThree = false;
         
-        antiLostNoMore3  = [(NSString *)[notification object]copy];
+        reconnectNoMore3 = (NSString *)[notification object];
+
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.antiLostTb reloadData];
+        });
+        
+    }
+    
+    
+    
+    else if ([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME]){
+        
+        antiLostNoMore3 = (NSString *)[notification object];
         NSDictionary *tempChildDictionary=[NSDictionary dictionary];
         for (int i = 0; i < _connectKidsByScanedToAntiLostAy.count; i ++) {
              tempChildDictionary=[_connectKidsByScanedToAntiLostAy  objectAtIndex:i];
@@ -5039,12 +5107,15 @@ progressView.hidden=YES;
         });
         
         
+       
+        
     }else if([[notification name] isEqualToString:BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME]){
+        //no more than three (connect the device)
         
         isMoreThanThree = true;
         
-        _antiLostMore3scanDataAy = [(NSMutableArray *)[notification mutableCopy]copy];
-        
+        _antiLostMore3scanDataAy = (NSMutableArray *)[notification object] ;
+        NSLog(@"_antiLostMore3scanDataAyPP------------> %lu",_antiLostMore3scanDataAy.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             [self.antiLostTb reloadData];
         });
@@ -5089,7 +5160,7 @@ progressView.hidden=YES;
     NSString *level = @"";
     NSLog(@"rssi --> %d",rssi);
     
-    if (rssi > -50) {
+    if (rssi >= -50) {
         
         int OffsetX = (arc4random() % 60) - 30;
         int OffsetY = (arc4random() % 60) - 30;
@@ -5116,7 +5187,7 @@ progressView.hidden=YES;
         level = [NSString stringWithFormat:@"%@ (%d)",LOCALIZATION(@"text_rssi_good"),rssi] ;
         
         
-    }else if (rssi < -80){
+    }else if (rssi <= -80){
         
         
         int OffsetX = (arc4random() % 160) - 90;
@@ -5150,6 +5221,7 @@ progressView.hidden=YES;
     localNotification.category = @"shoppingListReminderCategory";
      localNotification.soundName = UILocalNotificationDefaultSoundName;
     localNotification.applicationIconBadgeNumber++;
+    [UIApplication sharedApplication].applicationIconBadgeNumber ++;
     //localNotification.soundName = UILocalNotificationDefaultSoundName;
     [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
 }

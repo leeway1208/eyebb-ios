@@ -32,6 +32,12 @@
 @property (strong,nonatomic) NSTimer *otherTimer;
 @property (strong,nonatomic) NSTimer *reConnectTimer;
 @property (strong,nonatomic) NSTimer *antiLostTimer;
+@property (strong,nonatomic) NSTimer *bindingTimer;
+
+@property (strong,nonatomic) NSTimer *firstDeviceTimer;
+@property (strong,nonatomic) NSTimer *secondDeviceTimer;
+@property (strong,nonatomic) NSTimer *thirdDeviceTimer;
+
 @property (strong,nonatomic) CBPeripheral *connectedPeripheral;
 @property (strong,nonatomic) CBUUID *service2000;
 @property (strong,nonatomic) CBUUID *service1000;
@@ -65,7 +71,10 @@ static CustomerBluetooth *instance;
 double timerInterval = 5.0f;
 double otherTimerInterval = 20.0f;
 double repeatTimerInterval = 15.0f;
-double antiLostTimerInterval = 5.0f;
+double antiLostTimerInterval = 10.0f;
+double bindingTimerInterval = 20.0f;
+double deviceTimerInterval = 5.0f;
+
 NSInteger *tableNumberConut;
 Boolean setPassword = false;
 Boolean isBeep = false;
@@ -79,6 +88,9 @@ Boolean isAntiLost = false;
 Boolean isAntiLostMoreThanThree = false;
 Boolean isStopAntiLost = false;
 
+Boolean firstDevieLost = false;
+Boolean secondDevieLost = false;
+Boolean thirdDevieLost = false;
 
 int keepAntiNumFlag = 0;
 
@@ -146,6 +158,41 @@ NSString *keepMajorAndMinor;
     return _antiLostTimer;
 }
 
+- (NSTimer *) bindingTimer {
+    if (!_bindingTimer) {
+        _bindingTimer = [NSTimer timerWithTimeInterval:bindingTimerInterval target:self selector:@selector(bindingSelector:) userInfo:nil repeats:NO];
+    }
+    return _bindingTimer;
+}
+
+
+-(NSTimer *) firstDeviceTimer{
+    if (!_firstDeviceTimer) {
+        _firstDeviceTimer = [NSTimer timerWithTimeInterval:deviceTimerInterval target:self selector:@selector(firstDeviceSelector:) userInfo:nil repeats:YES];
+    }
+    return _firstDeviceTimer;
+    
+}
+
+-(NSTimer *) secondDeviceTimer{
+    if (!_secondDeviceTimer) {
+        _secondDeviceTimer = [NSTimer timerWithTimeInterval:deviceTimerInterval target:self selector:@selector(secondDeviceSelector:) userInfo:nil repeats:YES];
+    }
+    return _secondDeviceTimer;
+    
+}
+
+-(NSTimer *) thirdDeviceTimer{
+    if (!_thirdDeviceTimer) {
+        _thirdDeviceTimer = [NSTimer timerWithTimeInterval:deviceTimerInterval target:self selector:@selector(thirdDeviceSelector:) userInfo:nil repeats:YES];
+    }
+    return _thirdDeviceTimer;
+    
+}
+
+//----------------------
+
+
 -(void) startTimer{
     [[NSRunLoop mainRunLoop] addTimer:self.timer forMode:NSRunLoopCommonModes];
     NSLog(@"timer start...");
@@ -165,6 +212,31 @@ NSString *keepMajorAndMinor;
     [[NSRunLoop mainRunLoop] addTimer:self.otherTimer forMode:NSRunLoopCommonModes];
     NSLog(@"other timer start...");
 }
+
+-(void) startBindingTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.bindingTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"binding timer start...");
+}
+
+-(void) startFirstDeviceTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.firstDeviceTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"first device timer start...");
+}
+
+
+-(void) startSecondDeviceTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.secondDeviceTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"second device timer start...");
+}
+
+
+-(void) startThirdDeviceTimer{
+    [[NSRunLoop mainRunLoop] addTimer:self.thirdDeviceTimer forMode:NSRunLoopCommonModes];
+    NSLog(@"third device timer start...");
+}
+
+
+//-------------------------------------
 
 - (void) stopTimer{
     if (self.refreshTableTimer != nil){
@@ -196,6 +268,86 @@ NSString *keepMajorAndMinor;
         self.reConnectTimer = nil;
         NSLog(@"re connect timer stop...");
     }
+}
+
+- (void) stopBindingTimer{
+    if (self.bindingTimer != nil){
+        [self.bindingTimer invalidate];
+        self.bindingTimer = nil;
+        NSLog(@"binding timer stop...");
+    }
+}
+
+- (void) stopFirstDeviceTimer{
+    if (self.firstDeviceTimer != nil){
+        [self.firstDeviceTimer invalidate];
+        self.firstDeviceTimer = nil;
+        NSLog(@"firstDeviceTimer  stop...");
+    }
+}
+
+- (void) stopSecondDeviceimer{
+    if (self.secondDeviceTimer != nil){
+        [self.secondDeviceTimer invalidate];
+        self.secondDeviceTimer = nil;
+        NSLog(@"secondDeviceTimer timer stop...");
+    }
+}
+
+
+- (void) stopThirdDeviceTimer{
+    if (self.thirdDeviceTimer != nil){
+        [self.thirdDeviceTimer invalidate];
+        self.thirdDeviceTimer = nil;
+        NSLog(@"thirdDeviceTimer timer stop...");
+    }
+}
+
+//-------------------
+
+-(void) firstDeviceSelector:(NSTimer *)timer{
+    // retry1Ptimes++;
+    
+    CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:0];
+    [self.central connectPeripheral:antiLostPeripheral options:nil];
+    
+    if (firstDevieLost) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:0]];
+    }else{
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_RECONNECT_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:0]];
+
+    }
+}
+
+-(void) secondDeviceSelector:(NSTimer *)timer{
+    //retry2Ptimes++;
+    
+    CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:1];
+    [self.central connectPeripheral:antiLostPeripheral options:nil];
+    
+    if (secondDevieLost) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:1]];
+    }else{
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_RECONNECT_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:1]];
+    }
+    
+}
+
+
+-(void) thirdDeviceSelector:(NSTimer *)timer{
+    // retry3Ptimes++;
+    
+    CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:2];
+    [self.central connectPeripheral:antiLostPeripheral options:nil];
+    
+    
+    if (thirdDevieLost) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_ALREADY_LOST_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:2]];
+    }else{
+          [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_NO_MORE_THAN_3_RECONNECT_BROADCAST_DATA_BROADCAST_NAME object:[_keepAntiLostBroadDataAy objectAtIndex:2]];
+    }
+    
 }
 
 
@@ -233,8 +385,14 @@ NSString *keepMajorAndMinor;
         NSLog(@"isScanDevice --- > %lu",(unsigned long)self.discoveredPeripheralsBroadcastDataForScanDevice.count);
         
         //clear
+        
         [self.discoveredPeripheralsBroadcastDataForScanDevice removeAllObjects];
         [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi removeAllObjects];
+        
+        
+        
+        
+        
         
         [self startScan];
         
@@ -249,14 +407,14 @@ NSString *keepMajorAndMinor;
         
         [self stopScan];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME object:_antiLostMonitoringAy];
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_SCAN_DEVICE_BROADCAST_DATA_BROADCAST_NAME object:self.antiLostMonitoringAy];
         
         
         
         NSLog(@"_antiLostLongConnectAy --- > %lu",(unsigned long)_antiLostMonitoringAy.count);
         
         //clear
-        [_antiLostMonitoringAy removeAllObjects];
+        [self.antiLostMonitoringAy removeAllObjects];
         
         
         [self startScan];
@@ -294,6 +452,22 @@ NSString *keepMajorAndMinor;
     }
     
     
+}
+
+
+
+- (void)bindingSelector:(NSTimer*)timer{
+    
+    isMajor = false;
+    isMinor = false;
+    
+    self.writeValue1 = nil;
+    self.writeValue2 = nil;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_BINDING_TIME_OUT object:nil];
+    
+    [self stopScan];
+    [self stopBindingTimer];
 }
 
 #pragma mark - CBCentralManager Delegate methods
@@ -343,7 +517,7 @@ NSString *keepMajorAndMinor;
 -(void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     
-        NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,advertisementData ,RSSI);
+    //        NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,advertisementData ,RSSI);
     
     
     
@@ -353,19 +527,19 @@ NSString *keepMajorAndMinor;
         
         //this is for scanning device
         if(![self.discoveredPeripheralsBroadcastDataForScanDevice containsObject:advertisementData]) {
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
-                [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
-                
-                
-            });
+            //dispatch_async(dispatch_get_main_queue(), ^{
+            [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
+            [self.discoveredPeripheralsBroadcastDataForScanDevice addObject:advertisementData];
+            
+            
+            // });
         }
         
         
         NSString *toStringFromData = NSDataToHex([ advertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
         if(toStringFromData.length > 10 ){
             getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
-            NSLog(@"MAJOR AND MINOR ---> %@",getMajorAndMinor);
+            //NSLog(@"MAJOR AND MINOR ---> %@",getMajorAndMinor);
             
             /**
              *  anti lost function
@@ -379,10 +553,10 @@ NSString *keepMajorAndMinor;
                     
                     {
                         //more than three
-                        if(![_antiLostMonitoringAy containsObject:advertisementData]) {
+                        if(![self.antiLostMonitoringAy containsObject:advertisementData]) {
                             dispatch_async(dispatch_get_main_queue(), ^{
                                 //                            [self.discoveredPeripheralsBroadcastDataForScanDeviceRssi addObject:RSSI];
-                                [_antiLostMonitoringAy addObject:advertisementData];
+                                [self.antiLostMonitoringAy addObject:advertisementData];
                                 
                                 
                             });
@@ -533,28 +707,27 @@ NSString *keepMajorAndMinor;
     [self stopScan];
     
     if (isAntiLost) {
-        if (retry1Ptimes >= 1 || retry2Ptimes >= 1 || retry3Ptimes >= 1) {
-            for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
-                
-                CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
-                if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
-                    if(i == 0){
-                        retry1Ptimes--;
-                    }else if (i == 1) {
-                        retry2Ptimes--;
-                    }else if(i == 2){
-                        retry3Ptimes--;
-                    }
-                    //                    NSLog(@"Retrying ======================");
-                    //                    [self.central connectPeripheral:peripheral options:nil];
-                    //                    [self startReConnectTimer];
-                    [_antiLostBroadcastData removeObjectAtIndex:i];
-                    [self stopReConnectTimer];
-                    
-                    
+        for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
+            
+            CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
+            if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
+                if(i == 0){
+                    firstDevieLost = false;
+                }else if (i == 1) {
+                    secondDevieLost = false;
+                }else if(i == 2){
+                    thirdDevieLost = false;
                 }
+                //                    NSLog(@"Retrying ======================");
+                //                    [self.central connectPeripheral:peripheral options:nil];
+                //                    [self startReConnectTimer];
+                //                    [_antiLostBroadcastData removeObjectAtIndex:i];
+                //                    [self stopReConnectTimer];
+                
                 
             }
+            
+            
         }
         
     }
@@ -592,15 +765,22 @@ NSString *keepMajorAndMinor;
             CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
             if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
                 if(i == 0){
-                    retry1Ptimes++;
+                    firstDevieLost = true;
+                    
+                    [self startFirstDeviceTimer];
                 }else if (i == 1) {
-                    retry2Ptimes++;
+                    secondDevieLost = true;
+                    
+                    [self startSecondDeviceTimer];
+                    
                 }else if(i == 2){
-                    retry3Ptimes++;
+                    thirdDevieLost = true;
+                    
+                    [self startThirdDeviceTimer];
                 }
-                NSLog(@"Retrying ======================");
-                [self.central connectPeripheral:peripheral options:nil];
-                [self startReConnectTimer];
+                //                NSLog(@"Retrying ======================");
+                //                [self.central connectPeripheral:peripheral options:nil];
+                //                [self startReConnectTimer];
                 
                 
                 
@@ -712,6 +892,14 @@ NSString *keepMajorAndMinor;
                     // - 1
                     [_antiLostBroadcastData removeObject:peripheral];
                     
+                    if (_antiLostBroadcastData.count == 0) {
+                        [self stopFirstDeviceTimer];
+                        [self stopSecondDeviceimer];
+                        [self stopThirdDeviceTimer];
+                        
+                        
+                    }
+                    
                 }
                 
                 
@@ -777,6 +965,8 @@ NSString *keepMajorAndMinor;
             isMinor = false;
             //post get sos device broadcast
             [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
+            
+            [self stopBindingTimer];
         }else if (isAntiLost){
             NSLog(@"is anti !!! ");
             
@@ -959,6 +1149,8 @@ NSString * NSDataToHex(NSData *data) {
 
 -(void) writeMajorAndMinorThenMajor:(NSString *)UUID writeMajor:(NSString *)writeMajor writeMinor:(NSString *)writeMinor{
     //initial data
+    [self stopBindingTimer];
+    
     isMajor = true;
     isMinor = true;
     isSOSDevice = false;
@@ -973,6 +1165,8 @@ NSString * NSDataToHex(NSData *data) {
     
     [self startScan];
     
+    [self startBindingTimer];
+    
 }
 
 /**
@@ -981,7 +1175,7 @@ NSString * NSDataToHex(NSData *data) {
 -(void) findSOSDevice{
     
     isSOSDevice = true;
-    
+    startTimerOnce = true;
     [self initData:@"" minor:@""];
     
     [self startScan];
@@ -991,7 +1185,7 @@ NSString * NSDataToHex(NSData *data) {
 
 -(void)stopfindSOSDevice{
     isSOSDevice = false;
-    
+    startTimerOnce = false;
     [self stopTimer];
     [self stopScan];
 }
@@ -1012,7 +1206,7 @@ NSString * NSDataToHex(NSData *data) {
         if (_antiLostBroadcastData.count > 0) {
             [self initData:@"" minor:@""];
         }
-    
+        
         
     }
     
@@ -1037,9 +1231,9 @@ NSString * NSDataToHex(NSData *data) {
         
         isAntiLostMoreThanThree = true;
         
-        for (int i = 0; i < _antiLostAy.count; i ++) {
-            [ _antiLostMonitoringAy addObject:[_antiLostAy objectAtIndex:i]];
-        }
+        //        for (int i = 0; i < _antiLostAy.count; i ++) {
+        //            [ _antiLostMonitoringAy addObject:[_antiLostAy objectAtIndex:i]];
+        //        }
         
         [self startAntiLostTimer];
         

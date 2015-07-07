@@ -220,6 +220,7 @@ CFBundleDisplayName ="EyeBB";
 "btn_disconnect"="Disconnect";
 "btn_options"="Setting";
 "btn_map" = "map";
+"btn_uncheck_all" = "Uncheck All";
 
 //<!-- Toast strings -->
 "toast_login"="Login...;";

@@ -14,7 +14,7 @@
 #import "KidMessageViewController.h"
 #import "DBImageView.h"//图片加载
 
-#define BROADCAST_GUARDIAN_ID @"guardian_id_kids_listview"
+
 
 @interface KidslistViewController ()<UITableViewDataSource,UITableViewDelegate>
 {
@@ -84,6 +84,11 @@
     // Dispose of any resources that can be recreated.
 }
 
+
+- (void)viewDidDisappear:(BOOL)animated{
+//       [[NSNotificationCenter defaultCenter] removeObserver:self name:UNBIND_DEVICE_BROADCAST object:nil];
+}
+
 #pragma mark --
 #pragma mark - 初始化页面元素
 
@@ -92,16 +97,28 @@
  */
 -(void)iv
 {
+    
+    
     self.BindingArray=[[NSMutableArray alloc]init];
     
     self.unBindingArray=[[NSMutableArray alloc]init];
     
     self.grantedArray=[[NSMutableArray alloc]init];
-   _SelectChildrenDictionary=[NSMutableDictionary dictionary];
-        _cellHeight=44;
+    _SelectChildrenDictionary=[NSMutableDictionary dictionary];
+    _cellHeight=44;
     
-//     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    //     _documentsDirectoryPath= [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
     index=0;
+    
+    
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBindBroadcast:) name:UNBIND_DEVICE_BROADCAST object:nil ];
+    
+    
+    
+
+    
+    
+  
 }
 
 /**
@@ -120,6 +137,36 @@
     [self.view addSubview:_KindlistTView];
     
 }
+
+
+#pragma mark - broadcast
+- (void) unBindBroadcast:(NSNotification *)notification{
+    if ([[notification name] isEqualToString:UNBIND_DEVICE_BROADCAST]){
+        
+//        
+//        self.BindingArray=[[NSMutableArray alloc]init];
+//        
+//        self.unBindingArray=[[NSMutableArray alloc]init];
+//        
+//        self.grantedArray=[[NSMutableArray alloc]init];
+//        _SelectChildrenDictionary=[NSMutableDictionary dictionary];
+     
+        
+        
+
+        // Do any additional setup after loading the view.
+        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+      
+        [self iv];
+        [self lc];
+        
+        
+  
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UNBIND_DEVICE_BROADCAST object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBindBroadcast:) name:UNBIND_DEVICE_BROADCAST object:nil ];
+    }
+}
+
 #pragma mark --
 #pragma mark - 表单设置
 

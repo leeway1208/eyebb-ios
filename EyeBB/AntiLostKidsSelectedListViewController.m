@@ -25,6 +25,7 @@
 }
 /**右按钮*/
 @property(nonatomic, retain) UIBarButtonItem *rightBtnItem;
+
 /**图片本地存储地址*/
 @property (nonatomic,strong)NSString * documentsDirectoryPath;
 @property (strong, nonatomic) NSDictionary *data;
@@ -42,13 +43,14 @@
 @implementation AntiLostKidsSelectedListViewController
 
 @synthesize  rightBtnItem;
+
 @synthesize _childrenArray,SelectedchildrenArray;
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationItem.rightBarButtonItem = self.rightBtnItem;
-    
+
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(antiLostLeftAction:)];
     [newBackButton setBackgroundImage:[UIImage
                                        imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
@@ -128,7 +130,7 @@
  */
 -(void)lc
 {
-    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith,Drive_Height-36) style:UITableViewStylePlain];
+    _tableView=[[UITableView alloc]initWithFrame:CGRectMake(0,0,Drive_Wdith,Drive_Height-44) style:UITableViewStylePlain];
     _tableView.dataSource=self;
     _tableView.delegate=self;
     _tableView.sectionIndexBackgroundColor =[UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
@@ -149,16 +151,34 @@
 }
 
 /**自定义右按钮*/
+
 -(UIBarButtonItem *)rightBtnItem{
+    UIView *rightBarView = [[UIView alloc]initWithFrame:CGRectMake(Drive_Wdith - 185, 6, 180, 32)];
+    
     if (rightBtnItem==nil) {
-        UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-80, 6, 80, 32)];
+        UIButton *button=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith-220, 6, 80, 32)];
         [button setBackgroundColor:[UIColor clearColor]];
         [button setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
         [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
         [button setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
         [button addTarget:self action:@selector(Ok) forControlEvents:UIControlEventTouchUpInside];
         
-        rightBtnItem = [[UIBarButtonItem alloc] initWithCustomView:button] ;
+        [rightBarView addSubview:button];
+        
+        
+        //btn_uncheck_all
+        
+        UIButton *unCheckBtn=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 280, 6, 80, 32)];
+        [unCheckBtn setBackgroundColor:[UIColor clearColor]];
+        [unCheckBtn setTitle:LOCALIZATION(@"btn_uncheck_all") forState:UIControlStateNormal];
+        [unCheckBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [unCheckBtn setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
+        [unCheckBtn addTarget:self action:@selector(uncheckAll) forControlEvents:UIControlEventTouchUpInside];
+        
+        [rightBarView addSubview:unCheckBtn];
+        
+        
+        rightBtnItem = [[UIBarButtonItem alloc]initWithCustomView:rightBarView];
         
     }
     return rightBtnItem;
@@ -511,6 +531,21 @@
 #pragma mark --
 #pragma mark - 点击事件
 /**提交表单*/
+
+-(void)uncheckAll{
+    [self.SelectedchildrenIDArray removeAllObjects ];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+       
+        [_tableView reloadData];
+        
+        
+    });
+    
+    
+}
+
+
 -(void)Ok
 {
  

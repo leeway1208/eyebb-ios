@@ -12,6 +12,8 @@
 #import "MSCellAccessory.h"//自定义cell右边提示箭头
 #import "QRCodeGenerator.h"
 #import "RootViewController.h"
+#import "KidslistViewController.h"
+#import "SettingsViewController.h"
 
 @interface KidMessageViewController ()<UITableViewDataSource,UITableViewDelegate>
 
@@ -72,8 +74,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden = NO;
-    //    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(KindergartenListViewControllerLeftAction:)];
-    
+//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(backAction)];
+//    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
+//    [newBackButton setBackgroundImage:[UIImage
+//                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
+//    self.navigationItem.leftBarButtonItem = newBackButton;
     
    
     
@@ -359,11 +364,11 @@
     [confirmBtn.layer setBorderWidth:0.5]; //边框宽度
     [confirmBtn.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
     [_QRView addSubview:confirmBtn];
+
     
     
     
-    
-    if (macAddress.length > 0) {
+    if (macAddress.length > 0 && ![macAddress isEqualToString:@"<null>"]) {
         [self readBattery:nil major:[self getMajor:major] minor:[self getMinor:minor]];
         _kidBgView.backgroundColor=[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
     }else{
@@ -520,8 +525,9 @@
             
         }else if(indexPath.row == 3)
         {
+            NSLog(@"macAddressmacAddress--> %@",macAddress);
             
-            if(macAddress.length > 0){
+            if(macAddress.length > 8){
                 
                 [_PopupSView setHidden:NO];
             }else{
@@ -530,8 +536,14 @@
                 }
                 
                 _scanDeviceView.childID = [[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"];
-                _scanDeviceView.guardianId = @"1L";
+                
+                
+                 NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+                _scanDeviceView.guardianId = [userDefaultes objectForKey:LoginViewController_guardianId];
                 _scanDeviceView.comeFrom = @"kids_message";
+                
+                
+                
                 [[self navigationController] pushViewController:_scanDeviceView animated:YES];
             }
             
@@ -602,6 +614,19 @@
 
 
 #pragma mark - button action
+
+-(void)backAction{
+   
+    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+    {
+        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[KidslistViewController class]]){
+            
+//             [[NSNotificationCenter defaultCenter] postNotificationName:UNBIND_DEVICE_BROADCAST object:nil];
+            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+        }
+    }
+
+}
 
 -(void)cancelAction{
     [_PopupSView setHidden:YES];
@@ -716,6 +741,19 @@
                               cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                               otherButtonTitles:nil] show];
             
+            
+            //notification to update view
+
+//            [[NSNotificationCenter defaultCenter] postNotificationName:UNBIND_DEVICE_BROADCAST object:nil];
+            for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+            {
+                if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[SettingsViewController class]]){
+                    
+                    //             [[NSNotificationCenter defaultCenter] postNotificationName:UNBIND_DEVICE_BROADCAST object:nil];
+                    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+                }
+            }
+
             [_PopupSView setHidden:YES];
         }
         

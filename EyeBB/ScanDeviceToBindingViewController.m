@@ -128,11 +128,11 @@
 
 -(void)viewDidDisappear:(BOOL)animated
 {
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:BROADCAST_GUARDIAN_ID object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:BROADCAST_GUARDIAN_ID object:nil];
     
     _SOSDiscoveredPeripherals = nil;
     [_introLabel removeFromSuperview];
@@ -205,7 +205,20 @@
         NSLog(@"BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME");
          [HUD hide:YES afterDelay:0];
         
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_update_server_data_fail")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
         
+        
+    }else if([[notification name] isEqualToString:BLUETOOTH_BINDING_TIME_OUT]){
+        [HUD hide:YES afterDelay:0];
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_update_server_data_fail")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
         
         
     }
@@ -416,7 +429,7 @@
     NSLog(@"write major:%@ and minor:%@ ",getMajor,getMinor);
     
     //if the device is right
-    if (![self.targetPeripheral isEqualToString:_didSelectTargetPeripheral.identifier.UUIDString]) {
+   // if (![self.targetPeripheral isEqualToString:_didSelectTargetPeripheral.identifier.UUIDString]) {
         
          NSDictionary *checkBeaconDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,getMajor,ScanDeviceToBindingViewController_KEY_majors,getMinor,ScanDeviceToBindingViewController_KEY_minor,nil];
         
@@ -425,7 +438,7 @@
        
         [tableView reloadData];
         
-    }
+   // }
     
     
     
