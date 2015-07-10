@@ -1620,45 +1620,6 @@ static SystemSoundID shake_sound_male_id = 0;
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             
-            
-            if ([antiLostNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
-                
-                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
-                
-                antiLostNoMore3 = nil;
-                
-            }else if ([reconnectNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]){
-                
-                [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
-
-                reconnectNoMore3 = nil;
-                
-            }
-            
-            
-            
-//            else{
-//                for (int i = 0; i < antiResultAy.count; i ++) {
-//                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
-//                        
-//                        [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
-//                        NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
-//                        
-//                        
-//                        
-//                    }
-//                    
-//                    //            else{
-//                    //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
-//                    //
-//                    //            }
-//                    
-//                }
-//
-//            }
-//            
-            
-            
             [KidsImgView setImageWithPath:[pathOne copy]];
             
             //儿童名称
@@ -1666,36 +1627,65 @@ static SystemSoundID shake_sound_male_id = 0;
             [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
             
             UILabel * kidStatus =(UILabel *)[cell viewWithTag:703];
+
             
             if ([antiLostNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
                 
-                //change status
-                [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
-                [kidStatus setTextColor:[UIColor blackColor]];
-                
-   
-                antiLostNoMore3 = nil;
-                
-                
-            }else if ([reconnectNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]){
+                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
                 //change status
                 [kidStatus setText:LOCALIZATION(@"btn_missed")];
                 [kidStatus setTextColor:[UIColor redColor]];
                 
+                antiLostNoMore3 = nil;
+              
+                
+            }else if ([reconnectNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]){
+                
+                [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
+                //change status
+                [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                [kidStatus setTextColor:[UIColor blackColor]];
                 reconnectNoMore3 = nil;
+                
+            }else{
+                for (int i = 0; i < antiResultAy.count; i ++) {
+                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+                        
+                        [KidsImgView.layer setBorderColor:[UIColor greenColor].CGColor];
+//                        NSLog(@" %@ ---aa",[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] );
+                        [kidStatus setTextColor:[UIColor blackColor]];
+                        [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+                        
+                        
+                    }
+                    
+                    //            else{
+                    //                [KidsImgView.layer setBorderColor:[UIColor redColor].CGColor];
+                    //
+                    //            }
+                    
+                }
 
             }
+        }
+        
             
-            
-            
-            
-            
-//            else{
+//            if ([antiLostNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
+//                
+//        
+//  
+//                
+//                
+//            }else if ([reconnectNoMore3 isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]){
+//      
+//
+//                reconnectNoMore3 = nil;
+//
+//            }else{
 //                
 //                for (int i = 0; i < antiResultAy.count; i ++) {
 //                    if ([[NSString stringWithFormat:@"%@",[antiResultAy objectAtIndex:i]] isEqualToString:[NSString stringWithFormat:@"%@%@",[self getMajor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"minor"]]],[self getMinor:[NSString stringWithFormat:@"%@",[tempChildDictionary objectForKey:@"major"]]]]]) {
-//                        [kidStatus setTextColor:[UIColor blackColor]];
-//                        [kidStatus setText:LOCALIZATION(@"text_network_connecting")];
+//                  
 //                        
 //                    }
 //                    
@@ -1706,10 +1696,10 @@ static SystemSoundID shake_sound_male_id = 0;
 //                }
 //
 //            }
-            
-
-        }
-        
+//            
+//
+//        }
+//        
         
     }else if (tableView == self.RadarConnectTableView) {
         

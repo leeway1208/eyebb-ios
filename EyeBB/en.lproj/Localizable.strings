@@ -221,6 +221,9 @@ CFBundleDisplayName ="EyeBB";
 "btn_options"="Setting";
 "btn_map" = "map";
 "btn_uncheck_all" = "Uncheck All";
+"text_take_photo" = "Take Photo";
+"text_change_name" = "Change Name";
+"text_from_album" = "From Album";
 
 //<!-- Toast strings -->
 "toast_login"="Login...;";

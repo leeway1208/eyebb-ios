@@ -68,7 +68,7 @@
 static CustomerBluetooth *instance;
 @synthesize  clientDelegates;
 
-double timerInterval = 5.0f;
+double timerInterval = 10.0f;
 double otherTimerInterval = 20.0f;
 double repeatTimerInterval = 15.0f;
 double antiLostTimerInterval = 10.0f;
@@ -713,10 +713,13 @@ NSString *keepMajorAndMinor;
             if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
                 if(i == 0){
                     firstDevieLost = false;
+                    [self stopFirstDeviceTimer];
                 }else if (i == 1) {
                     secondDevieLost = false;
+                    [self stopSecondDeviceimer];
                 }else if(i == 2){
                     thirdDevieLost = false;
+                     [self stopThirdDeviceTimer];
                 }
                 //                    NSLog(@"Retrying ======================");
                 //                    [self.central connectPeripheral:peripheral options:nil];
@@ -759,35 +762,37 @@ NSString *keepMajorAndMinor;
             
             
         }
-        
-        for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
-            
-            CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
-            if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
-                if(i == 0){
-                    firstDevieLost = true;
+        if (_antiLostBroadcastData.count > 0) {
+            for (int i = 0; i < _antiLostBroadcastData.count; i ++) {
+                
+                CBPeripheral * antiLostPeripheral = [_antiLostBroadcastData objectAtIndex:i];
+                if ([antiLostPeripheral.identifier.UUIDString isEqualToString:peripheral.identifier.UUIDString]){
+                    if(i == 0){
+                        firstDevieLost = true;
+                        
+                        [self startFirstDeviceTimer];
+                    }else if (i == 1) {
+                        secondDevieLost = true;
+                        
+                        [self startSecondDeviceTimer];
+                        
+                    }else if(i == 2){
+                        thirdDevieLost = true;
+                        
+                        [self startThirdDeviceTimer];
+                    }
+                    //                NSLog(@"Retrying ======================");
+                    //                [self.central connectPeripheral:peripheral options:nil];
+                    //                [self startReConnectTimer];
                     
-                    [self startFirstDeviceTimer];
-                }else if (i == 1) {
-                    secondDevieLost = true;
                     
-                    [self startSecondDeviceTimer];
                     
-                }else if(i == 2){
-                    thirdDevieLost = true;
                     
-                    [self startThirdDeviceTimer];
                 }
-                //                NSLog(@"Retrying ======================");
-                //                [self.central connectPeripheral:peripheral options:nil];
-                //                [self startReConnectTimer];
-                
-                
                 
                 
             }
-            
-            
+
         }
         
     }
@@ -857,7 +862,7 @@ NSString *keepMajorAndMinor;
                     //[peripheral readValueForCharacteristic:characteristic];
                     //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
                     [peripheral writeValue:[self stringToByte:self.writeValue1]forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
-                    
+                   
                 }
             }else if (isMajor){
                 if ([characteristic.UUID.UUIDString isEqualToString:@"1008"]) {
@@ -872,7 +877,7 @@ NSString *keepMajorAndMinor;
                     //[peripheral readValueForCharacteristic:characteristic];
                     //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
                     [peripheral writeValue:[self stringToByte:self.writeValue2]forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
-                    
+                    //setPassword = false;
                 }
                 
             }else if(isAntiLost){
@@ -880,7 +885,7 @@ NSString *keepMajorAndMinor;
                     //[peripheral readValueForCharacteristic:characteristic];
                     //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
                     [peripheral writeValue:[self stringToByte:@"FFFF"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
-                    
+                    //setPassword = false;
                 }
                 
             }else if (isStopAntiLost){
@@ -888,7 +893,7 @@ NSString *keepMajorAndMinor;
                     //[peripheral readValueForCharacteristic:characteristic];
                     //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
                     [peripheral writeValue:[self stringToByte:@"0000"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
-                    
+                    //setPassword = false;
                     // - 1
                     [_antiLostBroadcastData removeObject:peripheral];
                     
@@ -956,6 +961,7 @@ NSString *keepMajorAndMinor;
     if (setPassword) {
         if (isBeep) {
             isBeep = false;
+             setPassword = false;
             //post get sos device broadcast
             [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
         }else if (isMajor){
@@ -965,11 +971,11 @@ NSString *keepMajorAndMinor;
             isMinor = false;
             //post get sos device broadcast
             [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
-            
+             setPassword = false;
             [self stopBindingTimer];
         }else if (isAntiLost){
             NSLog(@"is anti !!! ");
-            
+             setPassword = false;
             [_antiLostBroadcastData addObject:peripheral];
             [_keepAntiLostBroadDataAy addObject:keepMajorAndMinor];
             [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME object:keepMajorAndMinor];
@@ -1079,7 +1085,8 @@ NSString * NSDataToHex(NSData *data) {
     
     // scanForPeripheralsWithServices:@[[CBUUID UUIDWithString:@"FFE0"]]  (make your own device)
     //CBCentralManagerOptionRestoreIdentifierKey :@YES @{ CBCentralManagerScanOptionAllowDuplicatesKey : @YES}
-    [self.central scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@NO ,CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
+//    [self.central scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@NO ,CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
+        [self.central scanForPeripheralsWithServices:nil options:@{CBCentralManagerScanOptionAllowDuplicatesKey:@NO ,CBCentralManagerScanOptionAllowDuplicatesKey : @YES}];
 }
 
 -(void) stopScan{

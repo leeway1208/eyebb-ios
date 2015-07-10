@@ -11,9 +11,9 @@ CFBundleDisplayName ="寶寶安";
 
 
 //<!-- Text strings -->
-"this_Week"="This week";
-"Last_14_days"="Last 14 days";
-"50_days"="50 days";
+"this_Week"="這1周";
+"Last_14_days"="最近14天";
+"50_days"="50天";
 "app_name"="寶寶安";
 "text_policy"="By Continuing, you agree to our Terms and Privacy Policy.";
 "text_pssword_not_the_same" = "兩次密碼不一樣!";
@@ -186,6 +186,9 @@ CFBundleDisplayName ="寶寶安";
 "text_new_version_to_update" = "有新版本,請更新";
 "text_is_missing" = " 已丟失!";
 "text_view_list" = "消息列表";
+"text_take_photo" = "拍照";
+"text_change_name" = "修改姓名";
+"text_from_album" = "從相冊中選";
 
 //<!-- Button strings -->
 "btn_sign_up"="註冊";
