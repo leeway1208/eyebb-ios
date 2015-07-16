@@ -452,6 +452,8 @@
 
 - (void)childInformationSelectLeftAction:(id)sender{
     
+    NSLog(@"---> %@",_comeFrom);
+    
     if ([_comeFrom isEqualToString:@"logined"]) {
         for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
         {
@@ -493,10 +495,28 @@
                           otherButtonTitles:nil] show];
     }else{
         //[HUD show:YES];
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:childName, ChildInformationMatchingViewController_KEY_childName, dateOfBirth,ChildInformationMatchingViewController_KEY_dateOfBirth,kId,ChildInformationMatchingViewController_KEY_kId,nil];
         
         
-        [self postRequest:CHILD_CHECKING RequestDictionary:tempDoct delegate:self];
+        if ([_areaName isEqualToString:@"Others"]) {
+            
+            
+            
+              NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:childName, ChildInformationMatchingViewController_KEY_childName, dateOfBirth,ChildInformationMatchingViewController_KEY_dateOfBirth,kId,@"areaId",nil];
+            
+            NSLog(@"childName(%@)  dateOfBirth(%@)  kId(%@)",childName,dateOfBirth,kId);
+            
+            
+            [self postRequest:@"masterService/api/addChildInDummy" RequestDictionary:tempDoct delegate:self];
+            
+            
+        }else{
+            NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:childName, ChildInformationMatchingViewController_KEY_childName, dateOfBirth,ChildInformationMatchingViewController_KEY_dateOfBirth,kId,ChildInformationMatchingViewController_KEY_kId,nil];
+            
+            
+            [self postRequest:CHILD_CHECKING RequestDictionary:tempDoct delegate:self];
+        }
+
+     
         
         
     }
@@ -510,6 +530,7 @@
     if([self saveNSUserDefaults:[self.kidsNameTf.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] dateOfBirth:[self.kidsBirthdayBtn.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]] kId:_kindergartenId]){
         KindergartenListViewController *klvc = [[KindergartenListViewController alloc] init];
         klvc.guardianId = self.guardianId;
+        klvc.comeFrom = @"logined";
         [self.navigationController pushViewController:klvc animated:YES];
         klvc.title = @"";
     }
@@ -576,6 +597,52 @@
         }
         
         
+    }else if ([tag isEqualToString:@"masterService/api/addChildInDummy"]){
+        NSData *responseData = [request responseData];
+        
+        NSString *responseString = [[NSString alloc] initWithData:responseData encoding:NSUTF8StringEncoding];
+       
+//        NSDictionary *tempDic = [[NSDictionary alloc]init];
+//        tempDic = [responseData mutableObjectFromJSONData];
+         NSLog(@"addChildInDummy ----> %@ ",responseString);
+//        self.childId = [tempDic objectForKey:@"childId"];
+        //NSLog(@"CHILD_CHECKING ----> %@ ", self.childId);
+        
+        if ([[[responseData mutableObjectFromJSONData] objectForKey:@"kindergarten"] isKindOfClass:[NSNull class]]) {
+            
+            if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+                
+                  [self popView:[[responseData mutableObjectFromJSONData] objectForKey:@"name"] ChildIcon:[[responseData mutableObjectFromJSONData] objectForKey:@"icon"]KindergartenName:@"其它"];
+            } else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+                  [self popView:[[responseData mutableObjectFromJSONData] objectForKey:@"name"] ChildIcon:[[responseData mutableObjectFromJSONData] objectForKey:@"icon"]KindergartenName:@"其它"];
+            }else{
+                [self popView:[[responseData mutableObjectFromJSONData] objectForKey:@"name"] ChildIcon:[[responseData mutableObjectFromJSONData] objectForKey:@"icon"]KindergartenName:@"Others"];
+
+            }
+            
+  
+            //            [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
+            //            aa
+            //_childIcon = [[responseData mutableObjectFromJSONData] objectForKey:@"icon"];
+            NSLog(@"_childIcon --- > %@",_childIcon);
+            [_popUpImage setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            
+            //
+            //[_popUpImage setImageWithPath:[_childIcon copy]];
+        }else{
+            [self popView:[[responseData mutableObjectFromJSONData] objectForKey:@"name"] ChildIcon:[[responseData mutableObjectFromJSONData] objectForKey:@"icon"]KindergartenName:[[[responseData mutableObjectFromJSONData] objectForKey:@"kindergarten"] objectForKey:@"nameTc"]];
+            //            [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
+            //            aa
+            _childIcon = [[responseData mutableObjectFromJSONData] objectForKey:@"icon"];
+            NSLog(@"_childIcon --- > %@",_childIcon);
+            [_popUpImage setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+            
+            //
+            [_popUpImage setImageWithPath:[_childIcon copy]];
+            
+        }
+        
+
     }
     
     

@@ -17,6 +17,7 @@
 #import "UpdateNameViewController.h"//更新昵称
 #import "AppDelegate.h"
 #import "MainViewController.h"
+#import "WebViewController.h"
 
 @interface SettingsViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,UIGestureRecognizerDelegate>
 {
@@ -55,6 +56,8 @@
 @property(nonatomic, strong) UpdateNameViewController * UpdateName;
 //refresh main view
 @property(nonatomic, strong) MainViewController * mainView;
+
+@property(nonatomic, strong) WebViewController * webView;
 @end
 
 @implementation SettingsViewController
@@ -614,6 +617,44 @@
             }
             [self.navigationController pushViewController:_aboutView animated:YES];
         }
+        if(indexPath.row==1){
+            if (_webView==nil) {
+                _webView= [[WebViewController alloc] init];
+                
+                if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+                    _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_cn";
+                   
+                }else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+             _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_tw";
+                }else{
+     
+                    _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=EN_us";
+                }
+                
+            }
+            [self.navigationController pushViewController:_webView animated:YES];
+        }
+        if(indexPath.row==2){
+            if (_webView==nil) {
+                _webView= [[WebViewController alloc] init];
+                if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+                    
+                    _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_cn";
+
+                } else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+                    _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_tw";
+
+                }else{
+                    _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=EN_us";
+
+                }
+                
+            }
+            [self.navigationController pushViewController:_webView animated:YES];
+
+        }
+
+
         
     }
     

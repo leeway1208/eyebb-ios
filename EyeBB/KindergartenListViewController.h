@@ -17,4 +17,8 @@
 @property (nonatomic,assign) int index;
 /* guardian Id  */
 @property (strong,nonatomic) NSString *guardianId;
+
+@property (strong,nonatomic) NSString *comeFrom;
+
+
 @end

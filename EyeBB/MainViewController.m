@@ -2114,7 +2114,7 @@ static SystemSoundID shake_sound_male_id = 0;
             
             
             //房间开关
-            UISwitch *switchRoomButton = [[UISwitch alloc] initWithFrame:CGRectMake(CGRectGetWidth(RoomBtn.frame)-(35+(10*kindNum)+10 + 50), 20, 35+(10*kindNum), 20)];
+            UISwitch *switchRoomButton = [[UISwitch alloc] initWithFrame:CGRectMake(15, 85, 60, 60)];
             switchRoomButton.onTintColor = [UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1];
             
             for (int i = 0 ;i < _roomSosNumber.count ; i ++) {
@@ -4872,11 +4872,16 @@ progressView.hidden=YES;
             [view removeFromSuperview];
         }
         _connectKidsAy = [(NSMutableArray *)[notification object] mutableCopy];
+        
+        NSLog(@"-----> %@",_connectKidsAy);
+        
         _tempDisconnectKidsAy = [[NSMutableArray alloc]init];
         _connectKidsByScanedAy = [[NSMutableArray alloc]init];
 //        [_tempDisconnectKidsAy removeAllObjects];
 //        [_connectKidsByScanedAy removeAllObjects];
         _tempDisconnectKidsAy = [myDelegate.allKidsWithMacAddressBeanArray mutableCopy];
+        
+
          NSLog(@"_tempDisconnectKidsAy CONUT--- > %lu",(unsigned long)_tempDisconnectKidsAy.count);
         
         for (int i = 0; i < _connectKidsAy.count ; i ++) {
@@ -4895,6 +4900,8 @@ progressView.hidden=YES;
                     NSString *minor = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"minor"]]];
                     NSString *macAddress = [self getMinor:[NSString stringWithFormat:@"%@", [tempDic objectForKey:@"macAddress"]]];
                     NSString *kidsMajorAndMinor = [NSString stringWithFormat:@"%@%@",minor,major];
+                            NSLog(@"---> _tempDisconnectKidsAy ---> %@",kidsMajorAndMinor);
+                    
                     
                     if ([kidsMajorAndMinor isEqualToString:scanedMajorAndMinor]) {
                         [_connectKidsByScanedAy addObject:[_tempDisconnectKidsAy objectAtIndex:y]];

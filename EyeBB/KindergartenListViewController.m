@@ -21,6 +21,8 @@
 @property (nonatomic,strong) DBImageView * cellLeftImg;
 /** get image path */
 @property (nonatomic,strong) NSString * imgPath;
+/* next view */
+@property (nonatomic,strong) ChildInformationMatchingViewController * childView;
 @end
 
 
@@ -132,6 +134,10 @@
         
         
         _allLocationAreasInfoAr = [[[responseData mutableObjectFromJSONData] objectForKey:KindergartenListViewController_json_key_allLocationAreasInfo] copy];
+        
+        
+        
+        NSLog(@"_allLocationAreasInfoAr->%@",_allLocationAreasInfoAr);
         
         //NSLog(@"sadasdsadsafff--->%@ ",[_allLocationAreasInfoAr objectAtIndex:4]);
         
@@ -273,11 +279,21 @@
     
     if(tableView == self.kindergartenTable){
         
+        
         ChildInformationMatchingViewController *cimmvc = [[ChildInformationMatchingViewController alloc] init];
         cimmvc.kindergartenName = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_nameTc];
         cimmvc.kindergartenId = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_areaId];
         cimmvc.guardianId = self.guardianId;
+        cimmvc.areaName  = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:@"name"];
+
+        if ([_comeFrom isEqualToString:@"logined"]) {
+            cimmvc.comeFrom = @"logined";
+        }
+        
         [self.navigationController pushViewController:cimmvc animated:YES];
+        
+              
+        
         
     }
     
@@ -306,15 +322,17 @@
 #pragma mark - button action
 -(void)KindergartenListViewControllerLeftAction:(id) sender{
     
-    //<<<<<<< Updated upstream
+
     for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
     {
         if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
             [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+ 
+            
         }
     }
     
-    //=======
+
     //    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
     //    [[self navigationController] pushViewController:cimvc animated:YES];
     /*用法：[self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: ([self.navigationController.viewControllers count] -层次)] animated:YES];*/
