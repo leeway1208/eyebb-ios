@@ -8,6 +8,7 @@
 
 #import "CustomerBluetooth.h"
 #import "AppDelegate.h"
+#import "GetMacAddress.h"
 
 @interface CustomerBluetooth()
 {
@@ -19,6 +20,7 @@
 @property (strong,nonatomic) NSMutableArray *checkDiscoveredPeripherals;
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredPeripherals;
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
+@property (strong,nonatomic) NSMutableArray *SOSDiscoveredRSSIData;
 
 @property (strong,nonatomic) NSMutableArray *keepAntiLostBroadDataAy;
 @property (strong,nonatomic) NSMutableDictionary *discoveredPeripheralsDic;
@@ -61,6 +63,8 @@
 @property (strong,nonatomic)  NSMutableArray  *antiLostChildNameFromMainAy;
 @property (strong,nonatomic)  NSMutableArray  *antiLostChildNameAy;
 @property (strong,nonatomic)  NSMutableDictionary  *antiLostChildNameDictionary;
+
+
 @end
 
 @implementation CustomerBluetooth
@@ -371,10 +375,19 @@ NSString *keepMajorAndMinor;
 - (void)timerRefreshTableSelector:(NSTimer*)timer{
     
     if(isSOSDevice){
+        [self stopScan];
         //post get sos device broadcast
         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
         [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:self.SOSDiscoveredAdvertisementData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_SOS_DEVICE_RSSI_BROADCAST_NAME object:self.SOSDiscoveredRSSIData];
         NSLog(@"timerRefreshTableSelector --- > %lu",(unsigned long)self.SOSDiscoveredPeripherals.count);
+        
+        [self.SOSDiscoveredPeripherals removeAllObjects];
+        [self.SOSDiscoveredAdvertisementData removeAllObjects];
+        [self.SOSDiscoveredRSSIData removeAllObjects];
+        
+        
+        [self startScan];
     }else if (isScanDevice){
         [self stopScan];
         
@@ -517,10 +530,9 @@ NSString *keepMajorAndMinor;
 -(void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     
-    //        NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@",peripheral.name,advertisementData ,RSSI);
+//    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@", [[GetMacAddress alloc] getMacAddress:peripheral.identifier.UUIDString]  ,advertisementData ,RSSI);
     
-    
-    
+  
     
     
     if(advertisementData != nil){
@@ -642,6 +654,7 @@ NSString *keepMajorAndMinor;
                         dispatch_async(dispatch_get_main_queue(), ^{
                             [self.SOSDiscoveredPeripherals addObject:peripheral];
                             [self.SOSDiscoveredAdvertisementData addObject:advertisementData];
+                            [self.SOSDiscoveredRSSIData addObject:RSSI];
                             
                         });
                     }
@@ -1274,6 +1287,7 @@ NSString * NSDataToHex(NSData *data) {
     self.discoveredPeripheralsDic = [NSMutableDictionary new];
     self.checkDiscoveredPeripherals = [NSMutableArray new];
     self.SOSDiscoveredPeripherals = [NSMutableArray new];
+    self.SOSDiscoveredRSSIData = [NSMutableArray new];
     self.SOSDiscoveredAdvertisementData = [NSMutableArray new];
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     

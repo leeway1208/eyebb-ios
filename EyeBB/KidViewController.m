@@ -60,7 +60,8 @@
 
 /**按姓名/区域排序*/
 @property (nonatomic) BOOL isName;
-
+/* get local child informaton */
+@property (nonatomic,strong) NSMutableArray *localChildInfo;
 @end
 
 @implementation KidViewController
@@ -105,6 +106,7 @@
  */
 -(void)iv
 {
+    _localChildInfo = [self allChildren];
     //实例化数组
     _resultArray=[[NSArray alloc]init];
     _SortingArray=[[NSMutableArray alloc]init];
@@ -648,7 +650,26 @@
         [roomNameLbl setText:[NSString stringWithFormat:@"%@ %@",RoomNameStr,[_dateFormatter stringFromDate:lastAppearTime]]];
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
-        [KidsImgView setImageWithPath:[pathOne copy]];
+        for (int y =0 ; y < _localChildInfo.count;  y++) {
+            NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+            if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                    
+                    
+                    NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [KidsImgView setImage:image];
+                    
+                }else{
+                    
+                    
+                    [KidsImgView setImageWithPath:[pathOne copy]];
+                    
+                }
+                
+            }
+            
+        }
         
         pathOne=nil;
         
@@ -660,8 +681,23 @@
             
             if (_isName==YES) {
                 if (arr.count>0) {
+                    for (int y =0 ; y < _localChildInfo.count;  y++) {
+                        NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+                        if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                            if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]].length > 0) {
+                                
+                                
+                                [kidNameLbl setText:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]]];
+                                
+                            }else{
+                                
+                                
+                                [kidNameLbl setText:[arr objectAtIndex:row]];
+                            }
+                            
+                        }
+                    }
                     
-                    [kidNameLbl setText:[arr objectAtIndex:row]];
                 }
                 else
                 {

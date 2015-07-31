@@ -40,5 +40,8 @@
 /* if the app is in background */
 @property Boolean isBackgroud;
 
+/* user name */
+@property NSString* userName;
+
 @end
 

@@ -28,6 +28,8 @@
 }
 @property (strong, nonatomic) NSDictionary *data;
 @property (strong, nonatomic) NSArray *keys;
+/* get local child informaton */
+@property (nonatomic,strong) NSMutableArray *localChildInfo;
 @end
 
 @implementation ChildrenListViewController
@@ -76,6 +78,7 @@
  */
 -(void)iv
 {
+    _localChildInfo = [self allChildren];
     //实例化数组
     _resultArray=[[NSArray alloc]init];
 //    _childrenArray=[[NSMutableArray alloc]init];
@@ -248,7 +251,28 @@
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
-        [KidsImgView setImageWithPath:[pathOne copy]];
+        for (int y =0 ; y < _localChildInfo.count;  y++) {
+            NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+            if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                    
+                    
+                    
+                    NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                    UIImage *image = [UIImage imageWithData:imageData];
+                     [KidsImgView setImage:image];
+                    //  NSLog(@"resourcePath  %@",path);
+                    
+                }else{
+                    
+                    
+                     [KidsImgView setImageWithPath:[pathOne copy]];
+                }
+                
+            }
+            
+        }
+        //[KidsImgView setImageWithPath:[pathOne copy]];
         pathOne=nil;
 
         KidsImgView.tag=101;
@@ -282,7 +306,27 @@
     
     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
 
-   [KidsImgView setImageWithPath:[pathOne copy]];
+    for (int y =0 ; y < _localChildInfo.count;  y++) {
+        NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+        if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+            if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                
+                
+                
+                NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                UIImage *image = [UIImage imageWithData:imageData];
+                [KidsImgView setImage:image];
+                //  NSLog(@"resourcePath  %@",path);
+                
+            }else{
+                
+                
+                [KidsImgView setImageWithPath:[pathOne copy]];
+            }
+            
+        }
+        
+    }
 
     pathOne=nil;
     
@@ -294,8 +338,26 @@
         //儿童名称
         UILabel * KidsLbl =(UILabel *)[cell viewWithTag:102];
         if (arr.count>0) {
+            for (int y =0 ; y < _localChildInfo.count;  y++) {
+                NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+                if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                    if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]].length > 0) {
+                        
+                        
+                        [KidsLbl setText:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]]];
+                        
+                    }else{
+                        
+                        
+                        [KidsLbl setText:[arr objectAtIndex:row]];
+                    }
+                    
+                }
+                
+            }
             
-            [KidsLbl setText:[arr objectAtIndex:row]];
+
+            
         }
         else
         {

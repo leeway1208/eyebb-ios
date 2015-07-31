@@ -762,6 +762,18 @@
     }
     else
     {
+        
+        NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
+        // NSLog(@"login sss----> %@ ",guardian);
+        
+
+        [loginStatus setObject:phoneStr forKey:LoginViewController_accName];
+ 
+        [loginStatus setObject:NickNameStr forKey:LoginViewController_name];
+        [loginStatus synchronize];
+
+        
+        
         if(emailStr==nil)emailStr=@"";
         NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
         

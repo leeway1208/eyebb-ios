@@ -39,6 +39,8 @@
 @property (strong,nonatomic) NSDictionary *didSelectTargetAdvertisementData;
 /**  select Target AdvertisementData */
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
+/* get sos device table */
+@property (strong,nonatomic) NSMutableArray *SOSDiscoveredRSSI;
 @end
 
 @implementation ScanDeviceToBindingViewController
@@ -130,6 +132,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_RSSI_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BROADCAST_GUARDIAN_ID object:nil];
@@ -173,7 +176,7 @@
         NSLog(@"GET AD --- > %lu",(unsigned long)_SOSDiscoveredPeripherals.count);
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            [self.deviceTableView reloadData];
+            [_deviceTableView reloadData];
             
         });
         
@@ -183,7 +186,15 @@
         
          NSLog(@"GET AD ad --- > %lu",(unsigned long)_SOSDiscoveredAdvertisementData.count);
         
-    }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
+    }else if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_RSSI_BROADCAST_NAME]){
+     
+        _SOSDiscoveredRSSI = [(NSMutableArray *)[notification object]copy];
+        
+        
+    }
+    
+    
+    else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
         
         
         NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
@@ -374,9 +385,11 @@
     static NSString *detailIndicated = @"tableCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     
+    
+    
     CBPeripheral *peripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
    _didSelectTargetAdvertisementData = (NSDictionary *)_SOSDiscoveredAdvertisementData[indexPath.row];
-    
+
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         
@@ -389,8 +402,30 @@
         _tableCenterLabel.numberOfLines = 2;
         _tableCenterLabel.text = peripheral.identifier.UUIDString;
         [cell addSubview:_tableCenterLabel];
+           //beacon rssi
+        UILabel *RSSLlabel = [[UILabel alloc]initWithFrame:CGRectMake(self.view.frame.size.width-30, CGRectGetHeight(cell.frame) / 2 , 30, 30)];
+        
+        RSSLlabel.text = [NSString stringWithFormat:@"%@",[_SOSDiscoveredRSSI objectAtIndex:indexPath.row]];
+        RSSLlabel.tag = 200;
+        [RSSLlabel setTextColor:[UIColor blueColor]];
+        [RSSLlabel setFont:[UIFont systemFontOfSize: 12.0]];
+        [RSSLlabel setTextAlignment:NSTextAlignmentCenter];
+        [cell addSubview:RSSLlabel];
         
     }
+    
+    //beacon name
+
+    _tableTitleLabel.text = peripheral.name;
+  
+ //beacon id
+    _tableCenterLabel.text = peripheral.identifier.UUIDString;
+    
+    
+     //beacon rssi
+     UILabel *RSSLlabel = (UILabel *)[cell viewWithTag:200];
+     RSSLlabel.text = [NSString stringWithFormat:@"%@",[_SOSDiscoveredRSSI objectAtIndex:indexPath.row]];
+    
     
     if ([peripheral.identifier.UUIDString isEqualToString:self.targetPeripheral]) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;

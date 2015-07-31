@@ -39,6 +39,8 @@
 @property (nonatomic,strong) NSMutableDictionary * SelectChildrenDictionary;
 //@property (strong,nonatomic)  AddGuardianViewController *addGuardian;
 @property (strong,nonatomic)  KidMessageViewController * km;
+/* get local child informaton */
+@property (nonatomic,strong) NSMutableArray *localChildInfo;
 //-------------------视图变量--------------------
 @property NSInteger cellHeight;
 //
@@ -59,7 +61,7 @@
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     // Do any additional setup after loading the view.
-     [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
+    [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
     
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:LOCALIZATION(@"btn_add") style:UIBarButtonItemStyleBordered target:self action:@selector(addAction)];
     [self iv];
@@ -86,7 +88,7 @@
 
 
 - (void)viewDidDisappear:(BOOL)animated{
-//       [[NSNotificationCenter defaultCenter] removeObserver:self name:UNBIND_DEVICE_BROADCAST object:nil];
+    //       [[NSNotificationCenter defaultCenter] removeObserver:self name:UNBIND_DEVICE_BROADCAST object:nil];
 }
 
 #pragma mark --
@@ -98,6 +100,7 @@
 -(void)iv
 {
     
+    _localChildInfo = [self allChildren];
     
     self.BindingArray=[[NSMutableArray alloc]init];
     
@@ -111,14 +114,14 @@
     index=0;
     
     
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBindBroadcast:) name:UNBIND_DEVICE_BROADCAST object:nil ];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeIcon) name:CHANGE_ICON_BROADCAST object:nil ];
     
     
     
-
     
     
-  
+    
+    
 }
 
 /**
@@ -140,31 +143,11 @@
 
 
 #pragma mark - broadcast
-- (void) unBindBroadcast:(NSNotification *)notification{
-    if ([[notification name] isEqualToString:UNBIND_DEVICE_BROADCAST]){
-        
-//        
-//        self.BindingArray=[[NSMutableArray alloc]init];
-//        
-//        self.unBindingArray=[[NSMutableArray alloc]init];
-//        
-//        self.grantedArray=[[NSMutableArray alloc]init];
-//        _SelectChildrenDictionary=[NSMutableDictionary dictionary];
-     
-        
-        
-
-        // Do any additional setup after loading the view.
-        [self getRequest:GET_CHILDREN_INFO_LIST delegate:self RequestDictionary:nil];
-      
-        [self iv];
-        [self lc];
-        
-        
-  
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:UNBIND_DEVICE_BROADCAST object:nil];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(unBindBroadcast:) name:UNBIND_DEVICE_BROADCAST object:nil ];
-    }
+- (void) changeIcon{
+    
+    [_KindlistTView reloadData];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:CHANGE_ICON_BROADCAST object:nil];
+    
 }
 
 #pragma mark --
@@ -176,7 +159,7 @@
 {
     UITableViewCell * cell = [self tableView:tableView cellForRowAtIndexPath:indexPath];
     int row=0;
-
+    
     switch (indexPath.row) {
         case 0:
             row=_BindingArray.count%5>0?_BindingArray.count/5+1:_BindingArray.count/5;
@@ -217,7 +200,7 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     int sNum=0;
     //儿童头像行数
-     int kidsLogoListrow=0;
+    int kidsLogoListrow=0;
     switch (indexPath.row) {
         case 0:
             kidsLogoListrow=_BindingArray.count%5>0?_BindingArray.count/5+1:_BindingArray.count/5;
@@ -235,7 +218,7 @@
         kidsLogoListrow=1;
     }
     _cellHeight= 35+((CGRectGetWidth(self.view.frame)-100)/5+10)*kidsLogoListrow;
-     NSArray *tempArray=[[NSArray alloc]init];
+    NSArray *tempArray=[[NSArray alloc]init];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         //        cell.tag = indexPath.row;
@@ -257,28 +240,28 @@
         [bindLbl setTextColor:[UIColor whiteColor]];
         [bindLbl setTextAlignment:NSTextAlignmentLeft];
         [bindView addSubview:bindLbl];
-      
+        
         switch (indexPath.row) {
             case 0:
                 tempArray=[_BindingArray copy];
                 
                 break;
             case 1:
-                 tempArray=[_unBindingArray copy];
-       
+                tempArray=[_unBindingArray copy];
+                
                 break;
             case 2:
-                 tempArray=[_grantedArray copy];
-          
+                tempArray=[_grantedArray copy];
+                
                 break;
                 
             default:
                 break;
         }
-      
+        
         for (int i=0; i<tempArray.count; i++) {
             
-
+            
             if (i>0&&i%5==0) {
                 sNum++;
             }
@@ -292,6 +275,29 @@
             
             [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
+            //            for (int i =0 ; i < _localChildInfo.count; i ++) {
+            //                NSDictionary *tempdic = [_localChildInfo objectAtIndex:i];
+            //                if ([[NSString stringWithFormat:@"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]]isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+            //                    if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+            //
+            //
+            //
+            //                        NSData *imageData = loadImageData([self localImgPath], [NSString stringWithFormat:@"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]]);
+            //                        UIImage *image = [UIImage imageWithData:imageData];
+            //                        [kindImgView setImage:image];
+            //
+            //                        //  NSLog(@"resourcePath  %@",path);
+            //
+            //                    }else{
+            //
+            //
+            //                         [kindImgView setImageWithPath:[pathOne copy]];
+            //                    }
+            //
+            //                }
+            //
+            //            }
+            
             [kindImgView setImageWithPath:[pathOne copy]];
             [bindView addSubview:kindImgView];
             
@@ -299,8 +305,8 @@
             UIButton * kindBtn=[[UIButton alloc] initWithFrame:CGRectZero];
             kindBtn.frame=kindImgView.frame;
             kindBtn.backgroundColor=[UIColor clearColor];
-
-
+            
+            
             //设置按钮响应事件
             [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
             kindBtn.tag=102+i;
@@ -308,13 +314,13 @@
         }
         sNum=0;
     }
-//    cell.backgroundColor=[UIColor blackColor];
-     NSLog(@"_cellHeight  is %ld and indexPath.row si %zi height is %f",(long)_cellHeight,indexPath.row, cell.frame.size.height);
+    //    cell.backgroundColor=[UIColor blackColor];
+    NSLog(@"_cellHeight  is %ld and indexPath.row si %zi height is %f",(long)_cellHeight,indexPath.row, cell.frame.size.height);
     
-      
-        
-            UIView * bindView=(UIView *)[cell viewWithTag:101];
-            bindView.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, _cellHeight-10);
+    
+    
+    UIView * bindView=(UIView *)[cell viewWithTag:101];
+    bindView.frame=CGRectMake(5, 5, CGRectGetWidth(cell.frame)-10, _cellHeight-10);
     switch (indexPath.row) {
         case 0:
             [bindView setBackgroundColor:[UIColor colorWithRed:0.467 green:0.843 blue:0.639 alpha:1]];
@@ -328,18 +334,18 @@
         default:
             break;
     }
-
     
-            for (UIView *view in [bindView subviews])
-            {
-                if ([view isKindOfClass:[UIView class]])
-                {
-                    [view removeFromSuperview];
-                }
-            }
     
-            //绑定栏目title
-            UILabel * bindLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 0, self.view.frame.size.width, 20)];
+    for (UIView *view in [bindView subviews])
+    {
+        if ([view isKindOfClass:[UIView class]])
+        {
+            [view removeFromSuperview];
+        }
+    }
+    
+    //绑定栏目title
+    UILabel * bindLbl =[[UILabel alloc]initWithFrame:CGRectMake(5, 0, self.view.frame.size.width, 20)];
     switch (indexPath.row) {
         case 0:
             [bindLbl setText:LOCALIZATION(@"text_bind_child")];
@@ -353,13 +359,13 @@
         default:
             break;
     }
-
     
-            [bindLbl setFont:[UIFont systemFontOfSize: 15.0]];
-            [bindLbl setTextColor:[UIColor whiteColor]];
-            [bindLbl setTextAlignment:NSTextAlignmentLeft];
-            [bindView addSubview:bindLbl];
-            
+    
+    [bindLbl setFont:[UIFont systemFontOfSize: 15.0]];
+    [bindLbl setTextColor:[UIColor whiteColor]];
+    [bindLbl setTextAlignment:NSTextAlignmentLeft];
+    [bindView addSubview:bindLbl];
+    
     switch (indexPath.row) {
         case 0:
             tempArray=[_BindingArray copy];
@@ -377,10 +383,10 @@
     
     for (int i=0; i<tempArray.count; i++) {
         
-                
-                if (i>0&&i%5==0) {
-                    sNum++;
-                }
+        //NSLog(@"tempArray -- %@",tempArray);
+        if (i>0&&i%5==0) {
+            sNum++;
+        }
         DBImageView * kindImgView=[[DBImageView alloc] initWithFrame:CGRectMake(10+((CGRectGetWidth(bindView.frame)-100)/5+20)*(i%5),25+((CGRectGetWidth(bindView.frame)-100)/5+10)*sNum , (CGRectGetWidth(bindView.frame)-100)/5, (CGRectGetWidth(bindView.frame)-100)/5)];
         [kindImgView setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
         
@@ -391,7 +397,30 @@
         
         [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
-        [kindImgView setImageWithPath:[pathOne copy]];
+        for (int y =0 ; y < _localChildInfo.count;  y++) {
+            NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+            if ([[NSString stringWithFormat:@"%@",[[tempArray objectAtIndex:i] objectForKey:@"child_id" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                    
+                    
+                    
+                    NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[[tempArray objectAtIndex:i] objectForKey:@"child_id" ]]] );
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [kindImgView setImage:image];
+                    
+                    //  NSLog(@"resourcePath  %@",path);
+                    
+                }else{
+                    
+                    
+                    [kindImgView setImageWithPath:[pathOne copy]];
+                }
+                
+            }
+            
+        }
+        
+        // [kindImgView setImageWithPath:[pathOne copy]];
         [bindView addSubview:kindImgView];
         
         //儿童图标
@@ -399,29 +428,29 @@
         kindBtn.frame=kindImgView.frame;
         kindBtn.backgroundColor=[UIColor clearColor];
         
-//                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
-                //设置按钮响应事件
-                [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
+        //                [kindBtn setImage:[UIImage imageNamed:@"20150207105906"] forState:UIControlStateNormal];
+        //设置按钮响应事件
+        [kindBtn addTarget:self action:@selector(ShowKidMessageAction:) forControlEvents:UIControlEventTouchUpInside];
         
         [_SelectChildrenDictionary setObject:[tempArray objectAtIndex:i] forKey:[NSString stringWithFormat:@"%d",102+index]];
         kindBtn.tag=102+index;
         index++;
-                [bindView addSubview:kindBtn];
-                
-            }
+        [bindView addSubview:kindBtn];
         
-         sNum=0;
+    }
+    
+    sNum=0;
     return cell;
 }
 
 -(void)ShowKidMessageAction:(id)sender
 {
-   
+    
     int num = (int)[(UIButton *)sender tag];
     _km =[[KidMessageViewController alloc]init];
     NSLog(@"childrenArray is %@",childrenArray);
-//    _km.childrenDictionary=[_SelectChildrenDictionary objectForKey:[NSString stringWithFormat:@"%d",num]];
-
+    //    _km.childrenDictionary=[_SelectChildrenDictionary objectForKey:[NSString stringWithFormat:@"%d",num]];
+    
     NSDictionary *tempDictionary=[_SelectChildrenDictionary objectForKey:[NSString stringWithFormat:@"%d",num]];
     for (int i=0; childrenArray.count; i++) {
         if ([[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ] isEqualToString:[tempDictionary objectForKey:@"name"]]) {
@@ -430,11 +459,11 @@
         }
     }
     tempDictionary=nil;
-//    _km.major=[[childrenArray objectAtIndex:num] objectForKey:@"major"];
-//    _km.minor=[[childrenArray objectAtIndex:num] objectForKey:@"minor"];
+    //    _km.major=[[childrenArray objectAtIndex:num] objectForKey:@"major"];
+    //    _km.minor=[[childrenArray objectAtIndex:num] objectForKey:@"minor"];
     [self.navigationController pushViewController:_km animated:YES];
     _km.title = @"";
-
+    
 }
 #pragma mark --
 #pragma mark --服务器返回信息
@@ -465,22 +494,32 @@
                 [tempDictionary setObject:[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] forKey:@"mac_address"];
                 
                 
-                if (![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""] && [[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"]) {
+                if ([[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"] && ![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isKindOfClass:[NSNull class]]) {
                     [self.BindingArray addObject:[tempDictionary copy]];
-                }else if(![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""] && [[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"T"]){
-                    [self.BindingArray addObject:[tempDictionary copy]];
+                }else if([[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"T"] && ![[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isKindOfClass:[NSNull class]]){
+                    //[self.BindingArray addObject:[tempDictionary copy]];
+                    [self.grantedArray addObject:[tempDictionary copy]];
                 }
                 
-//                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
-//                                    }
-
+                //                if ([[[childrenArray objectAtIndex:i] objectForKey:@"macAddress"] isEqualToString:@""]) {
+                //                                    }
+                
             }
             else
             {
-                [self.unBindingArray addObject:[tempDictionary copy]];
-
+                if([[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"T"]){
+                    //[self.BindingArray addObject:[tempDictionary copy]];
+                    NSLog(@"  RELATION --- %@",[NSString stringWithFormat:@"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]]);
+                    [self.grantedArray addObject:[tempDictionary copy]];
+                }else{
+                    NSLog(@"  RELATION --- %@",[NSString stringWithFormat:@"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]]);
+                    [self.unBindingArray addObject:[tempDictionary copy]];
+                }
+                
+                
+                
             }
-           
+            
             
             if (![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"P"] && ![[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ] isEqualToString:@"T"]) {
                 [self.grantedArray addObject:[tempDictionary copy]];
@@ -489,14 +528,14 @@
             [tempDictionary removeAllObjects];
             tempDictionary=nil;
         }
-
+        
     }
     [_KindlistTView reloadData];
 }
 
 - (void)requestFailed:(ASIHTTPRequest *)request  tag:(NSString *)tag
 {
-//    [_progressView setHidden:YES];
+    //    [_progressView setHidden:YES];
     [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                 message:LOCALIZATION(@" text_network_error")
                                delegate:self
@@ -512,14 +551,14 @@
     
     NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
     
-
-//    [[NSNotificationCenter defaultCenter] postNotificationName:BROADCAST_GUARDIAN_ID object:[userDefaultes objectForKey:LoginViewController_guardianId]];
-//    
-//    NSLog(@" [userDefaultes objectForKey:LoginViewController_guardianId] -> %@",[userDefaultes objectForKey:LoginViewController_guardianId] );
+    
+    //    [[NSNotificationCenter defaultCenter] postNotificationName:BROADCAST_GUARDIAN_ID object:[userDefaultes objectForKey:LoginViewController_guardianId]];
+    //
+    //    NSLog(@" [userDefaultes objectForKey:LoginViewController_guardianId] -> %@",[userDefaultes objectForKey:LoginViewController_guardianId] );
     _childView.comeFrom = @"logined";
     _childView.guardianId = [userDefaultes objectForKey:LoginViewController_guardianId];
     [self.navigationController pushViewController:_childView animated:YES];
-
+    
 }
 
 @end

@@ -19,5 +19,8 @@
 @property (strong,nonatomic) NSString *areaName;
 /* this view comes from  */
 @property (strong,nonatomic) NSString *comeFrom;
-
+/* child barthday */
+@property (strong,nonatomic) NSString *childBarthday;
+/* child name */
+@property (strong,nonatomic) NSString *childNames;
 @end

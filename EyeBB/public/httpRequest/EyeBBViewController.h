@@ -31,6 +31,7 @@
 #define BACKGROUND_ACTIVE_BRODACAST @"back_ground_active"
 #define UNBIND_DEVICE_BROADCAST @"unbind_device"
 #define BROADCAST_GUARDIAN_ID @"guardian_id_kids_listview"
+#define CHANGE_ICON_BROADCAST @"change_icon"
 
 @interface EyeBBViewController : UIViewController<MBProgressHUDDelegate,UIGestureRecognizerDelegate>
 {

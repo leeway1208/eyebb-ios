@@ -94,9 +94,9 @@
     
     
     
-    [self loadWidget];
-    
     [self loadParameter];
+    [self loadWidget];
+  
     
 }
 
@@ -206,6 +206,11 @@
     _kidsNameTf.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
     _kidsNameTf.returnKeyType=UIReturnKeyDefault;//返回键的类型
     //[_loginUserAccount becomeFirstResponder];
+    
+    if (_childNames != nil) {
+        _kidsNameTf.text = _childNames;
+    }
+    
     [self.view addSubview:_kidsNameTf];
     
     /**Dividing line*/
@@ -235,7 +240,10 @@
     NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
     if([childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth] != nil){
         _kidsBirthdayBtn.text = [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth];}
-    
+    if (_kidsBirthdayBtn != nil) {
+        _kidsBirthdayBtn.text = _childBarthday;
+    }
+
     _kidsBirthdayImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_bday"]];
     _kidsBirthdayImg.frame = CGRectMake(0, 0, 20, 20);
     
@@ -388,15 +396,15 @@
     //init array
     _getChildInformationArray = [[NSMutableArray alloc]init];
     
-    //get the data from user defaults
-    NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
-    
-    //    NSLog(@"ASDASDAS-_---> %@", [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth]);
-    if(   [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_childName] != nil){
-        _kidsNameTf.text = [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_childName];
-    }else if([childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_kId] != nil){
-        [_kidsKindergartenBtn setTitle:[childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_kId] forState:UIControlStateNormal];
-    }
+//    //get the data from user defaults
+//    NSUserDefaults *childInformation = [NSUserDefaults standardUserDefaults];
+//    
+//    //    NSLog(@"ASDASDAS-_---> %@", [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_dateOfBirth]);
+//    if(   [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_childName] != nil){
+//        _kidsNameTf.text = [childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_childName];
+//    }else if([childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_kId] != nil){
+//        [_kidsKindergartenBtn setTitle:[childInformation objectForKey:ChildInformationMatchingViewController_userDefaults_kId] forState:UIControlStateNormal];
+//    }
 }
 
 #pragma mark - keyboard action
@@ -531,6 +539,8 @@
         KindergartenListViewController *klvc = [[KindergartenListViewController alloc] init];
         klvc.guardianId = self.guardianId;
         klvc.comeFrom = @"logined";
+        klvc.childNames = _kidsNameTf.text;
+        klvc.childBarthday = _kidsBirthdayBtn.text;
         [self.navigationController pushViewController:klvc animated:YES];
         klvc.title = @"";
     }

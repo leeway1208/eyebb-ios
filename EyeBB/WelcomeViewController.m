@@ -338,7 +338,7 @@
             }
             [defaults setInteger:[[guardian objectForKey:LoginViewController_guardianId] intValue] forKey:LoginViewController_guardianId];
             [defaults setObject:[[[responseData mutableObjectFromJSONData] objectForKey:@"iosLowestVer"] copy] forKey:LoginViewController_app_version] ;
-            
+             [defaults setObject:[guardian objectForKey:LoginViewController_accName] forKey:LoginViewController_accName];
             [defaults synchronize];
             
             NSDictionary *tempDoctToken = [NSDictionary dictionaryWithObjectsAndKeys:token, LOGIN_TO_CHECK_KEY_deviceId, @"O" ,LOGIN_TO_CHECK_KEY_type,nil];

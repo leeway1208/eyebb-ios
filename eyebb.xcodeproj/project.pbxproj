@@ -84,7 +84,6 @@
 		3251C67E1AB03DFF0080C508 /* zbar-helpicons.png in Resources */ = {isa = PBXBuildFile; fileRef = 3251C6711AB03DFF0080C508 /* zbar-helpicons.png */; };
 		3251C67F1AB03DFF0080C508 /* zbar-samples.png in Resources */ = {isa = PBXBuildFile; fileRef = 3251C6721AB03DFF0080C508 /* zbar-samples.png */; };
 		32530F491A9EE01100F66B6D /* Localisator.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F481A9EE01100F66B6D /* Localisator.m */; };
-		32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 32530F4B1A9EFF4F00F66B6D /* eyebb.db */; };
 		32530F511AA002B400F66B6D /* HttpRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F501AA002B400F66B6D /* HttpRequest.m */; };
 		32530F541AA006FC00F66B6D /* EyeBBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32530F531AA006FC00F66B6D /* EyeBBViewController.m */; };
 		3264D9481A9D6B72009CB9C2 /* ASIAuthenticationDialog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3264D8F11A9D6B72009CB9C2 /* ASIAuthenticationDialog.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -122,6 +121,7 @@
 		327D13C01ABABB71002E5F73 /* KidMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */; };
 		32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32D377DF1AB120C20055A8DE /* KidslistViewController.m */; };
 		921542941B4F725300D5AF46 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 921542931B4F725300D5AF46 /* VPImageCropperViewController.m */; };
+		922673C61B5F9A1E00D2C20A /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 922673C51B5F9A1E00D2C20A /* eyebb.db */; };
 		923632411AA40CA600687F3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923632401AA40CA600687F3F /* LoginViewController.m */; };
 		927DBC7B1AA7325B00923122 /* ChildInformationMatchingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7A1AA7325B00923122 /* ChildInformationMatchingViewController.m */; };
 		927DBC7E1AA9B46F00923122 /* KindergartenListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 927DBC7D1AA9B46F00923122 /* KindergartenListViewController.m */; };
@@ -131,6 +131,7 @@
 		928693551AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 928693541AC2AE66000D5B53 /* ScanDeviceToBindingViewController.m */; };
 		92A873411B329D1800A59A2B /* sos.wav in Resources */ = {isa = PBXBuildFile; fileRef = 92A873401B329D1800A59A2B /* sos.wav */; };
 		92A89EA01A9F04DF006054D7 /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */; };
+		92AC27991B6226DC00B91240 /* GetMacAddress.m in Sources */ = {isa = PBXBuildFile; fileRef = 92AC27981B6226DC00B91240 /* GetMacAddress.m */; };
 		92BBD88C1AC400CE00C760B4 /* CustomerBluetooth.m in Sources */ = {isa = PBXBuildFile; fileRef = 92BBD88B1AC400CE00C760B4 /* CustomerBluetooth.m */; };
 		92D41F2F1AD670AA00B1A59E /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92D41F2E1AD670AA00B1A59E /* AboutViewController.m */; };
 		92DA5E001AF7260F00B3BA98 /* AntiLostKidsSelectedListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 92DA5DFF1AF7260F00B3BA98 /* AntiLostKidsSelectedListViewController.m */; };
@@ -305,7 +306,6 @@
 		3251C6721AB03DFF0080C508 /* zbar-samples.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "zbar-samples.png"; sourceTree = "<group>"; };
 		32530F471A9EE01100F66B6D /* Localisator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Localisator.h; sourceTree = "<group>"; };
 		32530F481A9EE01100F66B6D /* Localisator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Localisator.m; sourceTree = "<group>"; };
-		32530F4B1A9EFF4F00F66B6D /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
 		32530F4E1AA0029700F66B6D /* EyeBBHttpDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = EyeBBHttpDelegate.h; path = EyeBB/public/httpRequest/EyeBBHttpDelegate.h; sourceTree = "<group>"; };
 		32530F4F1AA002B400F66B6D /* HttpRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpRequest.h; path = EyeBB/public/httpRequest/HttpRequest.h; sourceTree = "<group>"; };
 		32530F501AA002B400F66B6D /* HttpRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HttpRequest.m; path = EyeBB/public/httpRequest/HttpRequest.m; sourceTree = "<group>"; };
@@ -380,6 +380,7 @@
 		32D377DF1AB120C20055A8DE /* KidslistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidslistViewController.m; sourceTree = "<group>"; };
 		921542921B4F725300D5AF46 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
 		921542931B4F725300D5AF46 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
+		922673C51B5F9A1E00D2C20A /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
 		9236323F1AA40CA600687F3F /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginViewController.h; sourceTree = "<group>"; };
 		923632401AA40CA600687F3F /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginViewController.m; sourceTree = "<group>"; };
 		927DBC781AA6C70F00923122 /* UserDefaultsUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = UserDefaultsUtils.h; sourceTree = "<group>"; };
@@ -396,6 +397,8 @@
 		92A873401B329D1800A59A2B /* sos.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sos.wav; sourceTree = "<group>"; };
 		92A89E9E1A9F04DF006054D7 /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		92A89E9F1A9F04DF006054D7 /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
+		92AC27971B6226DC00B91240 /* GetMacAddress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetMacAddress.h; sourceTree = "<group>"; };
+		92AC27981B6226DC00B91240 /* GetMacAddress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GetMacAddress.m; sourceTree = "<group>"; };
 		92BBD88A1AC400CE00C760B4 /* CustomerBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomerBluetooth.h; sourceTree = "<group>"; };
 		92BBD88B1AC400CE00C760B4 /* CustomerBluetooth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomerBluetooth.m; sourceTree = "<group>"; };
 		92D41F2D1AD670AA00B1A59E /* AboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutViewController.h; sourceTree = "<group>"; };
@@ -860,7 +863,7 @@
 		32530F4A1A9EFF4F00F66B6D /* db */ = {
 			isa = PBXGroup;
 			children = (
-				32530F4B1A9EFF4F00F66B6D /* eyebb.db */,
+				922673C51B5F9A1E00D2C20A /* eyebb.db */,
 			);
 			name = db;
 			path = EyeBB/db;
@@ -1036,6 +1039,8 @@
 				928693511AC136DA000D5B53 /* UIViewController+EyebbBluetooth.m */,
 				92BBD88A1AC400CE00C760B4 /* CustomerBluetooth.h */,
 				92BBD88B1AC400CE00C760B4 /* CustomerBluetooth.m */,
+				92AC27971B6226DC00B91240 /* GetMacAddress.h */,
+				92AC27981B6226DC00B91240 /* GetMacAddress.m */,
 			);
 			name = bluetooth;
 			path = EyeBB/public/bluetooth;
@@ -1151,7 +1156,6 @@
 				3264D96D1A9D6B72009CB9C2 /* README-GHUnit in Resources */,
 				3240DAD31AA5591200661712 /* icon-29.png in Resources */,
 				20C14CA61A9B69910097C891 /* 20150207105906.png in Resources */,
-				32530F4C1A9EFF4F00F66B6D /* eyebb.db in Resources */,
 				20BD16F91A99FC7700039A31 /* Images.xcassets in Resources */,
 				206134EE1ACA1F7C006AE0AA /* Info.plist in Resources */,
 				3251C67E1AB03DFF0080C508 /* zbar-helpicons.png in Resources */,
@@ -1161,6 +1165,7 @@
 				20BD17171A9A21C600039A31 /* Default-568h@2x.png in Resources */,
 				3240DAD61AA5591200661712 /* icon-40.png in Resources */,
 				3240DAD41AA5591200661712 /* icon-29@2x.png in Resources */,
+				922673C61B5F9A1E00D2C20A /* eyebb.db in Resources */,
 				3240DAD71AA5591200661712 /* icon-40@2x.png in Resources */,
 				3251C67C1AB03DFF0080C508 /* zbar-back.png in Resources */,
 				3240DAD51AA5591200661712 /* icon-29@3x.png in Resources */,
@@ -1245,6 +1250,7 @@
 				20E2CC791AAC929B0027A7A8 /* ViewController+EyebbPublic.m in Sources */,
 				2031DCB21ADAB91A00B19BB4 /* UpdateNameViewController.m in Sources */,
 				3264D9521A9D6B72009CB9C2 /* ASICloudFilesContainer.m in Sources */,
+				92AC27991B6226DC00B91240 /* GetMacAddress.m in Sources */,
 				3251C5E61AB01A1D0080C508 /* EGOCache.m in Sources */,
 				3251C6751AB03DFF0080C508 /* QRCodeGenerator.m in Sources */,
 				3251C6731AB03DFF0080C508 /* bitstream.c in Sources */,

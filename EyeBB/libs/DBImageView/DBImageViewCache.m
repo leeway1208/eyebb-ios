@@ -62,11 +62,13 @@
 
 - (NSString *) localDirectory
 {
+     //NSLog(@"localDirectory (%@)",[NSString stringWithFormat:@"%@/DBImageView", NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0]]);
     return [NSString stringWithFormat:@"%@/DBImageView", NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)[0]];
 }
 
 - (NSString *) pathOnDiskForName:(NSString *)imageName
 {
+    NSLog(@"pathOnDiskForName (%@)",[NSString stringWithFormat:@"%@/%@", self.localDirectory, [DBImageViewCache md5:imageName]]);
     return [NSString stringWithFormat:@"%@/%@", self.localDirectory, [DBImageViewCache md5:imageName]];
 }
 

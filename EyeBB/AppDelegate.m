@@ -20,6 +20,7 @@
 @synthesize childDictionary;
 @synthesize applanguage;
 @synthesize childrenBeanArray;
+@synthesize userName;
 @synthesize allKidsBeanArray;
 @synthesize allKidsWithMacAddressBeanArray;
 @synthesize antiLostSelectedKidsAy;

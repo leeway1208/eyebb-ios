@@ -285,7 +285,10 @@
         cimmvc.kindergartenId = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:KindergartenListViewController_json_key_areaId];
         cimmvc.guardianId = self.guardianId;
         cimmvc.areaName  = [[_allLocationAreasInfoAr objectAtIndex:indexPath.row ]objectForKey:@"name"];
-
+        cimmvc.childNames = _childNames;
+        cimmvc.childBarthday = _childBarthday;
+        
+        
         if ([_comeFrom isEqualToString:@"logined"]) {
             cimmvc.comeFrom = @"logined";
         }
@@ -323,21 +326,18 @@
 -(void)KindergartenListViewControllerLeftAction:(id) sender{
     
 
-    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
-    {
-        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[ChildInformationMatchingViewController class]]){
-            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
- 
-            
-        }
+    
+    ChildInformationMatchingViewController *cimmvc = [[ChildInformationMatchingViewController alloc] init];
+    cimmvc.childNames = _childNames;
+    cimmvc.childBarthday = _childBarthday;
+    
+    
+    if ([_comeFrom isEqualToString:@"logined"]) {
+        cimmvc.comeFrom = @"logined";
     }
     
+    [self.navigationController pushViewController:cimmvc animated:YES];
 
-    //    ChildInformationMatchingViewController *cimvc = [[ChildInformationMatchingViewController alloc]init];
-    //    [[self navigationController] pushViewController:cimvc animated:YES];
-    /*用法：[self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: ([self.navigationController.viewControllers count] -层次)] animated:YES];*/
-    //    [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex: 1] animated:YES];
-    //>>>>>>> Stashed changes
     
 }
 

@@ -14,13 +14,15 @@
 #import "RootViewController.h"
 #import "KidslistViewController.h"
 #import "SettingsViewController.h"
-
+#import "DBImageView.h"
 
 #import "VPImageCropperViewController.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import <MobileCoreServices/MobileCoreServices.h>
-
+#import "AppDelegate.h"
 #define ORIGINAL_MAX_WIDTH 640.0f
+
+#define LOCAL_ICON_FOLDER_NAME @"LocalIcon"
 
 @interface KidMessageViewController ()<UITableViewDataSource,UITableViewDelegate,UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate, VPImageCropperDelegate>
 
@@ -33,12 +35,13 @@
     Boolean reReadBatteryLife;
     
     NSString *macAddress;
+    AppDelegate * myDelegate;
 }
 //蓝牙设备电量显示
 @property (weak, nonatomic) RMDownloadIndicator *closedIndicator;
 
 /** child image */
-@property (nonatomic,strong) UIImageView *childImgView;
+@property (nonatomic,strong) DBImageView *childImgView;
 /** child name */
 @property (nonatomic,strong) UILabel *childNameLbl;
 
@@ -69,8 +72,20 @@
 @property (nonatomic,strong) UIView *kidBgView;
 
 
+
+/**             QR CODE                   */
+@property (strong,nonatomic) UIScrollView * PopupChangeNameView;
+/**列表显示模式容器*/
+@property (strong,nonatomic) UIView * changeNameView;
+/** change child name  */
+@property (nonatomic,strong) UITextField *changeChildNameField;
+
+
 /**  next view */
 @property (nonatomic,strong) RootViewController *scanDeviceView;
+
+/* get local child informaton */
+@property (nonatomic,strong) NSMutableArray *localChildInfo;
 @end
 
 @implementation KidMessageViewController
@@ -81,13 +96,13 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationController.navigationBarHidden = NO;
-//    self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(backAction)];
-//    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
-//    [newBackButton setBackgroundImage:[UIImage
-//                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
-//    self.navigationItem.leftBarButtonItem = newBackButton;
+//        self.navigationController.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(backAction)];
+        UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
+        [newBackButton setBackgroundImage:[UIImage
+                                           imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
+        self.navigationItem.leftBarButtonItem = newBackButton;
     
-   
+    
     
     NSLog(@"childrenDictionary(%@)",self.childrenDictionary);
     NSLog(@"name (%@)",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"name"]);
@@ -139,6 +154,9 @@
     [_QRView removeFromSuperview];
     [_QRImgView removeFromSuperview];
     [_batteryLifeLbl removeFromSuperview];
+    [_PopupChangeNameView removeFromSuperview];
+    [_changeNameView removeFromSuperview];
+    [_changeChildNameField removeFromSuperview];
     
     [self.view removeFromSuperview];
     
@@ -152,6 +170,9 @@
     [self setQRView:nil];
     [self setQRImgView:nil];
     [self setBatteryLifeLbl:nil];
+    [self setPopupChangeNameView:nil];
+    [self setChangeNameView:nil];
+    [self setChangeChildNameField:nil];
     
     [self setView:nil];
     [super viewDidDisappear:animated];
@@ -175,6 +196,11 @@
  */
 -(void)iv
 {
+    myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+
+    _localChildInfo = [self allChildren];
+    
+   // NSLog(@"%@",_localChildInfo);
     
     batteryLife = 0;
     reReadBatteryLife = FALSE;
@@ -191,16 +217,16 @@
     //头像背景容器
     _kidBgView=[[UIView alloc]initWithFrame:CGRectZero];
     _kidBgView.frame=CGRectMake(0, 0, Drive_Wdith, Drive_Height/6*2);
-
+    
     [self.view addSubview:_kidBgView];
     
     
     //child image
-    _childImgView = [[UIImageView alloc] initWithFrame:CGRectMake(Drive_Wdith /3 + 7, 10 + 7, Drive_Wdith /3 - 14, Drive_Wdith /3 - 14)];
+    _childImgView = [[DBImageView alloc] initWithFrame:CGRectMake(Drive_Wdith /3 + 7, 10 + 7, Drive_Wdith /3 - 14, Drive_Wdith /3 - 14)];
     [_childImgView.layer setCornerRadius:CGRectGetHeight([_childImgView bounds]) / 2];
     [_childImgView.layer setMasksToBounds:YES];
     [_childImgView.layer setBorderWidth:2];
-     UITapGestureRecognizer *portraitTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPortrait)];
+    UITapGestureRecognizer *portraitTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(editPortrait)];
     _childImgView.userInteractionEnabled = YES;
     [_childImgView addGestureRecognizer:portraitTap];
     [_childImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
@@ -214,7 +240,30 @@
     
     if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
         
-        [_childImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
+        for (int i =0 ; i < _localChildInfo.count; i ++) {
+            NSDictionary *tempdic = [_localChildInfo objectAtIndex:i];
+            if ([[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                    
+
+
+                     NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]]);
+                     UIImage *image = [UIImage imageWithData:imageData];
+                    [_childImgView setImage:image];
+                    
+                    //  NSLog(@"resourcePath  %@",path);
+
+                }else{
+                    
+                    
+                    [_childImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
+                }
+
+            }
+            
+        }
+        
+        
     }
     else
     {
@@ -240,8 +289,25 @@
     
     //child name
     _childNameLbl =[[UILabel alloc]initWithFrame:(CGRectMake(Drive_Wdith / 2 - Drive_Wdith/2, 10 + Drive_Wdith/3  / 2 + 20, Drive_Wdith, Drive_Wdith /3))];
-    [_childNameLbl setText:[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"name"]];
-    
+   
+    for (int i =0 ; i < _localChildInfo.count; i ++) {
+        NSDictionary *tempdic = [_localChildInfo objectAtIndex:i];
+        if ([[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+            if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]].length > 0) {
+                
+                
+              [_childNameLbl setText:[tempdic objectForKey:@"local_name"]];
+                
+            }else{
+                
+                
+               [_childNameLbl setText:[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"name"]];
+            }
+            
+        }
+        
+    }
+
     [_childNameLbl setFont:[UIFont systemFontOfSize: 22.0]];
     [_childNameLbl setTextColor:[UIColor whiteColor]];
     [_childNameLbl setTextAlignment:NSTextAlignmentCenter];
@@ -374,8 +440,87 @@
     [confirmBtn.layer setBorderWidth:0.5]; //边框宽度
     [confirmBtn.layer setBorderColor:[UIColor colorWithRed:0.945 green:0.941 blue:0.945 alpha:1].CGColor];//边框颜色
     [_QRView addSubview:confirmBtn];
-
     
+    
+    //------------------change name------遮盖层------------------------
+    
+    //弹出遮盖层
+    _PopupChangeNameView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height)];
+    _PopupChangeNameView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
+    [self.view addSubview:_PopupChangeNameView];
+    [_PopupChangeNameView setHidden:YES];
+    
+    
+    //unbind view
+    _changeNameView=[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-138, Drive_Wdith-10, 100)];
+    [_changeNameView setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_changeNameView.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_changeNameView.layer setCornerRadius:4.0];
+    [_PopupChangeNameView addSubview:_changeNameView];
+    
+    
+    //取消按钮
+    UIButton * CencelBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 62,  CGRectGetWidth(_changeNameView.frame)/2, 38)];
+    //设置按显示文字
+    [CencelBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
+    [CencelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [CencelBtn setImage:[UIImage imageNamed:@"cross2"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [CencelBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [CencelBtn addTarget:self action:@selector(changeNameCancelAction) forControlEvents:UIControlEventTouchUpInside];
+    //                //CencelBtn按钮是否圆角
+    //                [CencelBtn.layer setMasksToBounds:YES];
+    //                //圆角像素化
+    //                [CencelBtn.layer setCornerRadius:4.0];
+    [CencelBtn.layer setBorderWidth:0.5]; //边框宽度
+    [CencelBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
+    
+    [_changeNameView addSubview:CencelBtn];
+    
+    //确定按钮
+    UIButton * OkBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_changeNameView.frame)/2,62, CGRectGetWidth(_changeNameView.frame)/2, 38)];
+    //设置按显示文字
+    [OkBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
+    [OkBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [OkBtn setImage:[UIImage imageNamed:@"tick"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [OkBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [OkBtn addTarget:self action:@selector(changeNameConfirmAction) forControlEvents:UIControlEventTouchUpInside];
+    //                //CencelBtn按钮是否圆角
+    //                [CencelBtn.layer setMasksToBounds:YES];
+    //                //圆角像素化
+    //                [CencelBtn.layer setCornerRadius:4.0];
+    [OkBtn.layer setBorderWidth:0.5]; //边框宽度
+    [OkBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
+    
+    [_changeNameView addSubview:OkBtn];
+    
+    _changeChildNameField=[[UITextField alloc] initWithFrame:CGRectMake(10,10, CGRectGetWidth(_changeNameView.frame) - 20, 40)];
+    _changeChildNameField.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    //    _changeChildNameField.frame = CGRectMake(10, 65,self.view.frame.size.width - 20, 40);
+    
+    _changeChildNameField.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+    _changeChildNameField.leftViewMode=UITextFieldViewModeAlways;
+    _changeChildNameField.placeholder=LOCALIZATION(@"text_change_name");//默认显示的字
+    //测试开发用
+    // _loginPassword.text=@"000000";
+    _changeChildNameField.layer.cornerRadius=8.0f;
+    _changeChildNameField.layer.masksToBounds=YES;
+    _changeChildNameField.layer.borderColor=[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor;
+    _changeChildNameField.layer.borderWidth= 1.0f;
+    _changeChildNameField.secureTextEntry = NO;//设置成密码格式
+    _changeChildNameField.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+    _changeChildNameField.returnKeyType=UIReturnKeyDefault;//返回键的类型
+    [_changeNameView addSubview:_changeChildNameField];
+    
+    
+    
+    //--------------------------------------------
     
     
     if (macAddress.length > 0 && ![macAddress isEqualToString:@"<null>"]) {
@@ -398,11 +543,18 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
     if ([[NSString stringWithFormat:@"%@",[loginStatus objectForKey:LoginViewController_type]] isEqualToString:@"T"]) {
-        return 3;
+        return 1;
     }else{
-        return 4;
+        
+        //如果被授权只返回一个
+        if([[NSString stringWithFormat:@"%@",[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"relation" ]] isEqualToString:@"G"]){
+            return 1;
+        }else{
+            return 4;
+        }
+        
     }
-
+    
     //return 4;
 }
 
@@ -422,7 +574,7 @@
         [_batteryLifeLbl setTextColor:[UIColor blackColor]];
         [_batteryLifeLbl setTextAlignment:NSTextAlignmentCenter];
         _batteryLifeLbl.tag = 100;
-         cell.accessoryView = _batteryLifeLbl;
+        cell.accessoryView = _batteryLifeLbl;
         
     }
     
@@ -430,12 +582,12 @@
         
         cell.textLabel.text=LOCALIZATION(@"text_battery_life");
         
-      UILabel *batteryLifeLbl = (UILabel*)[cell viewWithTag:100];;
+        UILabel *batteryLifeLbl = (UILabel*)[cell viewWithTag:100];;
         //_batteryLifeLbl.text = @"ss";
         NSLog(@"batteryLife --> %d",batteryLife);
-      [batteryLifeLbl setText:[NSString stringWithFormat:@"%d%@",batteryLife,@"/100"]];
+        [batteryLifeLbl setText:[NSString stringWithFormat:@"%d%@",batteryLife,@"/100"]];
         
-       
+        
         
     }else
     {
@@ -548,7 +700,7 @@
                 _scanDeviceView.childID = [[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"];
                 
                 
-                 NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
+                NSUserDefaults *userDefaultes = [NSUserDefaults standardUserDefaults];
                 _scanDeviceView.guardianId = [userDefaultes objectForKey:LoginViewController_guardianId];
                 _scanDeviceView.comeFrom = @"kids_message";
                 
@@ -563,6 +715,8 @@
     
     
 }
+
+
 
 #pragma mark - broadcast
 - (void) beepTimeout:(NSNotification *)notification{
@@ -591,25 +745,25 @@
         
         
         batteryLife = [(NSString *)[notification object] intValue];
-//        _batteryLifeLbl.text = [NSString stringWithFormat:@"%d",batteryLife];
+        //        _batteryLifeLbl.text = [NSString stringWithFormat:@"%d",batteryLife];
         
         NSLog(@"BLUETOOTH_READ_BATTERY_LIFE_BROADCAST_NAME --> %d",batteryLife);
         
-       
+        
         
         reReadBatteryLife = TRUE;
         
         dispatch_async(dispatch_get_main_queue(), ^{
-             [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
+            [_closedIndicator updateWithTotalBytes:100 downloadedBytes:batteryLife];
             [self.SelectedTView reloadData];
         });
         
     }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
         
         NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
-       
+        
         dispatch_async(dispatch_get_main_queue(), ^{
-          [HUD hide:YES afterDelay:0];
+            [HUD hide:YES afterDelay:0];
         });
         
     }
@@ -625,17 +779,44 @@
 
 #pragma mark - button action
 
+-(void)changeNameCancelAction{
+    [_PopupChangeNameView setHidden:YES];
+}
+
+
+-(void)changeNameConfirmAction{
+    
+    
+    NSString * newChildName = _changeChildNameField.text;
+    
+    
+    if (newChildName.length > 0) {
+        [self saveLocalNameToDB:[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]] ChildNewName:newChildName];
+        [_PopupChangeNameView setHidden:YES];
+        
+        
+         [_childNameLbl setText:newChildName];
+    }else{
+        
+    }
+    
+    
+    newChildName = nil;
+    
+    
+}
+
 -(void)backAction{
-   
+    
     for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
     {
         if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[KidslistViewController class]]){
             
-//             [[NSNotificationCenter defaultCenter] postNotificationName:UNBIND_DEVICE_BROADCAST object:nil];
+    
             [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
         }
     }
-
+    
 }
 
 -(void)cancelAction{
@@ -753,8 +934,8 @@
             
             
             //notification to update view
-
-//            [[NSNotificationCenter defaultCenter] postNotificationName:UNBIND_DEVICE_BROADCAST object:nil];
+            
+            //            [[NSNotificationCenter defaultCenter] postNotificationName:UNBIND_DEVICE_BROADCAST object:nil];
             for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
             {
                 if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[SettingsViewController class]]){
@@ -763,7 +944,7 @@
                     [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
                 }
             }
-
+            
             [_PopupSView setHidden:YES];
         }
         
@@ -825,10 +1006,37 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         
-        self.childImgView.image = editedImage;
+        //self.childImgView.image = editedImage;
+         [_childImgView setImage:editedImage];
+        
+        NSString *imageDir = [NSString stringWithFormat:@"%@/Library/Caches/%@", NSHomeDirectory(), LOCAL_ICON_FOLDER_NAME];
+        BOOL isDir = NO;
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL existed = [fileManager fileExistsAtPath:imageDir isDirectory:&isDir];
+        BOOL bo;
+        //NSLog(@"imageDir --> %@",imageDir);
+        if ( !(isDir == YES && existed == YES) )
+        {
+            bo = [fileManager createDirectoryAtPath:imageDir withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        
+        // NSAssert(bo,@"创建目录失败");
+        
+        NSString *imagePath = [[NSString stringWithFormat:@"%@/%@",imageDir, LOCAL_ICON_FOLDER_NAME] stringByAppendingString:[NSString stringWithFormat:@"_%@_%@.png",myDelegate.userName,[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]];
+        // NSLog(@"imagePath---> %@",imagePath);
+        [UIImagePNGRepresentation(editedImage) writeToFile:imagePath atomically:YES];
+        
+        
+        [self saveLocalIconToDB:[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"] ChildNewIcon:imagePath];
+        
+        
+        
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:CHANGE_ICON_BROADCAST object:nil];
     });
-
- 
+    
+   
+    
     [cropperViewController dismissViewControllerAnimated:YES completion:^{
         // TO DO
     }];
@@ -875,6 +1083,10 @@
                                  NSLog(@"Picker View Controller is presented");
                              }];
         }
+    } else if (buttonIndex == 2){
+        
+        
+        _PopupChangeNameView.hidden = NO;
     }
 }
 
@@ -882,13 +1094,18 @@
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
     [picker dismissViewControllerAnimated:YES completion:^() {
         UIImage *portraitImg = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-        portraitImg = [self imageByScalingToMaxSize:portraitImg];
-        // present the cropper view controller
-        VPImageCropperViewController *imgCropperVC = [[VPImageCropperViewController alloc] initWithImage:portraitImg cropFrame:CGRectMake(0, 100.0f, self.view.frame.size.width, self.view.frame.size.width) limitScaleRatio:3.0];
-        imgCropperVC.delegate = self;
-        [self presentViewController:imgCropperVC animated:YES completion:^{
-            // TO DO
-        }];
+        if ((int)portraitImg.size.width == 0) {
+            
+        }else{
+            portraitImg = [self imageByScalingToMaxSize:portraitImg];
+            // present the cropper view controller
+            VPImageCropperViewController *imgCropperVC = [[VPImageCropperViewController alloc] initWithImage:portraitImg cropFrame:CGRectMake(0, 100.0f, self.view.frame.size.width, self.view.frame.size.width) limitScaleRatio:3.0];
+            imgCropperVC.delegate = self;
+            [self presentViewController:imgCropperVC animated:YES completion:^{
+                // TO DO
+            }];
+            
+        }
     }];
 }
 
@@ -899,18 +1116,25 @@
 
 #pragma mark image scale utility
 - (UIImage *)imageByScalingToMaxSize:(UIImage *)sourceImage {
-    if (sourceImage.size.width < ORIGINAL_MAX_WIDTH) return sourceImage;
-    CGFloat btWidth = 0.0f;
-    CGFloat btHeight = 0.0f;
-    if (sourceImage.size.width > sourceImage.size.height) {
-        btHeight = ORIGINAL_MAX_WIDTH;
-        btWidth = sourceImage.size.width * (ORIGINAL_MAX_WIDTH / sourceImage.size.height);
-    } else {
-        btWidth = ORIGINAL_MAX_WIDTH;
-        btHeight = sourceImage.size.height * (ORIGINAL_MAX_WIDTH / sourceImage.size.width);
+    NSLog(@"sourceImage.size.width -- > %f",sourceImage.size.width);
+    if ((int)sourceImage.size.width == 0) {
+        
+        return nil;
+    }else{
+        if (sourceImage.size.width < ORIGINAL_MAX_WIDTH) return sourceImage;
+        CGFloat btWidth = 0.0f;
+        CGFloat btHeight = 0.0f;
+        if (sourceImage.size.width > sourceImage.size.height) {
+            btHeight = ORIGINAL_MAX_WIDTH;
+            btWidth = sourceImage.size.width * (ORIGINAL_MAX_WIDTH / sourceImage.size.height);
+        } else {
+            btWidth = ORIGINAL_MAX_WIDTH;
+            btHeight = sourceImage.size.height * (ORIGINAL_MAX_WIDTH / sourceImage.size.width);
+        }
+        CGSize targetSize = CGSizeMake(btWidth, btHeight);
+        return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
     }
-    CGSize targetSize = CGSizeMake(btWidth, btHeight);
-    return [self imageByScalingAndCroppingForSourceImage:sourceImage targetSize:targetSize];
+    
 }
 
 - (UIImage *)imageByScalingAndCroppingForSourceImage:(UIImage *)sourceImage targetSize:(CGSize)targetSize {

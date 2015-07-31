@@ -146,10 +146,15 @@
     
     [self setView:nil];
     [super viewDidDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter]removeObserver:self name:SETTING_CHANGE_LANGUAGE_BROADCAST object:nil];
 }
 
 
 -(void)loadPara{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(updateView) name:SETTING_CHANGE_LANGUAGE_BROADCAST object:nil];
+    
+    
     ifChangeTheLangugae = false;
     self.title = LOCALIZATION(@"btn_options");
     
@@ -331,7 +336,7 @@
         }else{
             return 2;
         }
-
+        
         
     }else if(section == 2){
         return 3;
@@ -587,7 +592,7 @@
         
         [[NSNotificationCenter defaultCenter] postNotificationName:kNotificationLanguageChanged object:nil userInfo:nil];
         [[NSNotificationCenter defaultCenter] postNotificationName:SETTING_CHANGE_LANGUAGE_BROADCAST object:nil userInfo:nil];
-
+        
         
         [_optionsTable reloadData];
     }
@@ -618,43 +623,42 @@
             [self.navigationController pushViewController:_aboutView animated:YES];
         }
         if(indexPath.row==1){
-            if (_webView==nil) {
-                _webView= [[WebViewController alloc] init];
+            
+            _webView= [[WebViewController alloc] init];
+            
+            if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+                _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_cn";
                 
-                if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
-                    _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_cn";
-                   
-                }else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
-             _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_tw";
-                }else{
-     
-                    _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=EN_us";
-                }
+            }else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+                _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_tw";
+            }else{
                 
+                _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=EN_us";
             }
+            
+            
             [self.navigationController pushViewController:_webView animated:YES];
         }
         if(indexPath.row==2){
-            if (_webView==nil) {
-                _webView= [[WebViewController alloc] init];
-                if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
-                    
-                    _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_cn";
-
-                } else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
-                    _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_tw";
-
-                }else{
-                    _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=EN_us";
-
-                }
+            _webView= [[WebViewController alloc] init];
+            if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+                
+                _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_cn";
+                
+            } else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+                _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_tw";
+                
+            }else{
+                _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=EN_us";
                 
             }
+            
+            
             [self.navigationController pushViewController:_webView animated:YES];
-
+            
         }
-
-
+        
+        
         
     }
     
@@ -664,6 +668,33 @@
     
 }
 
+-(void)updateView{
+    
+    _webView= [[WebViewController alloc] init];
+    
+    if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+        _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_cn";
+        
+    }else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+        _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=ZH_tw";
+    }else{
+        
+        _webView.urlStr = @"http://www.eyebb.com/disclaimer/?lang=EN_us";
+    }
+    
+    if ([[self getCurrentAppLanguage] isEqualToString:@"zh-Hans-CN"]) {
+        
+        _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_cn";
+        
+    } else if([[self getCurrentAppLanguage] isEqualToString:@"zh-Hant-HK"]){
+        _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=ZH_tw";
+        
+    }else{
+        _webView.urlStr = @"http://www.eyebb.com/privacy/?lang=EN_us";
+        
+    }
+    
+}
 
 #pragma mark - button action
 /*
@@ -677,22 +708,22 @@
  */
 -(void)settingsSelectLeftAction:(id)sender
 {
-//    if (ifChangeTheLangugae) {
-//        if (_mainView == nil) {
-//            _mainView = [[MainViewController alloc] init];
-//        }
-//        [[self navigationController] pushViewController:_mainView animated:YES];
-//        ifChangeTheLangugae = false;
-//    }else{
-//        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
-//        {
-//            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
-//                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
-//            }
-//        }
-//        ifChangeTheLangugae = false;
-//        
-//    }
+    //    if (ifChangeTheLangugae) {
+    //        if (_mainView == nil) {
+    //            _mainView = [[MainViewController alloc] init];
+    //        }
+    //        [[self navigationController] pushViewController:_mainView animated:YES];
+    //        ifChangeTheLangugae = false;
+    //    }else{
+    //        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+    //        {
+    //            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[MainViewController class]]){
+    //                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+    //            }
+    //        }
+    //        ifChangeTheLangugae = false;
+    //
+    //    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -710,6 +741,8 @@
         }
         
     }
+    //delect from DB
+    [self delLodChild];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

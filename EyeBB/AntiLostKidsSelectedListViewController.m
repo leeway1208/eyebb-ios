@@ -37,7 +37,8 @@
 
 /*next view*/
 @property (nonatomic,strong) MainViewController *mainView;
-
+/* get local child informaton */
+@property (nonatomic,strong) NSMutableArray *localChildInfo;
 @end
 
 @implementation AntiLostKidsSelectedListViewController
@@ -50,12 +51,12 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
     self.navigationItem.rightBarButtonItem = self.rightBtnItem;
-
+    
     UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(antiLostLeftAction:)];
     [newBackButton setBackgroundImage:[UIImage
                                        imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
     self.navigationItem.leftBarButtonItem = newBackButton;
-
+    
     [self iv];
     [self lc];
 }
@@ -68,7 +69,7 @@
     self.navigationController.navigationBarHidden = NO;
     self.navigationController.interactivePopGestureRecognizer.enabled = YES;
     
- 
+    
     
 }
 - (void)didReceiveMemoryWarning {
@@ -83,7 +84,7 @@
  */
 -(void)iv
 {
-    
+    _localChildInfo = [self allChildren];
     myDelegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
     
     //实例化数组
@@ -94,7 +95,7 @@
     
     
     self.SelectedchildrenIDArray=[NSMutableArray array];
-  
+    
     _childrenArray= (NSMutableArray *)myDelegate.allKidsWithMacAddressBeanArray;
     //    _childrenArray=[NSMutableArray array];
     
@@ -102,17 +103,17 @@
         for (int j=0; j<_childrenArray.count; j++) {
             //        NSLog(@"%@,%@",[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ],[NSNumber numberWithLong:(long)[self.guestId longLongValue]]);
             NSLog(@"_childrenArray %@",[[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]);
-        
+            
             for(int i=0; i<SelectedchildrenArray.count; i++)
             {
-                     NSLog(@"SelectedchildrenArray %@",[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]);
+                NSLog(@"SelectedchildrenArray %@",[[SelectedchildrenArray objectAtIndex:i] objectForKey:@"childId"]);
                 if ([[[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]isEqualToNumber:[[[[SelectedchildrenArray objectAtIndex:i]objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]]) {
                     [self.SelectedchildrenIDArray addObject: [[[[_childrenArray objectAtIndex:j] objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId"]] ;
                 }
             }
             
         }
-
+        
     }
     
     for (int i=0; i<_childrenArray.count; i++) {
@@ -168,7 +169,7 @@
         
         //btn_uncheck_all
         
-        UIButton *unCheckBtn=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 280, 6, 80, 32)];
+        UIButton *unCheckBtn=[[UIButton alloc]initWithFrame:CGRectMake(Drive_Wdith - 300, 6, 80, 32)];
         [unCheckBtn setBackgroundColor:[UIColor clearColor]];
         [unCheckBtn setTitle:LOCALIZATION(@"btn_uncheck_all") forState:UIControlStateNormal];
         [unCheckBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -297,14 +298,9 @@
         
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
-        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
         
         
-        
-        [KidsImgView setImageWithPath:[pathOne copy]];
-        
-        pathOne=nil;
         
         KidsImgView.tag=101;
         [cell addSubview:KidsImgView];
@@ -317,21 +313,64 @@
         UILabel * KidsLbl =[[UILabel alloc]initWithFrame:CGRectMake(70, 20, CGRectGetWidth(cell.frame)-80, 20)];
         
         
-        if (arr.count>0) {
-            
-            [KidsLbl setText:[arr objectAtIndex:row]];
-        }
-        else
-        {
-            [KidsLbl setText:@"*****"];
-        }
         [KidsLbl setFont:[UIFont systemFontOfSize: 18.0]];
         [KidsLbl setTextColor:[UIColor blackColor]];
         [KidsLbl setTextAlignment:NSTextAlignmentLeft];
         KidsLbl.tag=102;
         [cell addSubview:KidsLbl];
         
-        //        }
+        for (int y =0 ; y < _localChildInfo.count;  y++) {
+            NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+            if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                    
+                    
+                    
+                    NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    [KidsImgView setImage:image];
+                    
+                    //  NSLog(@"resourcePath  %@",path);
+                    
+                }else{
+                    
+                    
+                    NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+                    
+                    
+                    
+                    
+                    [KidsImgView setImageWithPath:[pathOne copy]];
+                    
+                    pathOne=nil;
+                }
+                
+                
+                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]].length > 0) {
+                    
+                    
+                    
+                    [KidsLbl setText:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]]];
+                }else{
+                    
+                    
+                    if (arr.count>0) {
+                        
+                        [KidsLbl setText:[arr objectAtIndex:row]];
+                    }
+                    else
+                    {
+                        [KidsLbl setText:@"*****"];
+                    }
+                    
+                    
+                }
+                
+                
+            }
+            
+        }
+        
         
         
         //选中/取消图标
@@ -390,7 +429,58 @@
     
     
     
-    //    }
+    for (int y =0 ; y < _localChildInfo.count;  y++) {
+        NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+        if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+            if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                
+                
+                
+                NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                UIImage *image = [UIImage imageWithData:imageData];
+                [KidsImgView setImage:image];
+                
+                //  NSLog(@"resourcePath  %@",path);
+                
+            }else{
+                
+                
+                NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+                
+                
+                
+                
+                [KidsImgView setImageWithPath:[pathOne copy]];
+                
+                pathOne=nil;
+            }
+            
+            
+            if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]].length > 0) {
+                
+                
+                
+                [KidsLbl setText:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]]];
+            }else{
+                
+                
+                if (arr.count>0) {
+                    
+                    [KidsLbl setText:[arr objectAtIndex:row]];
+                }
+                else
+                {
+                    [KidsLbl setText:@"*****"];
+                }
+                
+                
+            }
+            
+            
+        }
+        
+    }
+
     
     UIImageView *SelecteImgView=(UIImageView *)[cell viewWithTag:103];
     [SelecteImgView setImage:[UIImage imageNamed:@"selected_off"]];
@@ -536,7 +626,7 @@
     [self.SelectedchildrenIDArray removeAllObjects ];
     
     dispatch_async(dispatch_get_main_queue(), ^{
-       
+        
         [_tableView reloadData];
         
         
@@ -548,7 +638,7 @@
 
 -(void)Ok
 {
- 
+    
     
     if(myDelegate.antiLostSelectedKidsAy == nil){
         myDelegate.antiLostSelectedKidsAy = [[NSMutableArray alloc]init];
@@ -569,7 +659,7 @@
     
     NSLog(@"anti lost _str --> %@ ",tempArray);
     myDelegate.antiLostSelectedKidsAy = [tempArray mutableCopy];
-
+    
     //post NSNotificationCenter
     [[NSNotificationCenter defaultCenter] postNotificationName:ANTILOST_VIEW_ANTI_LOST_CONFIRM_BROADCAST object:@"turn_on"];
     if (myDelegate.antiLostSelectedKidsAy.count > 0) {
@@ -581,7 +671,7 @@
                 [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
             }
         }
-
+        
     }else{
         HUD.mode = MBProgressHUDModeCustomView;
         HUD.customView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"ic_arrow"]];
@@ -592,7 +682,7 @@
     }
     
     
-
+    
 }
 
 -(void)antiLostLeftAction:(id)sender{
@@ -607,7 +697,7 @@
             [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
         }
     }
-
+    
 }
 
 
