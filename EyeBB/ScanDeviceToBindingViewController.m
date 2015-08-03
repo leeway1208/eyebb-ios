@@ -171,7 +171,7 @@
     if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_PERIPHERAL_BROADCAST_NAME]) {
         
         
-        _SOSDiscoveredPeripherals = [(NSMutableArray *)[notification object]copy];
+        _SOSDiscoveredPeripherals = [(NSMutableArray *)[notification object]mutableCopy];
         
         NSLog(@"GET AD --- > %lu",(unsigned long)_SOSDiscoveredPeripherals.count);
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -182,13 +182,13 @@
         
     }else if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME]){
         
-        _SOSDiscoveredAdvertisementData = [(NSDictionary *)[notification object]copy];
+        _SOSDiscoveredAdvertisementData = [(NSDictionary *)[notification object]mutableCopy];
         
          NSLog(@"GET AD ad --- > %lu",(unsigned long)_SOSDiscoveredAdvertisementData.count);
         
     }else if ([[notification name] isEqualToString:BLUETOOTH_GET_SOS_DEVICE_RSSI_BROADCAST_NAME]){
      
-        _SOSDiscoveredRSSI = [(NSMutableArray *)[notification object]copy];
+        _SOSDiscoveredRSSI = [(NSMutableArray *)[notification object]mutableCopy];
         
         
     }
@@ -385,11 +385,16 @@
     static NSString *detailIndicated = @"tableCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:detailIndicated];
     
+    [self sortPeripheralByRssi:_SOSDiscoveredPeripherals SOSDiscoveredAdvertisementData:_SOSDiscoveredAdvertisementData SOSDiscoveredRSSI:_SOSDiscoveredRSSI];
+    
     
     
     CBPeripheral *peripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
    _didSelectTargetAdvertisementData = (NSDictionary *)_SOSDiscoveredAdvertisementData[indexPath.row];
 
+    
+
+    
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:detailIndicated];
         
@@ -481,6 +486,49 @@
     
 }
 
+#pragma mark - sort
 
+-(void)sortPeripheralByRssi:(NSMutableArray *)SOSDiscoveredPeripherals SOSDiscoveredAdvertisementData:(NSMutableArray *)SOSDiscoveredAdvertisementData SOSDiscoveredRSSI :(NSMutableArray *)SOSDiscoveredRSSI{
+    int i , j;
+    id  tempPeripherals,tempRSSI,tempAdvertisementData;
+    NSInteger length = SOSDiscoveredPeripherals.count;
+    
+    for (j = 0; j < length - 1; j ++) {
+        
+        for (i = 0; i  < length - 1 - j; i ++) {
+            
+            if([SOSDiscoveredRSSI objectAtIndex:i] < [SOSDiscoveredRSSI objectAtIndex:i + 1]){
+                
+                // rssi
+                tempRSSI = [SOSDiscoveredRSSI objectAtIndex:i];
+//                [SOSDiscoveredRSSI objectAtIndex:i] = [SOSDiscoveredRSSI objectAtIndex:i + 1];
+
+                [SOSDiscoveredRSSI replaceObjectAtIndex:i  withObject:[SOSDiscoveredRSSI objectAtIndex:i + 1]];
+             //   [SOSDiscoveredRSSI objectAtIndex:i + 1] = tempRSSI;
+              
+                [SOSDiscoveredRSSI replaceObjectAtIndex:i + 1 withObject:tempRSSI];
+                
+                
+                //Peripherals
+                tempPeripherals = [SOSDiscoveredPeripherals objectAtIndex:i];
+                [SOSDiscoveredPeripherals replaceObjectAtIndex:i  withObject:[SOSDiscoveredPeripherals objectAtIndex:i + 1]];
+                [SOSDiscoveredPeripherals replaceObjectAtIndex:i + 1 withObject:tempPeripherals];
+                
+                
+                //AdvertisementData
+                tempAdvertisementData = [SOSDiscoveredAdvertisementData objectAtIndex:i];
+                [SOSDiscoveredAdvertisementData replaceObjectAtIndex:i  withObject:[SOSDiscoveredAdvertisementData objectAtIndex:i + 1]];
+                [SOSDiscoveredAdvertisementData replaceObjectAtIndex:i + 1 withObject:tempAdvertisementData];
+                
+                
+            }
+            
+        }
+        
+        
+    }
+    
+    
+}
 
 @end
