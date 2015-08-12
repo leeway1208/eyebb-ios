@@ -41,6 +41,13 @@
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredAdvertisementData;
 /* get sos device table */
 @property (strong,nonatomic) NSMutableArray *SOSDiscoveredRSSI;
+
+/** beep pop */
+@property (strong,nonatomic) UIScrollView * PopupBeepView;
+/** beep pop   */
+@property (strong,nonatomic) UIView * BeepView;
+/** beep pop    */
+@property (nonatomic,strong) UILabel *beepLbl;
 @end
 
 @implementation ScanDeviceToBindingViewController
@@ -107,6 +114,76 @@
     _introLabel.numberOfLines = 4;
     [self.view addSubview:_introLabel];
     
+    
+    
+    
+    //------------------change name------遮盖层------------------------
+    
+    //弹出遮盖层
+    _PopupBeepView=[[UIScrollView alloc]initWithFrame:CGRectMake(0, 0, Drive_Wdith, Drive_Height)];
+    _PopupBeepView.backgroundColor=[UIColor colorWithRed:0.137 green:0.055 blue:0.078 alpha:0.3];
+    
+    [self.view addSubview:_PopupBeepView];
+    [_PopupBeepView setHidden:YES];
+    
+    
+    //unbind view
+    _BeepView =[[UIView alloc]initWithFrame:CGRectMake(5, (Drive_Height+20)/2-138, Drive_Wdith-10, 100)];
+    [_BeepView setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_BeepView.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_BeepView.layer setCornerRadius:4.0];
+    [_PopupBeepView addSubview:_BeepView];
+    
+    
+    // LABEL
+    _beepLbl = [[UILabel alloc]initWithFrame:CGRectMake(10,5 , CGRectGetWidth(_PopupBeepView.frame) - 20, 50)];
+    _beepLbl.text = @"";
+    [_beepLbl setFont:[UIFont systemFontOfSize:10]];
+    _beepLbl.numberOfLines = 3;
+    [_BeepView addSubview:_beepLbl];
+    
+    
+    //取消按钮
+    UIButton * CencelBtn=[[UIButton alloc]initWithFrame:CGRectMake(0, 62,  CGRectGetWidth(_BeepView.frame)/2, 38)];
+    //设置按显示文字
+    [CencelBtn setTitle:LOCALIZATION(@"btn_cancel") forState:UIControlStateNormal];
+    [CencelBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [CencelBtn setImage:[UIImage imageNamed:@"cross2"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [CencelBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [CencelBtn addTarget:self action:@selector(beepCancelAction) forControlEvents:UIControlEventTouchUpInside];
+    //                //CencelBtn按钮是否圆角
+    //                [CencelBtn.layer setMasksToBounds:YES];
+    //                //圆角像素化
+    //                [CencelBtn.layer setCornerRadius:4.0];
+    [CencelBtn.layer setBorderWidth:0.5]; //边框宽度
+    [CencelBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
+    
+    [_BeepView addSubview:CencelBtn];
+    
+    //确定按钮
+    UIButton * OkBtn=[[UIButton alloc]initWithFrame:CGRectMake(CGRectGetWidth(_BeepView.frame)/2,62, CGRectGetWidth(_BeepView.frame)/2, 38)];
+    //设置按显示文字
+    [OkBtn setTitle:LOCALIZATION(@"btn_ok") forState:UIControlStateNormal];
+    [OkBtn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [OkBtn setImage:[UIImage imageNamed:@"tick"] forState:UIControlStateNormal];
+    //设置按钮背景颜色
+    [OkBtn setBackgroundColor:[UIColor clearColor]];
+    //设置按钮响应事件
+    [OkBtn addTarget:self action:@selector(beepConfirmAction) forControlEvents:UIControlEventTouchUpInside];
+    //                //CencelBtn按钮是否圆角
+    //                [CencelBtn.layer setMasksToBounds:YES];
+    //                //圆角像素化
+    //                [CencelBtn.layer setCornerRadius:4.0];
+    [OkBtn.layer setBorderWidth:0.5]; //边框宽度
+    [OkBtn.layer setBorderColor:[UIColor colorWithRed:0.702 green:0.702 blue:0.702 alpha:1].CGColor];//边框颜色
+    
+    [_BeepView addSubview:OkBtn];
+
+    
 }
 
 
@@ -134,6 +211,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME object:nil];
         [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_SOS_DEVICE_RSSI_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_BEEP_SUCCESS_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:BROADCAST_GUARDIAN_ID object:nil];
     
@@ -142,12 +220,18 @@
     [_deviceTableView removeFromSuperview];
     [_tableTitleLabel removeFromSuperview];
     [_tableCenterLabel removeFromSuperview];
+    [_PopupBeepView removeFromSuperview];
+    [_BeepView removeFromSuperview];
+    [_beepLbl removeFromSuperview];
     [self.view removeFromSuperview];
     
     [self setTableTitleLabel:nil];
     [self setTableCenterLabel:nil];
     [self setIntroLabel:nil];
     [self setDeviceTableView:nil];
+    [self setPopupBeepView:nil];
+    [self setBeepView:nil];
+    [self setBeepLbl:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
 }
@@ -197,6 +281,9 @@
     else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
         
         
+        NSMutableArray *result = (NSMutableArray *)[notification object];
+        
+        
         NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
 //        if (guardian_id != nil) {
 //            self.guardianId = guardian_id;
@@ -232,7 +319,15 @@
                           otherButtonTitles:nil] show];
         
         
+    } else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_BEEP_SUCCESS_BROADCAST_NAME]){
+        
+        
+        
+        
+        
     }
+    
+    
 }
 
 #pragma mark - server return
@@ -343,6 +438,28 @@
 
 
 #pragma mark - button aciton
+-(void)beepCancelAction{
+    _PopupBeepView.hidden = YES;
+    [self findSOSDevice];
+}
+
+-(void)beepConfirmAction{
+ 
+    NSLog(@"DATA -- > %@",_didSelectTargetAdvertisementData);
+    NSString *toStringFromData = NSDataToHex([ _didSelectTargetAdvertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
+    
+    NSString *getMinor = [toStringFromData substringWithRange:NSMakeRange(0,4)];
+    NSString *getMajor = [toStringFromData substringWithRange:NSMakeRange(4,4)];
+    
+    NSLog(@"write major:%@ and minor:%@ ",getMajor,getMinor);
+    NSDictionary *checkBeaconDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,getMajor,ScanDeviceToBindingViewController_KEY_majors,getMinor,ScanDeviceToBindingViewController_KEY_minor,nil];
+    
+    [self postRequest:CHECK_BEACON RequestDictionary:checkBeaconDoct delegate:self];
+
+    
+    [HUD show:YES];
+}
+
 -(void)scanDeviceViewLeftAction:(id)sender
 {
     
@@ -456,25 +573,29 @@
 
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    [self stopfindSOSDevice];
-    [HUD show:YES];
+    
+
+        [self stopfindSOSDevice];
+    
+    
+   
+    
     _didSelectTargetAdvertisementData = (NSDictionary *)_SOSDiscoveredAdvertisementData[indexPath.row];
     _didSelectTargetPeripheral=(CBPeripheral *)_SOSDiscoveredPeripherals[indexPath.row];
-    NSLog(@"DATA -- > %@",_didSelectTargetAdvertisementData);
-    NSString *toStringFromData = NSDataToHex([ _didSelectTargetAdvertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
 
-    NSString *getMajor = [toStringFromData substringWithRange:NSMakeRange(0,4)];
-    NSString *getMinor = [toStringFromData substringWithRange:NSMakeRange(4,4)];
+    _beepLbl.text = [NSString stringWithFormat:@"%@ %@",_didSelectTargetPeripheral.identifier.UUIDString,LOCALIZATION(@"text_start_beep")];
+    _PopupBeepView.hidden = NO;
+    NSString *toStringFromData = NSDataToHex([ _didSelectTargetAdvertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
     
-    NSLog(@"write major:%@ and minor:%@ ",getMajor,getMinor);
+    NSString *getMinor = [toStringFromData substringWithRange:NSMakeRange(0,4)];
+    NSString *getMajor = [toStringFromData substringWithRange:NSMakeRange(4,4)];
     
+      NSLog(@"write major:%@ and minor:%@ ",getMajor,getMinor);
+    [self writeBeepMajor:getMajor minor:getMinor writeValue:@"01"];
     //if the device is right
    // if (![self.targetPeripheral isEqualToString:_didSelectTargetPeripheral.identifier.UUIDString]) {
         
-         NSDictionary *checkBeaconDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,getMajor,ScanDeviceToBindingViewController_KEY_majors,getMinor,ScanDeviceToBindingViewController_KEY_minor,nil];
-        
-        [self postRequest:CHECK_BEACON RequestDictionary:checkBeaconDoct delegate:self];
-        
+              
        
         [tableView reloadData];
         

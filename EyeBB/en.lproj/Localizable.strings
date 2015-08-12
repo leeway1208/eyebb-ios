@@ -182,6 +182,10 @@ CFBundleDisplayName ="EyeBB";
 "text_new_version_to_update" = "eyebb has a new version ,please update";
 "text_is_missing" = " is missing!";
 "text_view_list" = "View List";
+"text_area_code" = "Area Code";
+"text_start_beep" = "Start to beep";
+
+"text_stop_beep" = "Stop beep";
 
 //<!-- Button strings -->
 "btn_sign_up"="Sign Up";

@@ -73,7 +73,7 @@
 
 
 
-/**             QR CODE                   */
+/**            change name                   */
 @property (strong,nonatomic) UIScrollView * PopupChangeNameView;
 /**列表显示模式容器*/
 @property (strong,nonatomic) UIView * changeNameView;
@@ -550,7 +550,7 @@
         if([[NSString stringWithFormat:@"%@",[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"relation" ]] isEqualToString:@"G"]){
             return 1;
         }else{
-            return 4;
+            return 5;
         }
         
     }
@@ -603,9 +603,12 @@
             cell.textLabel.text=LOCALIZATION(@"text_beep");
             break;
         case 2:
-            cell.textLabel.text=LOCALIZATION(@"text_get_the_eyebb_device_qr_code");
+            cell.textLabel.text=LOCALIZATION(@"text_stop_beep");
             break;
         case 3:
+            cell.textLabel.text=LOCALIZATION(@"text_get_the_eyebb_device_qr_code");
+            break;
+        case 4:
             NSLog(@"macAddress --> %@",macAddress);
             if(macAddress.length > 0 && ![macAddress isEqualToString:@"<null>"]){
                 
@@ -649,7 +652,17 @@
             
             
             
-        }else if (indexPath.row == 2){
+        }else if (indexPath.row == 2) {
+            
+            [self writeBeepMajor:[self getMajor:major] minor:[self getMinor:minor] writeValue:@"00"];
+            [HUD show:YES];
+
+            
+            
+        }
+        
+        
+        else if (indexPath.row == 3){
             
             
             
@@ -685,7 +698,7 @@
             
             
             
-        }else if(indexPath.row == 3)
+        }else if(indexPath.row == 4)
         {
             NSLog(@"macAddressmacAddress--> %@",macAddress);
             
@@ -758,10 +771,10 @@
             [self.SelectedTView reloadData];
         });
         
-    }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME]){
+    }else if([[notification name] isEqualToString:BLUETOOTH_GET_WRITE_BEEP_SUCCESS_BROADCAST_NAME]){
         
         NSLog(@"BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME");
-        
+        [self writeToResetAntiMajor:[self getMajor:major] minor:[self getMajor:minor]];
         dispatch_async(dispatch_get_main_queue(), ^{
             [HUD hide:YES afterDelay:0];
         });

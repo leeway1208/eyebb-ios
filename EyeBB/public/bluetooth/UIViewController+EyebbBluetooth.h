@@ -22,5 +22,5 @@
 -(void)antiLostService:(NSMutableArray * )antiLostDeviceAy NameAy:(NSMutableArray * )nameAy;
 -(void)stopAntiLostService;
 
-
+-(void)writeToResetAntiMajor:(NSString *)major minor:(NSString *)minor;
 @end

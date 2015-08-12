@@ -189,6 +189,9 @@ CFBundleDisplayName ="宝宝安";
 "text_take_photo" = "拍照";
 "text_change_name" = "修改姓名";
 "text_from_album" = "从相册中选";
+"text_area_code" = "区号";
+"text_start_beep" = "开始蜂鸣";
+"text_stop_beep" = "关闭蜂鸣";
 
 
 //<!-- Button strings -->

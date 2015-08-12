@@ -92,6 +92,8 @@ Boolean isAntiLost = false;
 Boolean isAntiLostMoreThanThree = false;
 Boolean isStopAntiLost = false;
 
+Boolean isSoloAntiLost = false;
+
 Boolean firstDevieLost = false;
 Boolean secondDevieLost = false;
 Boolean thirdDevieLost = false;
@@ -530,7 +532,7 @@ NSString *keepMajorAndMinor;
 -(void) centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
     
     
-//    NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@", [[GetMacAddress alloc] getMacAddress:peripheral.identifier.UUIDString]  ,advertisementData ,RSSI);
+    //NSLog(@"Discovered peripheral %@ (%@) ---->RSSI : %@", [[GetMacAddress alloc] getMacAddress:peripheral.identifier.UUIDString]  ,advertisementData ,RSSI);
     
   
     
@@ -551,7 +553,7 @@ NSString *keepMajorAndMinor;
         NSString *toStringFromData = NSDataToHex([ advertisementData objectForKey:@"kCBAdvDataManufacturerData"]) ;
         if(toStringFromData.length > 10 ){
             getMajorAndMinor = [toStringFromData substringWithRange:NSMakeRange(0,8)];
-            //NSLog(@"MAJOR AND MINOR ---> %@",getMajorAndMinor);
+            NSLog(@"MAJOR AND MINOR ---> %@ (%@)",getMajorAndMinor    ,self.targetMajorAndMinorPeripheral);
             
             /**
              *  anti lost function
@@ -685,13 +687,22 @@ NSString *keepMajorAndMinor;
                     
                 }else{
                     //connect to the peripheral device
-                    if (isBeep||isMajor) {
-                        [self.central connectPeripheral:peripheral options:nil];
-                    }
-                    
+//                    if (isBeep||isMajor) {
+//                        [self.central connectPeripheral:peripheral options:nil];
+//                    }
+//                    
                     
                 }
                 
+                if (isBeep||isMajor) {
+                    [self.central connectPeripheral:peripheral options:nil];
+                }
+                
+                if (isSoloAntiLost) {
+                    [self.central connectPeripheral:peripheral options:nil];
+
+                }
+
             }
         }
     }
@@ -901,7 +912,17 @@ NSString *keepMajorAndMinor;
                     //setPassword = false;
                 }
                 
-            }else if (isStopAntiLost){
+            }else if (isSoloAntiLost){
+                if ([characteristic.UUID.UUIDString isEqualToString:@"1003"]) {
+  
+                    [peripheral writeValue:[self stringToByte:@"0000"] forCharacteristic:characteristic type:CBCharacteristicWriteWithResponse];
+                    
+                }
+
+            }
+            
+            
+            else if (isStopAntiLost){
                 if ([characteristic.UUID.UUIDString isEqualToString:@"1003"]) {
                     //[peripheral readValueForCharacteristic:characteristic];
                     //[peripheral setNotifyValue:YES forCharacteristic:characteristic];
@@ -976,7 +997,7 @@ NSString *keepMajorAndMinor;
             isBeep = false;
              setPassword = false;
             //post get sos device broadcast
-            [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
+            [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_GET_WRITE_BEEP_SUCCESS_BROADCAST_NAME object:self.SOSDiscoveredPeripherals];
         }else if (isMajor){
             isMajor = false;
             [peripheral discoverServices:nil];
@@ -993,7 +1014,12 @@ NSString *keepMajorAndMinor;
             [_keepAntiLostBroadDataAy addObject:keepMajorAndMinor];
             [[NSNotificationCenter defaultCenter] postNotificationName:BLUETOOTH_ANTI_LOST_BROADCAST_DATA_BROADCAST_NAME object:keepMajorAndMinor];
             [self startScan];
-        }else if (isStopAntiLost){
+        }else if(isSoloAntiLost){
+            setPassword = false;
+
+        }
+        
+        else if (isStopAntiLost){
             [_stopAntiLostBroadcastData addObject:peripheral];
             
             
@@ -1091,7 +1117,7 @@ NSString * NSDataToHex(NSData *data) {
 /**
  *  step one
  */
--(void) startScan {
+-(void)startScan {
     NSLog(@"Starting scan");
     
     //    self.central = [[CBCentralManager alloc] initWithDelegate:self queue:dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)];
@@ -1104,7 +1130,7 @@ NSString * NSDataToHex(NSData *data) {
     [self.central scanForPeripheralsWithServices:nil options:scanOptions];
 }
 
--(void) stopScan{
+-(void)stopScan{
     NSLog(@"Stop scan");
     
     [self.central stopScan];
@@ -1147,11 +1173,23 @@ NSString * NSDataToHex(NSData *data) {
     self.writeValue1 = writeValue;
     
     [self initData:major minor:minor];
+   // NSLog(<#NSString *format, ...#>)
     [self startScan];
     
 }
 
 
+-(void)writeToResetAntiMajor:(NSString *)major minor:(NSString *)minor {
+    //initial data
+    isSoloAntiLost = true;
+
+
+    
+    [self initData:major minor:minor];
+ 
+    [self startScan];
+    
+}
 
 
 

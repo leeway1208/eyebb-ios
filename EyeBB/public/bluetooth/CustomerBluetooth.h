@@ -19,6 +19,7 @@
 #define BLUETOOTH_GET_SOS_DEVICE_ADVERTISEMENT_DATA_BROADCAST_NAME @"get_sos_device_advertisementData"
 #define BLUETOOTH_GET_SOS_DEVICE_RSSI_BROADCAST_NAME @"get_sos_device_rssi"
 #define BLUETOOTH_GET_WRITE_SUCCESS_BROADCAST_NAME @"write_success"
+#define BLUETOOTH_GET_WRITE_BEEP_SUCCESS_BROADCAST_NAME @"write_beep_success"
 #define BLUETOOTH_GET_WRITE_FAIL_BROADCAST_NAME @"write_fail"
 #define BLUETOOTH_SCAN_DEVICE_BROADCAST_NAME @"scan_device"
 #define BLUETOOTH_SCAN_DEVICE_RSSI_BROADCAST_NAME @"scan_devic_rssi"
@@ -41,5 +42,5 @@ NSString * NSDataToHex(NSData *data);
 -(void)stopScanTheDevice;
 -(void)antiLostService:(NSMutableArray * )antiLostDeviceAy NameAy:(NSMutableArray * )nameAy;
 -(void)stopAntiLostService;
-
+-(void)writeToResetAntiMajor:(NSString *)major minor:(NSString *)minor ;
 @end

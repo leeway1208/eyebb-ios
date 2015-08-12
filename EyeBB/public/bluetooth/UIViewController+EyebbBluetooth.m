@@ -54,7 +54,11 @@
 
     
 }
-
+-(void) writeToResetAntiMajor:(NSString *)major minor:(NSString *)minor{
+    
+      [[self BluetoothRequest] writeToResetAntiMajor:(NSString *)major minor:(NSString *)minor];
+    
+}
 
 -(void)stopAntiLostService{
      [[self BluetoothRequest] stopAntiLostService ];

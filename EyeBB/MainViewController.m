@@ -2138,7 +2138,8 @@ static SystemSoundID shake_sound_male_id = 0;
     }
     //房间列表
     else if(tableView == self.RoomTableView){
-        
+        NSLog(@"sadasdsa (%@)",[self allChildren]);
+        _localChildInfo = [self allChildren];
         NSArray *tempChildArray;
         if (self.isallRoomOn==YES) {
             tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
@@ -2327,9 +2328,14 @@ static SystemSoundID shake_sound_male_id = 0;
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                 //NSLog(@"[tempChildArray objectAtIndex:i]-->%@",[tempChildArray objectAtIndex:i]);
                 
+          
                 for (int y =0 ; y < _localChildInfo.count;  y++) {
                     NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+                    
+                    NSLog(@"localChildInfo.count -- >%@",[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]);
                     if ([[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                        
+                        
                         if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
                             
                             
@@ -2568,6 +2574,9 @@ static SystemSoundID shake_sound_male_id = 0;
                 
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
+                
+                
+               
                 for (int y =0 ; y < _localChildInfo.count;  y++) {
                     NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
                     if ([[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {

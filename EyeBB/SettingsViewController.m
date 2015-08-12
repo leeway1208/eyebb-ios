@@ -742,7 +742,7 @@
         
     }
     //delect from DB
-    [self delLodChild];
+   // [self delLodChild];
     [self.navigationController popToRootViewControllerAnimated:YES];
 }
 

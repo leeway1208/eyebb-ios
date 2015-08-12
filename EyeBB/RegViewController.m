@@ -53,6 +53,16 @@
 @property (strong,nonatomic) NSString *userName;
 /** user password */
 @property (strong,nonatomic) NSString *userPassword;
+
+
+/** choose area code UITextField */
+@property (strong,nonatomic) UITextField * areaIdFd;
+/** choose area id view */
+@property (strong,nonatomic) UIView * areaIdContainer;
+/** area id view confirm button*/
+@property (nonatomic,strong) UIButton *areaIdViewContainerConfirmBtn;
+
+
 @end
 
 @implementation RegViewController
@@ -114,6 +124,9 @@
     [_cancelBtn removeFromSuperview];
     [_popTitleLabel removeFromSuperview];
     [_popContentLabel removeFromSuperview];
+    [_areaIdFd removeFromSuperview];
+    [_areaIdContainer removeFromSuperview];
+    [_areaIdViewContainerConfirmBtn removeFromSuperview];
     [self.view removeFromSuperview];
     [self setRegTView:nil];
     [self setTelTxt:nil];
@@ -128,6 +141,9 @@
     [self setCancelBtn:nil];
     [self setPopTitleLabel:nil];
     [self setPopContentLabel:nil];
+    [self setAreaIdFd:nil];
+    [self setAreaIdContainer:nil];
+    [self setAreaIdViewContainerConfirmBtn:nil];
     [self setView:nil];
     [super viewDidDisappear:animated];
     
@@ -276,6 +292,37 @@
     [buttonLabel.layer setBorderWidth:1.0]; //边框宽度
     [buttonLabel.layer setBorderColor:[UIColor colorWithRed:0.157 green:0.169 blue:0.208 alpha:0.3].CGColor];
     [_popViewContainer addSubview:buttonLabel];
+    
+    
+    
+    /* date view container  */
+    _areaIdContainer=[[UIView alloc]initWithFrame:CGRectMake(0, Drive_Height, Drive_Wdith-10, 220)];
+    [_areaIdContainer setBackgroundColor:[UIColor whiteColor] ];
+    //设置列表是否圆角
+    [_areaIdContainer.layer setMasksToBounds:YES];
+    //圆角像素化
+    [_areaIdContainer.layer setCornerRadius:4.0];
+    //[_PopupSView addSubview:_popViewContainer];
+    
+    
+    /** date view container confirm btn */
+    _areaIdViewContainerConfirmBtn=[[UIButton alloc] initWithFrame:self.view.bounds];
+    _areaIdViewContainerConfirmBtn.frame = CGRectMake(0, 175 ,self.view.frame.size.width , 40);
+    _areaIdViewContainerConfirmBtn.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    [_areaIdViewContainerConfirmBtn setTitle:LOCALIZATION(@"btn_confirm") forState:UIControlStateNormal];
+    [_areaIdViewContainerConfirmBtn setTitleColor:[UIColor blackColor]forState:UIControlStateNormal];
+    _areaIdViewContainerConfirmBtn.titleLabel.font = [UIFont systemFontOfSize:17];
+    [_areaIdViewContainerConfirmBtn addTarget:self action:@selector(areaIdConfirmAciton:) forControlEvents:UIControlEventTouchUpInside];
+    [_areaIdContainer addSubview:_areaIdViewContainerConfirmBtn];
+    
+    
+    /**Dividing line for container*/
+    UILabel * containerDivLb=[[UILabel alloc]initWithFrame:CGRectMake(0, 170 ,self.view.frame.size.width, 1)];
+    [containerDivLb.layer setBorderWidth:1.0]; //边框宽度
+    [containerDivLb.layer setBorderColor:[UIColor colorWithRed:0.682 green:0.682 blue:0.682 alpha:0.8].CGColor];
+    
+    [_areaIdContainer addSubview:containerDivLb];
+
 }
 /*-----------------------信息处理函数---------------------------------*/
 
@@ -512,12 +559,37 @@
     
     if (indexPath.section==0) {
         if (indexPath.row==0) {
+            _areaIdFd = [[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-30, 30)];
+            _areaIdFd.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
+            _areaIdFd.clearButtonMode=UITextFieldViewModeWhileEditing;
+            _areaIdFd.leftViewMode=UITextFieldViewModeAlways;
+            UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_phone"]];
+            _areaIdFd.leftView=imgV;//设置输入框内左边的图标
+            _areaIdFd.placeholder=LOCALIZATION(@"text_area_code");//默认显示的字
+            _areaIdFd.secureTextEntry=NO;//设置成密码格式
+            // _kidsBirthdayBtn.inputView =  self.areaIdContainer;
+            [cell addSubview:_areaIdFd];
+           // _areaIdFd.inputView  = _areaIdContainer;
+            _areaIdFd.text = @"+86";
+            
+            UILabel * telLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 40, self.view.frame.size.width-30, 1)];
+            [telLbl.layer setBorderWidth:1.0]; //边框宽度
+            [telLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
+            
+            [cell addSubview:telLbl];
+        }
+       else if (indexPath.row==1) {
             if ([cell viewWithTag:101]==nil) {
-                _telTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
-                _telTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+       
                 
+                
+                _telTxt=[[UITextField alloc]initWithFrame:CGRectMake(17 , 5, self.view.frame.size.width-30 , 30)];
+                _telTxt.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
                 UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_phone"]];
                 _telTxt.leftView=imgV;//设置输入框内左边的图标
+                _telTxt.placeholder=LOCALIZATION(@"text_area_code");//默认显示的字
+
+             
                 _telTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _telTxt.leftViewMode=UITextFieldViewModeAlways;
                 _telTxt.placeholder=LOCALIZATION(@"text_phone_number");//默认显示的字
@@ -541,7 +613,7 @@
             
             
         }
-        else if(indexPath.row==1)
+        else if(indexPath.row==2)
         {
             if ([cell viewWithTag:102]==nil) {
                 _nicknameTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
@@ -562,7 +634,7 @@
                 _nicknameTxt.tag=102;
                 [cell addSubview:_nicknameTxt];
                 
-                UILabel * nicknameLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 40, self.view.frame.size.width-30, 1)];
+                UILabel * nicknameLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 39, self.view.frame.size.width-30, 1)];
                 [nicknameLbl.layer setBorderWidth:1.0]; //边框宽度
                 [nicknameLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
                 
@@ -570,7 +642,7 @@
                 
             }
         }
-        else if(indexPath.row==2)
+        else if(indexPath.row==3)
         {
             if ([cell viewWithTag:103]==nil) {
                 _pDTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
@@ -598,7 +670,7 @@
                 [cell addSubview:PDLbl];
             }
         }
-        else if(indexPath.row==3)
+        else if(indexPath.row==4)
         {
             if ([cell viewWithTag:106]==nil) {
                 _verifyTxt=[[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-34, 30)];
@@ -742,10 +814,15 @@
 
 #pragma mark - 点击事件
 
+-(void)areaIdConfirmAciton:(id)sender{
+    
+}
+
+
 /**提交注册信息*/
 -(void)regAction:(id)sender
 {
-    NSString *phoneStr = [self.telTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *phoneStr = [NSString stringWithFormat:@"%@%@",[self.areaIdFd.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]],[self.telTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]] ;
     NSString *NickNameStr= [self.nicknameTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *pwdStr = [self.pDTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *varStr = [self.verifyTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
