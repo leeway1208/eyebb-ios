@@ -186,6 +186,8 @@ CFBundleDisplayName ="EyeBB";
 "text_start_beep" = "Start to beep";
 
 "text_stop_beep" = "Stop beep";
+"text_wait_for_beep" = "Please wait for the eyebb beep...";
+
 
 //<!-- Button strings -->
 "btn_sign_up"="Sign Up";

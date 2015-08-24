@@ -10,7 +10,7 @@
 // setting view children list
 #import "KidslistViewController.h"
 #import "ChildInformationMatchingViewController.h"
-
+#import "SettingsViewController.h"
 #import "KidMessageViewController.h"
 #import "DBImageView.h"//图片加载
 
@@ -58,6 +58,11 @@
 #pragma mark - 原生方法
 - (void)viewDidLoad {
     [super viewDidLoad];
+    UIBarButtonItem *newBackButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed: @"navi_btn_back.png"]  style:UIBarButtonItemStylePlain target:self action:@selector(backAction)];
+    [newBackButton setBackgroundImage:[UIImage
+                                       imageNamed: @"navi_btn_back.png"]forState:UIControlStateSelected  barMetrics:UIBarMetricsDefault];
+    self.navigationItem.leftBarButtonItem = newBackButton;
+
     // Do any additional setup after loading the view.
     self.view.backgroundColor=[UIColor colorWithRed:0.925 green:0.925   blue:0.925  alpha:1.0f];
     // Do any additional setup after loading the view.
@@ -149,6 +154,22 @@
 //    [[NSNotificationCenter defaultCenter] removeObserver:self name:CHANGE_ICON_BROADCAST object:nil];
     
 }
+
+
+#pragma mark - btn action
+
+-(void)backAction{
+        for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+        {
+            if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[SettingsViewController class]]){
+    
+    
+                [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+            }
+        }
+}
+
+
 
 #pragma mark --
 #pragma mark - 表单设置
@@ -397,6 +418,7 @@
         
         [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[tempArray objectAtIndex:i]objectForKey:@"icon" ]];
+        [kindImgView setImageWithPath:[pathOne copy]];
         for (int y =0 ; y < _localChildInfo.count;  y++) {
             NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
             if ([[NSString stringWithFormat:@"%@",[[tempArray objectAtIndex:i] objectForKey:@"child_id" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {

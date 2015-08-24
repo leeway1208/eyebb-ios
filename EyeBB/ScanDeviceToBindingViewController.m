@@ -16,6 +16,7 @@
 
 @interface ScanDeviceToBindingViewController (){
     NSString* guardian_id;
+    BOOL isBeep;
 }
 /**introdaction label*/
 @property (nonatomic,strong) UILabel* introLabel;
@@ -190,7 +191,7 @@
 -(void)loadParameter{
  
     
-    
+    isBeep = NO;
     _deviceTableView = [[UITableView alloc] initWithFrame:self.view.bounds];
     _deviceTableView.frame = CGRectMake(0, 110, Drive_Wdith, Drive_Height - 160);
     self.deviceTableView.tableFooterView = [[UIView alloc] init];
@@ -323,7 +324,7 @@
         
         
         
-        
+         isBeep = YES;
         
     }
     
@@ -452,12 +453,25 @@
     NSString *getMajor = [toStringFromData substringWithRange:NSMakeRange(4,4)];
     
     NSLog(@"write major:%@ and minor:%@ ",getMajor,getMinor);
-    NSDictionary *checkBeaconDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,getMajor,ScanDeviceToBindingViewController_KEY_majors,getMinor,ScanDeviceToBindingViewController_KEY_minor,nil];
     
-    [self postRequest:CHECK_BEACON RequestDictionary:checkBeaconDoct delegate:self];
+    if (isBeep) {
+        NSDictionary *checkBeaconDoct = [NSDictionary dictionaryWithObjectsAndKeys:self.childId, ScanDeviceToBindingViewController_KEY_childId, self.macAddress,ScanDeviceToBindingViewController_KEY_macAddress,getMajor,ScanDeviceToBindingViewController_KEY_majors,getMinor,ScanDeviceToBindingViewController_KEY_minor,nil];
+        
+        [self postRequest:CHECK_BEACON RequestDictionary:checkBeaconDoct delegate:self];
+        
+        
+        [HUD show:YES];
+        
+        isBeep = NO;
+    }else{
+        [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
+                                    message:LOCALIZATION(@"text_wait_for_beep")
+                                   delegate:self
+                          cancelButtonTitle:LOCALIZATION(@"btn_confirm")
+                          otherButtonTitles:nil] show];
 
-    
-    [HUD show:YES];
+    }
+  
 }
 
 -(void)scanDeviceViewLeftAction:(id)sender

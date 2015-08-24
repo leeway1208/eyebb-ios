@@ -120,6 +120,7 @@
 		327D13BA1ABAAA74002E5F73 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 327D13B91ABAAA74002E5F73 /* Social.framework */; };
 		327D13C01ABABB71002E5F73 /* KidMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */; };
 		32D377E01AB120C20055A8DE /* KidslistViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 32D377DF1AB120C20055A8DE /* KidslistViewController.m */; };
+		9214FCFD1B7DF4F800DE3F4D /* ZHPickView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9214FCFC1B7DF4F800DE3F4D /* ZHPickView.m */; };
 		921542941B4F725300D5AF46 /* VPImageCropperViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 921542931B4F725300D5AF46 /* VPImageCropperViewController.m */; };
 		922673C61B5F9A1E00D2C20A /* eyebb.db in Resources */ = {isa = PBXBuildFile; fileRef = 922673C51B5F9A1E00D2C20A /* eyebb.db */; };
 		923632411AA40CA600687F3F /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 923632401AA40CA600687F3F /* LoginViewController.m */; };
@@ -378,6 +379,8 @@
 		327D13BF1ABABB71002E5F73 /* KidMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidMessageViewController.m; sourceTree = "<group>"; };
 		32D377DE1AB120C20055A8DE /* KidslistViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KidslistViewController.h; sourceTree = "<group>"; };
 		32D377DF1AB120C20055A8DE /* KidslistViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KidslistViewController.m; sourceTree = "<group>"; };
+		9214FCFB1B7DF4F800DE3F4D /* ZHPickView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZHPickView.h; sourceTree = "<group>"; };
+		9214FCFC1B7DF4F800DE3F4D /* ZHPickView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZHPickView.m; sourceTree = "<group>"; };
 		921542921B4F725300D5AF46 /* VPImageCropperViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VPImageCropperViewController.h; sourceTree = "<group>"; };
 		921542931B4F725300D5AF46 /* VPImageCropperViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VPImageCropperViewController.m; sourceTree = "<group>"; };
 		922673C51B5F9A1E00D2C20A /* eyebb.db */ = {isa = PBXFileReference; lastKnownFileType = file; path = eyebb.db; sourceTree = "<group>"; };
@@ -1005,6 +1008,7 @@
 		326A924A1A9C4AD300CAB4F3 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				9214FCFA1B7DF4F800DE3F4D /* ZHpickView */,
 				921542911B4F725300D5AF46 /* VPImageCropper */,
 				20CA72B41B1812D00065E669 /* EAColourfulProgressView */,
 				20F769591ADEBB9E00A27479 /* DBImageView */,
@@ -1021,6 +1025,15 @@
 			);
 			name = libs;
 			path = EyeBB/libs;
+			sourceTree = "<group>";
+		};
+		9214FCFA1B7DF4F800DE3F4D /* ZHpickView */ = {
+			isa = PBXGroup;
+			children = (
+				9214FCFB1B7DF4F800DE3F4D /* ZHPickView.h */,
+				9214FCFC1B7DF4F800DE3F4D /* ZHPickView.m */,
+			);
+			path = ZHpickView;
 			sourceTree = "<group>";
 		};
 		921542911B4F725300D5AF46 /* VPImageCropper */ = {
@@ -1228,6 +1241,7 @@
 				3240DADF1AA69A4A00661712 /* UIView+AccessViewController.m in Sources */,
 				3264D94A1A9D6B72009CB9C2 /* ASIDataDecompressor.m in Sources */,
 				3209FFCE1AA06C5300BC6C48 /* CSerializedJSONData.m in Sources */,
+				9214FCFD1B7DF4F800DE3F4D /* ZHPickView.m in Sources */,
 				3209FFCD1AA06C5300BC6C48 /* CJSONSerializer.m in Sources */,
 				923632411AA40CA600687F3F /* LoginViewController.m in Sources */,
 				32530F541AA006FC00F66B6D /* EyeBBViewController.m in Sources */,

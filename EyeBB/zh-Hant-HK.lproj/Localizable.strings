@@ -192,7 +192,7 @@ CFBundleDisplayName ="寶寶安";
 "text_area_code" = "區號";
 "text_start_beep" = "開始蜂鳴";
 "text_stop_beep" = "關閉蜂鳴";
-
+"text_wait_for_beep" = "請耐心等待蜂鳴...";
 //<!-- Button strings -->
 "btn_sign_up"="註冊";
 "btn_login"="登錄";

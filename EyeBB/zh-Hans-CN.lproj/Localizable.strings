@@ -192,7 +192,7 @@ CFBundleDisplayName ="宝宝安";
 "text_area_code" = "区号";
 "text_start_beep" = "开始蜂鸣";
 "text_stop_beep" = "关闭蜂鸣";
-
+"text_wait_for_beep" = "请耐心等待蜂鸣...";
 
 //<!-- Button strings -->
 "btn_sign_up"="注册";

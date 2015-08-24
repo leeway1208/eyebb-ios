@@ -1211,6 +1211,7 @@ NSString * NSDataToHex(NSData *data) {
     //initial data
     [self stopBindingTimer];
     
+    isBeep = false;
     isMajor = true;
     isMinor = true;
     isSOSDevice = false;

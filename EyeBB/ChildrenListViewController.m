@@ -251,6 +251,8 @@
         [KidsImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
         
         NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
+        
+        [KidsImgView setImageWithPath:[pathOne copy]];
         for (int y =0 ; y < _localChildInfo.count;  y++) {
             NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
             if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -306,6 +308,8 @@
     
     NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
 
+    
+    [KidsImgView setImageWithPath:[pathOne copy]];
     for (int y =0 ; y < _localChildInfo.count;  y++) {
         NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
         if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -338,6 +342,8 @@
         //儿童名称
         UILabel * KidsLbl =(UILabel *)[cell viewWithTag:102];
         if (arr.count>0) {
+            
+             [KidsLbl setText:[arr objectAtIndex:row]];
             for (int y =0 ; y < _localChildInfo.count;  y++) {
                 NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
                 if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {

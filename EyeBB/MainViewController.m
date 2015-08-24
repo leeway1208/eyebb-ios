@@ -1246,7 +1246,7 @@ static SystemSoundID shake_sound_male_id = 0;
     [_kidsMassageView addSubview:KidsImgView];
     
     UILabel * kidNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 10, CGRectGetWidth(_kidsMassageView.frame)-100, 20)];
-    [kidNameLbl setText:@"sss"];
+    //[kidNameLbl setText:@"sss"];
     //            [messageLbl setAlpha:0.6];
     [kidNameLbl setFont:[UIFont systemFontOfSize: 15.0]];
     [kidNameLbl setTextColor:[UIColor blackColor]];
@@ -1255,7 +1255,7 @@ static SystemSoundID shake_sound_male_id = 0;
     [_kidsMassageView addSubview:kidNameLbl];
     
     UILabel * roomNameLbl =[[UILabel alloc]initWithFrame:CGRectMake(90, 35, CGRectGetWidth(_kidsMassageView.frame)-100, 40)];
-    [roomNameLbl setText:@"sss"];
+    //[roomNameLbl setText:@"sss"];
     //            [messageLbl setAlpha:0.6];
     [roomNameLbl setFont:[UIFont systemFontOfSize: 12.0]];
     [roomNameLbl setTextColor:[UIColor blackColor]];
@@ -1585,6 +1585,10 @@ static SystemSoundID shake_sound_male_id = 0;
 //            [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
             
             UILabel * kidStatus =(UILabel *)[cell viewWithTag:703];
+            [KidsImgView setImageWithPath:[pathOne copy]];
+            
+            
+            [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
             
             for (int y =0 ; y < _localChildInfo.count;  y++) {
                 NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
@@ -1675,7 +1679,11 @@ static SystemSoundID shake_sound_male_id = 0;
 //            [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
             
             
+            NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
             
+            [KidsImgView setImageWithPath:[pathOne copy]];
+            
+                     [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
             for (int y =0 ; y < _localChildInfo.count;  y++) {
                 NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
                 if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -1835,7 +1843,11 @@ static SystemSoundID shake_sound_male_id = 0;
         UILabel * KidsLbl =(UILabel *)[cell viewWithTag:802];
 //        [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
         
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
+        [KidsImgView setImageWithPath:[pathOne copy]];
+        
+             [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
         for (int y =0 ; y < _localChildInfo.count;  y++) {
             NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
             if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -1983,7 +1995,11 @@ static SystemSoundID shake_sound_male_id = 0;
         UILabel * KidsLbl =(UILabel *)[cell viewWithTag:902];
 //        [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
 //        
+        NSString* pathOne =[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"icon" ]];
         
+        [KidsImgView setImageWithPath:[pathOne copy]];
+        
+                 [KidsLbl setText:[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"name" ]]];
         for (int y =0 ; y < _localChildInfo.count;  y++) {
             NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
             if ([[NSString stringWithFormat: @"%@",[[[tempChildDictionary objectForKey:@"childRel"]objectForKey:@"child" ] objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -2138,8 +2154,8 @@ static SystemSoundID shake_sound_male_id = 0;
     }
     //房间列表
     else if(tableView == self.RoomTableView){
-        NSLog(@"sadasdsa (%@)",[self allChildren]);
-        _localChildInfo = [self allChildren];
+        //NSLog(@"sadasdsa (%@)",[self allChildren]);
+        //_localChildInfo = [self allChildren];
         NSArray *tempChildArray;
         if (self.isallRoomOn==YES) {
             tempChildArray=[_childrenDictionary objectForKey:[NSString stringWithFormat:@"%zi",indexPath.row]];
@@ -2208,7 +2224,10 @@ static SystemSoundID shake_sound_male_id = 0;
             [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-            [RoomImgView setImageWithPath:[pathOne copy]];
+              if (![[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"] isKindOfClass:[NSNull class]] ) {
+                   [RoomImgView setImageWithPath:[pathOne copy]];
+              }
+           
             pathOne=nil;
             
             RoomImgView.tag=202;
@@ -2327,35 +2346,41 @@ static SystemSoundID shake_sound_male_id = 0;
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                 //NSLog(@"[tempChildArray objectAtIndex:i]-->%@",[tempChildArray objectAtIndex:i]);
-                
-          
-                for (int y =0 ; y < _localChildInfo.count;  y++) {
-                    NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
-                    
-                    NSLog(@"localChildInfo.count -- >%@",[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]);
-                    if ([[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
-                        
-                        
-                        if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
-                            
-                            
-                            
-                            NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
-                            UIImage *image = [UIImage imageWithData:imageData];
-                            [kindImgView setImage:image];
-                            
-                            //  NSLog(@"resourcePath  %@",path);
-                            
-                        }else{
-                            
-                            
-                            [kindImgView setImageWithPath:[pathOne copy]];
-                        }
-                        
-                    }
-                    
-                }
+                 if (![[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] isKindOfClass:[NSNull class]] ) {
+                     [kindImgView setImageWithPath:[pathOne copy]];
+                     
+                     
+                     
+                     for (int y =0 ; y < _localChildInfo.count;  y++) {
+                         NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+                         
+                         NSLog(@"localChildInfo.count -- >%@",[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]);
+                         if ([[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                             
+                             
+                             if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                                 
+                                 
+                                 
+                                 NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                                 UIImage *image = [UIImage imageWithData:imageData];
+                                 [kindImgView setImage:image];
+                                 
+                                 //  NSLog(@"resourcePath  %@",path);
+                                 
+                             }else{
+                                 
+                                 
+                                 [kindImgView setImageWithPath:[pathOne copy]];
+                             }
+                             
+                         }
+                         
+                     }
 
+                 }
+                
+             
                 
                 
                 //[kindImgView setImageWithPath:[pathOne copy]];
@@ -2472,7 +2497,10 @@ static SystemSoundID shake_sound_male_id = 0;
             [RoomImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
             
             NSString* pathOne =[NSString stringWithFormat: @"%@",[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"]];
-            [RoomImgView setImageWithPath:[pathOne copy]];
+            if (![[[_roomArray objectAtIndex:indexPath.row] objectForKey:@"icon"] isKindOfClass:[NSNull class]] ) {
+                [RoomImgView setImageWithPath:[pathOne copy]];
+            }
+
             pathOne=nil;
             
             RoomImgView.tag=202;
@@ -2575,31 +2603,36 @@ static SystemSoundID shake_sound_male_id = 0;
                 [kindImgView.layer setBorderColor:[UIColor whiteColor].CGColor];
                 NSString* pathOne =[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]];
                 
-                
-               
-                for (int y =0 ; y < _localChildInfo.count;  y++) {
-                    NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
-                    if ([[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
-                        if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                if (![[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] isKindOfClass:[NSNull class]] ) {
+                    [kindImgView setImageWithPath:[pathOne copy]];
+                    
+                    
+                    for (int y =0 ; y < _localChildInfo.count;  y++) {
+                        NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
+                        if ([[NSString stringWithFormat: @"%@",[[[[tempChildArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                            if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                                
+                                
+                                
+                                NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
+                                UIImage *image = [UIImage imageWithData:imageData];
+                                [kindImgView setImage:image];
+                                
+                                //  NSLog(@"resourcePath  %@",path);
+                                
+                            }else{
+                                
+                                
+                                [kindImgView setImageWithPath:[pathOne copy]];
+                            }
                             
-                            
-                            
-                            NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]] );
-                            UIImage *image = [UIImage imageWithData:imageData];
-                            [kindImgView setImage:image];
-                            
-                            //  NSLog(@"resourcePath  %@",path);
-                            
-                        }else{
-                            
-                            
-                            [kindImgView setImageWithPath:[pathOne copy]];
                         }
                         
                     }
                     
+
                 }
-                
+               
                 
 
                 //[kindImgView setImageWithPath:[pathOne copy]];
@@ -4049,16 +4082,25 @@ progressView.hidden=YES;
         }
         
         //[self delLodChild];
+        
+        NSLog(@"childrenArray--  > %@",childrenArray);
         [self SaveChildren:childrenArray];
+        
+        
+        
+        
         
         myDelegate.allKidsWithMacAddressBeanArray = [_disconectKidsAy mutableCopy];
         NSLog(@"myDelegate.allKidsWithMacAddressBeanArray (%lu)",(unsigned long)myDelegate.allKidsWithMacAddressBeanArray.count);
         
-        
+        _localChildInfo = [self allChildren];
+        //NSLog(@"childrenArray--  > %lu",(unsigned long)childrenArray.count);
         NSLog(@"[self allChildren] -- > %@   ===(%lu) ",[self allChildren] ,(unsigned long)[self allChildren].count);
-        
+        NSLog(@"childrenArray--  > %lu",(unsigned long)childrenArray.count);
     }
     
+    
+        
     [_progressView setHidden:YES];
     //关闭加载
     //    [HUD hide:YES afterDelay:0];
@@ -4143,7 +4185,7 @@ progressView.hidden=YES;
         kidImgView.hidden=NO;
         NSString* pathOne =[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"icon" ]];
         NSLog(@"myDelegate.childDictionary -> %@",myDelegate.childDictionary);
-        
+        [kidImgView setImageWithPath:[pathOne copy]];
         for (int y =0 ; y < _localChildInfo.count;  y++) {
             NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
             if ([[NSString stringWithFormat: @"%@",[myDelegate.childDictionary objectForKey:@"child_id" ]] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -4593,7 +4635,10 @@ progressView.hidden=YES;
     UILabel * kidNameLbl =(UILabel *)[_kidsMassageView viewWithTag:220];
   
 
+       KidsImgView.imageWithPath = [pathOne copy];
     
+    
+    [kidNameLbl setText:[[[[tempChildArray objectAtIndex:(tempBtn.tag-1000)] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]];
     for (int y =0 ; y < _localChildInfo.count;  y++) {
         NSDictionary *tempdic = [_localChildInfo objectAtIndex:y];
         if ([[NSString stringWithFormat: @"%@",childId] isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
@@ -5156,6 +5201,7 @@ progressView.hidden=YES;
 #pragma mark - broadcast
 
 - (void) changeIcon{
+        _localChildInfo = [self allChildren];
     
     [_RadarDisconnectTableView reloadData];
     [_RadarConnectTableView reloadData];

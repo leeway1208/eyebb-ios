@@ -236,48 +236,53 @@
     NSArray  * array= [pathOne componentsSeparatedByString:@"/"];
     NSArray  * array2= [[[array objectAtIndex:([array count]-1)]componentsSeparatedByString:@"."] copy];
     
-    
-    
-    if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
-        
-        for (int i =0 ; i < _localChildInfo.count; i ++) {
-            NSDictionary *tempdic = [_localChildInfo objectAtIndex:i];
-            if ([[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
-                if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+    if (![[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"icon"] isKindOfClass:[NSNull class]] ) {
+        if ([self loadImage:[array2 objectAtIndex:0] ofType:[[array2 objectAtIndex:1] copy ]inDirectory:_documentsDirectoryPath]!=nil) {
+            
+            
+            
+            [_childImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
+            for (int i =0 ; i < _localChildInfo.count; i ++) {
+                NSDictionary *tempdic = [_localChildInfo objectAtIndex:i];
+                if ([[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+                    if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_icon"]].length > 0) {
+                        
+                        
+                        
+                        NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]]);
+                        UIImage *image = [UIImage imageWithData:imageData];
+                        [_childImgView setImage:image];
+                        
+                        //  NSLog(@"resourcePath  %@",path);
+                        
+                    }else{
+                        
+                        
+                        [_childImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
+                    }
                     
-
-
-                     NSData *imageData = loadImageData([self localImgPath], [self localImgName:[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]]);
-                     UIImage *image = [UIImage imageWithData:imageData];
-                    [_childImgView setImage:image];
-                    
-                    //  NSLog(@"resourcePath  %@",path);
-
-                }else{
-                    
-                    
-                    [_childImgView setImage:[self loadImage:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath]];
                 }
-
+                
             }
             
+            
         }
-        
-        
+        else
+        {
+            NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
+            NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
+            [_childImgView setImage:[UIImage imageWithData:data]];
+            //Get Image From URL
+            UIImage * imageFromURL  = nil;
+            imageFromURL=[UIImage imageWithData:data];
+            //Save Image to Directory
+            [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
+            
+            
+        }
+
     }
-    else
-    {
-        NSURL* urlOne = [NSURL URLWithString:[pathOne stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];//网络图片url
-        NSData* data = [NSData dataWithContentsOfURL:urlOne];//获取网咯图片数据
-        [_childImgView setImage:[UIImage imageWithData:data]];
-        //Get Image From URL
-        UIImage * imageFromURL  = nil;
-        imageFromURL=[UIImage imageWithData:data];
-        //Save Image to Directory
-        [self saveImage:imageFromURL withFileName:[[array2 objectAtIndex:0]copy] ofType:[[array2 objectAtIndex:1]copy] inDirectory:_documentsDirectoryPath];
-        
-        
-    }
+    
     pathOne=nil;
     array=nil;
     array2=nil;
@@ -289,10 +294,20 @@
     
     //child name
     _childNameLbl =[[UILabel alloc]initWithFrame:(CGRectMake(Drive_Wdith / 2 - Drive_Wdith/2, 10 + Drive_Wdith/3  / 2 + 20, Drive_Wdith, Drive_Wdith /3))];
+    
+    [_childNameLbl setText:[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"name"]];
    
     for (int i =0 ; i < _localChildInfo.count; i ++) {
         NSDictionary *tempdic = [_localChildInfo objectAtIndex:i];
+         NSLog(@" id(%@)  name(%@)",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"],[tempdic objectForKey:@"local_name"]);
+        
+        
         if ([[NSString stringWithFormat:@"%@",[[[self.childrenDictionary objectForKey:@"childRel" ]objectForKey:@"child" ]objectForKey:@"childId"]]isEqualToString:[NSString stringWithFormat:@"%@",[tempdic objectForKey:@"child_id"]]]) {
+            
+            
+              NSLog(@" temp -- > %@",[tempdic objectForKey:@"local_name"]);
+            
+            
             if ([NSString stringWithFormat:@"%@",[tempdic objectForKey:@"local_name"]].length > 0) {
                 
                 
@@ -809,6 +824,8 @@
         
         
          [_childNameLbl setText:newChildName];
+        
+         [[NSNotificationCenter defaultCenter] postNotificationName:CHANGE_ICON_BROADCAST object:nil];
     }else{
         
     }
@@ -821,15 +838,19 @@
 
 -(void)backAction{
     
-    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
-    {
-        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[KidslistViewController class]]){
-            
+//    for (int i = 0; i < [self.navigationController.viewControllers count]; i ++)
+//    {
+//        if([[self.navigationController.viewControllers objectAtIndex: i] isKindOfClass:[KidslistViewController class]]){
+//            
+//    
+//            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
+//        }
+//    }
+
+    KidslistViewController *llview = [[KidslistViewController alloc]init];
     
-            [self.navigationController popToViewController: [self.navigationController.viewControllers objectAtIndex:i] animated:YES];
-        }
-    }
     
+    [[self navigationController] pushViewController:llview animated:NO];
 }
 
 -(void)cancelAction{

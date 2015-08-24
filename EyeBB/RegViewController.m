@@ -12,8 +12,9 @@
 #import "JSONKit.h"
 #import "ChildInformationMatchingViewController.h"
 #import "WelcomeViewController.h"
+#import "ZHPickView.h"
 
-@interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate>
+@interface RegViewController ()<UITableViewDataSource,UITableViewDelegate,UITextFieldDelegate,ZHPickViewDelegate>
 {
     int textHeight;
 }
@@ -62,7 +63,8 @@
 /** area id view confirm button*/
 @property (nonatomic,strong) UIButton *areaIdViewContainerConfirmBtn;
 
-
+@property(nonatomic,strong)ZHPickView *pickview;
+@property(nonatomic,strong)NSIndexPath *indexPath;
 @end
 
 @implementation RegViewController
@@ -83,7 +85,7 @@
     
     self.title = LOCALIZATION(@"btn_sign_up");
     
-
+    
     
     [self iv];
     [self lc];
@@ -189,7 +191,7 @@
     //隐藏table自带的cell下划线
     _regTView.separatorStyle = UITableViewCellSeparatorStyleNone;
     [self.view addSubview:_regTView];
-
+    
     //注册键盘弹起与收起通知
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(BasicRegkeyboardWillShow:)
@@ -269,11 +271,11 @@
     [_popViewContainer addSubview:_popContentLabel];
     
     
-//    //pop image view
-//    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - CGRectGetHeight(_popContentLabel.frame) - 10,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 30, 30)];
-//    [_popUpImage setImage:[UIImage imageNamed:@"logo_en"]];
-//    [_popUpImage setTag:105];
-//    [_popViewContainer addSubview:_popUpImage];
+    //    //pop image view
+    //    _popUpImage=[[UIImageView alloc]initWithFrame:CGRectMake(CGRectGetWidth(_popViewContainer.frame)/2 - CGRectGetHeight(_popContentLabel.frame) - 10,CGRectGetHeight(_popViewContainer.frame)/2 - 30, 30, 30)];
+    //    [_popUpImage setImage:[UIImage imageNamed:@"logo_en"]];
+    //    [_popUpImage setTag:105];
+    //    [_popViewContainer addSubview:_popUpImage];
     
     //pop view dividing top line
     UILabel * popTopLabel=[[UILabel alloc]initWithFrame:CGRectMake(10, CGRectGetHeight(_popViewContainer.frame)/2 + 45, CGRectGetWidth(_popViewContainer.frame) - 20, 1)];
@@ -322,7 +324,7 @@
     [containerDivLb.layer setBorderColor:[UIColor colorWithRed:0.682 green:0.682 blue:0.682 alpha:0.8].CGColor];
     
     [_areaIdContainer addSubview:containerDivLb];
-
+    
 }
 /*-----------------------信息处理函数---------------------------------*/
 
@@ -387,18 +389,23 @@
 {
     
     if (textField == self.telTxt) {
+        [_pickview remove];
         textHeight=134;
     }
     if (textField == self.nicknameTxt) {
+        [_pickview remove];
         textHeight=174;
     }
     if (textField == self.pDTxt) {
+        [_pickview remove];
         textHeight=214;
     }
     if (textField == self.verifyTxt) {
+        [_pickview remove];
         textHeight=254;
     }
     if (textField == self.emailTxt) {
+        [_pickview remove];
         textHeight=334;
     }
 }
@@ -439,19 +446,24 @@
  */
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
     if (theTextField == self.telTxt) {
+        [_pickview remove];
         [theTextField resignFirstResponder];
     }
     if (theTextField == self.nicknameTxt) {
+        [_pickview remove];
         [theTextField resignFirstResponder];
     }
     if (theTextField == self.pDTxt) {
+        [_pickview remove];
         [theTextField resignFirstResponder];
     }
     if (theTextField == self.emailTxt) {
+        [_pickview remove];
         [theTextField resignFirstResponder];
     }
     
     if (theTextField == self.verifyTxt) {
+        [_pickview remove];
         [theTextField resignFirstResponder];
     }
     
@@ -461,6 +473,7 @@
 
 -(void)viewTapped:(UITapGestureRecognizer*)tapGr
 {
+    [_pickview remove];
     [self.telTxt resignFirstResponder];
     [self.nicknameTxt resignFirstResponder];
     [self.pDTxt resignFirstResponder];
@@ -536,13 +549,29 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     int num=3;
     if (section==0) {
-        num=4;
+        num=5;
     }
     else
     {
         num=2;
     }
     return num;
+}
+
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    _indexPath=indexPath;
+    
+    
+    if (indexPath.section==0){
+        if (indexPath.row ==0) {
+            [_pickview show];
+        }else{
+            [_pickview remove];
+        }
+    }
+    
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -559,18 +588,24 @@
     
     if (indexPath.section==0) {
         if (indexPath.row==0) {
-            _areaIdFd = [[UITextField alloc]initWithFrame:CGRectMake(17, 5, self.view.frame.size.width-30, 30)];
+            _areaIdFd = [[UITextField alloc]initWithFrame:CGRectMake(17, 5,self.view.frame.size.width-30, 30)];
             _areaIdFd.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;
             _areaIdFd.clearButtonMode=UITextFieldViewModeWhileEditing;
             _areaIdFd.leftViewMode=UITextFieldViewModeAlways;
             UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_phone"]];
+            [_areaIdFd setUserInteractionEnabled:NO];
             _areaIdFd.leftView=imgV;//设置输入框内左边的图标
             _areaIdFd.placeholder=LOCALIZATION(@"text_area_code");//默认显示的字
             _areaIdFd.secureTextEntry=NO;//设置成密码格式
             // _kidsBirthdayBtn.inputView =  self.areaIdContainer;
             [cell addSubview:_areaIdFd];
-           // _areaIdFd.inputView  = _areaIdContainer;
-            _areaIdFd.text = @"+86";
+            // _areaIdFd.inputView  = _areaIdContainer;
+            //_areaIdFd.text = @"+86";
+            
+            NSArray *array=@[@[@"+86",@"+852"]];
+            _pickview=[[ZHPickView alloc] initPickviewWithArray:array isHaveNavControler:NO];
+            
+            _pickview.delegate=self;
             
             UILabel * telLbl=[[UILabel alloc]initWithFrame:CGRectMake(15, 40, self.view.frame.size.width-30, 1)];
             [telLbl.layer setBorderWidth:1.0]; //边框宽度
@@ -578,9 +613,9 @@
             
             [cell addSubview:telLbl];
         }
-       else if (indexPath.row==1) {
+        else if (indexPath.row==1) {
             if ([cell viewWithTag:101]==nil) {
-       
+                
                 
                 
                 _telTxt=[[UITextField alloc]initWithFrame:CGRectMake(17 , 5, self.view.frame.size.width-30 , 30)];
@@ -588,8 +623,8 @@
                 UIImageView* imgV=[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_phone"]];
                 _telTxt.leftView=imgV;//设置输入框内左边的图标
                 _telTxt.placeholder=LOCALIZATION(@"text_area_code");//默认显示的字
-
-             
+                
+                
                 _telTxt.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
                 _telTxt.leftViewMode=UITextFieldViewModeAlways;
                 _telTxt.placeholder=LOCALIZATION(@"text_phone_number");//默认显示的字
@@ -822,11 +857,13 @@
 /**提交注册信息*/
 -(void)regAction:(id)sender
 {
-    NSString *phoneStr = [NSString stringWithFormat:@"%@%@",[self.areaIdFd.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]],[self.telTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]] ;
+    NSString *phoneStr = [NSString stringWithFormat:@"%@",[self.telTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]] ;
+    //     NSString *phoneStr = [NSString stringWithFormat:@"%@%@",[self.areaIdFd.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]],[self.telTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]] ;
     NSString *NickNameStr= [self.nicknameTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *pwdStr = [self.pDTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *varStr = [self.verifyTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
     NSString *emailStr = [self.emailTxt.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+    NSString *areaCode = [NSString stringWithFormat:@"%@",[self.areaIdFd.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]] ;
     
     if([self verifyRequest:phoneStr withpwd:[CommonUtils getSha256String:pwdStr] withver:[CommonUtils getSha256String:pwdStr] withNickName:NickNameStr withemail:emailStr]!=nil)
     {
@@ -843,16 +880,16 @@
         NSUserDefaults *loginStatus = [NSUserDefaults standardUserDefaults];
         // NSLog(@"login sss----> %@ ",guardian);
         
-
+        
         [loginStatus setObject:phoneStr forKey:LoginViewController_accName];
- 
+        
         [loginStatus setObject:NickNameStr forKey:LoginViewController_name];
         [loginStatus synchronize];
-
+        
         
         
         if(emailStr==nil)emailStr=@"";
-        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,nil];
+        NSDictionary *tempDoct = [NSDictionary dictionaryWithObjectsAndKeys:phoneStr, REG_PARENTS_KEY_ACCNAME, NickNameStr,REG_PARENTS_KEY_NAME,[CommonUtils getSha256String:pwdStr].uppercaseString,REG_PARENTS_KEY_PASSWORD,emailStr,REG_PARENTS_KEY_EMAIL,phoneStr,REG_PARENTS_KEY_PHONENUM ,areaCode,@"areaCode",nil];
         
         //save username and password
         _userName = phoneStr;
@@ -897,4 +934,11 @@
     
 }
 
+#pragma mark ZhpickVIewDelegate
+
+-(void)toobarDonBtnHaveClick:(ZHPickView *)pickView resultString:(NSString *)resultString{
+    
+    UITableViewCell * cell=[self.regTView cellForRowAtIndexPath:_indexPath];
+    _areaIdFd.text=resultString;
+}
 @end

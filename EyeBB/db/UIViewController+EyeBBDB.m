@@ -114,7 +114,7 @@ AppDelegate * myDelegate;
 
 -(void)SaveChildren:(NSArray *)childrenArray {
     
-    
+   // [self delLodChild];
     sqlite3 *database;
     if (sqlite3_open([[self findDBUrl] UTF8String] , &database) != SQLITE_OK) {
         
@@ -135,11 +135,29 @@ AppDelegate * myDelegate;
             NSString *update = @"UPDATE children SET name = ? , icon = ? , phone = ? ,relation_with_user = ? ,mac_address = ?  WHERE  child_id = ?";
             if (sqlite3_prepare_v2(database, [update UTF8String], -1, &statement, NULL) == SQLITE_OK) {
                 sqlite3_bind_text(statement, 1, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]] UTF8String], -1,SQLITE_TRANSIENT);
-                sqlite3_bind_text(statement, 2, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] UTF8String], -1,SQLITE_TRANSIENT);
-                sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"parents"]objectForKey:@"phoneNumber" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                 if (![[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] isKindOfClass:[NSNull class]] ) {
+                              sqlite3_bind_text(statement, 2, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                 }else{
+                     sqlite3_bind_text(statement, 2, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
+                 }
+                
+                if (![[[childrenArray objectAtIndex:i] objectForKey:@"parents"] isKindOfClass:[NSNull class]]) {
+                           sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"parents"]objectForKey:@"phoneNumber" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                }else{
+                           sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
+                }
+         
                 
                 sqlite3_bind_text(statement, 4, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]] UTF8String], -1,SQLITE_TRANSIENT);
-                sqlite3_bind_text(statement, 5, [[NSString stringWithFormat: @"%@",[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                
+                if (![[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ] isKindOfClass:[NSNull class]] ) {
+                       sqlite3_bind_text(statement, 5, [[NSString stringWithFormat: @"%@",[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                }else{
+                    sqlite3_bind_text(statement, 5, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
+                }
+                
+
+         
                 sqlite3_bind_text(statement, 6, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] UTF8String], -1,SQLITE_TRANSIENT);
                 
             }
@@ -147,7 +165,7 @@ AppDelegate * myDelegate;
         }else{
             NSLog(@"has not");
             
-            NSString *insert = @"INSERT INTO 'children' ('child_id', 'name' , 'icon',  'phone', 'relation_with_user', 'mac_address' , 'local_name', 'local_icon' ) VALUES (?, ?, ?, ? ,? , ?, ? ,?)";
+            NSString *insert = @"INSERT INTO 'children' ('child_id', 'name' , 'icon',  'phone', 'relation_with_user', 'mac_address','local_name','local_icon'  ) VALUES (?, ?, ?, ? ,? , ?,?,?)";
             //           NSString *insert = @"INSERT INTO 'children' ('child_id', 'name' , 'icon',  'phone', 'relation_with_user', 'mac_address' ) VALUES (?, ?, ?, ? ,? , ?)";
             
             
@@ -159,12 +177,30 @@ AppDelegate * myDelegate;
                 // NSLog(@" --- %s",[[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"childId" ]] UTF8String]);
                 sqlite3_bind_text(statement, 2, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"name" ]] UTF8String], -1,SQLITE_TRANSIENT);
                 
-                sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] UTF8String], -1,SQLITE_TRANSIENT);
+   
                 
-                sqlite3_bind_text(statement, 4, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"parents"]objectForKey:@"phoneNumber" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                if (![[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ] isKindOfClass:[NSNull class]] ) {
+                               sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",[[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"child" ]objectForKey:@"icon" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                }else{
+                    sqlite3_bind_text(statement, 3, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
+                }
+                
+                if (![[[childrenArray objectAtIndex:i] objectForKey:@"parents"] isKindOfClass:[NSNull class]]) {
+                 sqlite3_bind_text(statement, 4, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"parents"]objectForKey:@"phoneNumber" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                }else{
+                    sqlite3_bind_text(statement, 4, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
+                }
+
+                
                 sqlite3_bind_text(statement, 5, [[NSString stringWithFormat: @"%@",[[[childrenArray objectAtIndex:i] objectForKey:@"childRel"]objectForKey:@"relation" ]] UTF8String], -1,SQLITE_TRANSIENT);
-                sqlite3_bind_text(statement, 6, [[NSString stringWithFormat: @"%@",[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ]] UTF8String], -1,SQLITE_TRANSIENT);
                 
+                
+         
+                if (![[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ] isKindOfClass:[NSNull class]] ) {
+                        sqlite3_bind_text(statement, 6, [[NSString stringWithFormat: @"%@",[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                }else{
+                      sqlite3_bind_text(statement, 6, [[NSString stringWithFormat: @"%@",[[childrenArray objectAtIndex:i]objectForKey:@"macAddress" ]] UTF8String], -1,SQLITE_TRANSIENT);
+                }
                 sqlite3_bind_text(statement, 7, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
                 
                 sqlite3_bind_text(statement, 8, [[NSString stringWithFormat: @"%@",@""] UTF8String], -1,SQLITE_TRANSIENT);
@@ -225,7 +261,7 @@ NSData* loadImageData(NSString *directoryPath, NSString *imageName)
     
     NSLog(@"childID (%@)   childNewName (%@)",childID,childNewName);
     
-    NSString *SQL = [NSString stringWithFormat:@"UPDATE children SET local_name = '%@' WHERE child_id =  %@ ", childNewName,childID] ;
+    NSString *SQL = [NSString stringWithFormat:@"UPDATE children SET local_name = '%@' WHERE child_id =  '%@' ", childNewName,childID];
     sqlite3_stmt *statement = NULL;
     char *errorMsg;
     if (sqlite3_exec(database, [SQL UTF8String],  NULL, NULL, &errorMsg) == SQLITE_OK) {
@@ -342,8 +378,8 @@ NSData* loadImageData(NSString *directoryPath, NSString *imageName)
     }
     
     //查询儿童
-    NSString *qChildren = @"SELECT child_id,name,icon,phone,relation_with_user,mac_address,local_name,local_icon FROM  children";
-    
+//    NSString *qChildren = @"SELECT child_id,name,icon,phone,relation_with_user,mac_address,local_name,local_icon FROM  children";
+    NSString *qChildren = @"SELECT * FROM  children";    
     sqlite3_stmt *statement;
     
     if (sqlite3_prepare_v2(database, [qChildren UTF8String], -1, &statement, nil) == SQLITE_OK) {
@@ -354,35 +390,43 @@ NSData* loadImageData(NSString *directoryPath, NSString *imageName)
         while (sqlite3_step(statement) == SQLITE_ROW) {
             @try {
                 //临时装载信息
-                NSMutableDictionary *row=[NSMutableDictionary dictionaryWithCapacity:4];
+                NSMutableDictionary *row=[NSMutableDictionary new];
                 
                 //获得数据
-                int child_id = sqlite3_column_int(statement, 0);
+                int child_id = sqlite3_column_int(statement, 1);
                 
-                char* name = (char *)sqlite3_column_text(statement, 1);
+                char* name = (char *)sqlite3_column_text(statement, 2);
                 NSString *namestr =  [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
                 NSLog(@"child_id -> %@",namestr);
-                char* icon = (char *)sqlite3_column_text(statement, 2);
+                char* icon = (char *)sqlite3_column_text(statement, 3);
                 NSString *iconstr =  [NSString stringWithCString:icon encoding:NSUTF8StringEncoding];
                 
-                char* phone = (char *)sqlite3_column_text(statement, 3);
+                char* phone = (char *)sqlite3_column_text(statement, 4);
                 NSString * phonestr =  [NSString stringWithCString:phone encoding:NSUTF8StringEncoding];
                 
                 
-                char* relation = (char *)sqlite3_column_text(statement, 4);
+                char* relation = (char *)sqlite3_column_text(statement, 5);
                 
                 NSString * relationstr =  [NSString stringWithCString:relation encoding:NSUTF8StringEncoding];
                 
-                char* macAddress = (char *)sqlite3_column_text(statement, 5);
+                char* macAddress = (char *)sqlite3_column_text(statement, 6);
                 NSString *macAddressstr =  [NSString stringWithCString:macAddress encoding:NSUTF8StringEncoding];
-                NSLog(@"macAddress -> %@",macAddressstr);
-                char* localName = (char *)sqlite3_column_text(statement,6);
+                NSLog(@"DBmacAddress -> %@",macAddressstr);
+                char* localName = (char *)sqlite3_column_text(statement,7);
                 NSString *localNameStr =  [NSString stringWithCString:localName encoding:NSUTF8StringEncoding];
                 
                 
-                NSLog(@"localNameStr -> %@",localNameStr);
-                char* localIcon = (char *)sqlite3_column_text(statement, 7);
+                NSLog(@"DBlocalNameStr -> %@",localNameStr);
+                char* localIcon = (char *)sqlite3_column_text(statement, 8);
+                
+                
+            
+                
                 NSString *localIconStr =  [NSString stringWithCString:localIcon encoding:NSUTF8StringEncoding];
+                
+                
+                   NSLog(@"localIconStr -> %@",localIconStr);
+                
                 
                 [row setObject:[NSString stringWithFormat:@"%i", child_id] forKey:@"child_id"];
                 [row setObject:namestr forKey:@"name"];
@@ -394,6 +438,8 @@ NSData* loadImageData(NSString *directoryPath, NSString *imageName)
                 [row setObject:localIconStr forKey:@"local_icon"];
                 
                 [ChildrenArray addObject:row];
+                NSLog(@"ChildrenArray LENTGH (%lu)",(unsigned long)ChildrenArray.count);
+                
                 
             }
             @catch (NSException *exception) {
@@ -425,7 +471,7 @@ NSData* loadImageData(NSString *directoryPath, NSString *imageName)
     }
     
     
-    NSString *deleteSQL = @"DELETE FROM children";
+    NSString *deleteSQL = @"DELETE * FROM children";
     
     
     if (sqlite3_exec(database, [deleteSQL UTF8String], NULL, NULL, &errorMsg) == SQLITE_OK) {

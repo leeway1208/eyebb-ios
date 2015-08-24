@@ -68,7 +68,7 @@
 
 - (NSString *) pathOnDiskForName:(NSString *)imageName
 {
-    NSLog(@"pathOnDiskForName (%@)",[NSString stringWithFormat:@"%@/%@", self.localDirectory, [DBImageViewCache md5:imageName]]);
+//    NSLog(@"pathOnDiskForName (%@)",[NSString stringWithFormat:@"%@/%@", self.localDirectory, [DBImageViewCache md5:imageName]]);
     return [NSString stringWithFormat:@"%@/%@", self.localDirectory, [DBImageViewCache md5:imageName]];
 }
 

@@ -598,12 +598,15 @@
             [self popView:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"name"] ChildIcon:[[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"]KindergartenName:[[[_getChildInformationArray objectAtIndex:0] objectForKey:@"kindergarten"] objectForKey:@"nameTc"]];
 //            [NSThread detachNewThreadSelector:@selector(loadImage) toTarget:self withObject:nil];
 //            aa
-            _childIcon = [[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"];
-            NSLog(@"_childIcon --- > %@",_childIcon);
-            [_popUpImage setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
-            
-            //
-            [_popUpImage setImageWithPath:[_childIcon copy]];
+            if (![[[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"] isKindOfClass:[NSNull class]] ) {
+                _childIcon = [[_getChildInformationArray objectAtIndex:0] objectForKey:@"icon"];
+                NSLog(@"_childIcon --- > %@",_childIcon);
+                [_popUpImage setPlaceHolder:[UIImage imageNamed:@"logo_en"]];
+                
+                //
+                [_popUpImage setImageWithPath:[_childIcon copy]];
+            }
+          
         }
         
         

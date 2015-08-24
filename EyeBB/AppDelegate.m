@@ -107,6 +107,7 @@
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
     
     NSString *appLanguage = [def valueForKey:EyeBBViewController_userDefaults_userLanguage];
+    
     NSArray * availableLanguagesArray = @[@"en", @"zh-Hans-CN", @"zh-Hant-HK"];
     NSLog(@"arrayOfLanguages (%@)",availableLanguagesArray);
     if([appLanguage isEqualToString:@"zh-Hans-CN"]){
@@ -116,9 +117,12 @@
     }else if([appLanguage isEqualToString:@"zh-Hant-HK"]){
         [[Localisator sharedInstance] setLanguage:availableLanguagesArray[2]];
         applanguage=2;
-    }else{
+    }else if([appLanguage isEqualToString:@"en"]){
         [[Localisator sharedInstance] setLanguage:availableLanguagesArray[0]];
         applanguage=0;
+    }else{
+        [[Localisator sharedInstance] setLanguage:availableLanguagesArray[2]];
+        applanguage=2;
     }
     
     
@@ -126,18 +130,18 @@
     NSLog(@"Registering for push notifications...");
     //if is for ios 8 else if for ios 7 or blow
     if ([application respondsToSelector:@selector(isRegisteredForRemoteNotifications)]) {
-        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge
-                                                                                             |UIRemoteNotificationTypeSound
-                                                                                             |UIRemoteNotificationTypeAlert)
-                                                                                 categories:nil];
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeBadge|UIRemoteNotificationTypeSound|UIRemoteNotificationTypeAlert)categories:nil];
+        
+        
         [application registerUserNotificationSettings:settings];
         [application registerForRemoteNotifications];
-        
+    
         
     } else {
         [application registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge
                                                          |UIRemoteNotificationTypeSound
                                                          |UIRemoteNotificationTypeAlert)];
+        
     }
     
     return YES;
@@ -205,6 +209,101 @@
     [UIApplication sharedApplication].applicationIconBadgeNumber--;
 }
 
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    NSString *userValue;
+    
+//    for (id key in userInfo) {
+//        //NSLog(@"%@",[userInfo objectForKey:key]);
+//        userValue =  [[NSString stringWithFormat:@"%@",[userInfo objectForKey:key]] stringByReplacingOccurrencesOfString:@" " withString:@""] ;
+//        userValue = [userValue stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+//        userValue = [userValue stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+//        NSLog(@"---> %@",userValue);
+//        
+//
+//        if ([ userValue isEqualToString:@"{alert=\"DAILY_ENTRY\";}"]) {
+//            
+//            //[self scheduleLocalNotification:@"aa"];
+//            
+//        }else if ([userValue isEqualToString:@"{alert=\"NEW_NOTICE\";}"]) {
+//            
+//            NSLog(@"NEW_NOTICENEW_NOTICENEW_NOTICENEW_NOTICE----;;x");
+//        }
+//    }
+    
+    NSDictionary *test =(NSDictionary *)[userInfo objectForKey:@"aps"];
+    NSString *alertString =(NSString *) [test objectForKey:@"alert"];
+    NSLog(@"String recieved: %@",alertString);
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Title" message:alertString delegate:self cancelButtonTitle:@"OK" otherButtonTitles: @"Not OK", nil];
+//    [alert show];
+    
+    
+    if ([alertString isEqualToString:@"DAILY_ENTRY"]) {
+        
+    } else if([alertString isEqualToString:@"NEW_NOTICE"]) {
+        
+    }
+    
+    AudioServicesPlaySystemSound(1057);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
+    [UIApplication sharedApplication].applicationIconBadgeNumber++;
+}
+
+- (void)scheduleLocalNotification : (NSString *)childName{
+    [self setupNotificationSetting];
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    localNotification.fireDate = [NSDate dateWithTimeIntervalSinceNow:1];
+    localNotification.alertBody = [NSString stringWithFormat:@"%@%@",childName,LOCALIZATION(@"text_is_missing") ] ;
+    localNotification.alertAction = LOCALIZATION(@"text_view_list");
+    localNotification.category = @"shoppingListReminderCategory";
+    localNotification.soundName = UILocalNotificationDefaultSoundName;
+    localNotification.applicationIconBadgeNumber++;
+    [UIApplication sharedApplication].applicationIconBadgeNumber ++;
+    //localNotification.soundName = UILocalNotificationDefaultSoundName;
+    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+}
+
+
+- (void)setupNotificationSetting{
+    UIUserNotificationType type = UIUserNotificationTypeBadge | UIUserNotificationTypeAlert | UIUserNotificationTypeSound;
+    
+    UIMutableUserNotificationAction *justInformAction = [[UIMutableUserNotificationAction alloc] init];
+    justInformAction.identifier = @"justInform";
+    justInformAction.title = @"YES,I got it.";
+    justInformAction.activationMode = UIUserNotificationActivationModeBackground;
+    justInformAction.destructive = NO;
+    justInformAction.authenticationRequired = NO;
+    
+    UIMutableUserNotificationAction *modifyListAction = [[UIMutableUserNotificationAction alloc] init];
+    modifyListAction.identifier = @"editList";
+    modifyListAction.title = @"Edit list";
+    modifyListAction.activationMode = UIUserNotificationActivationModeForeground;
+    modifyListAction.destructive = NO;
+    modifyListAction.authenticationRequired = YES;
+    
+    UIMutableUserNotificationAction *trashAction = [[UIMutableUserNotificationAction alloc] init];
+    trashAction.identifier = @"trashAction";
+    trashAction.title = @"Delete list";
+    trashAction.activationMode = UIUserNotificationActivationModeBackground;
+    trashAction.destructive = YES;
+    trashAction.authenticationRequired = YES;
+    
+    NSArray *actionArray = [NSArray arrayWithObjects:justInformAction,modifyListAction,trashAction, nil];
+    NSArray *actionArrayMinimal = [NSArray arrayWithObjects:modifyListAction,trashAction, nil];
+    
+    UIMutableUserNotificationCategory *shoppingListReminderCategory = [[UIMutableUserNotificationCategory alloc] init];
+    shoppingListReminderCategory.identifier = @"shoppingListReminderCategory";
+    [shoppingListReminderCategory setActions:actionArray forContext:UIUserNotificationActionContextDefault];
+    [shoppingListReminderCategory setActions:actionArrayMinimal forContext:UIUserNotificationActionContextMinimal];
+    
+    NSSet *categoriesForSettings = [[NSSet alloc] initWithObjects:shoppingListReminderCategory, nil];
+    UIUserNotificationSettings *newNotificationSettings = [UIUserNotificationSettings settingsForTypes:type categories:categoriesForSettings];
+    
+    UIUserNotificationSettings *notificationSettings = [[UIApplication sharedApplication] currentUserNotificationSettings];
+    if (notificationSettings.types == UIUserNotificationTypeNone) {
+        [[UIApplication sharedApplication] registerUserNotificationSettings:newNotificationSettings];
+    }
+    
+}
 
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
     NSString *str = [NSString stringWithFormat:@"Device Token=%@",deviceToken];

@@ -12,9 +12,9 @@
 
 #import "JSONKit.h"
 #import "UserDefaultsUtils.h"
+#import "ZHPickView.h"
 
-
-@interface LoginViewController ()<UITextFieldDelegate>
+@interface LoginViewController ()<UITextFieldDelegate,ZHPickViewDelegate>
 {
     int textHeight;
     
@@ -23,6 +23,9 @@
 @property (nonatomic,strong) UITextField *loginUserAccount;
 /**user password*/
 @property (nonatomic,strong) UITextField *loginPassword;
+/**user name*/
+@property (nonatomic,strong) UITextField *areaCodeAccount;
+
 @property (nonatomic,strong) UITextField * nameTxt;
 @property (nonatomic,strong) UITextField * KidNameTxt;
 @property (nonatomic,strong) UITextField * BirthTxt;
@@ -55,6 +58,10 @@
 @property (nonatomic,strong) UIButton *dateViewContainerConfirmBtn;
 /*registrationId data was got from server */
 @property (nonatomic,strong) NSString * registrationId;
+
+
+@property(nonatomic,strong)ZHPickView *pickview;
+@property(nonatomic,strong)NSIndexPath *indexPath;
 @end
 
 @implementation LoginViewController
@@ -129,8 +136,10 @@
     [_loginBtn removeFromSuperview];
     [_userAccountImg removeFromSuperview];
     [_passWordImg removeFromSuperview];
+    [_areaCodeAccount removeFromSuperview];
     [self.view removeFromSuperview];
     [self setLoginPassword:nil];
+    [self setAreaCodeAccount:nil];
     [self setLoginUserAccount:nil];
     [self setForgetPasswordLabel:nil];
     [self setLoginBtn:nil];
@@ -146,13 +155,27 @@
     _guardian = [[NSDictionary alloc]init];
 }
 
+
+//-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField{
+//    
+//    
+//    
+//    return YES;
+//}
+
+
+//-(void)textFieldDidBeginEditing:(UITextField *)textField{
+//    
+//    
+//}
+
 -(void)loadWidget{
     
     /**
      *  button
      */
     //登录按钮
-    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 80 +(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8)];
+    _loginBtn=[[UIButton alloc]initWithFrame:CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 140 +(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8)];
     //设置按显示文字
     [_loginBtn setTitle:LOCALIZATION(@"btn_login") forState:UIControlStateNormal];
     [_loginBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -170,18 +193,53 @@
     [self.view addSubview:_loginBtn];
     
     
+    //area code
+    
+    _areaCodeAccount=[[UITextField alloc] initWithFrame:self.view.bounds];
+    _areaCodeAccount.frame = CGRectMake(10, 10,self.view.frame.size.width - 20 , 40);
+    _areaCodeAccount.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
+    
+    _userAccountImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_phone"]];
+    _userAccountImg.frame = CGRectMake(0, 0, 20, 20);
+    _areaCodeAccount.delegate = self;
+    _areaCodeAccount.leftView = _userAccountImg;//设置输入框内左边的图标
+    _areaCodeAccount.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
+    _areaCodeAccount.leftViewMode=UITextFieldViewModeAlways;
+    _areaCodeAccount.placeholder=LOCALIZATION(@"text_area_code");//默认显示的字
+    //测试开发用
+    //_areaCodeAccount.text=@"+86";
+     //[_areaCodeAccount setUserInteractionEnabled:NO];
+    _areaCodeAccount.secureTextEntry=NO;//设置成密码格式
+    _areaCodeAccount.keyboardType=UIKeyboardTypeDefault;//设置键盘类型为默认的
+    _areaCodeAccount.returnKeyType=UIReturnKeyDefault;//返回键的类型
+    //[_loginUserAccount becomeFirstResponder];
+    [self.view addSubview:_areaCodeAccount];
+    
+    
+    NSArray *array=@[@[@"+86",@"+852"]];
+    _pickview=[[ZHPickView alloc] initPickviewWithArray:array isHaveNavControler:NO];
+    _pickview.delegate=self;
+    
+    
+    UILabel * areaCodeLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 45, self.view.frame.size.width-20, 1)];
+    [areaCodeLbl.layer setBorderWidth:1.0]; //边框宽度
+    [areaCodeLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
+    
+    [self.view  addSubview:areaCodeLbl];
+
+    
     
     /**
      *  login
      */
     
     _loginUserAccount=[[UITextField alloc] initWithFrame:self.view.bounds];
-    _loginUserAccount.frame = CGRectMake(10, 10,self.view.frame.size.width - 20 , 40);
+    _loginUserAccount.frame = CGRectMake(10, 55,self.view.frame.size.width - 20 , 40);
     _loginUserAccount.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
     
     _userAccountImg =[[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_name"]];
     _userAccountImg.frame = CGRectMake(0, 0, 20, 20);
-    
+    _loginUserAccount.delegate = self;
     _loginUserAccount.leftView = _userAccountImg;//设置输入框内左边的图标
     _loginUserAccount.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _loginUserAccount.leftViewMode=UITextFieldViewModeAlways;
@@ -194,7 +252,7 @@
     //[_loginUserAccount becomeFirstResponder];
     [self.view addSubview:_loginUserAccount];
     
-    UILabel * accountTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 45, self.view.frame.size.width-20, 1)];
+    UILabel * accountTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 90, self.view.frame.size.width-20, 1)];
     [accountTelLbl.layer setBorderWidth:1.0]; //边框宽度
     [accountTelLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
     
@@ -206,13 +264,14 @@
      */
     _loginPassword=[[UITextField alloc] initWithFrame:self.view.bounds];
     _loginPassword.contentVerticalAlignment=UIControlContentVerticalAlignmentCenter;//设置其输入内容竖直居中
-    _loginPassword.frame = CGRectMake(10, 65,self.view.frame.size.width - 20, 40);
+    _loginPassword.frame = CGRectMake(10, 100,self.view.frame.size.width - 20, 40);
     _passWordImg = [[UIImageView alloc]initWithImage:[UIImage imageNamed:@"login_pw"]];
     _passWordImg.frame = CGRectMake(0, 0, 20, 20);
     _loginPassword.leftView = _passWordImg;//设置输入框内左边的图标
     _loginPassword.clearButtonMode=UITextFieldViewModeWhileEditing;//右侧删除按钮
     _loginPassword.leftViewMode=UITextFieldViewModeAlways;
     _loginPassword.placeholder=LOCALIZATION(@"text_password");//默认显示的字
+    _loginPassword.delegate = self;
     //测试开发用
    // _loginPassword.text=@"000000";
     _loginPassword.secureTextEntry = YES;//设置成密码格式
@@ -220,7 +279,7 @@
     _loginPassword.returnKeyType=UIReturnKeyDefault;//返回键的类型
     [self.view addSubview:_loginPassword];
     
-    UILabel * passWordTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 100, self.view.frame.size.width-20, 1)];
+    UILabel * passWordTelLbl=[[UILabel alloc]initWithFrame:CGRectMake(10, 135, self.view.frame.size.width-20, 1)];
     [passWordTelLbl.layer setBorderWidth:1.0]; //边框宽度
     [passWordTelLbl.layer setBorderColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1].CGColor];
     
@@ -233,7 +292,7 @@
     _forgetPasswordLabel.titleLabel.font = [UIFont systemFontOfSize:12];
     [_forgetPasswordLabel setTitle:LOCALIZATION(@"text_forgot_password") forState:UIControlStateNormal];
     [_forgetPasswordLabel setTitleColor:[UIColor colorWithRed:0.914 green:0.267 blue:0.235 alpha:1] forState:UIControlStateNormal];
-    _forgetPasswordLabel.frame = CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 120+(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8);
+    _forgetPasswordLabel.frame = CGRectMake((Drive_Wdith/2)-(Drive_Wdith/4), 180+(Drive_Wdith/8), (Drive_Wdith/2), Drive_Wdith/8);
     [_forgetPasswordLabel addTarget:self action:@selector(showFindPDAction) forControlEvents:UIControlEventTouchUpInside];
     [self.view  addSubview:_forgetPasswordLabel];
     
@@ -489,11 +548,21 @@
     }
     
 }
+
+#pragma mark ZhpickVIewDelegate
+
+-(void)toobarDonBtnHaveClick:(ZHPickView *)pickView resultString:(NSString *)resultString{
+    
+    //UITableViewCell * cell=[self.regTView cellForRowAtIndexPath:_indexPath];
+    _areaCodeAccount.text=resultString;
+}
 /**
  *	@brief	设置隐藏键盘
  *
  */
 - (BOOL)textFieldShouldReturn:(UITextField *)theTextField {
+   
+    // [_pickview remove];
     if (theTextField == self.loginUserAccount) {
         [theTextField resignFirstResponder];
     }
@@ -510,26 +579,41 @@
         [theTextField resignFirstResponder];
     }
 
+    
     return YES;
     
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
+  
+    if (textField == self.areaCodeAccount) {
+       
+         [textField resignFirstResponder];
+        
+        [_pickview show];
+        
+    }
     
-    if (textField == self.loginUserAccount) {
+    
+    if (textField == self.loginUserAccount)
+       [_pickview remove];{
         textHeight=90;
     }
     if (textField == self.loginPassword) {
+           [_pickview remove];
         textHeight=145;
     }
     if (textField == self.nameTxt) {
+           [_pickview remove];
         textHeight=(Drive_Height+20)/2-138+115;
     }
     if (textField == self.KidNameTxt) {
+           [_pickview remove];
         textHeight=(Drive_Height+20)/2-138+150;
     }
     if (textField == self.BirthTxt) {
+           [_pickview remove];
         textHeight=(Drive_Height+20)/2-138+185;
     }
 }
@@ -537,6 +621,7 @@
 
 -(void)viewTapped:(UITapGestureRecognizer*)tapGr
 {
+     [_pickview remove];
     [self.loginUserAccount resignFirstResponder];
     [self.loginPassword resignFirstResponder];
     [_nameTxt resignFirstResponder];
@@ -851,4 +936,7 @@
 
     
 }
+
+
+
 @end

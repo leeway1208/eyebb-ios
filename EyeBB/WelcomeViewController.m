@@ -353,12 +353,17 @@
             RegBtn.hidden=NO;
             LoginBtn.hidden=NO;
             CopyrightLbl.hidden=NO;
+            
+//            _autoLogin= NO;
+//            _myDelegate.appIsFirstStart = YES;
             //if the user name or password is invaild. alerting the user.
             [[[UIAlertView alloc] initWithTitle:LOCALIZATION(@"text_tips")
                                         message:LOCALIZATION(@"toast_invalid_username_or_password")
                                        delegate:self
                               cancelButtonTitle:LOCALIZATION(@"btn_confirm")
                               otherButtonTitles:nil] show];
+            
+          
         }
         
        
